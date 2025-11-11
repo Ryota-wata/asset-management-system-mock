@@ -134,61 +134,34 @@ function handleBackFromPhotoInput() {
 
 /**
  * 写真撮影・資産番号入力画面から資産情報登録画面へ遷移
- * 画面サイズに応じてスマートフォン版またはタブレット版を表示
  */
 function handlePhotoInputNext() {
     document.getElementById('photoInputPage').classList.remove('active');
-
-    // 画面サイズに応じてスマートフォン版またはタブレット版を表示
-    const screenWidth = window.innerWidth;
-    if (screenWidth <= 768) {
-        document.getElementById('assetInfoSmartphonePage').classList.add('active');
-    } else {
-        document.getElementById('assetInfoTabletPage').classList.add('active');
-    }
+    document.getElementById('assetInfoPage').classList.add('active');
 }
 
 /**
  * 資産情報登録画面から写真撮影・資産番号入力画面に戻る
  */
 function handleBackFromAssetInfo() {
-    document.getElementById('assetInfoSmartphonePage').classList.remove('active');
-    document.getElementById('assetInfoTabletPage').classList.remove('active');
+    document.getElementById('assetInfoPage').classList.remove('active');
     document.getElementById('photoInputPage').classList.add('active');
 }
 
 /**
  * 資産情報登録画面から履歴表示画面へ遷移
- * 画面サイズに応じてスマートフォン版またはタブレット版を表示
  */
 function handleShowHistoryList() {
-    document.getElementById('assetInfoSmartphonePage').classList.remove('active');
-    document.getElementById('assetInfoTabletPage').classList.remove('active');
-
-    // 画面サイズに応じてスマートフォン版またはタブレット版を表示
-    const screenWidth = window.innerWidth;
-    if (screenWidth <= 768) {
-        document.getElementById('historyListSmartphonePage').classList.add('active');
-    } else {
-        document.getElementById('historyListTabletPage').classList.add('active');
-    }
+    document.getElementById('assetInfoPage').classList.remove('active');
+    document.getElementById('historyListPage').classList.add('active');
 }
 
 /**
  * 履歴表示画面から資産情報登録画面に戻る
- * 画面サイズに応じてスマートフォン版またはタブレット版を表示
  */
 function handleBackFromHistoryList() {
-    document.getElementById('historyListSmartphonePage').classList.remove('active');
-    document.getElementById('historyListTabletPage').classList.remove('active');
-
-    // 画面サイズに応じてスマートフォン版またはタブレット版を表示
-    const screenWidth = window.innerWidth;
-    if (screenWidth <= 768) {
-        document.getElementById('assetInfoSmartphonePage').classList.add('active');
-    } else {
-        document.getElementById('assetInfoTabletPage').classList.add('active');
-    }
+    document.getElementById('historyListPage').classList.remove('active');
+    document.getElementById('assetInfoPage').classList.add('active');
 }
 
 /**
@@ -196,10 +169,8 @@ function handleBackFromHistoryList() {
  */
 function handleGoToSurvey() {
     // 全ての画面を非表示
-    document.getElementById('assetInfoSmartphonePage').classList.remove('active');
-    document.getElementById('assetInfoTabletPage').classList.remove('active');
-    document.getElementById('historyListSmartphonePage').classList.remove('active');
-    document.getElementById('historyListTabletPage').classList.remove('active');
+    document.getElementById('assetInfoPage').classList.remove('active');
+    document.getElementById('historyListPage').classList.remove('active');
     document.getElementById('photoInputPage').classList.remove('active');
     document.getElementById('qrScanPage').classList.remove('active');
 

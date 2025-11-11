@@ -1,0 +1,125 @@
+<!-- 資産情報登録画面（レスポンシブ対応） -->
+    <div id="assetInfoPage" class="asset-info-page">
+        <div class="main-container-asset">
+            <!-- ヘッダー -->
+            <header class="header-asset">
+                <h1 class="header-title-asset">現有資産調査</h1>
+            </header>
+
+            <!-- メインコンテンツ -->
+            <main class="main-content-asset">
+                <!-- フォーム全体を包むコンテナ -->
+                <div class="unified-form-container-asset">
+                    <!-- 分類情報セクション -->
+                    <section class="form-section-asset">
+                        <h3 class="section-title-asset">分類情報</h3>
+
+                        <div class="form-row-asset">
+                            <div class="form-group-asset">
+                                <label>大分類</label>
+                                <select id="assetLargeClassSelect" class="select-field-asset">
+                                    <option value="">選択してください</option>
+                                </select>
+                                <span class="input-hint-asset">フリー入力・一覧選択・あいまい検索可</span>
+                            </div>
+
+                            <div class="form-group-asset">
+                                <label>中分類</label>
+                                <select id="assetMediumClassSelect" class="select-field-asset">
+                                    <option value="">選択してください</option>
+                                </select>
+                                <span class="input-hint-asset">フリー入力・一覧選択・あいまい検索可</span>
+                            </div>
+
+                            <div class="form-group-asset">
+                                <label>品目</label>
+                                <select id="assetItemSelect" class="select-field-asset">
+                                    <option value="">選択してください</option>
+                                </select>
+                                <span class="input-hint-asset">フリー入力・一覧選択・あいまい検索可</span>
+                            </div>
+
+                            <div class="form-group-asset">
+                                <label>メーカー</label>
+                                <select id="assetMakerSelect" class="select-field-asset">
+                                    <option value="">選択してください</option>
+                                </select>
+                                <span class="input-hint-asset">フリー入力・一覧選択・あいまい検索可</span>
+                            </div>
+
+                            <div class="form-group-asset">
+                                <label>型式</label>
+                                <select id="assetModelSelect" class="select-field-asset">
+                                    <option value="">選択してください</option>
+                                </select>
+                                <span class="input-hint-asset">フリー入力・一覧選択・あいまい検索可</span>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- サイズ情報セクション -->
+                    <section class="form-section-asset">
+                        <h3 class="section-title-asset">サイズ情報</h3>
+
+                        <div class="dimension-row-asset">
+                            <div class="dimension-input-asset">
+                                <label>W (幅)</label>
+                                <input type="number" placeholder="0" min="0" step="1">
+                            </div>
+
+                            <div class="dimension-input-asset">
+                                <label>D (奥行)</label>
+                                <input type="number" placeholder="0" min="0" step="1">
+                            </div>
+
+                            <div class="dimension-input-asset">
+                                <label>H (高さ)</label>
+                                <input type="number" placeholder="0" min="0" step="1">
+                            </div>
+                        </div>
+                        <span class="input-hint-asset">単位: mm</span>
+                    </section>
+
+                    <!-- 備考セクション -->
+                    <section class="form-section-asset">
+                        <h3 class="section-title-asset">備考</h3>
+
+                        <div class="form-group-asset full">
+                            <label>備考</label>
+                            <textarea placeholder="備考を入力してください"></textarea>
+                        </div>
+
+                        <!-- アクションボタン -->
+                        <div class="action-buttons-asset">
+                            <button class="action-button-asset secondary" onclick="handleShowHistoryList()">
+                                <span class="icon">📋</span>
+                                <span>履歴表示</span>
+                            </button>
+
+                            <button class="action-button-asset primary">
+                                <span class="icon">✓</span>
+                                <span>商品登録</span>
+                            </button>
+                        </div>
+                    </section>
+                </div>
+            </main>
+
+            <!-- フッター -->
+            <footer class="footer-asset">
+                <button class="footer-button-asset" aria-label="戻る" onclick="handleBackFromAssetInfo()">
+                    <div class="icon-circle-asset">
+                        <div class="back-icon-asset"></div>
+                    </div>
+                    <span class="button-text-asset">戻る</span>
+                </button>
+
+                <button class="footer-button-asset" aria-label="部門入力へ" onclick="handleGoToSurvey()">
+                    <div class="icon-circle-asset">
+                        <div class="home-icon-asset">🏠</div>
+                    </div>
+                    <span class="button-text-asset">部門入力へ</span>
+                </button>
+            </footer>
+        </div>
+    </div>

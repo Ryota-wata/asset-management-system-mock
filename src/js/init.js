@@ -225,7 +225,7 @@ async function initChoices() {
         loadSearchMasterData();
     }
 
-    // 資産情報入力画面（スマホ版）の分類情報ドロップダウン初期化
+    // 資産情報入力画面の分類情報ドロップダウン初期化（レスポンシブ統合版）
     if (document.getElementById('assetLargeClassSelect')) {
         window.assetLargeClassChoice = new Choices('#assetLargeClassSelect', {
             searchEnabled: true,
@@ -300,97 +300,6 @@ async function initChoices() {
 
     if (document.getElementById('assetModelSelect')) {
         window.assetModelChoice = new Choices('#assetModelSelect', {
-            searchEnabled: true,
-            searchPlaceholderValue: '検索またはフリー入力してEnterキーを押してください',
-            shouldSort: false,
-            itemSelectText: '',
-            noResultsText: '該当なし。Enterキーでフリー入力として追加できます',
-            noChoicesText: '選択肢がありません',
-            placeholder: true,
-            placeholderValue: '選択してください',
-            addItems: true,
-            addItemFilter: (value) => {
-                return value.length > 0;
-            },
-            removeItemButton: false,
-        });
-    }
-
-    // 資産情報入力画面（タブレット版）の分類情報ドロップダウン初期化
-    if (document.getElementById('assetLargeClassSelectTb')) {
-        window.assetLargeClassChoiceTb = new Choices('#assetLargeClassSelectTb', {
-            searchEnabled: true,
-            searchPlaceholderValue: '検索またはフリー入力してEnterキーを押してください',
-            shouldSort: false,
-            itemSelectText: '',
-            noResultsText: '該当なし。Enterキーでフリー入力として追加できます',
-            noChoicesText: '選択肢がありません',
-            placeholder: true,
-            placeholderValue: '選択してください',
-            addItems: true,
-            addItemFilter: (value) => {
-                return value.length > 0;
-            },
-            removeItemButton: false,
-        });
-    }
-
-    if (document.getElementById('assetMediumClassSelectTb')) {
-        window.assetMediumClassChoiceTb = new Choices('#assetMediumClassSelectTb', {
-            searchEnabled: true,
-            searchPlaceholderValue: '検索またはフリー入力してEnterキーを押してください',
-            shouldSort: false,
-            itemSelectText: '',
-            noResultsText: '該当なし。Enterキーでフリー入力として追加できます',
-            noChoicesText: '選択肢がありません',
-            placeholder: true,
-            placeholderValue: '選択してください',
-            addItems: true,
-            addItemFilter: (value) => {
-                return value.length > 0;
-            },
-            removeItemButton: false,
-        });
-    }
-
-    if (document.getElementById('assetItemSelectTb')) {
-        window.assetItemChoiceTb = new Choices('#assetItemSelectTb', {
-            searchEnabled: true,
-            searchPlaceholderValue: '検索またはフリー入力してEnterキーを押してください',
-            shouldSort: false,
-            itemSelectText: '',
-            noResultsText: '該当なし。Enterキーでフリー入力として追加できます',
-            noChoicesText: '選択肢がありません',
-            placeholder: true,
-            placeholderValue: '選択してください',
-            addItems: true,
-            addItemFilter: (value) => {
-                return value.length > 0;
-            },
-            removeItemButton: false,
-        });
-    }
-
-    if (document.getElementById('assetMakerSelectTb')) {
-        window.assetMakerChoiceTb = new Choices('#assetMakerSelectTb', {
-            searchEnabled: true,
-            searchPlaceholderValue: '検索またはフリー入力してEnterキーを押してください',
-            shouldSort: false,
-            itemSelectText: '',
-            noResultsText: '該当なし。Enterキーでフリー入力として追加できます',
-            noChoicesText: '選択肢がありません',
-            placeholder: true,
-            placeholderValue: '選択してください',
-            addItems: true,
-            addItemFilter: (value) => {
-                return value.length > 0;
-            },
-            removeItemButton: false,
-        });
-    }
-
-    if (document.getElementById('assetModelSelectTb')) {
-        window.assetModelChoiceTb = new Choices('#assetModelSelectTb', {
             searchEnabled: true,
             searchPlaceholderValue: '検索またはフリー入力してEnterキーを押してください',
             shouldSort: false,
