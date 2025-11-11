@@ -1,0 +1,94 @@
+<!-- オフライン準備画面 -->
+    <div id="offlinePrepPage" class="offline-prep-page">
+        <!-- ヘッダー -->
+        <header class="offline-prep-header">
+            <h1 class="offline-prep-header-title">現有品調査 - オフライン準備</h1>
+        </header>
+
+        <!-- メインコンテンツ -->
+        <main class="offline-prep-main-content">
+            <div class="offline-prep-container">
+                <!-- マスタデータダウンロードセクション -->
+                <div class="offline-prep-section">
+                    <h2 class="offline-prep-section-title">
+                        <span class="offline-prep-section-icon">📥</span>
+                        マスタデータダウンロード
+                    </h2>
+                    
+                    <div class="offline-prep-info-box">
+                        <p class="offline-prep-info-text">オフライン環境で現有品調査を実施する場合は、事前にマスタデータをダウンロードしてください。</p>
+                        <p class="offline-prep-info-text">ダウンロード後、タブレット/スマートフォンがオフラインでも調査画面の選択肢が表示されます。</p>
+                    </div>
+                    
+                    <div class="offline-prep-info-box">
+                        <div class="offline-prep-status-row">
+                            <span class="offline-prep-status-label">ダウンロード状態:</span>
+                            <span class="offline-prep-status-value success" id="downloadStatus">✓ 最新</span>
+                        </div>
+                        <div class="offline-prep-status-row">
+                            <span class="offline-prep-status-label">最終更新:</span>
+                            <span class="offline-prep-status-value" id="lastDownloadTime">2025/06/02 10:30</span>
+                        </div>
+                        <div class="offline-prep-status-row">
+                            <span class="offline-prep-status-label">データ件数:</span>
+                            <span class="offline-prep-status-value" id="dataCount">施設:125件 / 資産:1,234件</span>
+                        </div>
+                    </div>
+                    
+                    <button class="offline-prep-button" id="downloadMasterButton" onclick="handleDownloadMaster()">
+                        <span class="offline-prep-button-icon">📥</span>
+                        <span>マスタデータをダウンロード</span>
+                    </button>
+                </div>
+
+                <!-- データ送信セクション -->
+                <div class="offline-prep-section">
+                    <h2 class="offline-prep-section-title">
+                        <span class="offline-prep-section-icon">📤</span>
+                        オフライン調査データ送信
+                    </h2>
+                    
+                    <div class="offline-prep-info-box">
+                        <p class="offline-prep-info-text">オフライン環境で登録した調査データをシステムに送信します。</p>
+                        <p class="offline-prep-info-text">送信前にオンライン環境に接続していることを確認してください。</p>
+                    </div>
+                    
+                    <div class="offline-prep-info-box">
+                        <div class="offline-prep-status-row">
+                            <span class="offline-prep-status-label">未送信データ:</span>
+                            <span class="offline-prep-status-value warning" id="unsyncedCount">25件</span>
+                        </div>
+                        <div class="offline-prep-status-row">
+                            <span class="offline-prep-status-label">最終送信:</span>
+                            <span class="offline-prep-status-value" id="lastSyncTime">2025/06/01 18:45</span>
+                        </div>
+                        <div class="offline-prep-status-row">
+                            <span class="offline-prep-status-label">接続状態:</span>
+                            <span class="offline-prep-status-value success" id="connectionStatus">✓ オンライン</span>
+                        </div>
+                    </div>
+                    
+                    <button class="offline-prep-button secondary" id="syncDataButton" onclick="handleSyncData()">
+                        <span class="offline-prep-button-icon">📤</span>
+                        <span>データを送信</span>
+                    </button>
+                </div>
+            </div>
+        </main>
+
+        <!-- フッター -->
+        <footer class="offline-prep-footer">
+            <button class="survey-footer-button" aria-label="戻る" onclick="handleBackFromOfflinePrep()">
+                <div class="survey-icon-circle">
+                    <div class="survey-back-icon"></div>
+                </div>
+                <span class="survey-button-text">戻る</span>
+            </button>
+            <button class="survey-footer-button" aria-label="調査開始" onclick="handleStartSurvey()">
+                <div class="survey-icon-circle">
+                    <div class="survey-next-icon"></div>
+                </div>
+                <span class="survey-button-text">調査開始</span>
+            </button>
+        </footer>
+    </div>

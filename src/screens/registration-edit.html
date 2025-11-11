@@ -1,0 +1,309 @@
+<!-- 登録内容修正画面 -->
+    <div id="registrationEditPage" class="registration-edit-page">
+        <div class="edit-container">
+            <!-- ヘッダー -->
+            <header class="edit-header">
+                <div class="edit-header-left">
+                    <div class="logo">
+                        <div class="logo-icon">SHIP</div>
+                        <div class="edit-header-title">現有品調査内容修正</div>
+                    </div>
+                </div>
+                <div class="edit-header-actions">
+                    <button class="edit-header-btn" onclick="handleBackFromEdit()">戻る</button>
+                </div>
+            </header>
+
+            <!-- フィルターヘッダー -->
+            <div class="filter-header">
+                <div class="filter-row-single">
+                    <div class="filter-group">
+                        <label>棟</label>
+                        <select id="filterBuilding" class="filter-select">
+                            <option value="">棟</option>
+                            <option value="本館">本館</option>
+                            <option value="別館">別館</option>
+                            <option value="新館">新館</option>
+                            <option value="東館">東館</option>
+                            <option value="西館">西館</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>階</label>
+                        <select id="filterFloor" class="filter-select">
+                            <option value="">階</option>
+                            <option value="1F">1F</option>
+                            <option value="2F">2F</option>
+                            <option value="3F">3F</option>
+                            <option value="4F">4F</option>
+                            <option value="5F">5F</option>
+                            <option value="B1F">B1F</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>部門</label>
+                        <select id="filterDepartment" class="filter-select">
+                            <option value="">部門</option>
+                            <option value="手術部門">手術部門</option>
+                            <option value="放射線科">放射線科</option>
+                            <option value="検査科">検査科</option>
+                            <option value="外科">外科</option>
+                            <option value="内科">内科</option>
+                            <option value="整形外科">整形外科</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>部署</label>
+                        <select id="filterSection" class="filter-select">
+                            <option value="">部署</option>
+                            <option value="手術">手術</option>
+                            <option value="CT室">CT室</option>
+                            <option value="MRI室">MRI室</option>
+                            <option value="一般撮影室">一般撮影室</option>
+                            <option value="検査室">検査室</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Category</label>
+                        <select id="filterCategory" class="filter-select">
+                            <option value="">Category</option>
+                            <option value="医療機器">医療機器</option>
+                            <option value="什器備品">什器備品</option>
+                            <option value="システム機器">システム機器</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>大分類</label>
+                        <select id="filterLargeClass" class="filter-select">
+                            <option value="">大分類</option>
+                            <option value="医療機器">医療機器</option>
+                            <option value="放射線関連機器">放射線関連機器</option>
+                            <option value="検査機器">検査機器</option>
+                            <option value="治療機器">治療機器</option>
+                            <option value="手術機器">手術機器</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>中分類</label>
+                        <select id="filterMediumClass" class="filter-select">
+                            <option value="">中分類</option>
+                            <option value="CT関連">CT関連</option>
+                            <option value="MRI関連">MRI関連</option>
+                            <option value="X線関連">X線関連</option>
+                            <option value="超音波関連">超音波関連</option>
+                            <option value="内視鏡関連">内視鏡関連</option>
+                        </select>
+                    </div>
+                    <div class="filter-actions">
+                        <button class="filter-btn primary" onclick="applyFilters()">絞り込み</button>
+                        <button class="filter-btn secondary" onclick="clearFilters()">クリア</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- データテーブル -->
+            <div class="data-table-container">
+                <div class="data-table-wrapper">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th class="th-checkbox"><input type="checkbox" id="selectAll" onclick="toggleAllCheckboxes(this)"></th>
+                                <th>調査日</th>
+                                <th>調査担当者</th>
+                                <th>Category</th>
+                                <th>棟</th>
+                                <th>階</th>
+                                <th>部門</th>
+                                <th>部署</th>
+                                <th>シールNo.</th>
+                                <th>室名</th>
+                                <th>資産番号</th>
+                                <th>備品番号</th>
+                                <th>購入年月日</th>
+                                <th>リース</th>
+                                <th>貸出品</th>
+                                <th>写真</th>
+                                <th>大分類</th>
+                                <th>中分類</th>
+                                <th>品目</th>
+                                <th>メーカー</th>
+                                <th>型式</th>
+                                <th>W</th>
+                                <th>D</th>
+                                <th>H</th>
+                                <th>備考</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dataTableBody">
+                            <!-- サンプルデータ行 1 -->
+                            <tr data-row-id="1" data-master-id="M001">
+                                <td class="td-checkbox"><input type="checkbox" class="row-checkbox"></td>
+                                <td>2025-11-01</td>
+                                <td>山田太郎</td>
+                                <td data-field="category" data-master-id="CAT01">医療機器</td>
+                                <td data-field="building" data-master-id="BLD01">本館</td>
+                                <td data-field="floor" data-master-id="FLR01">2F</td>
+                                <td data-field="department" data-master-id="DEP01">手術部門</td>
+                                <td data-field="section" data-master-id="SEC01">器材室</td>
+                                <td>22-00474</td>
+                                <td>手術室A</td>
+                                <td>10605379-000</td>
+                                <td>1338</td>
+                                <td>2022-04-15</td>
+                                <td>なし</td>
+                                <td>なし</td>
+                                <td><button class="photo-btn" onclick="alert('写真表示')">📷 3枚</button></td>
+                                <td data-field="largeClass" data-master-id="L01">医療機器</td>
+                                <td data-field="mediumClass" data-master-id="M01">滅菌機器</td>
+                                <td data-field="item" data-master-id="I001">燻蒸滅菌装置</td>
+                                <td data-field="manufacturer" data-master-id="MF01">VENLE GO</td>
+                                <td data-field="model" data-master-id="MD01">CEパルサマドライ</td>
+                                <td>φ500</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>
+                                    <button class="edit-btn" onclick="editRow(this)">編集</button>
+                                    <button class="confirm-btn" onclick="confirmRow(this)">確定</button>
+                                </td>
+                            </tr>
+                            <!-- マスタに登録なし行 -->
+                            <tr data-row-id="2" data-master-id="">
+                                <td class="td-checkbox"><input type="checkbox" class="row-checkbox"></td>
+                                <td>2025-11-02</td>
+                                <td>佐藤花子</td>
+                                <td data-field="category" data-master-id="CAT01">医療機器</td>
+                                <td data-field="building" data-master-id="BLD01">本館</td>
+                                <td data-field="floor" data-master-id="FLR02">3F</td>
+                                <td data-field="department" data-master-id="DEP02">放射線科</td>
+                                <td data-field="section" data-master-id="SEC02">CT室</td>
+                                <td>シールなし</td>
+                                <td>CT室1</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>あり</td>
+                                <td>なし</td>
+                                <td><button class="photo-btn" onclick="alert('写真表示')">📷 1枚</button></td>
+                                <td data-field="largeClass" data-master-id="">医療機器</td>
+                                <td data-field="mediumClass" data-master-id="">内視鏡関連機器</td>
+                                <td data-field="item" data-master-id="">特殊内視鏡 BF-TYPE ABC</td>
+                                <td data-field="manufacturer" data-master-id="">オリンパスメディカル</td>
+                                <td data-field="model" data-master-id="">BF-ABC-123-XYZ</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>リース期限近い</td>
+                                <td>
+                                    <button class="edit-btn" onclick="editRow(this)">編集</button>
+                                    <button class="confirm-btn" onclick="confirmRow(this)" disabled>確定</button>
+                                </td>
+                            </tr>
+                            <!-- サンプルデータ行 3 -->
+                            <tr data-row-id="3" data-master-id="M002">
+                                <td class="td-checkbox"><input type="checkbox" class="row-checkbox"></td>
+                                <td>2025-11-03</td>
+                                <td>田中一郎</td>
+                                <td data-field="category" data-master-id="CAT01">医療機器</td>
+                                <td data-field="building" data-master-id="BLD02">別館</td>
+                                <td data-field="floor" data-master-id="FLR03">1F</td>
+                                <td data-field="department" data-master-id="DEP03">検査科</td>
+                                <td data-field="section" data-master-id="SEC03">検査室</td>
+                                <td>22-00812</td>
+                                <td>検査室B</td>
+                                <td>10605421-000</td>
+                                <td>2156</td>
+                                <td>2023-01-20</td>
+                                <td>なし</td>
+                                <td>なし</td>
+                                <td><button class="photo-btn" onclick="alert('写真表示')">📷 2枚</button></td>
+                                <td data-field="largeClass" data-master-id="L02">検査機器</td>
+                                <td data-field="mediumClass" data-master-id="M05">血液検査装置</td>
+                                <td data-field="item" data-master-id="I010">自動血球計数器</td>
+                                <td data-field="manufacturer" data-master-id="MF10">シスメックス</td>
+                                <td data-field="model" data-master-id="MD10">XN-3000</td>
+                                <td>600</td>
+                                <td>550</td>
+                                <td>450</td>
+                                <td></td>
+                                <td>
+                                    <button class="edit-btn" onclick="editRow(this)">編集</button>
+                                    <button class="confirm-btn" onclick="confirmRow(this)">確定</button>
+                                </td>
+                            </tr>
+                            <!-- サンプルデータ行 4 -->
+                            <tr data-row-id="4" data-master-id="M003">
+                                <td class="td-checkbox"><input type="checkbox" class="row-checkbox"></td>
+                                <td>2025-11-03</td>
+                                <td>鈴木美咲</td>
+                                <td data-field="category" data-master-id="CAT02">什器備品</td>
+                                <td data-field="building" data-master-id="BLD03">新館</td>
+                                <td data-field="floor" data-master-id="FLR04">2F</td>
+                                <td data-field="department" data-master-id="DEP04">外科</td>
+                                <td data-field="section" data-master-id="SEC04">診察室</td>
+                                <td>22-01035</td>
+                                <td>診察室3</td>
+                                <td>10606523-000</td>
+                                <td>3421</td>
+                                <td>2024-06-10</td>
+                                <td>なし</td>
+                                <td>なし</td>
+                                <td><button class="photo-btn" onclick="alert('写真表示')">📷 1枚</button></td>
+                                <td data-field="largeClass" data-master-id="L04">什器備品</td>
+                                <td data-field="mediumClass" data-master-id="M08">診察台</td>
+                                <td data-field="item" data-master-id="I020">電動診察台</td>
+                                <td data-field="manufacturer" data-master-id="MF20">高田ベッド製作所</td>
+                                <td data-field="model" data-master-id="MD20">TB-1234</td>
+                                <td>1800</td>
+                                <td>650</td>
+                                <td>700</td>
+                                <td>昇降機能付き</td>
+                                <td>
+                                    <button class="edit-btn" onclick="editRow(this)">編集</button>
+                                    <button class="confirm-btn" onclick="confirmRow(this)">確定</button>
+                                </td>
+                            </tr>
+                            <!-- サンプルデータ行 5 -->
+                            <tr data-row-id="5" data-master-id="M004">
+                                <td class="td-checkbox"><input type="checkbox" class="row-checkbox"></td>
+                                <td>2025-11-04</td>
+                                <td>高橋健太</td>
+                                <td data-field="category" data-master-id="CAT01">医療機器</td>
+                                <td data-field="building" data-master-id="BLD01">本館</td>
+                                <td data-field="floor" data-master-id="FLR05">4F</td>
+                                <td data-field="department" data-master-id="DEP05">整形外科</td>
+                                <td data-field="section" data-master-id="SEC05">処置室</td>
+                                <td>22-01247</td>
+                                <td>処置室A</td>
+                                <td>10607834-000</td>
+                                <td>4892</td>
+                                <td>2021-09-15</td>
+                                <td>あり</td>
+                                <td>なし</td>
+                                <td><button class="photo-btn" onclick="alert('写真表示')">📷 4枚</button></td>
+                                <td data-field="largeClass" data-master-id="L03">治療機器</td>
+                                <td data-field="mediumClass" data-master-id="M07">物理療法機器</td>
+                                <td data-field="item" data-master-id="I015">超音波治療器</td>
+                                <td data-field="manufacturer" data-master-id="MF15">伊藤超短波</td>
+                                <td data-field="model" data-master-id="MD15">US-750</td>
+                                <td>350</td>
+                                <td>280</td>
+                                <td>120</td>
+                                <td>定期メンテナンス済</td>
+                                <td>
+                                    <button class="edit-btn" onclick="editRow(this)">編集</button>
+                                    <button class="confirm-btn" onclick="confirmRow(this)">確定</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- フッターアクションボタン -->
+            <div class="edit-footer">
+                <button class="edit-action-btn primary" onclick="confirmAllRegistrations()">一括確定</button>
+            </div>
+        </div>
+    </div>

@@ -1,0 +1,472 @@
+/**
+ * 現有資産調査画面CSS
+ *
+ * このファイルには、現有資産調査関連の画面のスタイルが含まれています。
+ *
+ * - 現有資産調査画面（survey-page）
+ * - オフライン準備画面（offline-prep-page）
+ */
+
+/* ========================================
+   オフライン準備画面
+======================================== */
+.offline-prep-page {
+    display: none;
+    background: #f5f5f5;
+    min-height: 100vh;
+    flex-direction: column;
+}
+
+.offline-prep-page.active {
+    display: flex;
+}
+
+.offline-prep-header {
+    background-color: #ffffff;
+    padding: 16px 24px;
+    border-bottom: 1px solid #e0e0e0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.offline-prep-header-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #333333;
+}
+
+.offline-prep-main-content {
+    flex: 1;
+    padding: 38px 40px 120px 40px;
+    overflow-y: auto;
+}
+
+.offline-prep-container {
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 36px 40px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    max-width: 800px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.offline-prep-section {
+    margin-bottom: 32px;
+    padding-bottom: 32px;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+.offline-prep-section:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.offline-prep-section-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333333;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.offline-prep-section-icon {
+    font-size: 20px;
+}
+
+.offline-prep-info-box {
+    background-color: #f8f9fa;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 16px;
+}
+
+.offline-prep-info-text {
+    font-size: 14px;
+    color: #666666;
+    line-height: 1.6;
+    margin-bottom: 8px;
+}
+
+.offline-prep-info-text:last-child {
+    margin-bottom: 0;
+}
+
+.offline-prep-status-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    font-size: 14px;
+}
+
+.offline-prep-status-label {
+    color: #666666;
+    font-weight: 500;
+}
+
+.offline-prep-status-value {
+    color: #333333;
+    font-weight: 600;
+}
+
+.offline-prep-status-value.success {
+    color: #27ae60;
+}
+
+.offline-prep-status-value.warning {
+    color: #f39c12;
+}
+
+.offline-prep-status-value.error {
+    color: #e74c3c;
+}
+
+.offline-prep-button {
+    width: 100%;
+    padding: 16px 24px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #ffffff;
+    background-color: #27ae60;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.offline-prep-button:hover {
+    background-color: #229954;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
+}
+
+.offline-prep-button:active {
+    transform: translateY(0);
+}
+
+.offline-prep-button:disabled {
+    background-color: #95a5a6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.offline-prep-button.secondary {
+    background-color: #3498db;
+}
+
+.offline-prep-button.secondary:hover {
+    background-color: #2980b9;
+}
+
+.offline-prep-button-icon {
+    font-size: 18px;
+}
+
+.offline-prep-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #ffffff;
+    padding: 20px 40px;
+    border-top: 1px solid #e0e0e0;
+    box-shadow: 0 -2px 8px rgba(0,0,0,0.05);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100px;
+    z-index: 1000;
+}
+
+/* スマートフォン対応 */
+@media (max-width: 480px) {
+    .offline-prep-header {
+        padding: 16px 20px;
+    }
+
+    .offline-prep-header-title {
+        font-size: 18px;
+    }
+
+    .offline-prep-main-content {
+        padding: 20px 20px 110px 20px;
+    }
+
+    .offline-prep-container {
+        padding: 24px 20px;
+    }
+
+    .offline-prep-section {
+        margin-bottom: 24px;
+        padding-bottom: 24px;
+    }
+
+    .offline-prep-section-title {
+        font-size: 16px;
+    }
+
+    .offline-prep-button {
+        padding: 14px 20px;
+        font-size: 15px;
+    }
+
+    .offline-prep-footer {
+        padding: 16px 20px;
+        height: 90px;
+    }
+}
+
+/* ========================================
+   現有資産調査画面
+======================================== */
+.survey-page {
+    display: none;
+    background: #f5f5f5;
+    min-height: 100vh;
+    flex-direction: column;
+}
+
+.survey-page.active {
+    display: flex;
+}
+
+.survey-header {
+    background-color: #ffffff;
+    padding: 16px 24px;
+    border-bottom: 1px solid #e0e0e0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.survey-header-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #333333;
+}
+
+.survey-main-content {
+    flex: 1;
+    padding: 38px 40px 120px 40px;
+    overflow-y: auto;
+}
+
+.survey-form-container {
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 36px 40px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    max-width: 600px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.survey-form-group {
+    margin-bottom: 26px;
+}
+
+.survey-form-group:last-child {
+    margin-bottom: 0;
+}
+
+.survey-form-label {
+    display: block;
+    font-size: 15px;
+    font-weight: 600;
+    color: #333333;
+    margin-bottom: 10px;
+}
+
+.survey-display-field {
+    background-color: #f8f8f8;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 14px 18px;
+    font-size: 16px;
+    color: #666666;
+    width: 100%;
+}
+
+.survey-select-field {
+    width: 100%;
+    padding: 14px 18px;
+    font-size: 16px;
+    color: #333333;
+    background-color: #ffffff;
+    border: 2px solid #d0d0d0;
+    border-radius: 8px;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23666' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 18px center;
+    cursor: pointer;
+    transition: border-color 0.2s;
+}
+
+.survey-select-field:hover {
+    border-color: #4CAF50;
+}
+
+.survey-select-field:focus {
+    outline: none;
+    border-color: #4CAF50;
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+}
+
+.survey-select-field option {
+    padding: 8px;
+}
+
+.survey-select-field option:disabled {
+    color: #999999;
+}
+
+.survey-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #ffffff;
+    padding: 20px 40px;
+    border-top: 1px solid #e0e0e0;
+    box-shadow: 0 -2px 8px rgba(0,0,0,0.05);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100px;
+    z-index: 1000;
+}
+
+.survey-footer-button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s;
+}
+
+.survey-footer-button:hover {
+    transform: translateY(-2px);
+}
+
+.survey-footer-button:active {
+    transform: translateY(0);
+}
+
+.survey-icon-circle {
+    background-color: #4CAF50;
+    border-radius: 50%;
+    width: 52px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 8px rgba(76, 175, 80, 0.3);
+}
+
+.survey-footer-button:hover .survey-icon-circle {
+    background-color: #45a049;
+    box-shadow: 0 6px 12px rgba(76, 175, 80, 0.4);
+}
+
+.survey-button-text {
+    font-size: 14px;
+    font-weight: 500;
+    color: #333333;
+}
+
+.survey-back-icon {
+    width: 0;
+    height: 0;
+    border-right: 11px solid #ffffff;
+    border-top: 7px solid transparent;
+    border-bottom: 7px solid transparent;
+    margin-right: 2px;
+}
+
+.survey-next-icon {
+    width: 0;
+    height: 0;
+    border-left: 11px solid #ffffff;
+    border-top: 7px solid transparent;
+    border-bottom: 7px solid transparent;
+    margin-left: 2px;
+}
+
+/* スマートフォン対応（390px幅） */
+@media (max-width: 480px) {
+    .survey-header {
+        padding: 16px 20px;
+    }
+
+    .survey-header-title {
+        font-size: 18px;
+    }
+
+    .survey-main-content {
+        padding: 20px 20px 110px 20px;
+    }
+
+    .survey-form-container {
+        padding: 24px 20px;
+    }
+
+    .survey-form-group {
+        margin-bottom: 18px;
+    }
+
+    .survey-form-label {
+        font-size: 14px;
+        margin-bottom: 8px;
+    }
+
+    .survey-display-field {
+        padding: 12px 14px;
+        font-size: 15px;
+    }
+
+    .survey-select-field {
+        padding: 12px 14px;
+        font-size: 15px;
+        background-position: right 14px center;
+    }
+
+    .survey-footer {
+        padding: 16px 20px;
+        height: 90px;
+    }
+
+    .survey-icon-circle {
+        width: 48px;
+        height: 48px;
+    }
+
+    .survey-button-text {
+        font-size: 12px;
+    }
+
+    .survey-footer-button {
+        gap: 6px;
+    }
+
+    .survey-back-icon {
+        border-right: 10px solid #ffffff;
+        border-top: 6px solid transparent;
+        border-bottom: 6px solid transparent;
+    }
+
+    .survey-next-icon {
+        border-left: 10px solid #ffffff;
+        border-top: 6px solid transparent;
+        border-bottom: 6px solid transparent;
+    }
+}

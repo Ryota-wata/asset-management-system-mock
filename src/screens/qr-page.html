@@ -1,0 +1,223 @@
+<!-- QRコード管理画面 -->
+    <div id="qrPage" class="qr-page">
+        <div class="qr-header">
+            <div class="qr-header-left">
+                <button class="qr-back-btn" onclick="handleBackFromQR()">
+                    <span>←</span>
+                    <span>戻る</span>
+                </button>
+                <div class="qr-header-title-group">
+                    <h1>QRコード一覧</h1>
+                    <div class="qr-hospital-name">〇〇病院</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="qr-main-content">
+            <!-- ページヘッダー -->
+            <div class="qr-page-header">
+                <div class="qr-page-title">QRコード管理</div>
+                <div class="qr-page-actions">
+                    <button class="qr-btn-new" onclick="showQRIssue()">
+                        <span>➕</span>
+                        <span>新規発行</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 統計カード -->
+            <div class="qr-stats-section">
+                <div class="qr-stats-grid">
+                    <div class="qr-stat-card total">
+                        <div class="qr-stat-icon">📊</div>
+                        <div class="qr-stat-value">500</div>
+                        <div class="qr-stat-label">総発行数</div>
+                    </div>
+                    <div class="qr-stat-card in-use">
+                        <div class="qr-stat-icon">✅</div>
+                        <div class="qr-stat-value">325</div>
+                        <div class="qr-stat-label">使用中</div>
+                    </div>
+                    <div class="qr-stat-card available">
+                        <div class="qr-stat-icon">🔖</div>
+                        <div class="qr-stat-value">150</div>
+                        <div class="qr-stat-label">未使用</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- フィルターバー -->
+            <div class="qr-filter-bar">
+                <div class="qr-search-box">
+                    <span class="qr-search-icon">🔍</span>
+                    <input type="text" class="qr-search-input" placeholder="QR番号、発行者で検索...">
+                </div>
+                <select class="qr-filter-select">
+                    <option value="">ステータス：すべて</option>
+                    <option value="available">未使用</option>
+                    <option value="in-use">使用中</option>
+                </select>
+                <select class="qr-filter-select">
+                    <option value="">印刷状態：すべて</option>
+                    <option value="printed">印刷済</option>
+                    <option value="not-printed">未印刷</option>
+                </select>
+            </div>
+
+            <!-- アクションバー -->
+            <div class="qr-action-bar">
+                <div class="qr-action-left">
+                    <button class="qr-action-btn" disabled onclick="handleBulkPrint()">
+                        <span>🖨️</span>
+                        <span>選択印刷</span>
+                    </button>
+                    <span class="qr-selected-count">0件選択中</span>
+                </div>
+                <div class="qr-result-count">
+                    全500件中 1-20件を表示
+                </div>
+            </div>
+
+            <!-- テーブル -->
+            <div class="qr-table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="qr-checkbox-cell">
+                                <input type="checkbox" id="select-all">
+                            </th>
+                            <th class="qr-sortable">QR番号 ▼</th>
+                            <th class="qr-sortable">ステータス</th>
+                            <th class="qr-sortable">発行日</th>
+                            <th>発行者</th>
+                            <th>印刷状態</th>
+                            <th>紐付資産</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="qr-checkbox-cell">
+                                <input type="checkbox">
+                            </td>
+                            <td><span class="qr-number">H001-0500</span></td>
+                            <td><span class="qr-status-badge available">未使用</span></td>
+                            <td>2025/11/01</td>
+                            <td>田中 太郎</td>
+                            <td><span class="qr-print-badge printed">印刷済</span></td>
+                            <td>-</td>
+                            <td>
+                                <a href="#" class="qr-action-link">詳細</a>
+                                <a href="#" class="qr-action-link">印刷</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="qr-checkbox-cell">
+                                <input type="checkbox">
+                            </td>
+                            <td><span class="qr-number">H001-0499</span></td>
+                            <td><span class="qr-status-badge in-use">使用中</span></td>
+                            <td>2025/11/01</td>
+                            <td>田中 太郎</td>
+                            <td><span class="qr-print-badge printed">印刷済</span></td>
+                            <td>超音波診断装置</td>
+                            <td>
+                                <a href="#" class="qr-action-link">詳細</a>
+                                <a href="#" class="qr-action-link">印刷</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="qr-checkbox-cell">
+                                <input type="checkbox">
+                            </td>
+                            <td><span class="qr-number">H001-0498</span></td>
+                            <td><span class="qr-status-badge available">未使用</span></td>
+                            <td>2025/11/01</td>
+                            <td>田中 太郎</td>
+                            <td><span class="qr-print-badge not-printed">未印刷</span></td>
+                            <td>-</td>
+                            <td>
+                                <a href="#" class="qr-action-link">詳細</a>
+                                <a href="#" class="qr-action-link">印刷</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="qr-checkbox-cell">
+                                <input type="checkbox">
+                            </td>
+                            <td><span class="qr-number">H001-0497</span></td>
+                            <td><span class="qr-status-badge in-use">使用中</span></td>
+                            <td>2025/10/28</td>
+                            <td>佐藤 花子</td>
+                            <td><span class="qr-print-badge printed">印刷済</span></td>
+                            <td>椅子</td>
+                            <td>
+                                <a href="#" class="qr-action-link">詳細</a>
+                                <a href="#" class="qr-action-link">印刷</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="qr-checkbox-cell">
+                                <input type="checkbox">
+                            </td>
+                            <td><span class="qr-number">H001-0496</span></td>
+                            <td><span class="qr-status-badge in-use">使用中</span></td>
+                            <td>2025/10/28</td>
+                            <td>佐藤 花子</td>
+                            <td><span class="qr-print-badge printed">印刷済</span></td>
+                            <td>心電図モニター</td>
+                            <td>
+                                <a href="#" class="qr-action-link">詳細</a>
+                                <a href="#" class="qr-action-link">印刷</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="qr-checkbox-cell">
+                                <input type="checkbox">
+                            </td>
+                            <td><span class="qr-number">H001-0495</span></td>
+                            <td><span class="qr-status-badge available">未使用</span></td>
+                            <td>2025/10/28</td>
+                            <td>佐藤 花子</td>
+                            <td><span class="qr-print-badge printed">印刷済</span></td>
+                            <td>-</td>
+                            <td>
+                                <a href="#" class="qr-action-link">詳細</a>
+                                <a href="#" class="qr-action-link">印刷</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="qr-checkbox-cell">
+                                <input type="checkbox">
+                            </td>
+                            <td><span class="qr-number">H001-0494</span></td>
+                            <td><span class="qr-status-badge available">未使用</span></td>
+                            <td>2025/10/28</td>
+                            <td>佐藤 花子</td>
+                            <td><span class="qr-print-badge printed">印刷済</span></td>
+                            <td>-</td>
+                            <td>
+                                <a href="#" class="qr-action-link">詳細</a>
+                                <a href="#" class="qr-action-link">印刷</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- ページネーション -->
+            <div class="qr-pagination">
+                <button class="qr-page-btn" disabled>«</button>
+                <button class="qr-page-btn" disabled>‹</button>
+                <button class="qr-page-btn active">1</button>
+                <button class="qr-page-btn">2</button>
+                <button class="qr-page-btn">3</button>
+                <button class="qr-page-btn">4</button>
+                <button class="qr-page-btn">5</button>
+                <span style="padding: 0 8px; color: #666;">...</span>
+                <button class="qr-page-btn">25</button>
+                <button class="qr-page-btn">›</button>
+                <button class="qr-page-btn">»</button>
+            </div>
+        </div>
+    </div>

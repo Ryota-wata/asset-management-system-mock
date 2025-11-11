@@ -1,0 +1,74 @@
+<!-- 現有資産調査画面 -->
+    <div id="surveyPage" class="survey-page">
+        <!-- ヘッダー -->
+        <header class="survey-header">
+            <h1 class="survey-header-title">現有資産調査</h1>
+        </header>
+
+        <!-- メインコンテンツ -->
+        <main class="survey-main-content">
+            <div class="survey-form-container">
+                <!-- 調査日 -->
+                <div class="survey-form-group">
+                    <label class="survey-form-label">調査日</label>
+                    <div class="survey-display-field">2025年6月2日</div>
+                </div>
+
+                <!-- Category -->
+                <div class="survey-form-group">
+                    <label class="survey-form-label">Category</label>
+                    <select class="survey-select-field" id="surveyCategorySelect">
+                        <option value="">選択してください</option>
+                    </select>
+                </div>
+
+                <!-- 棟 -->
+                <div class="survey-form-group">
+                    <label class="survey-form-label">棟</label>
+                    <select class="survey-select-field" id="surveyBuildingSelect">
+                        <option value="">選択してください</option>
+                    </select>
+                </div>
+
+                <!-- 階 -->
+                <div class="survey-form-group">
+                    <label class="survey-form-label">階</label>
+                    <select class="survey-select-field" id="surveyFloorSelect">
+                        <option value="">選択してください</option>
+                    </select>
+                </div>
+
+                <!-- 部門 -->
+                <div class="survey-form-group">
+                    <label class="survey-form-label">部門</label>
+                    <select class="survey-select-field" id="surveyDepartmentSelect">
+                        <option value="">選択してください</option>
+                    </select>
+                </div>
+
+                <!-- 部署 -->
+                <div class="survey-form-group">
+                    <label class="survey-form-label">部署</label>
+                    <select class="survey-select-field" id="surveySectionSelect">
+                        <option value="">選択してください</option>
+                    </select>
+                </div>
+            </div>
+        </main>
+
+        <!-- フッター -->
+        <footer class="survey-footer">
+            <button class="survey-footer-button" aria-label="戻る" onclick="handleBackFromSurvey()">
+                <div class="survey-icon-circle">
+                    <div class="survey-back-icon"></div>
+                </div>
+                <span class="survey-button-text">戻る</span>
+            </button>
+            <button class="survey-footer-button" aria-label="次へ" onclick="handleSurveyNext()">
+                <div class="survey-icon-circle">
+                    <div class="survey-next-icon"></div>
+                </div>
+                <span class="survey-button-text">次へ</span>
+            </button>
+        </footer>
+    </div>

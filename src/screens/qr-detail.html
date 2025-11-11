@@ -1,0 +1,159 @@
+<!-- QRコード詳細画面 -->
+    <div id="qrDetailPage" class="qr-detail-page">
+        <div class="qr-detail-header">
+            <div class="qr-detail-header-left">
+                <button class="qr-detail-back-btn" onclick="handleBackFromQRDetail()">
+                    <span>←</span>
+                    <span>一覧に戻る</span>
+                </button>
+                <div class="qr-detail-header-title-group">
+                    <h1>QRコード詳細</h1>
+                    <span class="qr-detail-number-header" id="qrDetailHeaderNumber">H001-0500</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="qr-detail-main-content">
+
+            <!-- グリッドレイアウト -->
+            <div class="qr-detail-content-grid">
+                <!-- 左カラム -->
+                <div>
+                    <!-- 基本情報 -->
+                    <div class="qr-detail-section">
+                        <div class="qr-detail-section-header">
+                            <h3 class="qr-detail-section-title">📋 基本情報</h3>
+                        </div>
+
+                        <div class="qr-detail-form-group">
+                            <label class="qr-detail-form-label">QR番号</label>
+                            <div class="qr-detail-form-value qr-detail-number-large" id="qrDetailNumber">H001-0500</div>
+                        </div>
+
+                        <div class="qr-detail-form-group">
+                            <label class="qr-detail-form-label">ステータス</label>
+                            <div class="qr-detail-form-value">
+                                <span class="qr-detail-status-badge available">未使用</span>
+                            </div>
+                        </div>
+
+                        <div class="qr-detail-form-group">
+                            <label class="qr-detail-form-label">発行日時</label>
+                            <div class="qr-detail-form-value">2025年11月1日 14:30:45</div>
+                        </div>
+
+                        <div class="qr-detail-form-group">
+                            <label class="qr-detail-form-label">発行者</label>
+                            <div class="qr-detail-form-value">田中 太郎（consul001）</div>
+                        </div>
+                    </div>
+
+                    <!-- 紐付け情報 -->
+                    <div class="qr-detail-section">
+                        <div class="qr-detail-section-header">
+                            <h3 class="qr-detail-section-title">🔗 紐付け情報</h3>
+                        </div>
+
+                        <div class="qr-detail-form-group">
+                            <label class="qr-detail-form-label">紐付資産</label>
+                            <div class="qr-detail-form-value" style="color: #999;">未紐付け</div>
+                        </div>
+
+                        <div class="qr-detail-form-group">
+                            <label class="qr-detail-form-label">使用開始日</label>
+                            <div class="qr-detail-form-value" style="color: #999;">-</div>
+                        </div>
+
+                        <!-- 紐付けられている場合は資産詳細へのリンクカードを表示 -->
+                        <!-- <a href="#" class="qr-detail-link-card">
+                            <div class="qr-detail-link-card-icon">📦</div>
+                            <div class="qr-detail-link-card-content">
+                                <div class="qr-detail-link-card-title">超音波診断装置</div>
+                                <div class="qr-detail-link-card-subtitle">MED-001 | 本館3F 検査室</div>
+                            </div>
+                            <span class="qr-detail-link-card-arrow">→</span>
+                        </a> -->
+                    </div>
+
+                    <!-- 印刷履歴 -->
+                    <div class="qr-detail-section">
+                        <div class="qr-detail-section-header">
+                            <h3 class="qr-detail-section-title">🖨️ 印刷履歴</h3>
+                        </div>
+
+                        <div class="qr-detail-form-group">
+                            <label class="qr-detail-form-label">印刷回数</label>
+                            <div class="qr-detail-form-value">1回</div>
+                        </div>
+
+                        <div class="qr-detail-form-group">
+                            <label class="qr-detail-form-label">最終印刷日時</label>
+                            <div class="qr-detail-form-value">2025年11月1日 14:32:10</div>
+                        </div>
+
+                        <div class="qr-detail-history-table">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>印刷日時</th>
+                                        <th>印刷者</th>
+                                        <th>プリンタ</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>2025/11/01 14:32</td>
+                                        <td>田中 太郎</td>
+                                        <td>TEPRA SR5900P</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- 備考 -->
+                    <div class="qr-detail-section">
+                        <div class="qr-detail-section-header">
+                            <h3 class="qr-detail-section-title">📝 備考</h3>
+                        </div>
+
+                        <div class="qr-detail-form-group">
+                            <textarea class="qr-detail-form-textarea" placeholder="メモや注意事項を入力してください"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 右カラム -->
+                <div>
+                    <!-- QRコードプレビュー -->
+                    <div class="qr-detail-section">
+                        <div class="qr-detail-section-header">
+                            <h3 class="qr-detail-section-title">QRコード</h3>
+                        </div>
+
+                        <div class="qr-detail-preview">
+                            <div class="qr-detail-image">
+                                <span>📱</span>
+                            </div>
+                            <div class="qr-detail-number-large" id="qrDetailPreviewNumber">H001-0500</div>
+                            <button class="qr-detail-print-btn" onclick="handleQRDetailPrint()">
+                                <span>🖨️</span>
+                                <span>QRコードを印刷</span>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- ボタングループ -->
+            <div class="qr-detail-button-group">
+                <button class="qr-detail-btn qr-detail-btn-secondary">
+                    <span>リセット</span>
+                </button>
+                <button class="qr-detail-btn qr-detail-btn-primary">
+                    <span>保存</span>
+                </button>
+            </div>
+        </div>
+    </div>

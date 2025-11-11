@@ -1,0 +1,127 @@
+<!-- QRコード新規発行画面 -->
+    <div id="qrIssuePage" class="qr-issue-page">
+        <div class="qr-issue-header">
+            <div class="qr-issue-header-left">
+                <button class="qr-issue-back-btn" onclick="handleBackFromQRIssue()">
+                    <span>←</span>
+                    <span>戻る</span>
+                </button>
+                <div class="qr-issue-header-title-group">
+                    <h1>QRコード新規発行</h1>
+                    <span class="qr-issue-hospital-name">東京総合病院</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="qr-issue-main-content">
+            <!-- ページヘッダー -->
+            <div class="qr-issue-page-header">
+                <h2 class="qr-issue-page-title">QRコード新規発行</h2>
+                <p class="qr-issue-page-description">資産管理用のQRコードを発行します</p>
+            </div>
+
+            <!-- フォーム -->
+            <div class="qr-issue-form-container">
+                <!-- タブ切り替え -->
+                <div class="qr-issue-tab-switcher">
+                    <button class="qr-issue-tab-btn active" onclick="switchQRIssueTab('single')">単発発行</button>
+                    <button class="qr-issue-tab-btn" onclick="switchQRIssueTab('bulk')">一括発行</button>
+                </div>
+
+                <!-- 単発発行タブ -->
+                <div id="qr-issue-single-tab" class="qr-issue-tab-content active">
+                    <div class="qr-issue-number-preview">
+                        <div class="qr-issue-preview-label">発行予定番号</div>
+                        <div class="qr-issue-preview-range">
+                            <div class="qr-issue-preview-number">H001-0501</div>
+                            <div class="qr-issue-preview-count">（自動採番）</div>
+                        </div>
+                    </div>
+
+                    <div class="qr-issue-form-group">
+                        <label class="qr-issue-form-label">備考</label>
+                        <input type="text" class="qr-issue-form-input" placeholder="メモがあれば入力してください（任意）">
+                        <div class="qr-issue-form-help">例：再発行、新規資産用など</div>
+                    </div>
+                </div>
+
+                <!-- 一括発行タブ -->
+                <div id="qr-issue-bulk-tab" class="qr-issue-tab-content">
+                    <div class="qr-issue-form-group">
+                        <label class="qr-issue-form-label">
+                            発行枚数<span class="qr-issue-required">*</span>
+                        </label>
+                        <input type="number" class="qr-issue-form-input short" value="50" min="1" max="100" oninput="updateQRIssueBulkPreview()">
+                        <div class="qr-issue-form-help">※最大100枚まで一括発行可能です</div>
+                    </div>
+
+                    <div class="qr-issue-number-preview">
+                        <div class="qr-issue-preview-label">発行予定番号範囲</div>
+                        <div class="qr-issue-preview-range">
+                            <div class="qr-issue-preview-number">H001-0501</div>
+                            <div class="qr-issue-preview-separator">〜</div>
+                            <div class="qr-issue-preview-number">H001-0550</div>
+                            <div class="qr-issue-preview-count">（50枚）</div>
+                        </div>
+                    </div>
+
+                    <div class="qr-issue-form-group">
+                        <label class="qr-issue-form-label">備考</label>
+                        <input type="text" class="qr-issue-form-input" placeholder="メモがあれば入力してください（任意）">
+                        <div class="qr-issue-form-help">例：初回調査用、新病棟用など</div>
+                    </div>
+
+                    <!-- プレビューテーブル -->
+                    <div class="qr-issue-bulk-preview-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>No.</th>
+                                    <th>QR番号</th>
+                                    <th>ステータス</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td class="qr-issue-qr-number-cell">H001-0501</td>
+                                    <td>発行予定</td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td class="qr-issue-qr-number-cell">H001-0502</td>
+                                    <td>発行予定</td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td class="qr-issue-qr-number-cell">H001-0503</td>
+                                    <td>発行予定</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3" style="text-align: center; color: #666;">
+                                        ... 他47件 ...
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>50</td>
+                                    <td class="qr-issue-qr-number-cell">H001-0550</td>
+                                    <td>発行予定</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- ボタングループ -->
+                <div class="qr-issue-button-group">
+                    <button class="qr-issue-btn qr-issue-btn-secondary">
+                        <span>キャンセル</span>
+                    </button>
+                    <button class="qr-issue-btn qr-issue-btn-primary">
+                        <span>発行する</span>
+                        <span>→</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>

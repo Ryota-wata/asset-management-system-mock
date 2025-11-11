@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>医療機器管理システム - 資産検索画面</title>
+
+    <!-- Choices.js CSS (外部ライブラリ) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css">
+
+    <!-- 共通CSS -->
+    <link rel="stylesheet" href="src/css/common.css">
+
+    <!-- モーダルCSS -->
+    <link rel="stylesheet" href="src/css/modals.css">
+
+    <!-- 画面固有のCSS -->
+    <link rel="stylesheet" href="src/css/screens/login.css">
+    <link rel="stylesheet" href="src/css/screens/main.css">
+    <link rel="stylesheet" href="src/css/screens/qr.css">
+    <link rel="stylesheet" href="src/css/screens/survey.css">
+    <link rel="stylesheet" href="src/css/screens/mobile.css">
+    <link rel="stylesheet" href="src/css/screens/asset-info.css">
+    <link rel="stylesheet" href="src/css/screens/history.css">
+    <link rel="stylesheet" href="src/css/screens/edit.css">
+
+    <!-- Choices.js JS (外部ライブラリ) -->
+    <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+</head>
+<body>
+    <!-- ログイン画面 -->
+    <div id="loginPage" class="login-page">
+        <div class="login-container">
+            <div class="login-logo">MC</div>
+            <h1 class="login-title">個体管理システム</h1>
+
+            <form onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label for="email">メールアドレス</label>
+                    <input type="email" id="email" placeholder="メールアドレスを入力してください" autocomplete="username" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">パスワード</label>
+                    <input type="password" id="password" placeholder="パスワードを入力してください" autocomplete="current-password" required>
+                </div>
+
+                <div class="remember-me">
+                    <input type="checkbox" id="remember">
+                    <label for="remember">ログイン情報を記憶する</label>
+                </div>
+
+                <button type="submit" class="login-button">ログイン</button>
+            </form>
+
+            <div class="forgot-password">
+                <a href="#" onclick="showPasswordReset(event)">パスワードをお忘れの方</a>
+            </div>
+        </div>
+    </div>
+
+        <!-- メインコンテナ（資産検索画面）は外部ファイルから読み込み -->
+        <div id="mainContainer"></div>
+
+        <!-- 個体管理リスト作成モーダル -->
+        <div id="listModal"></div>
+
+        <!-- マスター管理モーダル -->
+        <div id="masterModal"></div>
+
+        <!-- モバイルカラム選択モーダル -->
+        <div id="mobileColumnModal"></div>
+
+        <!-- 登録内容修正画面 -->
+        <div id="registrationEditPage"></div>
+
+        <!-- 写真表示モーダル -->
+        <div id="photoModal"></div>
+
+        <!-- QRコード管理画面 -->
+        <div id="qrPage"></div>
+
+        <!-- QRコード詳細画面 -->
+        <div id="qrDetailPage"></div>
+
+        <!-- QRコード新規発行画面 -->
+        <div id="qrIssuePage"></div>
+
+        <!-- QRコード印刷画面 -->
+        <div id="qrPrintPage"></div>
+
+        <!-- オフライン準備画面 -->
+        <div id="offlinePrepPage"></div>
+
+        <!-- 現有資産調査画面 -->
+        <div id="surveyPage"></div>
+
+        <!-- QR読取画面 -->
+        <div id="qrScanPage"></div>
+
+        <!-- 写真撮影・資産番号入力画面 -->
+        <div id="photoInputPage"></div>
+
+        <!-- 資産情報登録画面（スマートフォン版） -->
+        <div id="assetInfoSmartphonePage"></div>
+
+        <!-- 資産情報登録画面（タブレット版） -->
+        <div id="assetInfoTabletPage"></div>
+
+        <!-- 履歴表示画面（スマートフォン版） -->
+        <div id="historyListSmartphonePage"></div>
+
+        <!-- 履歴表示画面（タブレット版） -->
+        <div id="historyListTabletPage"></div>
+    </div>
+
+    <!-- JavaScript読み込み（依存関係順） -->
+    <script src="src/js/master-data.js"></script>
+    <script src="src/js/master-data-loader.js"></script>
+    <script src="src/js/table-edit.js"></script>
+    <script src="src/js/auth.js"></script>
+    <script src="src/js/navigation.js"></script>
+    <script src="src/js/modals.js"></script>
+    <script src="src/js/qr-management.js"></script>
+    <script src="src/js/asset-survey.js"></script>
+    <script src="src/js/filters.js"></script>
+    <script src="src/js/init.js"></script>
+
+    <!-- 画面HTMLの動的読み込みスクリプト -->
+    <script>
+        // 画面HTMLを読み込む関数
+        async function loadScreenHTML(screenId, fileName) {
+            try {
+                const response = await fetch(`src/screens/${fileName}`);
+                const html = await response.text();
+                const container = document.getElementById(screenId);
+                if (container) {
+                    container.outerHTML = html;
+                }
+            } catch (error) {
+                console.error(`Failed to load ${fileName}:`, error);
+            }
+        }
+
+        // すべての画面HTMLを読み込み（ログイン画面は除く）
+        document.addEventListener('DOMContentLoaded', async function() {
+            const screens = [
+                { id: 'mainContainer', file: 'main.html' },
+                { id: 'listModal', file: 'list-modal.html' },
+                { id: 'masterModal', file: 'master-modal.html' },
+                { id: 'mobileColumnModal', file: 'mobile-column-modal.html' },
+                { id: 'registrationEditPage', file: 'registration-edit.html' },
+                { id: 'photoModal', file: 'photo-modal.html' },
+                { id: 'qrPage', file: 'qr-page.html' },
+                { id: 'qrDetailPage', file: 'qr-detail.html' },
+                { id: 'qrIssuePage', file: 'qr-issue.html' },
+                { id: 'qrPrintPage', file: 'qr-print.html' },
+                { id: 'offlinePrepPage', file: 'offline-prep.html' },
+                { id: 'surveyPage', file: 'survey.html' },
+                { id: 'qrScanPage', file: 'qr-scan.html' },
+                { id: 'photoInputPage', file: 'photo-input.html' },
+                { id: 'assetInfoSmartphonePage', file: 'asset-info-smartphone.html' },
+                { id: 'assetInfoTabletPage', file: 'asset-info-tablet.html' },
+                { id: 'historyListSmartphonePage', file: 'history-smartphone.html' },
+                { id: 'historyListTabletPage', file: 'history-tablet.html' }
+            ];
+
+            // すべての画面を並行して読み込み
+            await Promise.all(screens.map(screen => loadScreenHTML(screen.id, screen.file)));
+
+            console.log('All screens loaded successfully');
+
+            // 画面読み込み完了後、Choices.jsを初期化
+            if (typeof window.initChoices === 'function') {
+                await window.initChoices();
+                console.log('Choices.js initialized successfully');
+            } else {
+                console.error('initChoices function not found');
+            }
+        });
+    </script>
+</body>
+</html>

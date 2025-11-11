@@ -1,0 +1,545 @@
+/**
+ * 登録内容修正画面CSS
+ *
+ * このファイルには、登録内容修正画面のスタイルが含まれています。
+ *
+ * - 登録内容修正画面のレイアウト
+ * - データテーブル
+ * - フィルターヘッダー
+ * - 写真表示モーダル
+ */
+
+/* ========================================
+   登録内容修正画面
+======================================== */
+.registration-edit-page {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: #f5f5f5;
+    z-index: 10000;
+    overflow: hidden;
+}
+
+.registration-edit-page.active {
+    display: flex !important;
+}
+
+.edit-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100%;
+    overflow: hidden;
+    background: #f5f5f5;
+}
+
+/* ========================================
+   ヘッダー
+======================================== */
+.edit-header {
+    background: #2c3e50;
+    color: white;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.edit-header-left {
+    display: flex;
+    align-items: center;
+}
+
+.edit-header-title {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.edit-header-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.edit-header-btn {
+    padding: 8px 16px;
+    background: #34495e;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.3s;
+}
+
+.edit-header-btn:hover {
+    background: #2c3e50;
+}
+
+.edit-header-btn.logout {
+    background: #e74c3c;
+}
+
+.edit-header-btn.logout:hover {
+    background: #c0392b;
+}
+
+/* ========================================
+   フィルターヘッダー
+======================================== */
+.filter-header {
+    background: white;
+    padding: 10px 20px;
+    border-bottom: 2px solid #ddd;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 100;
+}
+
+.filter-row-single {
+    display: flex;
+    gap: 10px;
+    align-items: flex-end;
+    flex-wrap: nowrap;
+}
+
+.filter-row {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 10px;
+    align-items: flex-end;
+}
+
+.filter-row:last-child {
+    margin-bottom: 0;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    position: relative;
+    z-index: 1;
+}
+
+.filter-group:has(.choices.is-open) {
+    z-index: 5001 !important;
+}
+
+.filter-group label {
+    font-size: 11px;
+    color: #555;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.filter-select,
+.filter-input {
+    padding: 6px 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 13px;
+    min-width: 100px;
+    background: white;
+}
+
+.filter-input {
+    min-width: 80px;
+}
+
+.filter-warning {
+    color: #e74c3c;
+}
+
+.filter-actions {
+    display: flex;
+    gap: 10px;
+    align-items: flex-end;
+}
+
+.filter-btn {
+    padding: 6px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s;
+    white-space: nowrap;
+}
+
+.filter-btn.primary {
+    background: #27ae60;
+    color: white;
+}
+
+.filter-btn.primary:hover {
+    background: #229954;
+}
+
+.filter-btn.secondary {
+    background: #95a5a6;
+    color: white;
+}
+
+.filter-btn.secondary:hover {
+    background: #7f8c8d;
+}
+
+/* ========================================
+   データテーブルコンテナ
+======================================== */
+.data-table-container {
+    flex: 1;
+    overflow: hidden;
+    background: white;
+    margin: 10px 20px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+}
+
+.data-table-wrapper {
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+}
+
+.data-table {
+    width: max-content;
+    min-width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+.data-table thead {
+    position: sticky;
+    top: 0;
+    background: #2c3e50;
+    color: white;
+    z-index: 10;
+}
+
+.data-table th {
+    padding: 12px 8px;
+    text-align: left;
+    font-weight: 600;
+    border: 1px solid #34495e;
+    white-space: nowrap;
+    font-size: 12px;
+    min-width: 100px;
+}
+
+.data-table th.th-checkbox {
+    min-width: 50px;
+    text-align: center;
+}
+
+.data-table td {
+    padding: 8px;
+    border: 1px solid #ddd;
+    white-space: nowrap;
+    position: relative;
+}
+
+.data-table td.td-checkbox {
+    text-align: center;
+}
+
+.data-table tbody tr:hover td {
+    background: #f8f9fa;
+}
+
+/* フリー入力セルの強調表示 */
+.data-table td[data-field][data-master-id=""] {
+    background-color: #fff3cd !important;
+}
+
+.data-table tbody tr:hover td[data-field][data-master-id=""] {
+    background-color: #ffe69c !important;
+}
+
+.photo-btn {
+    background: #3498db;
+    color: white;
+    border: none;
+    padding: 4px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.photo-btn:hover {
+    background: #2980b9;
+}
+
+.cell-input {
+    width: 100%;
+    padding: 4px 6px;
+    border: 1px solid #27ae60;
+    border-radius: 3px;
+    font-size: 13px;
+    box-sizing: border-box;
+}
+
+.cell-input:focus {
+    outline: none;
+    border-color: #27ae60;
+    box-shadow: 0 0 0 2px rgba(39, 174, 96, 0.2);
+}
+
+/* セル内のプルダウン幅を制限 */
+.data-table td .choices {
+    max-width: 100% !important;
+    width: 100% !important;
+}
+
+.data-table td .choices__inner {
+    max-width: 100% !important;
+    width: 100% !important;
+    min-height: 30px !important;
+    padding: 2px 4px !important;
+}
+
+.data-table td .choices__list--single {
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+}
+
+.data-table td .choices__item--selectable {
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+}
+
+.confirm-btn {
+    background: #27ae60;
+    color: white;
+    border: none;
+    padding: 4px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.confirm-btn:hover {
+    background: #229954;
+}
+
+.row-checkbox {
+    cursor: pointer;
+}
+
+/* Choices.js ドロップダウンメニューのカスタマイズ */
+.choices__list--dropdown {
+    min-width: 200px !important;
+    width: auto !important;
+    max-width: 400px !important;
+    white-space: nowrap !important;
+}
+
+.choices__list--dropdown .choices__item {
+    white-space: nowrap !important;
+}
+
+/* テーブル内のChoices.jsドロップダウン（JavaScriptでbody直下に移動される） */
+.data-table td .choices {
+    position: relative;
+}
+
+.data-table td .choices[data-type*="select-one"].is-open::after {
+    border-color: #27ae60 transparent transparent transparent !important;
+}
+
+/* フィルターヘッダーのChoices.jsドロップダウン */
+.filter-header .choices__list--dropdown {
+    position: absolute !important;
+    z-index: 5000 !important;
+    min-width: 150px !important;
+}
+
+/* 現在値参考表示 */
+.current-value-reference {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 3px;
+    padding: 4px 8px;
+    margin-bottom: 4px;
+    font-size: 12px;
+    color: #6c757d;
+}
+
+.current-value-label {
+    font-weight: 600;
+    color: #495057;
+}
+
+.current-value-text {
+    color: #212529;
+    margin-left: 4px;
+}
+
+.select-wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+/* ========================================
+   写真表示モーダル
+======================================== */
+.photo-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.2);
+    z-index: 20000;
+    pointer-events: none;
+}
+
+.photo-modal.active {
+    display: block;
+}
+
+.photo-modal-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    border-radius: 8px;
+    width: 600px;
+    max-width: 90%;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    pointer-events: auto;
+    cursor: move;
+}
+
+.photo-modal-header {
+    padding: 15px 20px;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: move;
+    background: #f8f9fa;
+    border-radius: 8px 8px 0 0;
+}
+
+.photo-modal-header h3 {
+    margin: 0;
+    font-size: 16px;
+    color: #2c3e50;
+    user-select: none;
+}
+
+.photo-modal-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.photo-modal-new-window {
+    background: #3498db;
+    color: white;
+    border: none;
+    padding: 4px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.photo-modal-new-window:hover {
+    background: #2980b9;
+}
+
+.photo-modal-close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #999;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0;
+    width: 26px;
+    height: 26px;
+}
+
+.photo-modal-close:hover {
+    color: #333;
+}
+
+.photo-modal-body {
+    padding: 20px;
+    overflow-y: auto;
+    flex: 1;
+    cursor: default;
+}
+
+.photo-grid-modal {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 15px;
+}
+
+.photo-item-modal {
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.photo-item-modal img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* ========================================
+   フッター
+======================================== */
+.edit-footer {
+    background: white;
+    padding: 15px 20px;
+    border-top: 2px solid #ddd;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.edit-action-btn {
+    padding: 10px 24px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.3s;
+}
+
+.edit-action-btn.primary {
+    background: #27ae60;
+    color: white;
+}
+
+.edit-action-btn.primary:hover {
+    background: #229954;
+}
+
+.edit-action-btn.secondary {
+    background: #3498db;
+    color: white;
+}
+
+.edit-action-btn.secondary:hover {
+    background: #2980b9;
+}

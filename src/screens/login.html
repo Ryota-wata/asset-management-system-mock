@@ -1,0 +1,30 @@
+<!-- ログイン画面 -->
+    <div id="loginPage" class="login-page">
+        <div class="login-container">
+            <div class="login-logo">MC</div>
+            <h1 class="login-title">個体管理システム</h1>
+            
+            <form onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label for="email">メールアドレス</label>
+                    <input type="email" id="email" placeholder="メールアドレスを入力してください" autocomplete="username" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">パスワード</label>
+                    <input type="password" id="password" placeholder="パスワードを入力してください" autocomplete="current-password" required>
+                </div>
+                
+                <div class="remember-me">
+                    <input type="checkbox" id="remember">
+                    <label for="remember">ログイン情報を記憶する</label>
+                </div>
+                
+                <button type="submit" class="login-button">ログイン</button>
+            </form>
+            
+            <div class="forgot-password">
+                <a href="#" onclick="showPasswordReset(event)">パスワードをお忘れの方</a>
+            </div>
+        </div>
+    </div>

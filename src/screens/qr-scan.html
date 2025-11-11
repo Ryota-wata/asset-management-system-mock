@@ -1,0 +1,64 @@
+<!-- QR読取画面 -->
+    <div id="qrScanPage" class="qr-scan-page">
+        <!-- ヘッダー -->
+        <header class="qr-scan-header">
+            <h1 class="qr-scan-header-title">現有資産調査</h1>
+        </header>
+
+        <!-- メインコンテンツ -->
+        <main class="qr-scan-main-content">
+            <div class="qr-scan-form-container">
+                <!-- フォーム入力セクション -->
+                <div class="qr-scan-form-section">
+                    <!-- シールNo. -->
+                    <div class="qr-scan-form-group">
+                        <label class="qr-scan-form-label">シールNo.</label>
+                        <input type="text" class="qr-scan-text-input" placeholder="シール番号を入力">
+                    </div>
+
+                    <!-- 室名 -->
+                    <div class="qr-scan-form-group">
+                        <label class="qr-scan-form-label">室名</label>
+                        <input type="text" class="qr-scan-text-input" placeholder="室名を入力または検索">
+                    </div>
+                </div>
+
+                <!-- QRコード表示セクション -->
+                <div class="qr-scan-display-section">
+                    <div class="qr-scan-display-label">読み取ったQRコード</div>
+                    <div class="qr-scan-display-area">
+                        <div class="qr-scan-placeholder">
+                            <div class="qr-scan-placeholder-icon">📷</div>
+                            <div class="qr-scan-placeholder-text">QRコードを読み取ってください</div>
+                        </div>
+                        <!-- QRコード読み取り後に表示 -->
+                        <!-- <img src="qr-code.png" class="qr-scan-code-image" alt="QRコード"> -->
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- フッター -->
+        <footer class="qr-scan-footer">
+            <button class="qr-scan-footer-button" aria-label="前へ" onclick="handleBackFromQRScan()">
+                <div class="qr-scan-icon-circle">
+                    <div class="qr-scan-back-icon"></div>
+                </div>
+                <span class="qr-scan-button-text">前へ</span>
+            </button>
+            
+            <button class="qr-scan-footer-button qr-scan-camera-button" aria-label="QR読取">
+                <div class="qr-scan-icon-circle">
+                    <div class="qr-scan-camera-icon">📷</div>
+                </div>
+                <span class="qr-scan-button-text">QR読取</span>
+            </button>
+            
+            <button class="qr-scan-footer-button" aria-label="次へ" onclick="handleQRScanNext()">
+                <div class="qr-scan-icon-circle">
+                    <div class="qr-scan-next-icon"></div>
+                </div>
+                <span class="qr-scan-button-text">次へ</span>
+            </button>
+        </footer>
+    </div>

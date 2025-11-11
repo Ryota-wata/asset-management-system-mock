@@ -1,0 +1,118 @@
+<!-- QRコード印刷画面 -->
+    <div id="qrPrintPage" class="qr-print-page">
+        <div class="qr-print-header">
+            <div class="qr-print-header-left">
+                <button class="qr-print-back-btn" onclick="handleBackFromQRPrint()">
+                    <span>←</span>
+                    <span>戻る</span>
+                </button>
+                <div class="qr-print-header-title-group">
+                    <h1>QRコード印刷</h1>
+                    <span class="qr-print-hospital-name">東京総合病院</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="qr-print-main-content">
+            <!-- ページヘッダー -->
+            <div class="qr-print-page-header">
+                <h2 class="qr-print-page-title">QRコード印刷プレビュー</h2>
+            </div>
+
+            <!-- グリッドレイアウト -->
+            <div class="qr-print-content-grid">
+                <!-- 左カラム：設定 -->
+                <div>
+                    <div class="qr-print-section">
+                        <div class="qr-print-section-header">
+                            <h3 class="qr-print-section-title">⚙️ 印刷設定</h3>
+                        </div>
+
+                        <div class="qr-print-form-group">
+                            <label class="qr-print-form-label">プリンタ</label>
+                            <select class="qr-print-form-select">
+                                <option value="sr5900p">TEPRA SR5900P (USB接続)</option>
+                                <option value="sr970">TEPRA SR970 (Bluetooth)</option>
+                            </select>
+                        </div>
+
+                        <div class="qr-print-form-group">
+                            <label class="qr-print-form-label">シールサイズ</label>
+                            <select class="qr-print-form-select">
+                                <option value="24mm" selected>24mm幅 (推奨)</option>
+                                <option value="18mm">18mm幅</option>
+                                <option value="12mm">12mm幅</option>
+                            </select>
+                            <div class="qr-print-form-help">※QRコード印刷には24mm幅を推奨します</div>
+                        </div>
+                    </div>
+
+                    <!-- 印刷リスト -->
+                    <div class="qr-print-section">
+                        <div class="qr-print-section-header">
+                            <h3 class="qr-print-section-title">📋 印刷対象リスト</h3>
+                        </div>
+
+                        <div class="qr-print-list">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>No.</th>
+                                        <th>QR番号</th>
+                                        <th>ステータス</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="qrPrintTableBody">
+                                    <tr>
+                                        <td>1</td>
+                                        <td class="qr-print-qr-number-cell">H001-0498</td>
+                                        <td>印刷待機中</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2</td>
+                                        <td class="qr-print-qr-number-cell">H001-0499</td>
+                                        <td>印刷待機中</td>
+                                    </tr>
+                                    <tr>
+                                        <td>3</td>
+                                        <td class="qr-print-qr-number-cell">H001-0500</td>
+                                        <td>印刷待機中</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 右カラム：プレビュー -->
+                <div>
+                    <div class="qr-print-section">
+                        <div class="qr-print-section-header">
+                            <h3 class="qr-print-section-title">👁️ 印刷プレビュー</h3>
+                        </div>
+
+                        <div class="qr-print-preview-area">
+                            <div class="qr-print-preview-label">シール印刷イメージ</div>
+                            <div class="qr-print-label-preview">
+                                <div class="qr-print-qr-placeholder">
+                                    📱
+                                </div>
+                                <div class="qr-print-qr-number-preview" id="qrPrintPreviewNumber">H001-0498</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ボタングループ -->
+            <div class="qr-print-button-group">
+                <button class="qr-print-btn qr-print-btn-secondary">
+                    <span>キャンセル</span>
+                </button>
+                <button class="qr-print-btn qr-print-btn-primary">
+                    <span>🖨️</span>
+                    <span>印刷を開始</span>
+                </button>
+            </div>
+        </div>
+    </div>

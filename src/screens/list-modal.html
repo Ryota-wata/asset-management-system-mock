@@ -1,0 +1,41 @@
+<!-- 個体管理リスト作成モーダル -->
+    <div id="listModal" class="modal">
+        <div class="modal-content" id="listModalContent">
+            <!-- モーダルヘッダー -->
+            <div class="modal-header">
+                個体管理リスト作成
+            </div>
+
+            <!-- モーダルボディ -->
+            <div class="modal-body">
+                <!-- 施設選択 -->
+                <div class="facility-section">
+                    <label class="facility-label">施設を選択</label>
+                    <div class="facility-select-wrapper">
+                        <select id="facilitySearchSelect">
+                            <option value="">読み込み中...</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- メニューボタン -->
+                <div class="menu-section">
+                    <button class="menu-btn" id="btn1" onclick="selectMenu('QRコード管理')" disabled>
+                        <span>QRコード管理</span>
+                    </button>
+                    <button class="menu-btn" id="btn2" onclick="selectMenu('現有品調査')" disabled>
+                        <span>現有品調査</span>
+                    </button>
+                    <button class="menu-btn" id="btn3" onclick="selectMenu('現有品調査内容修正')" disabled>
+                        <span>現有品調査内容修正</span>
+                    </button>
+                    <button class="menu-btn" id="btn4" onclick="selectMenu('資産台帳取込')" disabled>
+                        <span>資産台帳取込</span>
+                    </button>
+                    <button class="menu-btn" id="btn5" onclick="selectMenu('データ突合')" disabled>
+                        <span>データ突合</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>

@@ -1,0 +1,38 @@
+<!-- モバイルカラム選択モーダル -->
+    <div id="mobileColumnModal" class="modal">
+        <div class="modal-content" style="max-height: 80vh; overflow-y: auto;">
+            <h3 class="modal-title">出力項目選択</h3>
+            <div class="column-content">
+                <ul class="column-list">
+                    <div class="column-category">基本情報</div>
+                    <li class="column-item">
+                        <input type="checkbox" class="column-checkbox" checked>
+                        <span>資産台帳No.</span>
+                    </li>
+                    <li class="column-item">
+                        <input type="checkbox" class="column-checkbox" checked>
+                        <span>機器名称</span>
+                    </li>
+                    <li class="column-item">
+                        <input type="checkbox" class="column-checkbox" checked>
+                        <span>メーカー</span>
+                    </li>
+                    <li class="column-item">
+                        <input type="checkbox" class="column-checkbox" checked>
+                        <span>型番</span>
+                    </li>
+                    
+                    <div class="column-category">設備情報</div>
+                    <li class="column-item">
+                        <input type="checkbox" class="column-checkbox">
+                        <span>特殊設備</span>
+                    </li>
+                    <li class="column-item">
+                        <input type="checkbox" class="column-checkbox">
+                        <span>電源種別</span>
+                    </li>
+                </ul>
+            </div>
+            <button class="modal-btn modal-close" onclick="closeMobileColumn()">閉じる</button>
+        </div>
+    </div>
