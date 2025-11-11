@@ -178,6 +178,48 @@ function handleGoToSurvey() {
     document.getElementById('surveyPage').classList.add('active');
 }
 
+/**
+ * 資産台帳取込画面への遷移（個体管理リストモーダルから）
+ */
+function handleAssetImport() {
+    // モーダルを閉じる
+    if (typeof closeListModal === 'function') {
+        closeListModal();
+    }
+
+    // 資産台帳取込画面を表示
+    document.getElementById('mainContainer').classList.remove('active');
+    document.getElementById('assetImportPage').classList.add('active');
+}
+
+/**
+ * 資産台帳取込画面から戻る
+ */
+function handleBackFromImport() {
+    document.getElementById('assetImportPage').classList.remove('active');
+    document.getElementById('mainContainer').classList.add('active');
+    // 個体管理リストモーダルを再度開く
+    if (typeof showListModal === 'function') {
+        showListModal();
+    }
+}
+
+/**
+ * インポート画面から突き合わせ画面へ遷移
+ */
+function handleImportToMatching() {
+    document.getElementById('assetImportPage').classList.remove('active');
+    document.getElementById('assetMatchingPage').classList.add('active');
+}
+
+/**
+ * 突き合わせ画面から戻る
+ */
+function handleBackFromMatching() {
+    document.getElementById('assetMatchingPage').classList.remove('active');
+    document.getElementById('assetImportPage').classList.add('active');
+}
+
 // グローバルスコープに関数を公開
 window.handleQRManagement = handleQRManagement;
 window.handleBackFromQR = handleBackFromQR;
@@ -197,3 +239,7 @@ window.handleBackFromAssetInfo = handleBackFromAssetInfo;
 window.handleShowHistoryList = handleShowHistoryList;
 window.handleBackFromHistoryList = handleBackFromHistoryList;
 window.handleGoToSurvey = handleGoToSurvey;
+window.handleAssetImport = handleAssetImport;
+window.handleBackFromImport = handleBackFromImport;
+window.handleImportToMatching = handleImportToMatching;
+window.handleBackFromMatching = handleBackFromMatching;

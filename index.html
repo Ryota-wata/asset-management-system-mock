@@ -23,6 +23,8 @@
     <link rel="stylesheet" href="src/css/screens/asset-info.css">
     <link rel="stylesheet" href="src/css/screens/history.css">
     <link rel="stylesheet" href="src/css/screens/edit.css">
+    <link rel="stylesheet" href="src/css/screens/asset-import.css">
+    <link rel="stylesheet" href="src/css/screens/asset-matching.css">
 
     <!-- Choices.js JS (外部ライブラリ) -->
     <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
@@ -106,6 +108,15 @@
 
         <!-- 履歴表示画面（レスポンシブ対応） -->
         <div id="historyListPage"></div>
+
+        <!-- 固定資産管理台帳Excelインポート画面 -->
+        <div id="assetImportPage"></div>
+
+        <!-- 資産管理台帳と資産マスタ突き合わせ画面 -->
+        <div id="assetMatchingPage"></div>
+
+        <!-- 資産マスタ表示モーダル -->
+        <div id="assetMasterModal"></div>
     </div>
 
     <!-- JavaScript読み込み（依存関係順） -->
@@ -154,7 +165,10 @@
                 { id: 'qrScanPage', file: 'qr-scan.html' },
                 { id: 'photoInputPage', file: 'photo-input.html' },
                 { id: 'assetInfoPage', file: 'asset-info.html' },
-                { id: 'historyListPage', file: 'history.html' }
+                { id: 'historyListPage', file: 'history.html' },
+                { id: 'assetImportPage', file: 'asset-import.html' },
+                { id: 'assetMatchingPage', file: 'asset-matching.html' },
+                { id: 'assetMasterModal', file: 'asset-master-modal.html' }
             ];
 
             // すべての画面を並行して読み込み

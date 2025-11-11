@@ -1,0 +1,357 @@
+<!-- 資産管理台帳と資産マスタ突き合わせ画面（レスポンシブ対応） -->
+<div id="assetMatchingPage" class="asset-matching-page">
+    <div class="main-container-matching">
+        <!-- ヘッダー -->
+        <header class="header-matching">
+            <h1 class="header-title-matching">資産台帳とマスタの突き合わせ</h1>
+            <button class="master-view-button-matching" onclick="showAssetMasterModal()">
+                📋 資産マスタ全体を表示
+            </button>
+        </header>
+
+        <!-- メインコンテンツ -->
+        <main class="main-content-matching">
+            <!-- 説明とフィルター -->
+            <div class="info-bar-matching">
+                <div class="info-text-matching">
+                    <span class="info-label-matching">インポート件数:</span>
+                    <span class="info-value-matching">150 件</span>
+                    <span class="info-separator-matching">|</span>
+                    <span class="info-label-matching">一致:</span>
+                    <span class="info-value-matching success">120 件</span>
+                    <span class="info-separator-matching">|</span>
+                    <span class="info-label-matching">要確認:</span>
+                    <span class="info-value-matching warning">30 件</span>
+                </div>
+                <div class="filter-buttons-matching">
+                    <button class="filter-btn-matching active" onclick="filterMatching('all')">すべて</button>
+                    <button class="filter-btn-matching" onclick="filterMatching('matched')">一致のみ</button>
+                    <button class="filter-btn-matching" onclick="filterMatching('unmatched')">要確認のみ</button>
+                </div>
+            </div>
+
+            <!-- データ表示エリア -->
+            <div class="matching-container">
+                <!-- サンプルデータ行1 (一致) -->
+                <div class="matching-row" data-status="matched">
+                    <div class="import-data-section">
+                        <div class="section-header-matching">
+                            <h3 class="section-title-matching">
+                                <span class="row-number-matching">1</span>
+                                インポートデータ
+                            </h3>
+                            <span class="status-badge-matching success">一致</span>
+                        </div>
+                        <div class="data-card-matching">
+                            <div class="data-row-matching">
+                                <span class="data-label-matching">資産番号:</span>
+                                <input type="text" class="data-input-matching" value="A-001-2023" onchange="markAsEdited(this)">
+                            </div>
+                            <div class="data-row-matching">
+                                <span class="data-label-matching">品名:</span>
+                                <input type="text" class="data-input-matching" value="超音波診断装置" onchange="markAsEdited(this)">
+                            </div>
+                            <div class="data-row-matching">
+                                <span class="data-label-matching">メーカー:</span>
+                                <input type="text" class="data-input-matching" value="ABC社" onchange="markAsEdited(this)">
+                            </div>
+                            <div class="data-row-matching">
+                                <span class="data-label-matching">型式:</span>
+                                <input type="text" class="data-input-matching" value="US-1000" onchange="markAsEdited(this)">
+                            </div>
+                            <div class="data-row-matching">
+                                <span class="data-label-matching">取得年月日:</span>
+                                <input type="date" class="data-input-matching" value="2023-04-01" onchange="markAsEdited(this)">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="suggestions-section">
+                        <div class="section-header-matching">
+                            <h3 class="section-title-matching">AI推奨マスタ候補</h3>
+                            <span class="ai-badge-matching">🤖 AI</span>
+                        </div>
+                        <div class="suggestions-grid">
+                            <!-- 推奨候補1 (最高類似度) -->
+                            <div class="suggestion-card-matching best-match">
+                                <div class="suggestion-header-matching">
+                                    <span class="similarity-badge-matching high">類似度: 98%</span>
+                                    <button class="select-button-matching" onclick="selectSuggestion(this, 1, 1)">選択</button>
+                                </div>
+                                <div class="suggestion-body-matching">
+                                    <div class="suggestion-row-matching">
+                                        <span class="suggestion-label-matching">資産番号:</span>
+                                        <span class="suggestion-value-matching">A-001-2023</span>
+                                    </div>
+                                    <div class="suggestion-row-matching">
+                                        <span class="suggestion-label-matching">品名:</span>
+                                        <span class="suggestion-value-matching">超音波診断装置</span>
+                                    </div>
+                                    <div class="suggestion-row-matching">
+                                        <span class="suggestion-label-matching">メーカー:</span>
+                                        <span class="suggestion-value-matching">ABC社</span>
+                                    </div>
+                                    <div class="suggestion-row-matching">
+                                        <span class="suggestion-label-matching">型式:</span>
+                                        <span class="suggestion-value-matching">US-1000</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 推奨候補2 -->
+                            <div class="suggestion-card-matching">
+                                <div class="suggestion-header-matching">
+                                    <span class="similarity-badge-matching medium">類似度: 75%</span>
+                                    <button class="select-button-matching secondary" onclick="selectSuggestion(this, 1, 2)">選択</button>
+                                </div>
+                                <div class="suggestion-body-matching">
+                                    <div class="suggestion-row-matching">
+                                        <span class="suggestion-label-matching">資産番号:</span>
+                                        <span class="suggestion-value-matching">A-002-2023</span>
+                                    </div>
+                                    <div class="suggestion-row-matching">
+                                        <span class="suggestion-label-matching">品名:</span>
+                                        <span class="suggestion-value-matching">超音波診断装置</span>
+                                    </div>
+                                    <div class="suggestion-row-matching">
+                                        <span class="suggestion-label-matching">メーカー:</span>
+                                        <span class="suggestion-value-matching">DEF社</span>
+                                    </div>
+                                    <div class="suggestion-row-matching">
+                                        <span class="suggestion-label-matching">型式:</span>
+                                        <span class="suggestion-value-matching">US-2000</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 推奨候補3 -->
+                            <div class="suggestion-card-matching">
+                                <div class="suggestion-header-matching">
+                                    <span class="similarity-badge-matching low">類似度: 60%</span>
+                                    <button class="select-button-matching secondary" onclick="selectSuggestion(this, 1, 3)">選択</button>
+                                </div>
+                                <div class="suggestion-body-matching">
+                                    <div class="suggestion-row-matching">
+                                        <span class="suggestion-label-matching">資産番号:</span>
+                                        <span class="suggestion-value-matching">A-010-2022</span>
+                                    </div>
+                                    <div class="suggestion-row-matching">
+                                        <span class="suggestion-label-matching">品名:</span>
+                                        <span class="suggestion-value-matching">診断装置</span>
+                                    </div>
+                                    <div class="suggestion-row-matching">
+                                        <span class="suggestion-label-matching">メーカー:</span>
+                                        <span class="suggestion-value-matching">GHI社</span>
+                                    </div>
+                                    <div class="suggestion-row-matching">
+                                        <span class="suggestion-label-matching">型式:</span>
+                                        <span class="suggestion-value-matching">DX-100</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- サンプルデータ行2 (要確認) -->
+                <div class="matching-row" data-status="unmatched">
+                    <div class="import-data-section">
+                        <div class="section-header-matching">
+                            <h3 class="section-title-matching">
+                                <span class="row-number-matching">2</span>
+                                インポートデータ
+                            </h3>
+                            <span class="status-badge-matching warning">要確認</span>
+                        </div>
+                        <div class="data-card-matching">
+                            <div class="data-row-matching">
+                                <span class="data-label-matching">資産番号:</span>
+                                <input type="text" class="data-input-matching" value="B-050-2022" onchange="markAsEdited(this)">
+                            </div>
+                            <div class="data-row-matching">
+                                <span class="data-label-matching">品名:</span>
+                                <input type="text" class="data-input-matching" value="デスクトップPC" onchange="markAsEdited(this)">
+                            </div>
+                            <div class="data-row-matching">
+                                <span class="data-label-matching">メーカー:</span>
+                                <input type="text" class="data-input-matching" value="Dell" onchange="markAsEdited(this)">
+                            </div>
+                            <div class="data-row-matching">
+                                <span class="data-label-matching">型式:</span>
+                                <input type="text" class="data-input-matching" value="OptiPlex3000" onchange="markAsEdited(this)">
+                            </div>
+                            <div class="data-row-matching">
+                                <span class="data-label-matching">取得年月日:</span>
+                                <input type="date" class="data-input-matching" value="2022-08-15" onchange="markAsEdited(this)">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="suggestions-section">
+                        <div class="section-header-matching">
+                            <h3 class="section-title-matching">AI推奨マスタ候補</h3>
+                            <span class="ai-badge-matching">🤖 AI</span>
+                        </div>
+                        <div class="suggestions-grid">
+                            <div class="suggestion-card-matching">
+                                <div class="suggestion-header-matching">
+                                    <span class="similarity-badge-matching medium">類似度: 72%</span>
+                                    <button class="select-button-matching secondary" onclick="selectSuggestion(this, 2, 1)">選択</button>
+                                </div>
+                                <div class="suggestion-body-matching">
+                                    <div class="suggestion-row-matching">
+                                        <span class="suggestion-label-matching">資産番号:</span>
+                                        <span class="suggestion-value-matching">B-051-2022</span>
+                                    </div>
+                                    <div class="suggestion-row-matching">
+                                        <span class="suggestion-label-matching">品名:</span>
+                                        <span class="suggestion-value-matching">デスクトップPC</span>
+                                    </div>
+                                    <div class="suggestion-row-matching">
+                                        <span class="suggestion-label-matching">メーカー:</span>
+                                        <span class="suggestion-value-matching">HP</span>
+                                    </div>
+                                    <div class="suggestion-row-matching">
+                                        <span class="suggestion-label-matching">型式:</span>
+                                        <span class="suggestion-value-matching">ProDesk 400</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="suggestion-card-matching">
+                                <div class="suggestion-header-matching">
+                                    <span class="similarity-badge-matching low">類似度: 65%</span>
+                                    <button class="select-button-matching secondary" onclick="selectSuggestion(this, 2, 2)">選択</button>
+                                </div>
+                                <div class="suggestion-body-matching">
+                                    <div class="suggestion-row-matching">
+                                        <span class="suggestion-label-matching">資産番号:</span>
+                                        <span class="suggestion-value-matching">B-100-2021</span>
+                                    </div>
+                                    <div class="suggestion-row-matching">
+                                        <span class="suggestion-label-matching">品名:</span>
+                                        <span class="suggestion-value-matching">PC</span>
+                                    </div>
+                                    <div class="suggestion-row-matching">
+                                        <span class="suggestion-label-matching">メーカー:</span>
+                                        <span class="suggestion-value-matching">Lenovo</span>
+                                    </div>
+                                    <div class="suggestion-row-matching">
+                                        <span class="suggestion-label-matching">型式:</span>
+                                        <span class="suggestion-value-matching">ThinkCentre</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="suggestion-card-matching">
+                                <div class="suggestion-header-matching">
+                                    <span class="similarity-badge-matching low">類似度: 58%</span>
+                                    <button class="select-button-matching secondary" onclick="selectSuggestion(this, 2, 3)">選択</button>
+                                </div>
+                                <div class="suggestion-body-matching">
+                                    <div class="suggestion-row-matching">
+                                        <span class="suggestion-label-matching">資産番号:</span>
+                                        <span class="suggestion-value-matching">B-200-2020</span>
+                                    </div>
+                                    <div class="suggestion-row-matching">
+                                        <span class="suggestion-label-matching">品名:</span>
+                                        <span class="suggestion-value-matching">ワークステーション</span>
+                                    </div>
+                                    <div class="suggestion-row-matching">
+                                        <span class="suggestion-label-matching">メーカー:</span>
+                                        <span class="suggestion-value-matching">Dell</span>
+                                    </div>
+                                    <div class="suggestion-row-matching">
+                                        <span class="suggestion-label-matching">型式:</span>
+                                        <span class="suggestion-value-matching">Precision</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ページネーション -->
+                <div class="pagination-matching">
+                    <button class="pagination-button-matching" onclick="previousPage()">← 前へ</button>
+                    <span class="pagination-info-matching">1 / 15 ページ</span>
+                    <button class="pagination-button-matching" onclick="nextPage()">次へ →</button>
+                </div>
+            </div>
+        </main>
+
+        <!-- フッター -->
+        <footer class="footer-matching">
+            <button class="footer-button-matching secondary" onclick="handleBackFromMatching()">
+                <span>←</span>
+                <span>戻る</span>
+            </button>
+            <button class="footer-button-matching primary" onclick="confirmMatching()">
+                <span>✓</span>
+                <span>確定して登録</span>
+            </button>
+        </footer>
+    </div>
+</div>
+
+<script>
+// フィルター機能
+function filterMatching(type) {
+    const rows = document.querySelectorAll('.matching-row');
+    const buttons = document.querySelectorAll('.filter-btn-matching');
+
+    buttons.forEach(btn => btn.classList.remove('active'));
+    event.target.classList.add('active');
+
+    rows.forEach(row => {
+        const status = row.getAttribute('data-status');
+        if (type === 'all') {
+            row.style.display = 'grid';
+        } else if (type === 'matched' && status === 'matched') {
+            row.style.display = 'grid';
+        } else if (type === 'unmatched' && status === 'unmatched') {
+            row.style.display = 'grid';
+        } else {
+            row.style.display = 'none';
+        }
+    });
+}
+
+// 編集マーク
+function markAsEdited(input) {
+    input.classList.add('edited');
+}
+
+// 候補選択
+function selectSuggestion(button, rowId, suggestionId) {
+    console.log(`Selected suggestion ${suggestionId} for row ${rowId}`);
+    alert(`候補 ${suggestionId} を選択しました。インポートデータに反映されます。`);
+    // 実際の実装では、選択した候補のデータをインポートデータ側に反映する
+}
+
+// ページネーション
+function previousPage() {
+    console.log('Previous page');
+}
+
+function nextPage() {
+    console.log('Next page');
+}
+
+// 確定処理
+function confirmMatching() {
+    const editedInputs = document.querySelectorAll('.data-input-matching.edited');
+    if (editedInputs.length > 0) {
+        if (confirm(`${editedInputs.length} 件の編集があります。確定して登録しますか？`)) {
+            console.log('Confirming matching data...');
+            alert('データの登録が完了しました。');
+            // 実際の実装では、サーバーにデータを送信して登録処理を行う
+        }
+    } else {
+        if (confirm('突き合わせ結果を確定して登録しますか？')) {
+            console.log('Confirming matching data...');
+            alert('データの登録が完了しました。');
+        }
+    }
+}
+</script>

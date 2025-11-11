@@ -1,0 +1,474 @@
+/**
+ * 固定資産管理台帳Excelインポート画面CSS
+ *
+ * このファイルには、Excelインポート画面（レスポンシブ対応）のスタイルが含まれています。
+ */
+
+/* ========================================
+   Excelインポート画面（レスポンシブ統合版）
+======================================== */
+.asset-import-page {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #f5f5f5;
+    z-index: 1000;
+}
+
+.asset-import-page.active {
+    display: block;
+}
+
+.asset-import-page .main-container-import {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+    max-width: 1024px;
+    width: 100%;
+    margin: 0 auto;
+    background: #f5f5f5;
+}
+
+.asset-import-page .header-import {
+    background-color: #ffffff;
+    padding: 18px 24px;
+    border-bottom: 1px solid #e0e0e0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    height: 60px;
+    flex-shrink: 0;
+}
+
+.asset-import-page .header-title-import {
+    font-size: 20px;
+    font-weight: 600;
+    color: #333333;
+}
+
+.asset-import-page .main-content-import {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 24px 40px;
+}
+
+.asset-import-page .import-container {
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.asset-import-page .instruction-box-import {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.asset-import-page .instruction-title-import {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333333;
+    margin-bottom: 12px;
+}
+
+.asset-import-page .instruction-text-import {
+    font-size: 14px;
+    color: #666666;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.asset-import-page .dropzone-import {
+    background: #ffffff;
+    border: 3px dashed #d0d0d0;
+    border-radius: 12px;
+    padding: 48px 32px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-bottom: 24px;
+}
+
+.asset-import-page .dropzone-import:hover {
+    border-color: #4CAF50;
+    background: #f0fdf4;
+}
+
+.asset-import-page .dropzone-import.dragover {
+    border-color: #4CAF50;
+    background: #f0fdf4;
+    transform: scale(1.02);
+}
+
+.asset-import-page .dropzone-icon-import {
+    font-size: 64px;
+    margin-bottom: 16px;
+}
+
+.asset-import-page .dropzone-text-import {
+    margin-bottom: 20px;
+}
+
+.asset-import-page .dropzone-main-text-import {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333333;
+    margin-bottom: 8px;
+}
+
+.asset-import-page .dropzone-sub-text-import {
+    font-size: 14px;
+    color: #999999;
+    margin: 0;
+}
+
+.asset-import-page .file-select-button-import {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 32px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(76, 175, 80, 0.3);
+}
+
+.asset-import-page .file-select-button-import:hover {
+    background-color: #45a049;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(76, 175, 80, 0.4);
+}
+
+.asset-import-page .dropzone-hint-import {
+    font-size: 12px;
+    color: #999999;
+    margin-top: 16px;
+    margin-bottom: 0;
+}
+
+.asset-import-page .file-info-import {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.asset-import-page .file-info-header-import {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #f5f5f5;
+}
+
+.asset-import-page .file-info-title-import {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333333;
+    margin: 0;
+}
+
+.asset-import-page .file-remove-button-import {
+    background: #ff5252;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.asset-import-page .file-remove-button-import:hover {
+    background: #ff1744;
+    transform: rotate(90deg);
+}
+
+.asset-import-page .file-details-import {
+    margin-bottom: 16px;
+}
+
+.asset-import-page .file-detail-row-import {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #f5f5f5;
+}
+
+.asset-import-page .file-detail-row-import:last-child {
+    border-bottom: none;
+}
+
+.asset-import-page .file-detail-label-import {
+    font-size: 14px;
+    color: #666666;
+    font-weight: 600;
+}
+
+.asset-import-page .file-detail-value-import {
+    font-size: 14px;
+    color: #333333;
+    font-weight: 500;
+}
+
+.asset-import-page .upload-progress-import {
+    margin-top: 16px;
+}
+
+.asset-import-page .progress-bar-import {
+    width: 100%;
+    height: 8px;
+    background: #e0e0e0;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 8px;
+}
+
+.asset-import-page .progress-fill-import {
+    height: 100%;
+    background: linear-gradient(90deg, #4CAF50, #66bb6a);
+    border-radius: 4px;
+    transition: width 0.3s ease;
+    width: 0%;
+}
+
+.asset-import-page .progress-text-import {
+    font-size: 13px;
+    color: #666666;
+    text-align: center;
+    margin: 0;
+}
+
+.asset-import-page .notice-box-import {
+    background: #fff8e1;
+    border-left: 4px solid #ffc107;
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+}
+
+.asset-import-page .notice-title-import {
+    font-size: 15px;
+    font-weight: 600;
+    color: #f57f17;
+    margin-bottom: 12px;
+}
+
+.asset-import-page .notice-list-import {
+    margin: 0;
+    padding-left: 20px;
+}
+
+.asset-import-page .notice-list-import li {
+    font-size: 13px;
+    color: #666666;
+    line-height: 1.6;
+    margin-bottom: 6px;
+}
+
+.asset-import-page .notice-list-import li:last-child {
+    margin-bottom: 0;
+}
+
+.asset-import-page .action-buttons-import {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    margin-top: 32px;
+}
+
+.asset-import-page .action-button-import {
+    padding: 14px 32px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-width: 140px;
+}
+
+.asset-import-page .action-button-import.secondary {
+    background: white;
+    border: 2px solid #666666;
+    color: #666666;
+}
+
+.asset-import-page .action-button-import.secondary:hover {
+    background: #f5f5f5;
+    border-color: #333333;
+    color: #333333;
+    transform: translateY(-2px);
+}
+
+.asset-import-page .action-button-import.primary {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    box-shadow: 0 4px 8px rgba(76, 175, 80, 0.3);
+}
+
+.asset-import-page .action-button-import.primary:hover:not(:disabled) {
+    background-color: #45a049;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(76, 175, 80, 0.4);
+}
+
+.asset-import-page .action-button-import.primary:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+.asset-import-page .main-content-import::-webkit-scrollbar {
+    width: 8px;
+}
+
+.asset-import-page .main-content-import::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.asset-import-page .main-content-import::-webkit-scrollbar-thumb {
+    background: #c0c0c0;
+    border-radius: 4px;
+}
+
+.asset-import-page .main-content-import::-webkit-scrollbar-thumb:hover {
+    background: #a0a0a0;
+}
+
+/* ========================================
+   レスポンシブ対応（スマートフォン）
+======================================== */
+@media (max-width: 768px) {
+    .asset-import-page .main-container-import {
+        max-width: 100%;
+    }
+
+    .asset-import-page .header-import {
+        padding: 14px 16px;
+        height: 50px;
+    }
+
+    .asset-import-page .header-title-import {
+        font-size: 18px;
+    }
+
+    .asset-import-page .main-content-import {
+        padding: 16px;
+    }
+
+    .asset-import-page .instruction-box-import {
+        padding: 16px 18px;
+        margin-bottom: 20px;
+    }
+
+    .asset-import-page .instruction-title-import {
+        font-size: 16px;
+        margin-bottom: 10px;
+    }
+
+    .asset-import-page .instruction-text-import {
+        font-size: 13px;
+    }
+
+    .asset-import-page .dropzone-import {
+        padding: 32px 20px;
+        margin-bottom: 20px;
+    }
+
+    .asset-import-page .dropzone-icon-import {
+        font-size: 48px;
+        margin-bottom: 12px;
+    }
+
+    .asset-import-page .dropzone-main-text-import {
+        font-size: 14px;
+    }
+
+    .asset-import-page .dropzone-sub-text-import {
+        font-size: 13px;
+    }
+
+    .asset-import-page .file-select-button-import {
+        padding: 10px 24px;
+        font-size: 14px;
+    }
+
+    .asset-import-page .dropzone-hint-import {
+        font-size: 11px;
+    }
+
+    .asset-import-page .file-info-import {
+        padding: 16px 18px;
+        margin-bottom: 20px;
+    }
+
+    .asset-import-page .file-info-title-import {
+        font-size: 15px;
+    }
+
+    .asset-import-page .file-remove-button-import {
+        width: 28px;
+        height: 28px;
+        font-size: 18px;
+    }
+
+    .asset-import-page .file-detail-row-import {
+        padding: 8px 0;
+    }
+
+    .asset-import-page .file-detail-label-import,
+    .asset-import-page .file-detail-value-import {
+        font-size: 13px;
+    }
+
+    .asset-import-page .progress-text-import {
+        font-size: 12px;
+    }
+
+    .asset-import-page .notice-box-import {
+        padding: 14px 16px;
+        margin-bottom: 20px;
+    }
+
+    .asset-import-page .notice-title-import {
+        font-size: 14px;
+        margin-bottom: 10px;
+    }
+
+    .asset-import-page .notice-list-import li {
+        font-size: 12px;
+    }
+
+    .asset-import-page .action-buttons-import {
+        flex-direction: column;
+        gap: 12px;
+        margin-top: 24px;
+    }
+
+    .asset-import-page .action-button-import {
+        width: 100%;
+        padding: 12px 24px;
+        font-size: 15px;
+    }
+
+    .asset-import-page .main-content-import::-webkit-scrollbar {
+        width: 6px;
+    }
+}

@@ -1,0 +1,200 @@
+<!-- 固定資産管理台帳Excelインポート画面（レスポンシブ対応） -->
+<div id="assetImportPage" class="asset-import-page">
+    <div class="main-container-import">
+        <!-- ヘッダー -->
+        <header class="header-import">
+            <h1 class="header-title-import">固定資産管理台帳取込</h1>
+        </header>
+
+        <!-- メインコンテンツ -->
+        <main class="main-content-import">
+            <div class="import-container">
+                <!-- 説明テキスト -->
+                <div class="instruction-box-import">
+                    <h2 class="instruction-title-import">Excelファイルをアップロードしてください</h2>
+                    <p class="instruction-text-import">
+                        固定資産管理台帳のExcelファイル（.xlsx, .xls）またはCSVファイル（.csv）をアップロードできます。
+                    </p>
+                </div>
+
+                <!-- ドラッグ&ドロップエリア -->
+                <div class="dropzone-import" id="dropzone" ondrop="handleDrop(event)" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)">
+                    <div class="dropzone-icon-import">📁</div>
+                    <div class="dropzone-text-import">
+                        <p class="dropzone-main-text-import">ここにファイルをドラッグ&ドロップ</p>
+                        <p class="dropzone-sub-text-import">または</p>
+                    </div>
+                    <button type="button" class="file-select-button-import" onclick="document.getElementById('fileInput').click()">
+                        ファイルを選択
+                    </button>
+                    <input type="file" id="fileInput" accept=".xlsx,.xls,.csv" style="display: none;" onchange="handleFileSelect(event)">
+                    <p class="dropzone-hint-import">対応形式: .xlsx, .xls, .csv （最大サイズ: 10MB）</p>
+                </div>
+
+                <!-- 選択済みファイル情報 -->
+                <div class="file-info-import" id="fileInfo" style="display: none;">
+                    <div class="file-info-header-import">
+                        <h3 class="file-info-title-import">選択済みファイル</h3>
+                        <button class="file-remove-button-import" onclick="removeFile()">
+                            <span>×</span>
+                        </button>
+                    </div>
+                    <div class="file-details-import">
+                        <div class="file-detail-row-import">
+                            <span class="file-detail-label-import">ファイル名:</span>
+                            <span class="file-detail-value-import" id="fileName">sample.xlsx</span>
+                        </div>
+                        <div class="file-detail-row-import">
+                            <span class="file-detail-label-import">ファイルサイズ:</span>
+                            <span class="file-detail-value-import" id="fileSize">2.5 MB</span>
+                        </div>
+                        <div class="file-detail-row-import">
+                            <span class="file-detail-label-import">データ件数:</span>
+                            <span class="file-detail-value-import" id="fileRows">150 件</span>
+                        </div>
+                    </div>
+                    <div class="upload-progress-import" id="uploadProgress" style="display: none;">
+                        <div class="progress-bar-import">
+                            <div class="progress-fill-import" id="progressFill"></div>
+                        </div>
+                        <p class="progress-text-import" id="progressText">アップロード中... 0%</p>
+                    </div>
+                </div>
+
+                <!-- 注意事項 -->
+                <div class="notice-box-import">
+                    <h3 class="notice-title-import">📌 アップロード時の注意事項</h3>
+                    <ul class="notice-list-import">
+                        <li>Excelファイルの1行目はヘッダー行として認識されます</li>
+                        <li>データは2行目から読み込まれます</li>
+                        <li>空白行は自動的にスキップされます</li>
+                        <li>必須項目: 資産番号、品名、取得年月日</li>
+                    </ul>
+                </div>
+
+                <!-- アクションボタン -->
+                <div class="action-buttons-import">
+                    <button class="action-button-import secondary" onclick="handleBackFromImport()">
+                        <span>←</span>
+                        <span>戻る</span>
+                    </button>
+                    <button class="action-button-import primary" id="uploadButton" disabled onclick="handleUploadAndNext()">
+                        <span>次へ</span>
+                        <span>→</span>
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<script>
+// ドラッグ&ドロップハンドラー
+function handleDragOver(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    document.getElementById('dropzone').classList.add('dragover');
+}
+
+function handleDragLeave(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    document.getElementById('dropzone').classList.remove('dragover');
+}
+
+function handleDrop(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    document.getElementById('dropzone').classList.remove('dragover');
+
+    const files = event.dataTransfer.files;
+    if (files.length > 0) {
+        processFile(files[0]);
+    }
+}
+
+function handleFileSelect(event) {
+    const files = event.target.files;
+    if (files.length > 0) {
+        processFile(files[0]);
+    }
+}
+
+function processFile(file) {
+    // ファイルタイプチェック
+    const allowedTypes = ['application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'text/csv'];
+    const allowedExtensions = ['.xlsx', '.xls', '.csv'];
+    const fileExtension = '.' + file.name.split('.').pop().toLowerCase();
+
+    if (!allowedExtensions.includes(fileExtension)) {
+        alert('対応していないファイル形式です。.xlsx, .xls, .csv のファイルをアップロードしてください。');
+        return;
+    }
+
+    // ファイルサイズチェック (10MB)
+    if (file.size > 10 * 1024 * 1024) {
+        alert('ファイルサイズが大きすぎます。10MB以下のファイルをアップロードしてください。');
+        return;
+    }
+
+    // ファイル情報を表示
+    document.getElementById('fileName').textContent = file.name;
+    document.getElementById('fileSize').textContent = formatFileSize(file.size);
+    document.getElementById('fileRows').textContent = '解析中...';
+    document.getElementById('fileInfo').style.display = 'block';
+
+    // アップロードボタンを有効化
+    document.getElementById('uploadButton').disabled = false;
+
+    // 仮のデータ件数を表示（実際はファイルを解析して取得）
+    setTimeout(() => {
+        document.getElementById('fileRows').textContent = '150 件';
+    }, 500);
+
+    // グローバル変数にファイルを保存
+    window.selectedFile = file;
+}
+
+function formatFileSize(bytes) {
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(2) + ' KB';
+    return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+}
+
+function removeFile() {
+    document.getElementById('fileInfo').style.display = 'none';
+    document.getElementById('fileInput').value = '';
+    document.getElementById('uploadButton').disabled = true;
+    window.selectedFile = null;
+}
+
+function handleUploadAndNext() {
+    if (!window.selectedFile) {
+        alert('ファイルが選択されていません。');
+        return;
+    }
+
+    // プログレスバーを表示
+    document.getElementById('uploadProgress').style.display = 'block';
+
+    // 仮のアップロード処理（実際はサーバーにアップロード）
+    let progress = 0;
+    const interval = setInterval(() => {
+        progress += 10;
+        document.getElementById('progressFill').style.width = progress + '%';
+        document.getElementById('progressText').textContent = `アップロード中... ${progress}%`;
+
+        if (progress >= 100) {
+            clearInterval(interval);
+            document.getElementById('progressText').textContent = 'アップロード完了！';
+
+            // 突き合わせ画面へ遷移
+            setTimeout(() => {
+                if (typeof handleImportToMatching === 'function') {
+                    handleImportToMatching();
+                }
+            }, 500);
+        }
+    }, 200);
+}
+</script>

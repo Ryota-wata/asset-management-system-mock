@@ -1,0 +1,305 @@
+<!-- 資産マスタ表示モーダル -->
+<div id="assetMasterModal" class="asset-master-modal">
+    <div class="asset-master-modal-content" id="assetMasterModalContent">
+        <!-- ヘッダー -->
+        <div class="asset-master-modal-header">
+            <h2 class="asset-master-modal-title">資産マスタ一覧</h2>
+            <button class="asset-master-modal-close" onclick="closeAssetMasterModal()">×</button>
+        </div>
+
+        <!-- 検索・フィルターエリア -->
+        <div class="asset-master-search-area">
+            <div class="asset-master-search-box">
+                <input type="text" class="asset-master-search-input" id="masterSearchInput" placeholder="資産番号、品名、メーカー、型式で検索..." onkeyup="searchMasterTable()">
+                <span class="asset-master-search-icon">🔍</span>
+            </div>
+            <div class="asset-master-filter-row">
+                <select class="asset-master-filter-select" onchange="filterMasterTable()">
+                    <option value="">すべての分類</option>
+                    <option value="医療機器">医療機器</option>
+                    <option value="事務機器">事務機器</option>
+                    <option value="家具">家具</option>
+                </select>
+                <button class="asset-master-reset-btn" onclick="resetMasterFilters()">フィルターをリセット</button>
+            </div>
+        </div>
+
+        <!-- テーブルエリア -->
+        <div class="asset-master-table-container">
+            <table class="asset-master-table">
+                <thead>
+                    <tr>
+                        <th>資産番号</th>
+                        <th>大分類</th>
+                        <th>中分類</th>
+                        <th>品目</th>
+                        <th>メーカー</th>
+                        <th>型式</th>
+                        <th>取得年月日</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody id="masterTableBody">
+                    <!-- サンプルデータ -->
+                    <tr>
+                        <td>A-001-2023</td>
+                        <td>医療機器</td>
+                        <td>検査機器</td>
+                        <td>超音波診断装置</td>
+                        <td>ABC社</td>
+                        <td>US-1000</td>
+                        <td>2023-04-01</td>
+                        <td>
+                            <button class="asset-master-select-btn" onclick="selectMasterData(this)">選択</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>A-002-2023</td>
+                        <td>医療機器</td>
+                        <td>検査機器</td>
+                        <td>超音波診断装置</td>
+                        <td>DEF社</td>
+                        <td>US-2000</td>
+                        <td>2023-05-15</td>
+                        <td>
+                            <button class="asset-master-select-btn" onclick="selectMasterData(this)">選択</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>A-010-2022</td>
+                        <td>医療機器</td>
+                        <td>検査機器</td>
+                        <td>血液分析装置</td>
+                        <td>メディカル社</td>
+                        <td>BA-3000</td>
+                        <td>2022-06-10</td>
+                        <td>
+                            <button class="asset-master-select-btn" onclick="selectMasterData(this)">選択</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>B-050-2022</td>
+                        <td>事務機器</td>
+                        <td>PC機器</td>
+                        <td>デスクトップPC</td>
+                        <td>HP</td>
+                        <td>ProDesk 400</td>
+                        <td>2022-08-20</td>
+                        <td>
+                            <button class="asset-master-select-btn" onclick="selectMasterData(this)">選択</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>B-051-2022</td>
+                        <td>事務機器</td>
+                        <td>PC機器</td>
+                        <td>ノートPC</td>
+                        <td>XYZ社</td>
+                        <td>NB-2000</td>
+                        <td>2022-09-01</td>
+                        <td>
+                            <button class="asset-master-select-btn" onclick="selectMasterData(this)">選択</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>B-100-2021</td>
+                        <td>事務機器</td>
+                        <td>PC機器</td>
+                        <td>PC</td>
+                        <td>Lenovo</td>
+                        <td>ThinkCentre</td>
+                        <td>2021-10-15</td>
+                        <td>
+                            <button class="asset-master-select-btn" onclick="selectMasterData(this)">選択</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>C-001-2023</td>
+                        <td>家具</td>
+                        <td>デスク</td>
+                        <td>事務デスク</td>
+                        <td>家具工房</td>
+                        <td>D-1200</td>
+                        <td>2023-01-20</td>
+                        <td>
+                            <button class="asset-master-select-btn" onclick="selectMasterData(this)">選択</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>C-002-2023</td>
+                        <td>家具</td>
+                        <td>椅子</td>
+                        <td>事務椅子</td>
+                        <td>オフィス家具</td>
+                        <td>CH-500</td>
+                        <td>2023-01-20</td>
+                        <td>
+                            <button class="asset-master-select-btn" onclick="selectMasterData(this)">選択</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>D-001-2022</td>
+                        <td>医療機器</td>
+                        <td>治療機器</td>
+                        <td>人工呼吸器</td>
+                        <td>DEF社</td>
+                        <td>RES-500</td>
+                        <td>2022-03-10</td>
+                        <td>
+                            <button class="asset-master-select-btn" onclick="selectMasterData(this)">選択</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>E-001-2023</td>
+                        <td>事務機器</td>
+                        <td>複合機</td>
+                        <td>業務用複合機</td>
+                        <td>オフィス機器</td>
+                        <td>MFP-7000</td>
+                        <td>2023-02-15</td>
+                        <td>
+                            <button class="asset-master-select-btn" onclick="selectMasterData(this)">選択</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- フッター（ページネーション） -->
+        <div class="asset-master-modal-footer">
+            <div class="asset-master-pagination">
+                <button class="asset-master-page-btn" onclick="previousMasterPage()">← 前へ</button>
+                <span class="asset-master-page-info">1 / 10 ページ (全 100 件)</span>
+                <button class="asset-master-page-btn" onclick="nextMasterPage()">次へ →</button>
+            </div>
+            <button class="asset-master-close-btn" onclick="closeAssetMasterModal()">閉じる</button>
+        </div>
+    </div>
+</div>
+
+<script>
+// 資産マスタモーダルを表示
+function showAssetMasterModal() {
+    const modal = document.getElementById('assetMasterModal');
+    const modalContent = document.getElementById('assetMasterModalContent');
+
+    if (modalContent) {
+        modalContent.style.transform = '';
+    }
+
+    modal.classList.add('show');
+
+    // 外クリックでモーダルを閉じる
+    setTimeout(() => {
+        const handleOutsideClick = function(event) {
+            if (event.target === modal) {
+                closeAssetMasterModal();
+                modal.removeEventListener('click', handleOutsideClick);
+            }
+        };
+        modal.addEventListener('click', handleOutsideClick);
+    }, 0);
+}
+
+// 資産マスタモーダルを閉じる
+function closeAssetMasterModal() {
+    const modal = document.getElementById('assetMasterModal');
+    modal.classList.remove('show');
+}
+
+// テーブル検索
+function searchMasterTable() {
+    const input = document.getElementById('masterSearchInput');
+    const filter = input.value.toUpperCase();
+    const table = document.getElementById('masterTableBody');
+    const rows = table.getElementsByTagName('tr');
+
+    for (let i = 0; i < rows.length; i++) {
+        const cells = rows[i].getElementsByTagName('td');
+        let found = false;
+
+        for (let j = 0; j < cells.length - 1; j++) { // 最後の「操作」列は除外
+            if (cells[j]) {
+                const txtValue = cells[j].textContent || cells[j].innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    found = true;
+                    break;
+                }
+            }
+        }
+
+        rows[i].style.display = found ? '' : 'none';
+    }
+}
+
+// フィルター
+function filterMasterTable() {
+    const select = document.querySelector('.asset-master-filter-select');
+    const filter = select.value;
+    const table = document.getElementById('masterTableBody');
+    const rows = table.getElementsByTagName('tr');
+
+    for (let i = 0; i < rows.length; i++) {
+        const largeClassCell = rows[i].getElementsByTagName('td')[1]; // 大分類の列
+        if (largeClassCell) {
+            const txtValue = largeClassCell.textContent || largeClassCell.innerText;
+            if (filter === '' || txtValue === filter) {
+                rows[i].style.display = '';
+            } else {
+                rows[i].style.display = 'none';
+            }
+        }
+    }
+}
+
+// フィルターリセット
+function resetMasterFilters() {
+    document.getElementById('masterSearchInput').value = '';
+    document.querySelector('.asset-master-filter-select').value = '';
+    const table = document.getElementById('masterTableBody');
+    const rows = table.getElementsByTagName('tr');
+    for (let i = 0; i < rows.length; i++) {
+        rows[i].style.display = '';
+    }
+}
+
+// マスタデータ選択
+function selectMasterData(button) {
+    const row = button.closest('tr');
+    const cells = row.getElementsByTagName('td');
+    const data = {
+        assetNumber: cells[0].textContent,
+        largeClass: cells[1].textContent,
+        mediumClass: cells[2].textContent,
+        item: cells[3].textContent,
+        maker: cells[4].textContent,
+        model: cells[5].textContent,
+        acquisitionDate: cells[6].textContent
+    };
+
+    console.log('Selected master data:', data);
+    alert(`選択しました:\n資産番号: ${data.assetNumber}\n品名: ${data.item}`);
+
+    // 実際の実装では、選択したデータを突き合わせ画面に反映する
+    closeAssetMasterModal();
+}
+
+// ページネーション
+function previousMasterPage() {
+    console.log('Previous page');
+}
+
+function nextMasterPage() {
+    console.log('Next page');
+}
+
+// グローバルスコープに関数を公開
+window.showAssetMasterModal = showAssetMasterModal;
+window.closeAssetMasterModal = closeAssetMasterModal;
+window.searchMasterTable = searchMasterTable;
+window.filterMasterTable = filterMasterTable;
+window.resetMasterFilters = resetMasterFilters;
+window.selectMasterData = selectMasterData;
+window.previousMasterPage = previousMasterPage;
+window.nextMasterPage = nextMasterPage;
+</script>
