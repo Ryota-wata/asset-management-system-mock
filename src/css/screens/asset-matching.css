@@ -1,9 +1,8 @@
 /**
- * 資産管理台帳と資産マスタ突き合わせ画面CSS（2ペイン分割方式）
+ * 資産管理台帳と資産マスタ突き合わせ画面CSS（1テーブル形式・展開式）
  *
- * このファイルには、2ペイン分割による突き合わせ画面のスタイルが含まれています。
- * 左ペイン：インポートデータテーブル（5000件対応）
- * 右ペイン：AI推薦と詳細編集エリア
+ * 2ペイン分割を廃止し、1つのテーブルで全データを表示
+ * 各行をクリックで展開してAI推薦を確認・選択できる形式
  */
 
 /* ========================================
@@ -100,11 +99,14 @@
     padding: 12px 32px;
     border-bottom: 1px solid #e0e0e0;
     flex-shrink: 0;
+    flex-wrap: wrap;
+    gap: 12px;
 }
 
 .asset-matching-page .filter-buttons-matching {
     display: flex;
     gap: 8px;
+    flex-wrap: wrap;
 }
 
 .asset-matching-page .filter-btn-matching {
@@ -141,9 +143,11 @@
 .asset-matching-page .bulk-actions-matching {
     display: flex;
     gap: 8px;
+    flex-wrap: wrap;
 }
 
-.asset-matching-page .bulk-action-btn-matching {
+.asset-matching-page .bulk-action-btn-matching,
+.asset-matching-page .master-view-btn-matching {
     padding: 8px 16px;
     border: 1px solid #ff9800;
     border-radius: 6px;
@@ -158,102 +162,92 @@
     gap: 6px;
 }
 
-.asset-matching-page .bulk-action-btn-matching:hover {
+.asset-matching-page .bulk-action-btn-matching:hover,
+.asset-matching-page .master-view-btn-matching:hover {
     background: #ff9800;
     color: white;
 }
 
+.asset-matching-page .master-view-btn-matching {
+    border-color: #1976d2;
+    background: #e3f2fd;
+    color: #1565c0;
+}
+
+.asset-matching-page .master-view-btn-matching:hover {
+    background: #1976d2;
+    color: white;
+}
+
 /* ========================================
-   メインコンテンツ（2ペイン分割）
+   メインコンテンツ
 ======================================== */
 .asset-matching-page .main-content-matching {
     flex: 1;
-    display: grid;
-    grid-template-columns: 1fr 1.2fr;
-    gap: 0;
     overflow: hidden;
-}
-
-/* ========================================
-   左ペイン：インポートデータテーブル
-======================================== */
-.asset-matching-page .left-pane-matching {
     display: flex;
     flex-direction: column;
-    background: #ffffff;
-    border-right: 2px solid #e0e0e0;
-    overflow: hidden;
+    padding: 16px 32px;
 }
 
-.asset-matching-page .pane-header-matching {
-    padding: 16px 20px;
-    border-bottom: 1px solid #e0e0e0;
-    background: #fafafa;
-    flex-shrink: 0;
+/* 検索エリア */
+.asset-matching-page .search-area-matching {
+    margin-bottom: 16px;
 }
 
-.asset-matching-page .pane-title-matching {
-    font-size: 16px;
-    font-weight: 600;
-    color: #333333;
-    margin: 0 0 12px 0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.asset-matching-page .current-row-info-matching {
-    font-size: 14px;
-    color: #666666;
-    font-weight: 500;
-}
-
-.asset-matching-page .search-box-matching {
-    margin-top: 8px;
-}
-
-.asset-matching-page .search-input-matching {
+.asset-matching-page .search-input-full-matching {
     width: 100%;
-    padding: 8px 12px;
+    max-width: 600px;
+    padding: 10px 16px;
     border: 1px solid #d0d0d0;
-    border-radius: 6px;
+    border-radius: 8px;
     font-size: 14px;
     outline: none;
     transition: border-color 0.2s ease;
 }
 
-.asset-matching-page .search-input-matching:focus {
+.asset-matching-page .search-input-full-matching:focus {
     border-color: #4CAF50;
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
 }
 
-/* テーブルコンテナ */
-.asset-matching-page .table-container-matching {
+/* テーブルラッパー */
+.asset-matching-page .table-wrapper-matching {
     flex: 1;
     overflow-y: auto;
-    overflow-x: hidden;
+    overflow-x: auto;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
 
-/* テーブルスタイル */
-.asset-matching-page .import-table-matching {
+/* テーブル */
+.asset-matching-page .matching-table {
     width: 100%;
     border-collapse: collapse;
     font-size: 13px;
 }
 
-.asset-matching-page .import-table-matching thead {
+.asset-matching-page .matching-table thead {
     position: sticky;
     top: 0;
     background: #f8f9fa;
     z-index: 10;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
-.asset-matching-page .import-table-matching th {
-    padding: 12px 8px;
+.asset-matching-page .matching-table th {
+    padding: 14px 12px;
     text-align: left;
     font-weight: 600;
     color: #555555;
     border-bottom: 2px solid #e0e0e0;
     white-space: nowrap;
+}
+
+.asset-matching-page .th-expand-matching {
+    width: 50px;
+    text-align: center;
 }
 
 .asset-matching-page .th-no-matching {
@@ -269,33 +263,62 @@
     width: 140px;
 }
 
-.asset-matching-page .th-name-matching {
+.asset-matching-page .th-product-name-matching {
     width: auto;
+    min-width: 250px;
 }
 
 .asset-matching-page .th-similarity-matching {
-    width: 100px;
+    width: 110px;
     text-align: center;
 }
 
-.asset-matching-page .import-row-matching {
-    cursor: pointer;
+.asset-matching-page .th-selected-master-matching {
+    width: 150px;
+}
+
+.asset-matching-page .th-actions-matching {
+    width: 150px;
+    text-align: center;
+}
+
+/* データ行 */
+.asset-matching-page .data-row-matching {
     transition: background-color 0.15s ease;
     border-bottom: 1px solid #f0f0f0;
 }
 
-.asset-matching-page .import-row-matching:hover {
+.asset-matching-page .data-row-matching:hover {
     background-color: #f9f9f9;
 }
 
-.asset-matching-page .import-row-matching.active {
-    background-color: #e8f5e9;
-    border-left: 4px solid #4CAF50;
+.asset-matching-page .matching-table td {
+    padding: 12px;
+    color: #333333;
+    vertical-align: middle;
 }
 
-.asset-matching-page .import-table-matching td {
-    padding: 12px 8px;
-    color: #333333;
+.asset-matching-page .td-expand-matching {
+    text-align: center;
+}
+
+.asset-matching-page .expand-btn-matching {
+    background: transparent;
+    border: none;
+    font-size: 14px;
+    color: #666666;
+    cursor: pointer;
+    padding: 4px 8px;
+    transition: all 0.2s ease;
+}
+
+.asset-matching-page .expand-btn-matching:hover {
+    color: #4CAF50;
+    transform: scale(1.2);
+}
+
+.asset-matching-page .expand-btn-matching.expanded {
+    color: #4CAF50;
 }
 
 .asset-matching-page .td-no-matching {
@@ -337,7 +360,7 @@
     color: #1976d2;
 }
 
-.asset-matching-page .td-name-matching {
+.asset-matching-page .td-product-name-matching {
     font-weight: 500;
 }
 
@@ -369,19 +392,288 @@
     color: #c62828;
 }
 
-/* ページネーション */
-.asset-matching-page .pagination-matching {
+.asset-matching-page .td-selected-master-matching {
+    font-size: 13px;
+    color: #1976d2;
+    font-weight: 500;
+}
+
+.asset-matching-page .td-actions-matching {
+    text-align: center;
+}
+
+.asset-matching-page .action-btn-small-matching {
+    padding: 6px 12px;
+    border: 1px solid #d0d0d0;
+    border-radius: 6px;
+    background: white;
+    color: #666666;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin: 0 2px;
+}
+
+.asset-matching-page .action-btn-small-matching:hover:not(:disabled) {
+    background: #f5f5f5;
+    border-color: #4CAF50;
+    color: #4CAF50;
+}
+
+.asset-matching-page .action-btn-small-matching.primary {
+    background: #4CAF50;
+    color: white;
+    border-color: #4CAF50;
+}
+
+.asset-matching-page .action-btn-small-matching.primary:hover:not(:disabled) {
+    background: #45a049;
+}
+
+.asset-matching-page .action-btn-small-matching:disabled {
+    background: #f5f5f5;
+    color: #999999;
+    cursor: not-allowed;
+}
+
+/* ========================================
+   詳細行（展開エリア）
+======================================== */
+.asset-matching-page .detail-row-matching {
+    background: #f8f9fa;
+}
+
+.asset-matching-page .detail-content-matching {
+    padding: 24px;
+}
+
+/* インポートデータ詳細ボックス */
+.asset-matching-page .import-detail-box-matching {
+    background: white;
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.asset-matching-page .detail-section-title-matching {
+    font-size: 15px;
+    font-weight: 600;
+    color: #333333;
+    margin: 0 0 12px 0;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+.asset-matching-page .import-detail-grid-matching {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+}
+
+.asset-matching-page .detail-item-matching {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.asset-matching-page .detail-label-small-matching {
+    font-size: 12px;
+    color: #666666;
+    font-weight: 600;
+}
+
+.asset-matching-page .detail-value-small-matching {
+    font-size: 13px;
+    color: #333333;
+    font-weight: 500;
+    padding: 6px 10px;
+    background: #f5f5f5;
+    border-radius: 4px;
+}
+
+/* AI推薦ボックス */
+.asset-matching-page .recommendations-box-matching {
+    background: white;
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.asset-matching-page .recommendation-item-matching {
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 16px;
+    transition: all 0.2s ease;
+    background: #fafafa;
+}
+
+.asset-matching-page .recommendation-item-matching:hover {
+    border-color: #4CAF50;
+    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.15);
+}
+
+.asset-matching-page .recommendation-item-matching.selected {
+    border-color: #4CAF50;
+    background: #f1f8f4;
+    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.2);
+}
+
+.asset-matching-page .rec-header-matching {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 12px 20px;
-    border-top: 1px solid #e0e0e0;
-    background: #fafafa;
-    flex-shrink: 0;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.asset-matching-page .rec-number-matching {
+    font-size: 14px;
+    font-weight: 600;
+    color: #666666;
+}
+
+.asset-matching-page .selected-indicator-small-matching {
+    color: #4CAF50;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.asset-matching-page .rec-fields-matching {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.asset-matching-page .rec-field-matching {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.asset-matching-page .rec-field-matching label {
+    font-size: 11px;
+    color: #666666;
+    font-weight: 600;
+}
+
+.asset-matching-page .rec-input-small-matching {
+    padding: 6px 10px;
+    border: 1px solid #d0d0d0;
+    border-radius: 4px;
+    font-size: 12px;
+    outline: none;
+    transition: border-color 0.2s ease;
+    background: white;
+}
+
+.asset-matching-page .rec-input-small-matching:focus {
+    border-color: #4CAF50;
+    background: #fafff8;
+}
+
+.asset-matching-page .select-rec-button-matching {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #4CAF50;
+    border-radius: 6px;
+    background: white;
+    color: #4CAF50;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.asset-matching-page .select-rec-button-matching:hover {
+    background: #4CAF50;
+    color: white;
+}
+
+.asset-matching-page .select-rec-button-matching.selected {
+    background: #4CAF50;
+    color: white;
+}
+
+/* 詳細アクションボタン */
+.asset-matching-page .detail-actions-matching {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.asset-matching-page .detail-action-btn-matching {
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.asset-matching-page .detail-action-btn-matching {
+    background: white;
+    border: 1px solid #1976d2;
+    color: #1976d2;
+}
+
+.asset-matching-page .detail-action-btn-matching:hover {
+    background: #1976d2;
+    color: white;
+}
+
+.asset-matching-page .detail-action-btn-matching.secondary {
+    border-color: #666666;
+    color: #666666;
+}
+
+.asset-matching-page .detail-action-btn-matching.secondary:hover {
+    background: #666666;
+    color: white;
+}
+
+.asset-matching-page .detail-action-btn-matching.primary {
+    background: #4CAF50;
+    color: white;
+    border-color: #4CAF50;
+}
+
+.asset-matching-page .detail-action-btn-matching.primary:hover {
+    background: #45a049;
+}
+
+/* 確定済みメッセージ */
+.asset-matching-page .completed-message-matching {
+    text-align: center;
+    font-size: 16px;
+    color: #4CAF50;
+    font-weight: 600;
+    padding: 32px;
+    margin: 0;
+}
+
+/* ========================================
+   ページネーション
+======================================== */
+.asset-matching-page .pagination-area-matching {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    margin-top: 16px;
+    padding: 12px;
 }
 
 .asset-matching-page .pagination-btn-matching {
-    padding: 6px 16px;
+    padding: 8px 16px;
     border: 1px solid #d0d0d0;
     border-radius: 6px;
     background: white;
@@ -402,239 +694,6 @@
     font-size: 13px;
     color: #666666;
     font-weight: 500;
-}
-
-/* ========================================
-   右ペイン：AI推薦と詳細編集
-======================================== */
-.asset-matching-page .right-pane-matching {
-    display: flex;
-    flex-direction: column;
-    background: #f8f9fa;
-    overflow-y: auto;
-    overflow-x: hidden;
-}
-
-/* インポートデータ詳細セクション */
-.asset-matching-page .import-detail-section-matching {
-    background: #ffffff;
-    margin: 20px;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-}
-
-.asset-matching-page .section-title-matching {
-    font-size: 15px;
-    font-weight: 600;
-    color: #333333;
-    margin: 0 0 16px 0;
-    padding-bottom: 8px;
-    border-bottom: 2px solid #e0e0e0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.asset-matching-page .detail-grid-matching {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-}
-
-.asset-matching-page .detail-row-matching {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-}
-
-.asset-matching-page .detail-label-matching {
-    font-size: 12px;
-    color: #666666;
-    font-weight: 600;
-}
-
-.asset-matching-page .detail-value-matching {
-    font-size: 14px;
-    color: #333333;
-    font-weight: 500;
-    padding: 8px 12px;
-    background: #f5f5f5;
-    border-radius: 4px;
-}
-
-/* AI推薦セクション */
-.asset-matching-page .ai-recommendations-section-matching {
-    margin: 0 20px 20px 20px;
-}
-
-.asset-matching-page .master-search-btn-matching {
-    padding: 6px 14px;
-    background: #1976d2;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.asset-matching-page .master-search-btn-matching:hover {
-    background: #1565c0;
-    transform: translateY(-1px);
-}
-
-/* 推薦カード */
-.asset-matching-page .recommendation-card-matching {
-    background: #ffffff;
-    border: 2px solid #e0e0e0;
-    border-radius: 8px;
-    margin-bottom: 16px;
-    padding: 16px;
-    transition: all 0.2s ease;
-    cursor: pointer;
-}
-
-.asset-matching-page .recommendation-card-matching:hover {
-    border-color: #4CAF50;
-    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.15);
-}
-
-.asset-matching-page .recommendation-card-matching.selected {
-    border-color: #4CAF50;
-    background: #f1f8f4;
-    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.2);
-}
-
-.asset-matching-page .recommendation-header-matching {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 12px;
-    padding-bottom: 8px;
-    border-bottom: 1px solid #e0e0e0;
-}
-
-.asset-matching-page .recommendation-label-matching {
-    font-size: 14px;
-    font-weight: 600;
-    color: #666666;
-}
-
-.asset-matching-page .selected-indicator-matching {
-    color: #4CAF50;
-    font-size: 13px;
-    font-weight: 600;
-}
-
-.asset-matching-page .recommendation-body-matching {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-bottom: 12px;
-}
-
-.asset-matching-page .recommendation-row-matching {
-    display: grid;
-    grid-template-columns: 140px 1fr;
-    align-items: center;
-    gap: 12px;
-}
-
-.asset-matching-page .rec-label-matching {
-    font-size: 13px;
-    color: #666666;
-    font-weight: 600;
-}
-
-.asset-matching-page .rec-input-matching {
-    padding: 8px 12px;
-    border: 1px solid #d0d0d0;
-    border-radius: 4px;
-    font-size: 13px;
-    outline: none;
-    transition: border-color 0.2s ease;
-    background: white;
-}
-
-.asset-matching-page .rec-input-matching:focus {
-    border-color: #4CAF50;
-    background: #fafff8;
-}
-
-.asset-matching-page .rec-input-matching:disabled {
-    background: #f5f5f5;
-    color: #999999;
-}
-
-.asset-matching-page .select-rec-btn-matching {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #4CAF50;
-    border-radius: 6px;
-    background: white;
-    color: #4CAF50;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.asset-matching-page .select-rec-btn-matching:hover {
-    background: #4CAF50;
-    color: white;
-}
-
-.asset-matching-page .select-rec-btn-matching.selected {
-    background: #4CAF50;
-    color: white;
-}
-
-/* アクションセクション */
-.asset-matching-page .action-section-matching {
-    display: flex;
-    gap: 12px;
-    margin: 0 20px 20px 20px;
-}
-
-.asset-matching-page .action-btn-matching {
-    flex: 1;
-    padding: 14px 24px;
-    border-radius: 8px;
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-}
-
-.asset-matching-page .action-btn-matching.secondary {
-    background: white;
-    border: 2px solid #666666;
-    color: #666666;
-}
-
-.asset-matching-page .action-btn-matching.secondary:hover {
-    background: #f5f5f5;
-    border-color: #333333;
-    color: #333333;
-}
-
-.asset-matching-page .action-btn-matching.primary {
-    background: #4CAF50;
-    color: white;
-    border: none;
-    box-shadow: 0 4px 8px rgba(76, 175, 80, 0.3);
-}
-
-.asset-matching-page .action-btn-matching.primary:hover {
-    background: #45a049;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(76, 175, 80, 0.4);
 }
 
 /* ========================================
@@ -691,24 +750,21 @@
 /* ========================================
    スクロールバー
 ======================================== */
-.asset-matching-page .table-container-matching::-webkit-scrollbar,
-.asset-matching-page .right-pane-matching::-webkit-scrollbar {
+.asset-matching-page .table-wrapper-matching::-webkit-scrollbar {
     width: 8px;
+    height: 8px;
 }
 
-.asset-matching-page .table-container-matching::-webkit-scrollbar-track,
-.asset-matching-page .right-pane-matching::-webkit-scrollbar-track {
+.asset-matching-page .table-wrapper-matching::-webkit-scrollbar-track {
     background: #f1f1f1;
 }
 
-.asset-matching-page .table-container-matching::-webkit-scrollbar-thumb,
-.asset-matching-page .right-pane-matching::-webkit-scrollbar-thumb {
+.asset-matching-page .table-wrapper-matching::-webkit-scrollbar-thumb {
     background: #c0c0c0;
     border-radius: 4px;
 }
 
-.asset-matching-page .table-container-matching::-webkit-scrollbar-thumb:hover,
-.asset-matching-page .right-pane-matching::-webkit-scrollbar-thumb:hover {
+.asset-matching-page .table-wrapper-matching::-webkit-scrollbar-thumb:hover {
     background: #a0a0a0;
 }
 
@@ -716,12 +772,12 @@
    レスポンシブ対応（タブレット）
 ======================================== */
 @media (max-width: 1200px) {
-    .asset-matching-page .main-content-matching {
-        grid-template-columns: 1fr 1fr;
+    .asset-matching-page .import-detail-grid-matching {
+        grid-template-columns: repeat(2, 1fr);
     }
 
-    .asset-matching-page .detail-grid-matching {
-        grid-template-columns: 1fr;
+    .asset-matching-page .rec-fields-matching {
+        grid-template-columns: repeat(3, 1fr);
     }
 }
 
@@ -729,49 +785,28 @@
    レスポンシブ対応（スマートフォン）
 ======================================== */
 @media (max-width: 768px) {
-    .asset-matching-page .main-content-matching {
-        grid-template-columns: 1fr;
-    }
-
-    .asset-matching-page .left-pane-matching {
-        display: none; /* モバイルでは左ペインを非表示 */
-    }
-
-    .asset-matching-page .header-matching {
-        padding: 12px 16px;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 8px;
-        height: auto;
-    }
-
-    .asset-matching-page .filter-bar-matching {
-        padding: 12px 16px;
-        flex-direction: column;
-        align-items: stretch;
-        gap: 12px;
-    }
-
-    .asset-matching-page .filter-buttons-matching {
-        flex-wrap: wrap;
-    }
-
-    .asset-matching-page .import-detail-section-matching,
-    .asset-matching-page .ai-recommendations-section-matching,
-    .asset-matching-page .action-section-matching {
-        margin: 12px;
-    }
-
-    .asset-matching-page .recommendation-row-matching {
-        grid-template-columns: 1fr;
-        gap: 4px;
-    }
-
-    .asset-matching-page .action-section-matching {
-        flex-direction: column;
-    }
-
+    .asset-matching-page .header-matching,
+    .asset-matching-page .filter-bar-matching,
+    .asset-matching-page .main-content-matching,
     .asset-matching-page .footer-matching {
-        padding: 12px 16px;
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    .asset-matching-page .import-detail-grid-matching {
+        grid-template-columns: 1fr;
+    }
+
+    .asset-matching-page .rec-fields-matching {
+        grid-template-columns: 1fr;
+    }
+
+    .asset-matching-page .detail-actions-matching {
+        flex-direction: column;
+    }
+
+    .asset-matching-page .detail-action-btn-matching {
+        width: 100%;
+        justify-content: center;
     }
 }
