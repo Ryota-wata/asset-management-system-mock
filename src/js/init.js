@@ -44,89 +44,9 @@ async function initChoices() {
     }
 
     // 登録内容修正画面のフィルター
-    if (document.getElementById('filterBuilding')) {
-        new Choices('#filterBuilding', {
-            searchEnabled: true,
-            searchPlaceholderValue: '棟検索',
-            shouldSort: false,
-            itemSelectText: '',
-            noResultsText: '該当なし',
-            placeholder: true,
-            placeholderValue: '棟',
-        });
-    }
-
-    if (document.getElementById('filterFloor')) {
-        new Choices('#filterFloor', {
-            searchEnabled: true,
-            searchPlaceholderValue: '階検索',
-            shouldSort: false,
-            itemSelectText: '',
-            noResultsText: '該当なし',
-            placeholder: true,
-            placeholderValue: '階',
-        });
-    }
-
-    if (document.getElementById('filterDepartment')) {
-        new Choices('#filterDepartment', {
-            searchEnabled: true,
-            searchPlaceholderValue: '部門検索',
-            shouldSort: false,
-            itemSelectText: '',
-            noResultsText: '該当なし',
-            placeholder: true,
-            placeholderValue: '部門',
-        });
-    }
-
-    if (document.getElementById('filterSection')) {
-        new Choices('#filterSection', {
-            searchEnabled: true,
-            searchPlaceholderValue: '部署検索',
-            shouldSort: false,
-            itemSelectText: '',
-            noResultsText: '該当なし',
-            placeholder: true,
-            placeholderValue: '部署',
-        });
-    }
-
-    if (document.getElementById('filterCategory')) {
-        new Choices('#filterCategory', {
-            searchEnabled: true,
-            searchPlaceholderValue: 'Category検索',
-            shouldSort: false,
-            itemSelectText: '',
-            noResultsText: '該当なし',
-            placeholder: true,
-            placeholderValue: 'Category',
-        });
-    }
-
-    if (document.getElementById('filterLargeClass')) {
-        new Choices('#filterLargeClass', {
-            searchEnabled: true,
-            searchPlaceholderValue: '大分類検索',
-            shouldSort: false,
-            itemSelectText: '',
-            noResultsText: '該当なし',
-            placeholder: true,
-            placeholderValue: '大分類',
-        });
-    }
-
-    if (document.getElementById('filterMediumClass')) {
-        new Choices('#filterMediumClass', {
-            searchEnabled: true,
-            searchPlaceholderValue: '中分類検索',
-            shouldSort: false,
-            itemSelectText: '',
-            noResultsText: '該当なし',
-            placeholder: true,
-            placeholderValue: '中分類',
-        });
-    }
+    // 注意: filterBuilding, filterFloor, filterDepartment, filterSection, filterCategory, filterLargeClass, filterMediumClass
+    // これらのIDは資産検索結果画面で使用されているため、init.jsでは初期化しない
+    // 資産検索結果画面は独自の初期化処理（search-result-simple.js）を使用
 
     // 現有資産調査画面のドロップダウン初期化
     if (document.getElementById('surveyCategorySelect')) {

@@ -1,0 +1,1246 @@
+/**
+ * 資産検索結果画面のCSS - 完全版
+ * 元ファイルから全機能を移植
+ */
+
+/* 画面表示制御 */
+.search-result-page {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #f5f5f5;
+    z-index: 1000;
+    overflow-y: auto;
+}
+
+.search-result-page.active {
+    display: block;
+}
+
+/* 元のスタイル */
+
+.search-result-page * {
+    box-sizing: border-box;
+}
+        
+        .search-result-page .result-container {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: white;
+        }
+        
+        /* ヘッダー */
+        .search-result-page .result-header {
+            background: #2c3e50;
+            color: white;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+        
+        .search-result-page .result-header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .search-result-page .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .search-result-page .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: #27ae60;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .search-result-page .result-header-title {
+            font-size: 16px;
+            font-weight: bold;
+        }
+        
+        .search-result-page .result-count {
+            font-size: 14px;
+            color: #ecf0f1;
+            margin-left: 20px;
+        }
+        
+        .search-result-page .result-header-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .search-result-page .header-icon-btn {
+            width: 40px;
+            height: 40px;
+            background: #34495e;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            transition: background 0.3s;
+        }
+        
+        .search-result-page .header-icon-btn:hover {
+            background: #2c3e50;
+        }
+        
+        .search-result-page .header-icon-btn.active {
+            background: #27ae60;
+        }
+        
+        .search-result-page .header-btn {
+            padding: 8px 16px;
+            background: #27ae60;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s;
+            white-space: nowrap;
+        }
+        
+        .search-result-page .header-btn:hover {
+            background: #229954;
+        }
+        
+        .search-result-page .header-btn.back {
+            background: #95a5a6;
+        }
+        
+        .search-result-page .header-btn.back:hover {
+            background: #7f8c8d;
+        }
+        
+        .search-result-page .header-btn.new-purchase {
+            background: #3498db;
+        }
+        
+        .search-result-page .header-btn.new-purchase:hover {
+            background: #2980b9;
+        }
+        
+        /* フィルターヘッダー */
+        .search-result-page .filter-header {
+            background: white;
+            padding: 10px 20px;
+            border-bottom: 2px solid #ddd;
+            flex-shrink: 0;
+            position: relative;
+            z-index: 100;
+        }
+        
+        .search-result-page .filter-row-single {
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+            flex-wrap: nowrap;
+        }
+        
+        .search-result-page .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            position: relative;
+        }
+        
+        .search-result-page .filter-group label {
+            font-size: 11px;
+            color: #555;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+        
+        .search-result-page .filter-select {
+            padding: 6px 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 13px;
+            min-width: 100px;
+            background: white;
+        }
+        
+        /* アクションバー */
+        .search-result-page .action-bar {
+            background: #ecf0f1;
+            padding: 10px 20px;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-shrink: 0;
+        }
+        
+        .search-result-page .selection-info {
+            font-size: 13px;
+            color: #555;
+            margin-right: 10px;
+        }
+        
+        .search-result-page .action-btn {
+            padding: 6px 16px;
+            background: white;
+            color: #2c3e50;
+            border: 1px solid #bdc3c7;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.3s;
+        }
+        
+        .search-result-page .action-btn:hover {
+            background: #f8f9fa;
+            border-color: #95a5a6;
+        }
+        
+        .search-result-page .action-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .search-result-page .action-btn.new-purchase-action {
+            background: #3498db;
+            color: white;
+            border-color: #3498db;
+        }
+        
+        .search-result-page .action-btn.new-purchase-action:hover {
+            background: #2980b9;
+            border-color: #2980b9;
+        }
+        
+        /* ナビゲーションメニュー */
+        .search-result-page .nav-menu {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .search-result-page .nav-menu-btn {
+            padding: 8px 16px;
+            background: #34495e;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .search-result-page .nav-menu-btn:hover {
+            background: #2c3e50;
+        }
+        
+        .search-result-page .nav-menu-arrow {
+            font-size: 10px;
+            transition: transform 0.3s;
+        }
+        
+        .search-result-page .nav-menu-btn.active .nav-menu-arrow {
+            transform: rotate(180deg);
+        }
+        
+        .search-result-page .nav-menu-dropdown {
+            position: absolute;
+            top: calc(100% + 4px);
+            right: 0;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            min-width: 200px;
+            z-index: 2000;
+            display: none;
+            overflow: hidden;
+        }
+        
+        .search-result-page .nav-menu-dropdown.active {
+            display: block;
+            animation: fadeIn 0.2s ease;
+        }
+        
+        .search-result-page .nav-menu-item {
+            padding: 12px 16px;
+            cursor: pointer;
+            font-size: 13px;
+            color: #2c3e50;
+            transition: background 0.2s;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .search-result-page .nav-menu-item:last-child {
+            border-bottom: none;
+        }
+        
+        .search-result-page .nav-menu-item:hover {
+            background: #f8f9fa;
+        }
+        
+        .search-result-page .nav-menu-item:active {
+            background: #e9ecef;
+        }
+        
+        .search-result-page .nav-menu-item-icon {
+            font-size: 16px;
+        }
+        
+        /* ドロップダウンメニュー（申請用） */
+        .search-result-page .dropdown-container {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .search-result-page .dropdown-btn {
+            padding: 6px 16px;
+            background: white;
+            color: #2c3e50;
+            border: 1px solid #bdc3c7;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
+        
+        .search-result-page .dropdown-btn:hover {
+            background: #f8f9fa;
+            border-color: #95a5a6;
+        }
+        
+        .search-result-page .dropdown-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .search-result-page .dropdown-btn.purchase-related {
+            background: #e3f2fd;
+            border-color: #64b5f6;
+            color: #1976d2;
+        }
+        
+        .search-result-page .dropdown-btn.purchase-related:hover:not(:disabled) {
+            background: #bbdefb;
+            border-color: #42a5f5;
+        }
+        
+        .search-result-page .dropdown-btn.management-related {
+            background: #fff3e0;
+            border-color: #ffb74d;
+            color: #f57c00;
+        }
+        
+        .search-result-page .dropdown-btn.management-related:hover:not(:disabled) {
+            background: #ffe0b2;
+            border-color: #ffa726;
+        }
+        
+        .search-result-page .dropdown-arrow {
+            font-size: 10px;
+            transition: transform 0.3s;
+        }
+        
+        .search-result-page .dropdown-btn.active .dropdown-arrow {
+            transform: rotate(180deg);
+        }
+        
+        .search-result-page .dropdown-menu {
+            position: absolute;
+            top: calc(100% + 4px);
+            left: 0;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            min-width: 180px;
+            z-index: 1000;
+            display: none;
+            overflow: hidden;
+        }
+        
+        .search-result-page .dropdown-menu.active {
+            display: block;
+            animation: fadeIn 0.2s ease;
+        }
+        
+        @keyframes fadeIn {
+            .search-result-page from {
+                opacity: 0;
+                transform: translateY(-8px);
+            }
+            .search-result-page to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .search-result-page .dropdown-menu-item {
+            padding: 10px 16px;
+            cursor: pointer;
+            font-size: 13px;
+            color: #2c3e50;
+            transition: background 0.2s;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .search-result-page .dropdown-menu-item:last-child {
+            border-bottom: none;
+        }
+        
+        .search-result-page .dropdown-menu-item:hover {
+            background: #f8f9fa;
+        }
+        
+        .search-result-page .dropdown-menu-item:active {
+            background: #e9ecef;
+        }
+        
+        /* 棚卸しボタン */
+        .search-result-page .inventory-btn {
+            padding: 6px 16px;
+            background: #27ae60;
+            color: white;
+            border: 1px solid #27ae60;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+        
+        .search-result-page .inventory-btn:hover {
+            background: #229954;
+            border-color: #229954;
+        }
+        
+        .search-result-page .inventory-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        /* 申請入力モーダル */
+        .search-result-page .application-input-modal {
+            display: none;
+            position: fixed;
+            z-index: 2001;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .search-result-page .application-input-modal.active {
+            display: flex;
+        }
+        
+        .search-result-page .application-input-content {
+            background: white;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 900px;
+            max-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+        
+        .search-result-page .application-input-header {
+            padding: 20px;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f8f9fa;
+        }
+        
+        .search-result-page .application-input-header h2 {
+            font-size: 18px;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .search-result-page .application-input-body {
+            padding: 20px;
+            overflow-y: auto;
+            flex: 1;
+        }
+        
+        .search-result-page .application-section {
+            margin-bottom: 25px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 15px;
+            background: #fafafa;
+        }
+        
+        .search-result-page .application-section-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #3498db;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .search-result-page .application-form-group {
+            margin-bottom: 15px;
+        }
+        
+        .search-result-page .application-form-group label {
+            display: block;
+            font-size: 13px;
+            color: #555;
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+        
+        .search-result-page .application-form-group label .required {
+            color: #e74c3c;
+            margin-left: 4px;
+        }
+        
+        .search-result-page .application-form-group input[type="text"],
+        .search-result-page .application-form-group input[type="number"],
+        .search-result-page .application-form-group input[type="date"],
+        .search-result-page .application-form-group select,
+        .search-result-page .application-form-group textarea {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 13px;
+            background: white;
+        }
+        
+        .search-result-page .application-form-group textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+        
+        .search-result-page .selected-asset-display {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 12px;
+            margin-bottom: 10px;
+        }
+        
+        .search-result-page .selected-asset-display .asset-name {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 4px;
+        }
+        
+        .search-result-page .selected-asset-display .asset-detail {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .search-result-page .quotation-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .search-result-page .quotation-item {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 15px;
+            position: relative;
+        }
+        
+        .search-result-page .quotation-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        
+        .search-result-page .quotation-item-title {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .search-result-page .quotation-remove-btn {
+            padding: 4px 12px;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background 0.3s;
+        }
+        
+        .search-result-page .quotation-remove-btn:hover {
+            background: #c0392b;
+        }
+        
+        .search-result-page .quotation-fields {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        
+        .search-result-page .quotation-fields .full-width {
+            grid-column: 1 / -1;
+        }
+        
+        .search-result-page .quotation-file-input {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .search-result-page .quotation-file-name {
+            font-size: 12px;
+            color: #666;
+            font-style: italic;
+        }
+        
+        .search-result-page .add-quotation-btn {
+            width: 100%;
+            padding: 10px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: background 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .search-result-page .add-quotation-btn:hover {
+            background: #2980b9;
+        }
+        
+        .search-result-page .approval-flow {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .search-result-page .application-input-footer {
+            padding: 20px;
+            border-top: 1px solid #ddd;
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            background: #f8f9fa;
+        }
+        
+        .search-result-page .application-input-footer .left-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .search-result-page .application-input-footer .right-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        /* メインコンテンツエリア */
+        .search-result-page .main-content-area {
+            flex: 1;
+            overflow: hidden;
+            background: white;
+            margin: 10px 20px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+        }
+        
+        .search-result-page .content-wrapper {
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+        }
+        
+        /* テーブル表示 */
+        .search-result-page .list-view {
+            display: block;
+        }
+        
+        .search-result-page .list-view.hidden {
+            display: none;
+        }
+        
+        .search-result-page .data-table {
+            width: max-content;
+            min-width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+        
+        .search-result-page .data-table thead {
+            position: sticky;
+            top: 0;
+            background: #2c3e50;
+            color: white;
+            z-index: 10;
+        }
+        
+        .search-result-page .data-table th {
+            padding: 12px 8px;
+            text-align: left;
+            font-weight: 500;
+            border-right: 1px solid #34495e;
+            white-space: nowrap;
+        }
+        
+        .search-result-page .data-table th:first-child {
+            width: 40px;
+            text-align: center;
+        }
+        
+        .search-result-page .data-table tbody tr {
+            border-bottom: 1px solid #ecf0f1;
+        }
+        
+        .search-result-page .data-table tbody tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .search-result-page .data-table tbody tr.selected {
+            background: #e8f5e9;
+        }
+        
+        .search-result-page .data-table td {
+            padding: 10px 8px;
+            border-right: 1px solid #ecf0f1;
+        }
+        
+        .search-result-page .data-table td:first-child {
+            text-align: center;
+        }
+        
+        /* カード表示 */
+        .search-result-page .card-view {
+            display: none;
+            padding: 20px;
+            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        }
+        
+        .search-result-page .card-view.active {
+            display: grid;
+        }
+        
+        .search-result-page .asset-card {
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            background: white;
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .search-result-page .asset-card:hover {
+            border-color: #27ae60;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .search-result-page .asset-card.selected {
+            border-color: #27ae60;
+            background: #e8f5e9;
+        }
+        
+        .search-result-page .card-checkbox {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+        
+        .search-result-page .card-image {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            background: #f5f5f5;
+        }
+        
+        .search-result-page .card-number {
+            font-size: 11px;
+            color: #7f8c8d;
+            margin-bottom: 8px;
+        }
+        
+        .search-result-page .card-info {
+            margin-bottom: 8px;
+        }
+        
+        .search-result-page .card-label {
+            font-size: 11px;
+            color: #7f8c8d;
+            display: inline-block;
+            min-width: 60px;
+        }
+        
+        .search-result-page .card-value {
+            font-size: 13px;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+        
+        .search-result-page .card-dimensions {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 5px;
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid #ecf0f1;
+        }
+        
+        .search-result-page .card-dim {
+            text-align: center;
+        }
+        
+        .search-result-page .card-dim-label {
+            font-size: 10px;
+            color: #95a5a6;
+        }
+        
+        .search-result-page .card-dim-value {
+            font-size: 12px;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+        
+        /* Choices.js カスタムスタイル */
+        .search-result-page .choices {
+            margin-bottom: 0;
+            position: relative;
+            z-index: 100;
+        }
+        
+        .search-result-page .choices.is-open {
+            z-index: 100001 !important;
+        }
+        
+        .search-result-page .choices__inner {
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 6px 10px;
+            min-height: 38px;
+            font-size: 14px;
+        }
+        
+        .search-result-page .choices__input {
+            background-color: transparent;
+            font-size: 12px;
+        }
+        
+        .search-result-page .choices[data-type*="select-one"] .choices__inner {
+            padding: 6px 40px 6px 10px;
+        }
+        
+        .search-result-page .choices__list--single {
+            padding: 4px;
+        }
+        
+        .search-result-page .choices__placeholder {
+            opacity: 0.5;
+            font-size: 12px;
+        }
+        
+        .search-result-page .choices__list--dropdown {
+            position: absolute !important;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+            z-index: 100002 !important;
+            background: white !important;
+            opacity: 1 !important;
+            max-height: 300px !important;
+            overflow-y: auto !important;
+        }
+        
+        .search-result-page .choices__list--dropdown .choices__item--selectable {
+            padding: 8px 12px;
+            background: white;
+        }
+        
+        .search-result-page .choices__list--dropdown .choices__item--selectable.is-highlighted {
+            background-color: #f0f0f0;
+        }
+        
+        .search-result-page .choices[data-type*="select-one"] .choices__list--dropdown {
+            top: 100%;
+            bottom: auto;
+        }
+        
+        /* モーダル */
+        .search-result-page .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* 資産マスタモーダルは他の要素より確実に上に */
+        .search-result-page #assetMasterModal {
+            z-index: 4000;
+        }
+        
+        .search-result-page .modal.active {
+            display: flex;
+        }
+        
+        .search-result-page .modal-content {
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+            z-index: 2001;
+        }
+        
+        /* 資産マスタモーダルのコンテンツは広く、overflow設定を調整 */
+        .search-result-page #assetMasterModal .modal-content {
+            max-width: 700px;
+            max-height: 90vh;
+            overflow-y: auto;
+            overflow-x: visible;
+            z-index: 4001;
+        }
+        
+        
+        .search-result-page .modal-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #e74c3c;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .search-result-page .modal-option {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 15px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+        
+        .search-result-page .modal-option:hover {
+            background: #f8f9fa;
+            border-color: #27ae60;
+        }
+        
+        .search-result-page .modal-option-label {
+            font-size: 14px;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+        
+        .search-result-page .modal-option-desc {
+            font-size: 12px;
+            color: #7f8c8d;
+            margin-top: 5px;
+        }
+        
+        .search-result-page .modal-button {
+            width: 100%;
+            padding: 12px;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background 0.3s;
+        }
+        
+        .search-result-page .modal-button:hover {
+            background: #c0392b;
+        }
+        
+        .search-result-page .modal-button.secondary {
+            background: white;
+            color: #2c3e50;
+            border: 1px solid #ddd;
+            margin-top: 5px;
+        }
+        
+        .search-result-page .modal-button.secondary:hover {
+            background: #f8f9fa;
+        }
+
+        
+        /* 資産マスタモーダル用のselect */
+        .search-result-page .master-filter-select {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 13px;
+            background: white;
+        }
+        
+        /* 資産マスタモーダルのコンテンツ */
+        
+        .search-result-page #assetMasterModal .choices {
+            margin-bottom: 0;
+            position: relative;
+            z-index: 100000 !important;
+        }
+        
+        .search-result-page #assetMasterModal .choices.is-open {
+            z-index: 100001 !important;
+        }
+        
+        /* 各ドロップダウンの個別z-index設定 */
+        #categoryWrapper .choices,
+        .search-result-page #largeClassWrapper .choices {
+            z-index: 100005 !important;
+        }
+        
+        #categoryWrapper .choices.is-open,
+        .search-result-page #largeClassWrapper .choices.is-open {
+            z-index: 100006 !important;
+        }
+        
+        #categoryWrapper .choices__list--dropdown,
+        .search-result-page #largeClassWrapper .choices__list--dropdown {
+            z-index: 100007 !important;
+            position: absolute !important;
+            background: white !important;
+            border: 1px solid #ccc !important;
+            border-radius: 4px !important;
+            max-height: 300px !important;
+            overflow-y: auto !important;
+        }
+        
+        #mediumClassWrapper .choices,
+        .search-result-page #individualItemWrapper .choices {
+            z-index: 100003 !important;
+        }
+        
+        #mediumClassWrapper .choices.is-open,
+        .search-result-page #individualItemWrapper .choices.is-open {
+            z-index: 100004 !important;
+        }
+        
+        #mediumClassWrapper .choices__list--dropdown,
+        .search-result-page #individualItemWrapper .choices__list--dropdown {
+            z-index: 100005 !important;
+            position: absolute !important;
+            background: white !important;
+            border: 1px solid #ccc !important;
+            border-radius: 4px !important;
+            max-height: 300px !important;
+            overflow-y: auto !important;
+        }
+        
+        #makerWrapper .choices,
+        .search-result-page #modelWrapper .choices {
+            z-index: 100001 !important;
+        }
+        
+        #makerWrapper .choices.is-open,
+        .search-result-page #modelWrapper .choices.is-open {
+            z-index: 100002 !important;
+        }
+        
+        #makerWrapper .choices__list--dropdown,
+        .search-result-page #modelWrapper .choices__list--dropdown {
+            z-index: 100003 !important;
+            position: absolute !important;
+            background: white !important;
+            border: 1px solid #ccc !important;
+            border-radius: 4px !important;
+            max-height: 300px !important;
+            overflow-y: auto !important;
+        }
+        
+        .search-result-page #assetMasterModal .choices__inner {
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 8px 10px;
+            min-height: 38px;
+            font-size: 13px;
+        }
+        
+        
+        .search-result-page #assetMasterModal .choices__list--dropdown .choices__item--selectable {
+            padding: 8px 12px;
+        }
+        
+        .search-result-page #assetMasterModal .choices__list--dropdown .choices__item--selectable.is-highlighted {
+            background-color: #f0f0f0;
+        }
+        
+        /* 選択済み資産カード */
+        .search-result-page .selected-asset-card {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 10px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .search-result-page .selected-asset-info {
+            flex: 1;
+            font-size: 13px;
+            color: #2c3e50;
+        }
+        
+        .search-result-page .selected-asset-remove {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            padding: 4px 12px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        
+        .search-result-page .selected-asset-remove:hover {
+            background: #c0392b;
+        }
+        
+        /* 右サイドパネル（カラム選択） */
+        .search-result-page .side-panel {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 400px;
+            height: 100vh;
+            background: white;
+            box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+            transition: right 0.3s;
+            z-index: 3000;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .search-result-page .side-panel.active {
+            right: 0;
+        }
+        
+        .search-result-page .side-panel-header {
+            background: #e74c3c;
+            color: white;
+            padding: 15px 20px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        
+        .search-result-page .side-panel-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        
+        .search-result-page .panel-section {
+            margin-bottom: 20px;
+        }
+        
+        .search-result-page .panel-section-title {
+            font-size: 13px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #27ae60;
+        }
+        
+        .search-result-page .panel-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 0;
+            font-size: 13px;
+            color: #2c3e50;
+        }
+        
+        .search-result-page .panel-item input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+        
+        .search-result-page .side-panel-footer {
+            padding: 15px 20px;
+            border-top: 1px solid #ddd;
+        }
+        
+        .search-result-page .panel-close-btn {
+            width: 100%;
+            padding: 10px;
+            background: #95a5a6;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .search-result-page .panel-close-btn:hover {
+            background: #7f8c8d;
+        }
+

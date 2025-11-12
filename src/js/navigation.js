@@ -228,6 +228,42 @@ function handleUploadAndNext() {
     handleImportToMatching();
 }
 
+/**
+ * 資産検索画面から資産検索結果画面へ遷移
+ */
+function handleViewSearchResult() {
+    console.log('=== handleViewSearchResult called ===');
+    const mainContainer = document.getElementById('mainContainer');
+    const searchResultPage = document.getElementById('searchResultPage');
+
+    if (!mainContainer || !searchResultPage) {
+        console.error('Required elements not found!');
+        return;
+    }
+
+    mainContainer.classList.remove('active');
+    searchResultPage.classList.add('active');
+
+    console.log('=== Screen transition complete ===');
+
+    // 資産検索結果画面の初期化を直接呼び出し
+    setTimeout(() => {
+        if (typeof window.initSearchResultPage === 'function') {
+            window.initSearchResultPage();
+        } else {
+            console.error('initSearchResultPage is not defined!');
+        }
+    }, 100);
+}
+
+/**
+ * 資産検索結果画面から資産検索画面に戻る
+ */
+function handleBackFromSearchResult() {
+    document.getElementById('searchResultPage').classList.remove('active');
+    document.getElementById('mainContainer').classList.add('active');
+}
+
 // グローバルスコープに関数を公開
 window.handleQRManagement = handleQRManagement;
 window.handleBackFromQR = handleBackFromQR;
@@ -252,3 +288,5 @@ window.handleBackFromImport = handleBackFromImport;
 window.handleImportToMatching = handleImportToMatching;
 window.handleBackFromMatching = handleBackFromMatching;
 window.handleUploadAndNext = handleUploadAndNext;
+window.handleViewSearchResult = handleViewSearchResult;
+window.handleBackFromSearchResult = handleBackFromSearchResult;

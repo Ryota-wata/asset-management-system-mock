@@ -21,7 +21,12 @@ function clearForm() {
  * リスト閲覧
  */
 function viewList() {
-    alert('資産一覧画面へ遷移します');
+    console.log('=== viewList called ===');
+    if (typeof handleViewSearchResult === 'function') {
+        handleViewSearchResult();
+    } else {
+        console.error('handleViewSearchResult is not defined!');
+    }
 }
 
 /**

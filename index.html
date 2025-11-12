@@ -25,6 +25,7 @@
     <link rel="stylesheet" href="src/css/screens/edit.css">
     <link rel="stylesheet" href="src/css/screens/asset-import.css">
     <link rel="stylesheet" href="src/css/screens/asset-matching.css">
+    <link rel="stylesheet" href="src/css/screens/search-result-simple.css">
 
     <!-- Choices.js JS (外部ライブラリ) -->
     <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
@@ -117,6 +118,9 @@
 
         <!-- 資産マスタ表示モーダル -->
         <div id="assetMasterModal"></div>
+
+        <!-- 資産検索結果画面 -->
+        <div id="searchResultPage"></div>
     </div>
 
     <!-- JavaScript読み込み（依存関係順） -->
@@ -129,6 +133,7 @@
     <script src="src/js/qr-management.js"></script>
     <script src="src/js/asset-survey.js"></script>
     <script src="src/js/asset-matching.js"></script>
+    <script src="src/js/search-result-simple.js"></script>
     <script src="src/js/filters.js"></script>
     <script src="src/js/init.js"></script>
 
@@ -169,7 +174,8 @@
                 { id: 'historyListPage', file: 'history.html' },
                 { id: 'assetImportPage', file: 'asset-import.html' },
                 { id: 'assetMatchingPage', file: 'asset-matching.html' },
-                { id: 'assetMasterModal', file: 'asset-master-modal.html' }
+                { id: 'assetMasterModal', file: 'asset-master-modal.html' },
+                { id: 'searchResultPage', file: 'search-result-simple.html' }
             ];
 
             // すべての画面を並行して読み込み
