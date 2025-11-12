@@ -57,20 +57,18 @@
                                 <input type="checkbox" id="selectAllCheckbox" onchange="toggleSelectAll(this)">
                             </th>
                             <th class="th-no-matching">No.</th>
-                            <th class="th-status-matching">状態</th>
                             <!-- 固定資産台帳カラム -->
                             <th class="th-col-group-matching" colspan="12">固定資産台帳データ</th>
                             <!-- AI推薦1 -->
-                            <th class="th-col-group-matching" colspan="6">AI推薦1</th>
+                            <th class="th-col-group-matching" colspan="7">AI推薦1</th>
                             <!-- AI推薦2 -->
-                            <th class="th-col-group-matching" colspan="6">AI推薦2</th>
+                            <th class="th-col-group-matching" colspan="7">AI推薦2</th>
                             <!-- AI推薦3 -->
-                            <th class="th-col-group-matching" colspan="6">AI推薦3</th>
+                            <th class="th-col-group-matching" colspan="7">AI推薦3</th>
                             <!-- 操作 -->
                             <th class="th-actions-matching" colspan="2">操作</th>
                         </tr>
                         <tr class="sub-header-row">
-                            <th></th>
                             <th></th>
                             <th></th>
                             <!-- 固定資産台帳サブヘッダー -->
@@ -87,6 +85,7 @@
                             <th class="th-sub-matching">設置場所</th>
                             <th class="th-sub-matching">管理部門</th>
                             <!-- AI推薦1サブヘッダー -->
+                            <th class="th-sub-matching th-select-matching">選択</th>
                             <th class="th-sub-matching">類似度</th>
                             <th class="th-sub-matching">大分類</th>
                             <th class="th-sub-matching">中分類</th>
@@ -94,6 +93,7 @@
                             <th class="th-sub-matching">メーカー名</th>
                             <th class="th-sub-matching">型式</th>
                             <!-- AI推薦2サブヘッダー -->
+                            <th class="th-sub-matching th-select-matching">選択</th>
                             <th class="th-sub-matching">類似度</th>
                             <th class="th-sub-matching">大分類</th>
                             <th class="th-sub-matching">中分類</th>
@@ -101,6 +101,7 @@
                             <th class="th-sub-matching">メーカー名</th>
                             <th class="th-sub-matching">型式</th>
                             <!-- AI推薦3サブヘッダー -->
+                            <th class="th-sub-matching th-select-matching">選択</th>
                             <th class="th-sub-matching">類似度</th>
                             <th class="th-sub-matching">大分類</th>
                             <th class="th-sub-matching">中分類</th>
@@ -119,9 +120,6 @@
                                 <input type="checkbox" class="row-checkbox" data-index="0">
                             </td>
                             <td class="td-no-matching">1</td>
-                            <td class="td-status-matching">
-                                <span class="status-icon-matching pending">●</span>
-                            </td>
                             <!-- 固定資産台帳データ -->
                             <td class="td-data-matching"><span class="cell-value" data-field="assetNo">A-001-2023</span></td>
                             <td class="td-data-matching"><span class="cell-value" data-field="productName">MRI装置 シーメンス MAGNETOM</span></td>
@@ -136,6 +134,9 @@
                             <td class="td-data-matching"><span class="cell-value" data-field="location">放射線科</span></td>
                             <td class="td-data-matching"><span class="cell-value" data-field="department">医療機器管理部</span></td>
                             <!-- AI推薦1 -->
+                            <td class="td-select-matching">
+                                <input type="radio" name="ai-select-0" class="ai-select-radio" value="rec1" checked onchange="selectAIRecommendation(0, 1)">
+                            </td>
                             <td class="td-similarity-matching"><span class="similarity-badge-matching high">98%</span></td>
                             <td class="td-data-matching"><span class="cell-value" data-field="ai1_major">医療機器</span></td>
                             <td class="td-data-matching"><span class="cell-value" data-field="ai1_middle">画像診断装置</span></td>
@@ -143,6 +144,9 @@
                             <td class="td-data-matching"><span class="cell-value" data-field="ai1_mfr">シーメンスヘルスケア</span></td>
                             <td class="td-data-matching"><span class="cell-value" data-field="ai1_model">MAGNETOM Vida 3T</span></td>
                             <!-- AI推薦2 -->
+                            <td class="td-select-matching">
+                                <input type="radio" name="ai-select-0" class="ai-select-radio" value="rec2" onchange="selectAIRecommendation(0, 2)">
+                            </td>
                             <td class="td-similarity-matching"><span class="similarity-badge-matching medium">85%</span></td>
                             <td class="td-data-matching"><span class="cell-value" data-field="ai2_major">医療機器</span></td>
                             <td class="td-data-matching"><span class="cell-value" data-field="ai2_middle">画像診断装置</span></td>
@@ -150,6 +154,9 @@
                             <td class="td-data-matching"><span class="cell-value" data-field="ai2_mfr">シーメンス</span></td>
                             <td class="td-data-matching"><span class="cell-value" data-field="ai2_model">MAGNETOMシリーズ</span></td>
                             <!-- AI推薦3 -->
+                            <td class="td-select-matching">
+                                <input type="radio" name="ai-select-0" class="ai-select-radio" value="rec3" onchange="selectAIRecommendation(0, 3)">
+                            </td>
                             <td class="td-similarity-matching"><span class="similarity-badge-matching low">72%</span></td>
                             <td class="td-data-matching"><span class="cell-value" data-field="ai3_major">医療機器</span></td>
                             <td class="td-data-matching"><span class="cell-value" data-field="ai3_middle">診断機器</span></td>
@@ -171,9 +178,6 @@
                                 <input type="checkbox" class="row-checkbox" data-index="1">
                             </td>
                             <td class="td-no-matching">2</td>
-                            <td class="td-status-matching">
-                                <span class="status-icon-matching pending">●</span>
-                            </td>
                             <!-- 固定資産台帳データ -->
                             <td class="td-data-matching"><span class="cell-value" data-field="assetNo">A-002-2023</span></td>
                             <td class="td-data-matching"><span class="cell-value" data-field="productName">CT装置 GE Healthcare Revolution</span></td>
@@ -188,6 +192,9 @@
                             <td class="td-data-matching"><span class="cell-value" data-field="location">放射線科</span></td>
                             <td class="td-data-matching"><span class="cell-value" data-field="department">医療機器管理部</span></td>
                             <!-- AI推薦1 -->
+                            <td class="td-select-matching">
+                                <input type="radio" name="ai-select-1" class="ai-select-radio" value="rec1" checked onchange="selectAIRecommendation(1, 1)">
+                            </td>
                             <td class="td-similarity-matching"><span class="similarity-badge-matching high">95%</span></td>
                             <td class="td-data-matching"><span class="cell-value" data-field="ai1_major">医療機器</span></td>
                             <td class="td-data-matching"><span class="cell-value" data-field="ai1_middle">画像診断装置</span></td>
@@ -195,6 +202,9 @@
                             <td class="td-data-matching"><span class="cell-value" data-field="ai1_mfr">GEヘルスケア</span></td>
                             <td class="td-data-matching"><span class="cell-value" data-field="ai1_model">Revolution CT</span></td>
                             <!-- AI推薦2 -->
+                            <td class="td-select-matching">
+                                <input type="radio" name="ai-select-1" class="ai-select-radio" value="rec2" onchange="selectAIRecommendation(1, 2)">
+                            </td>
                             <td class="td-similarity-matching"><span class="similarity-badge-matching medium">88%</span></td>
                             <td class="td-data-matching"><span class="cell-value" data-field="ai2_major">医療機器</span></td>
                             <td class="td-data-matching"><span class="cell-value" data-field="ai2_middle">画像診断装置</span></td>
@@ -202,6 +212,9 @@
                             <td class="td-data-matching"><span class="cell-value" data-field="ai2_mfr">GE</span></td>
                             <td class="td-data-matching"><span class="cell-value" data-field="ai2_model">Revolution シリーズ</span></td>
                             <!-- AI推薦3 -->
+                            <td class="td-select-matching">
+                                <input type="radio" name="ai-select-1" class="ai-select-radio" value="rec3" onchange="selectAIRecommendation(1, 3)">
+                            </td>
                             <td class="td-similarity-matching"><span class="similarity-badge-matching low">75%</span></td>
                             <td class="td-data-matching"><span class="cell-value" data-field="ai3_major">医療機器</span></td>
                             <td class="td-data-matching"><span class="cell-value" data-field="ai3_middle">診断機器</span></td>
@@ -223,9 +236,6 @@
                                 <input type="checkbox" class="row-checkbox" data-index="2">
                             </td>
                             <td class="td-no-matching">3</td>
-                            <td class="td-status-matching">
-                                <span class="status-icon-matching pending">●</span>
-                            </td>
                             <!-- 固定資産台帳データ -->
                             <td class="td-data-matching"><span class="cell-value" data-field="assetNo">A-003-2023</span></td>
                             <td class="td-data-matching"><span class="cell-value" data-field="productName">人工呼吸器 ドレーゲル Savina</span></td>
@@ -240,6 +250,9 @@
                             <td class="td-data-matching"><span class="cell-value" data-field="location">ICU</span></td>
                             <td class="td-data-matching"><span class="cell-value" data-field="department">集中治療部</span></td>
                             <!-- AI推薦1 -->
+                            <td class="td-select-matching">
+                                <input type="radio" name="ai-select-2" class="ai-select-radio" value="rec1" checked onchange="selectAIRecommendation(2, 1)">
+                            </td>
                             <td class="td-similarity-matching"><span class="similarity-badge-matching medium">88%</span></td>
                             <td class="td-data-matching"><span class="cell-value" data-field="ai1_major">医療機器</span></td>
                             <td class="td-data-matching"><span class="cell-value" data-field="ai1_middle">生命維持装置</span></td>
@@ -247,6 +260,9 @@
                             <td class="td-data-matching"><span class="cell-value" data-field="ai1_mfr">ドレーゲル</span></td>
                             <td class="td-data-matching"><span class="cell-value" data-field="ai1_model">Savina 300</span></td>
                             <!-- AI推薦2 -->
+                            <td class="td-select-matching">
+                                <input type="radio" name="ai-select-2" class="ai-select-radio" value="rec2" onchange="selectAIRecommendation(2, 2)">
+                            </td>
                             <td class="td-similarity-matching"><span class="similarity-badge-matching medium">82%</span></td>
                             <td class="td-data-matching"><span class="cell-value" data-field="ai2_major">医療機器</span></td>
                             <td class="td-data-matching"><span class="cell-value" data-field="ai2_middle">生命維持装置</span></td>
@@ -254,6 +270,9 @@
                             <td class="td-data-matching"><span class="cell-value" data-field="ai2_mfr">ドレーゲル</span></td>
                             <td class="td-data-matching"><span class="cell-value" data-field="ai2_model">Savinaシリーズ</span></td>
                             <!-- AI推薦3 -->
+                            <td class="td-select-matching">
+                                <input type="radio" name="ai-select-2" class="ai-select-radio" value="rec3" onchange="selectAIRecommendation(2, 3)">
+                            </td>
                             <td class="td-similarity-matching"><span class="similarity-badge-matching low">70%</span></td>
                             <td class="td-data-matching"><span class="cell-value" data-field="ai3_major">医療機器</span></td>
                             <td class="td-data-matching"><span class="cell-value" data-field="ai3_middle">呼吸器系装置</span></td>
@@ -294,232 +313,3 @@
         </footer>
     </div>
 </div>
-
-<script>
-/**
- * 全選択切り替え
- */
-function toggleSelectAll(checkbox) {
-    const checkboxes = document.querySelectorAll('.row-checkbox');
-    checkboxes.forEach(cb => {
-        cb.checked = checkbox.checked;
-    });
-}
-
-/**
- * 編集モード切り替え
- */
-function toggleEditMode(index) {
-    const row = document.querySelector(`.data-row-flat[data-index="${index}"]`);
-    const editBtn = row.querySelector('.edit-btn-flat');
-    const isEditing = row.classList.contains('editing');
-
-    if (isEditing) {
-        // 編集モード終了：inputをspanに戻す
-        row.querySelectorAll('.cell-value').forEach(cell => {
-            const input = cell.querySelector('input');
-            if (input) {
-                const span = document.createElement('span');
-                span.className = 'cell-value';
-                span.setAttribute('data-field', cell.getAttribute('data-field'));
-                span.textContent = input.value;
-                cell.parentNode.replaceChild(span, cell);
-            }
-        });
-        row.classList.remove('editing');
-        editBtn.textContent = '編集';
-        editBtn.classList.remove('editing');
-    } else {
-        // 編集モード開始：spanをinputに変換
-        row.querySelectorAll('.cell-value').forEach(cell => {
-            const currentValue = cell.textContent;
-            const field = cell.getAttribute('data-field');
-
-            const input = document.createElement('input');
-            input.type = 'text';
-            input.className = 'cell-input-flat';
-            input.value = currentValue;
-            input.setAttribute('data-field', field);
-
-            cell.parentNode.replaceChild(input, cell);
-        });
-        row.classList.add('editing');
-        editBtn.textContent = '保存';
-        editBtn.classList.add('editing');
-    }
-}
-
-/**
- * 行を確定
- */
-function confirmRowFlat(index) {
-    const row = document.querySelector(`.data-row-flat[data-index="${index}"]`);
-
-    // 編集モードの場合は保存
-    if (row.classList.contains('editing')) {
-        toggleEditMode(index);
-    }
-
-    // 状態を「済」に更新
-    row.setAttribute('data-status', 'completed');
-    const statusIcon = row.querySelector('.status-icon-matching');
-    statusIcon.className = 'status-icon-matching completed';
-    statusIcon.textContent = '✓';
-
-    // ボタンを無効化
-    const editBtn = row.querySelector('.edit-btn-flat');
-    const confirmBtn = row.querySelector('.confirm-btn-flat');
-    editBtn.disabled = true;
-    confirmBtn.disabled = true;
-    confirmBtn.textContent = '確定済';
-
-    // チェックボックスを無効化
-    const checkbox = row.querySelector('.row-checkbox');
-    checkbox.disabled = true;
-    checkbox.checked = false;
-
-    // 進捗カウント更新
-    updateProgressCount();
-}
-
-/**
- * 選択項目を一括確定
- */
-function bulkConfirmSelected() {
-    const selectedCheckboxes = document.querySelectorAll('.row-checkbox:checked:not(:disabled)');
-
-    if (selectedCheckboxes.length === 0) {
-        alert('確定する項目を選択してください。');
-        return;
-    }
-
-    if (confirm(`選択した${selectedCheckboxes.length}件を一括確定しますか？`)) {
-        selectedCheckboxes.forEach(checkbox => {
-            const index = checkbox.getAttribute('data-index');
-            confirmRowFlat(parseInt(index));
-        });
-
-        // 全選択チェックボックスを解除
-        document.getElementById('selectAllCheckbox').checked = false;
-    }
-}
-
-/**
- * フィルター適用
- */
-function filterMatchingData(filterType) {
-    // フィルターボタンのアクティブ状態を更新
-    document.querySelectorAll('.filter-btn-matching').forEach(btn => {
-        btn.classList.remove('active');
-    });
-    document.querySelector(`[data-filter="${filterType}"]`).classList.add('active');
-
-    // データ行をフィルタリング
-    document.querySelectorAll('.data-row-flat').forEach(row => {
-        const status = row.getAttribute('data-status');
-
-        if (filterType === 'all') {
-            row.style.display = '';
-        } else if (filterType === status) {
-            row.style.display = '';
-        } else {
-            row.style.display = 'none';
-        }
-    });
-}
-
-/**
- * 検索
- */
-function searchImportData(searchTerm) {
-    const term = searchTerm.toLowerCase();
-    document.querySelectorAll('.data-row-flat').forEach(row => {
-        const cells = row.querySelectorAll('.td-data-matching');
-        let found = false;
-
-        cells.forEach(cell => {
-            const text = cell.textContent.toLowerCase();
-            if (text.includes(term)) {
-                found = true;
-            }
-        });
-
-        if (found || term === '') {
-            row.style.display = '';
-        } else {
-            row.style.display = 'none';
-        }
-    });
-}
-
-/**
- * 進捗カウント更新
- */
-function updateProgressCount() {
-    const completedRows = document.querySelectorAll('.data-row-flat[data-status="completed"]').length;
-    const totalRows = document.querySelectorAll('.data-row-flat').length;
-
-    document.getElementById('progressCount').textContent = `${completedRows} / ${totalRows}`;
-    document.getElementById('completedCount').textContent = `${completedRows}件`;
-
-    // フィルターカウント更新
-    const pendingCount = document.querySelectorAll('.data-row-flat[data-status="pending"]').length;
-    document.querySelector('[data-filter="all"] .filter-count-matching').textContent = `(${totalRows})`;
-    document.querySelector('[data-filter="pending"] .filter-count-matching').textContent = `(${pendingCount})`;
-    document.querySelector('[data-filter="completed"] .filter-count-matching').textContent = `(${completedRows})`;
-}
-
-/**
- * 資産マスタを新しいウィンドウで開く
- */
-function openAssetMasterWindow() {
-    const width = 1200;
-    const height = 800;
-    const left = (screen.width - width) / 2;
-    const top = (screen.height - height) / 2;
-
-    window.open(
-        'about:blank',
-        'assetMasterWindow',
-        `width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=yes`
-    );
-
-    alert('資産マスタを新しいウィンドウで開きます（実装時はデータを表示）');
-}
-
-/**
- * ページネーション
- */
-function goToPreviousPage() {
-    console.log('Go to previous page');
-}
-
-function goToNextPage() {
-    console.log('Go to next page');
-}
-
-/**
- * 突き合わせ完了
- */
-function completeMatching() {
-    const pendingCount = document.querySelectorAll('.data-row-flat[data-status="pending"]').length;
-
-    if (pendingCount > 0) {
-        if (!confirm(`未処理のデータが${pendingCount}件あります。このまま完了しますか？`)) {
-            return;
-        }
-    }
-
-    if (confirm('突き合わせを完了してマスタに登録しますか？')) {
-        console.log('Completing matching process...');
-        alert('突き合わせが完了しました。');
-    }
-}
-
-// 初期化
-document.addEventListener('DOMContentLoaded', function() {
-    if (document.getElementById('assetMatchingPage')) {
-        updateProgressCount();
-    }
-});
-</script>

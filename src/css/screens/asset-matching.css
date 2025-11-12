@@ -289,29 +289,31 @@
     border-bottom: 1px solid #e0e0e0;
 }
 
-/* 状態カラム */
-.asset-matching-page .th-status-matching {
-    width: 60px;
+/* 選択カラム（AI推薦用ラジオボタン） */
+.asset-matching-page .th-select-matching {
+    width: 50px;
     text-align: center;
+    background: #e8f5e9 !important;
 }
 
-.asset-matching-page .td-status-matching {
-    width: 60px;
+.asset-matching-page .td-select-matching {
+    width: 50px;
     text-align: center;
     padding: 12px 8px;
     border-bottom: 1px solid #e0e0e0;
+    border-right: 1px solid #f0f0f0;
 }
 
-.asset-matching-page .status-icon-matching {
-    font-size: 16px;
+.asset-matching-page .ai-select-radio {
+    cursor: pointer;
+    width: 18px;
+    height: 18px;
+    accent-color: #4CAF50;
 }
 
-.asset-matching-page .status-icon-matching.pending {
-    color: #ff9800;
-}
-
-.asset-matching-page .status-icon-matching.completed {
-    color: #4CAF50;
+.asset-matching-page .ai-select-radio:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
 }
 
 /* データセル */
