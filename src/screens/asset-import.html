@@ -78,7 +78,7 @@
                         <span>←</span>
                         <span>戻る</span>
                     </button>
-                    <button class="action-button-import primary" id="uploadButton" disabled onclick="handleUploadAndNext()">
+                    <button class="action-button-import primary" id="uploadButton" onclick="handleUploadAndNext()">
                         <span>次へ</span>
                         <span>→</span>
                     </button>
@@ -143,9 +143,6 @@ function processFile(file) {
     document.getElementById('fileRows').textContent = '解析中...';
     document.getElementById('fileInfo').style.display = 'block';
 
-    // アップロードボタンを有効化
-    document.getElementById('uploadButton').disabled = false;
-
     // 仮のデータ件数を表示（実際はファイルを解析して取得）
     setTimeout(() => {
         document.getElementById('fileRows').textContent = '150 件';
@@ -164,37 +161,14 @@ function formatFileSize(bytes) {
 function removeFile() {
     document.getElementById('fileInfo').style.display = 'none';
     document.getElementById('fileInput').value = '';
-    document.getElementById('uploadButton').disabled = true;
     window.selectedFile = null;
 }
 
 function handleUploadAndNext() {
-    if (!window.selectedFile) {
-        alert('ファイルが選択されていません。');
-        return;
+    // レイアウト確認用のため、ファイル選択の有無に関わらず遷移可能
+    // 突き合わせ画面へ直接遷移
+    if (typeof handleImportToMatching === 'function') {
+        handleImportToMatching();
     }
-
-    // プログレスバーを表示
-    document.getElementById('uploadProgress').style.display = 'block';
-
-    // 仮のアップロード処理（実際はサーバーにアップロード）
-    let progress = 0;
-    const interval = setInterval(() => {
-        progress += 10;
-        document.getElementById('progressFill').style.width = progress + '%';
-        document.getElementById('progressText').textContent = `アップロード中... ${progress}%`;
-
-        if (progress >= 100) {
-            clearInterval(interval);
-            document.getElementById('progressText').textContent = 'アップロード完了！';
-
-            // 突き合わせ画面へ遷移
-            setTimeout(() => {
-                if (typeof handleImportToMatching === 'function') {
-                    handleImportToMatching();
-                }
-            }, 500);
-        }
-    }, 200);
 }
 </script>
