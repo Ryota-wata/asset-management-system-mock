@@ -167,8 +167,16 @@ function removeFile() {
 function handleUploadAndNext() {
     // レイアウト確認用のため、ファイル選択の有無に関わらず遷移可能
     // 突き合わせ画面へ直接遷移
-    if (typeof handleImportToMatching === 'function') {
-        handleImportToMatching();
+    console.log('handleUploadAndNext called');
+
+    if (typeof window.handleImportToMatching === 'function') {
+        console.log('Calling handleImportToMatching');
+        window.handleImportToMatching();
+    } else {
+        console.error('handleImportToMatching is not defined');
+        // フォールバック: 直接遷移を試みる
+        document.getElementById('assetImportPage').classList.remove('active');
+        document.getElementById('assetMatchingPage').classList.add('active');
     }
 }
 </script>
