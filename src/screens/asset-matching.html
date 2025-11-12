@@ -9,10 +9,10 @@
             <div class="header-right-matching">
                 <div class="progress-info-matching">
                     <span class="progress-label-matching">進捗:</span>
-                    <span class="progress-value-matching" id="progressCount">0 / 5000</span>
+                    <span class="progress-value-matching" id="progressCount">4 / 30</span>
                     <span class="progress-separator-matching">|</span>
                     <span class="completed-label-matching">完了:</span>
-                    <span class="completed-value-matching" id="completedCount">0件</span>
+                    <span class="completed-value-matching" id="completedCount">4件</span>
                 </div>
             </div>
         </header>
@@ -21,16 +21,16 @@
         <div class="filter-bar-matching">
             <div class="filter-buttons-matching">
                 <button class="filter-btn-matching active" onclick="filterMatchingData('all')" data-filter="all">
-                    すべて <span class="filter-count-matching">(5000)</span>
+                    すべて <span class="filter-count-matching">(30)</span>
                 </button>
                 <button class="filter-btn-matching" onclick="filterMatchingData('pending')" data-filter="pending">
-                    未処理 <span class="filter-count-matching">(4850)</span>
+                    未処理 <span class="filter-count-matching">(23)</span>
                 </button>
                 <button class="filter-btn-matching" onclick="filterMatchingData('inProgress')" data-filter="inProgress">
-                    作業中 <span class="filter-count-matching">(120)</span>
+                    作業中 <span class="filter-count-matching">(3)</span>
                 </button>
                 <button class="filter-btn-matching" onclick="filterMatchingData('completed')" data-filter="completed">
-                    済 <span class="filter-count-matching">(30)</span>
+                    済 <span class="filter-count-matching">(4)</span>
                 </button>
             </div>
             <div class="bulk-actions-matching">
@@ -125,13 +125,313 @@
                                     <span class="similarity-badge-matching high">92%</span>
                                 </td>
                             </tr>
-                            <!-- ... ここに5000件までデータが入る想定 ... -->
+                            <tr class="import-row-matching" data-index="5" data-status="pending" onclick="selectImportRow(5)">
+                                <td class="td-no-matching">6</td>
+                                <td class="td-status-matching">
+                                    <span class="status-icon-matching pending">●</span>
+                                    <span class="status-text-matching">未処理</span>
+                                </td>
+                                <td class="td-asset-no-matching">A-006-2023</td>
+                                <td class="td-name-matching">X線撮影装置 キャノン</td>
+                                <td class="td-similarity-matching">
+                                    <span class="similarity-badge-matching high">94%</span>
+                                </td>
+                            </tr>
+                            <tr class="import-row-matching" data-index="6" data-status="pending" onclick="selectImportRow(6)">
+                                <td class="td-no-matching">7</td>
+                                <td class="td-status-matching">
+                                    <span class="status-icon-matching pending">●</span>
+                                    <span class="status-text-matching">未処理</span>
+                                </td>
+                                <td class="td-asset-no-matching">A-007-2023</td>
+                                <td class="td-name-matching">電子カルテシステム 富士通</td>
+                                <td class="td-similarity-matching">
+                                    <span class="similarity-badge-matching medium">78%</span>
+                                </td>
+                            </tr>
+                            <tr class="import-row-matching" data-index="7" data-status="completed" onclick="selectImportRow(7)">
+                                <td class="td-no-matching">8</td>
+                                <td class="td-status-matching">
+                                    <span class="status-icon-matching completed">✓</span>
+                                    <span class="status-text-matching">済</span>
+                                </td>
+                                <td class="td-asset-no-matching">A-008-2023</td>
+                                <td class="td-name-matching">血液分析装置 シスメックス</td>
+                                <td class="td-similarity-matching">
+                                    <span class="similarity-badge-matching high">96%</span>
+                                </td>
+                            </tr>
+                            <tr class="import-row-matching" data-index="8" data-status="pending" onclick="selectImportRow(8)">
+                                <td class="td-no-matching">9</td>
+                                <td class="td-status-matching">
+                                    <span class="status-icon-matching pending">●</span>
+                                    <span class="status-text-matching">未処理</span>
+                                </td>
+                                <td class="td-asset-no-matching">A-009-2023</td>
+                                <td class="td-name-matching">心電計 日本光電</td>
+                                <td class="td-similarity-matching">
+                                    <span class="similarity-badge-matching high">91%</span>
+                                </td>
+                            </tr>
+                            <tr class="import-row-matching" data-index="9" data-status="pending" onclick="selectImportRow(9)">
+                                <td class="td-no-matching">10</td>
+                                <td class="td-status-matching">
+                                    <span class="status-icon-matching pending">●</span>
+                                    <span class="status-text-matching">未処理</span>
+                                </td>
+                                <td class="td-asset-no-matching">A-010-2023</td>
+                                <td class="td-name-matching">患者監視装置 フィリップス</td>
+                                <td class="td-similarity-matching">
+                                    <span class="similarity-badge-matching medium">82%</span>
+                                </td>
+                            </tr>
+                            <tr class="import-row-matching" data-index="10" data-status="pending" onclick="selectImportRow(10)">
+                                <td class="td-no-matching">11</td>
+                                <td class="td-status-matching">
+                                    <span class="status-icon-matching pending">●</span>
+                                    <span class="status-text-matching">未処理</span>
+                                </td>
+                                <td class="td-asset-no-matching">A-011-2023</td>
+                                <td class="td-name-matching">麻酔器 ドレーゲル</td>
+                                <td class="td-similarity-matching">
+                                    <span class="similarity-badge-matching high">89%</span>
+                                </td>
+                            </tr>
+                            <tr class="import-row-matching" data-index="11" data-status="inProgress" onclick="selectImportRow(11)">
+                                <td class="td-no-matching">12</td>
+                                <td class="td-status-matching">
+                                    <span class="status-icon-matching inProgress">▶</span>
+                                    <span class="status-text-matching">作業中</span>
+                                </td>
+                                <td class="td-asset-no-matching">A-012-2023</td>
+                                <td class="td-name-matching">除細動器 日本光電</td>
+                                <td class="td-similarity-matching">
+                                    <span class="similarity-badge-matching high">93%</span>
+                                </td>
+                            </tr>
+                            <tr class="import-row-matching" data-index="12" data-status="pending" onclick="selectImportRow(12)">
+                                <td class="td-no-matching">13</td>
+                                <td class="td-status-matching">
+                                    <span class="status-icon-matching pending">●</span>
+                                    <span class="status-text-matching">未処理</span>
+                                </td>
+                                <td class="td-asset-no-matching">A-013-2023</td>
+                                <td class="td-name-matching">輸液ポンプ テルモ</td>
+                                <td class="td-similarity-matching">
+                                    <span class="similarity-badge-matching medium">75%</span>
+                                </td>
+                            </tr>
+                            <tr class="import-row-matching" data-index="13" data-status="pending" onclick="selectImportRow(13)">
+                                <td class="td-no-matching">14</td>
+                                <td class="td-status-matching">
+                                    <span class="status-icon-matching pending">●</span>
+                                    <span class="status-text-matching">未処理</span>
+                                </td>
+                                <td class="td-asset-no-matching">A-014-2023</td>
+                                <td class="td-name-matching">シリンジポンプ テルモ</td>
+                                <td class="td-similarity-matching">
+                                    <span class="similarity-badge-matching medium">77%</span>
+                                </td>
+                            </tr>
+                            <tr class="import-row-matching" data-index="14" data-status="completed" onclick="selectImportRow(14)">
+                                <td class="td-no-matching">15</td>
+                                <td class="td-status-matching">
+                                    <span class="status-icon-matching completed">✓</span>
+                                    <span class="status-text-matching">済</span>
+                                </td>
+                                <td class="td-asset-no-matching">A-015-2023</td>
+                                <td class="td-name-matching">超音波凝固切開装置 ジョンソン・エンド・ジョンソン</td>
+                                <td class="td-similarity-matching">
+                                    <span class="similarity-badge-matching high">97%</span>
+                                </td>
+                            </tr>
+                            <tr class="import-row-matching" data-index="15" data-status="pending" onclick="selectImportRow(15)">
+                                <td class="td-no-matching">16</td>
+                                <td class="td-status-matching">
+                                    <span class="status-icon-matching pending">●</span>
+                                    <span class="status-text-matching">未処理</span>
+                                </td>
+                                <td class="td-asset-no-matching">A-016-2023</td>
+                                <td class="td-name-matching">電動手術台 マッケ</td>
+                                <td class="td-similarity-matching">
+                                    <span class="similarity-badge-matching medium">84%</span>
+                                </td>
+                            </tr>
+                            <tr class="import-row-matching" data-index="16" data-status="pending" onclick="selectImportRow(16)">
+                                <td class="td-no-matching">17</td>
+                                <td class="td-status-matching">
+                                    <span class="status-icon-matching pending">●</span>
+                                    <span class="status-text-matching">未処理</span>
+                                </td>
+                                <td class="td-asset-no-matching">A-017-2023</td>
+                                <td class="td-name-matching">無影灯 山田医療照明</td>
+                                <td class="td-similarity-matching">
+                                    <span class="similarity-badge-matching high">90%</span>
+                                </td>
+                            </tr>
+                            <tr class="import-row-matching" data-index="17" data-status="pending" onclick="selectImportRow(17)">
+                                <td class="td-no-matching">18</td>
+                                <td class="td-status-matching">
+                                    <span class="status-icon-matching pending">●</span>
+                                    <span class="status-text-matching">未処理</span>
+                                </td>
+                                <td class="td-asset-no-matching">A-018-2023</td>
+                                <td class="td-name-matching">生体情報モニタ 日本光電</td>
+                                <td class="td-similarity-matching">
+                                    <span class="similarity-badge-matching high">95%</span>
+                                </td>
+                            </tr>
+                            <tr class="import-row-matching" data-index="18" data-status="pending" onclick="selectImportRow(18)">
+                                <td class="td-no-matching">19</td>
+                                <td class="td-status-matching">
+                                    <span class="status-icon-matching pending">●</span>
+                                    <span class="status-text-matching">未処理</span>
+                                </td>
+                                <td class="td-asset-no-matching">A-019-2023</td>
+                                <td class="td-name-matching">透析装置 日機装</td>
+                                <td class="td-similarity-matching">
+                                    <span class="similarity-badge-matching low">68%</span>
+                                </td>
+                            </tr>
+                            <tr class="import-row-matching" data-index="19" data-status="pending" onclick="selectImportRow(19)">
+                                <td class="td-no-matching">20</td>
+                                <td class="td-status-matching">
+                                    <span class="status-icon-matching pending">●</span>
+                                    <span class="status-text-matching">未処理</span>
+                                </td>
+                                <td class="td-asset-no-matching">A-020-2023</td>
+                                <td class="td-name-matching">保育器 アトムメディカル</td>
+                                <td class="td-similarity-matching">
+                                    <span class="similarity-badge-matching medium">81%</span>
+                                </td>
+                            </tr>
+                            <tr class="import-row-matching" data-index="20" data-status="pending" onclick="selectImportRow(20)">
+                                <td class="td-no-matching">21</td>
+                                <td class="td-status-matching">
+                                    <span class="status-icon-matching pending">●</span>
+                                    <span class="status-text-matching">未処理</span>
+                                </td>
+                                <td class="td-asset-no-matching">A-021-2023</td>
+                                <td class="td-name-matching">医用冷蔵庫 パナソニック</td>
+                                <td class="td-similarity-matching">
+                                    <span class="similarity-badge-matching medium">73%</span>
+                                </td>
+                            </tr>
+                            <tr class="import-row-matching" data-index="21" data-status="inProgress" onclick="selectImportRow(21)">
+                                <td class="td-no-matching">22</td>
+                                <td class="td-status-matching">
+                                    <span class="status-icon-matching inProgress">▶</span>
+                                    <span class="status-text-matching">作業中</span>
+                                </td>
+                                <td class="td-asset-no-matching">A-022-2023</td>
+                                <td class="td-name-matching">遠心分離器 久保田商事</td>
+                                <td class="td-similarity-matching">
+                                    <span class="similarity-badge-matching medium">79%</span>
+                                </td>
+                            </tr>
+                            <tr class="import-row-matching" data-index="22" data-status="pending" onclick="selectImportRow(22)">
+                                <td class="td-no-matching">23</td>
+                                <td class="td-status-matching">
+                                    <span class="status-icon-matching pending">●</span>
+                                    <span class="status-text-matching">未処理</span>
+                                </td>
+                                <td class="td-asset-no-matching">A-023-2023</td>
+                                <td class="td-name-matching">顕微鏡 ニコン</td>
+                                <td class="td-similarity-matching">
+                                    <span class="similarity-badge-matching high">88%</span>
+                                </td>
+                            </tr>
+                            <tr class="import-row-matching" data-index="23" data-status="pending" onclick="selectImportRow(23)">
+                                <td class="td-no-matching">24</td>
+                                <td class="td-status-matching">
+                                    <span class="status-icon-matching pending">●</span>
+                                    <span class="status-text-matching">未処理</span>
+                                </td>
+                                <td class="td-asset-no-matching">A-024-2023</td>
+                                <td class="td-name-matching">滅菌器 サクラ精機</td>
+                                <td class="td-similarity-matching">
+                                    <span class="similarity-badge-matching high">92%</span>
+                                </td>
+                            </tr>
+                            <tr class="import-row-matching" data-index="24" data-status="pending" onclick="selectImportRow(24)">
+                                <td class="td-no-matching">25</td>
+                                <td class="td-status-matching">
+                                    <span class="status-icon-matching pending">●</span>
+                                    <span class="status-text-matching">未処理</span>
+                                </td>
+                                <td class="td-asset-no-matching">A-025-2023</td>
+                                <td class="td-name-matching">洗浄器 オリンパス</td>
+                                <td class="td-similarity-matching">
+                                    <span class="similarity-badge-matching medium">76%</span>
+                                </td>
+                            </tr>
+                            <tr class="import-row-matching" data-index="25" data-status="completed" onclick="selectImportRow(25)">
+                                <td class="td-no-matching">26</td>
+                                <td class="td-status-matching">
+                                    <span class="status-icon-matching completed">✓</span>
+                                    <span class="status-text-matching">済</span>
+                                </td>
+                                <td class="td-asset-no-matching">A-026-2023</td>
+                                <td class="td-name-matching">内視鏡洗浄消毒器 富士フイルム</td>
+                                <td class="td-similarity-matching">
+                                    <span class="similarity-badge-matching high">94%</span>
+                                </td>
+                            </tr>
+                            <tr class="import-row-matching" data-index="26" data-status="pending" onclick="selectImportRow(26)">
+                                <td class="td-no-matching">27</td>
+                                <td class="td-status-matching">
+                                    <span class="status-icon-matching pending">●</span>
+                                    <span class="status-text-matching">未処理</span>
+                                </td>
+                                <td class="td-asset-no-matching">A-027-2023</td>
+                                <td class="td-name-matching">酸素濃縮装置 帝人ファーマ</td>
+                                <td class="td-similarity-matching">
+                                    <span class="similarity-badge-matching medium">80%</span>
+                                </td>
+                            </tr>
+                            <tr class="import-row-matching" data-index="27" data-status="pending" onclick="selectImportRow(27)">
+                                <td class="td-no-matching">28</td>
+                                <td class="td-status-matching">
+                                    <span class="status-icon-matching pending">●</span>
+                                    <span class="status-text-matching">未処理</span>
+                                </td>
+                                <td class="td-asset-no-matching">A-028-2023</td>
+                                <td class="td-name-matching">吸引器 新鋭工業</td>
+                                <td class="td-similarity-matching">
+                                    <span class="similarity-badge-matching low">62%</span>
+                                </td>
+                            </tr>
+                            <tr class="import-row-matching" data-index="28" data-status="pending" onclick="selectImportRow(28)">
+                                <td class="td-no-matching">29</td>
+                                <td class="td-status-matching">
+                                    <span class="status-icon-matching pending">●</span>
+                                    <span class="status-text-matching">未処理</span>
+                                </td>
+                                <td class="td-asset-no-matching">A-029-2023</td>
+                                <td class="td-name-matching">ネブライザー オムロン</td>
+                                <td class="td-similarity-matching">
+                                    <span class="similarity-badge-matching medium">74%</span>
+                                </td>
+                            </tr>
+                            <tr class="import-row-matching" data-index="29" data-status="pending" onclick="selectImportRow(29)">
+                                <td class="td-no-matching">30</td>
+                                <td class="td-status-matching">
+                                    <span class="status-icon-matching pending">●</span>
+                                    <span class="status-text-matching">未処理</span>
+                                </td>
+                                <td class="td-asset-no-matching">A-030-2023</td>
+                                <td class="td-name-matching">電動ベッド パラマウントベッド</td>
+                                <td class="td-similarity-matching">
+                                    <span class="similarity-badge-matching high">91%</span>
+                                </td>
+                            </tr>
+                            <!-- サンプルデータ30件 / 実際は5000件を想定 -->
                         </tbody>
                     </table>
                 </div>
                 <div class="pagination-matching">
                     <button class="pagination-btn-matching" onclick="goToPreviousPage()">← 前へ</button>
-                    <span class="pagination-info-matching">1 - 100 / 5000</span>
+                    <span class="pagination-info-matching">1 - 30 / 30</span>
                     <button class="pagination-btn-matching" onclick="goToNextPage()">次へ →</button>
                 </div>
             </div>
@@ -141,7 +441,7 @@
                 <div class="pane-header-matching">
                     <h2 class="pane-title-matching">
                         <span>詳細確認・編集</span>
-                        <span class="current-row-info-matching" id="currentRowInfo">(1/5000)</span>
+                        <span class="current-row-info-matching" id="currentRowInfo">(1/30)</span>
                     </h2>
                 </div>
 
@@ -331,7 +631,8 @@ function selectImportRow(index) {
  */
 function updateRightPane(index) {
     // 実際にはimportData[index]のデータを使用
-    document.getElementById('currentRowInfo').textContent = `(${index + 1}/5000)`;
+    const totalRows = document.querySelectorAll('.import-row-matching').length;
+    document.getElementById('currentRowInfo').textContent = `(${index + 1}/${totalRows})`;
 
     // 詳細データを更新（サンプル）
     // 実際にはimportData配列からデータを取得
