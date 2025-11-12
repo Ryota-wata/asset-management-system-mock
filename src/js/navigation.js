@@ -220,6 +220,14 @@ function handleBackFromMatching() {
     document.getElementById('assetImportPage').classList.add('active');
 }
 
+/**
+ * インポート画面の「次へ」ボタン処理
+ * レイアウト確認用のため、ファイル選択の有無に関わらず遷移可能
+ */
+function handleUploadAndNext() {
+    handleImportToMatching();
+}
+
 // グローバルスコープに関数を公開
 window.handleQRManagement = handleQRManagement;
 window.handleBackFromQR = handleBackFromQR;
@@ -243,3 +251,4 @@ window.handleAssetImport = handleAssetImport;
 window.handleBackFromImport = handleBackFromImport;
 window.handleImportToMatching = handleImportToMatching;
 window.handleBackFromMatching = handleBackFromMatching;
+window.handleUploadAndNext = handleUploadAndNext;
