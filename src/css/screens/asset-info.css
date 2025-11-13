@@ -369,6 +369,84 @@
 }
 
 /* ========================================
+   レスポンシブ対応（タブレット）
+======================================== */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .asset-info-page .main-container-asset {
+        max-width: 768px;
+    }
+
+    .asset-info-page .main-content-asset {
+        padding: 20px 24px;
+    }
+
+    .asset-info-page .unified-form-container-asset {
+        padding: 20px 24px;
+        max-width: 100%;
+    }
+
+    /* 分類情報セクションを2カラムグリッドに */
+    .asset-info-page .form-row-asset {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px 20px;
+    }
+
+    .asset-info-page .form-group-asset label {
+        font-size: 14px;
+        margin-bottom: 8px;
+    }
+
+    .asset-info-page .select-field-asset {
+        padding: 12px 16px;
+        font-size: 15px;
+    }
+
+    .asset-info-page .input-hint-asset {
+        font-size: 11px;
+    }
+
+    /* サイズ情報も少しコンパクトに */
+    .asset-info-page .dimension-input-asset label {
+        font-size: 14px;
+        margin-bottom: 8px;
+    }
+
+    .asset-info-page .dimension-input-asset input {
+        padding: 12px 10px;
+        font-size: 15px;
+    }
+
+    /* アクションボタンも2カラムに */
+    .asset-info-page .action-buttons-asset {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        margin-top: 16px;
+    }
+
+    .asset-info-page .action-button-asset {
+        padding: 12px 20px;
+        font-size: 15px;
+    }
+
+    .asset-info-page .footer-asset {
+        max-width: 768px;
+        padding: 14px 24px;
+        height: 100px;
+    }
+
+    .asset-info-page .icon-circle-asset {
+        width: 52px;
+        height: 52px;
+    }
+
+    .asset-info-page .button-text-asset {
+        font-size: 13px;
+    }
+}
+
+/* ========================================
    レスポンシブ対応（スマートフォン）
 ======================================== */
 @media (max-width: 768px) {
