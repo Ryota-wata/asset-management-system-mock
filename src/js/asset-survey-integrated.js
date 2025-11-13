@@ -4,6 +4,62 @@
  */
 
 /**
+ * トグルスイッチの状態を設定
+ * @param {HTMLElement} switchElement - トグルスイッチ要素
+ * @param {boolean} isActive - アクティブ状態
+ */
+function setToggleState(switchElement, isActive) {
+    const label = switchElement.parentElement?.querySelector('.survey-integrated-toggle-label');
+    if (!label) return;
+
+    if (isActive) {
+        switchElement.classList.add('active');
+        label.textContent = 'オン';
+    } else {
+        switchElement.classList.remove('active');
+        label.textContent = 'オフ';
+    }
+}
+
+/**
+ * シールNo.から連番情報を解析
+ * @param {string} sealNo - シールNo.
+ * @returns {Object|null} { prefix, startNum, numLength } または null
+ */
+function parseSerialNumber(sealNo) {
+    const match = sealNo.match(/^([A-Za-z]*)(\d+)$/);
+    if (!match) return null;
+
+    return {
+        prefix: match[1],
+        startNum: parseInt(match[2]),
+        numLength: match[2].length
+    };
+}
+
+/**
+ * 連番リストを生成
+ * @param {string} sealNo - 開始シールNo.
+ * @param {number} quantity - 個数
+ * @returns {Array<string>|null} 連番リスト または null（形式エラー）
+ */
+function generateSerialNumbers(sealNo, quantity) {
+    const parsed = parseSerialNumber(sealNo);
+    if (!parsed) return null;
+
+    const { prefix, startNum, numLength } = parsed;
+    const serialNos = [];
+
+    for (let i = 0; i < quantity; i++) {
+        const num = startNum + i;
+        const paddedNum = String(num).padStart(numLength, '0');
+        serialNos.push(prefix + paddedNum);
+    }
+
+    return serialNos;
+}
+
+/**
  * 一括登録モードの切り替え
  */
 function toggleBulkRegistration() {
@@ -41,24 +97,13 @@ function updateBulkSealNoPreview() {
         return;
     }
 
-    // シールNo.から数字部分を抽出
-    const match = sealNo.match(/^([A-Za-z]*)(\d+)$/);
-    if (!match) {
+    const serialNos = generateSerialNumbers(sealNo, quantity);
+    if (!serialNos) {
         preview.style.display = 'none';
         return;
     }
 
-    const prefix = match[1]; // アルファベット部分
-    const startNum = parseInt(match[2]); // 数字部分
-    const numLength = match[2].length; // 桁数（ゼロパディング用）
-
-    // 連番範囲を表示
-    const endNum = startNum + quantity - 1;
-    const startPadded = String(startNum).padStart(numLength, '0');
-    const endPadded = String(endNum).padStart(numLength, '0');
-
-    const previewHtml = `<div class="survey-integrated-preview-item">${prefix}${startPadded} ～ ${prefix}${endPadded}</div>`;
-
+    const previewHtml = `<div class="survey-integrated-preview-item">${serialNos[0]} ～ ${serialNos[serialNos.length - 1]}</div>`;
     previewContent.innerHTML = previewHtml;
     preview.style.display = 'block';
 }
@@ -69,15 +114,7 @@ function updateBulkSealNoPreview() {
  */
 function toggleIntegratedSwitch(switchElement) {
     const isActive = switchElement.classList.contains('active');
-    const label = switchElement.parentElement.querySelector('.survey-integrated-toggle-label');
-
-    if (isActive) {
-        switchElement.classList.remove('active');
-        label.textContent = 'オフ';
-    } else {
-        switchElement.classList.add('active');
-        label.textContent = 'オン';
-    }
+    setToggleState(switchElement, !isActive);
 }
 
 /**
@@ -124,23 +161,10 @@ function handleIntegratedAssetRegistration() {
             return;
         }
 
-        // シールNo.から連番を生成
-        const match = sealNo.match(/^([A-Za-z]*)(\d+)$/);
-        if (!match) {
+        const serialNos = generateSerialNumbers(sealNo, quantity);
+        if (!serialNos) {
             alert('シールNo.の形式が正しくありません\n（例: K0001, ABC123）');
             return;
-        }
-
-        const prefix = match[1];
-        const startNum = parseInt(match[2]);
-        const numLength = match[2].length;
-
-        // 連番リスト生成
-        const serialNos = [];
-        for (let i = 0; i < quantity; i++) {
-            const num = startNum + i;
-            const paddedNum = String(num).padStart(numLength, '0');
-            serialNos.push(prefix + paddedNum);
         }
 
         // 登録確認
@@ -161,28 +185,43 @@ function handleIntegratedAssetRegistration() {
  * フォームをクリア
  */
 function clearIntegratedForm() {
-    document.getElementById('integratedSealNo').value = '';
-    document.getElementById('integratedRoomName').value = '';
-    document.getElementById('integratedAssetNo').value = '';
-    document.getElementById('integratedEquipmentNo').value = '';
-    document.getElementById('integratedPurchaseDate').value = '';
-    document.getElementById('integratedWidth').value = '';
-    document.getElementById('integratedDepth').value = '';
-    document.getElementById('integratedHeight').value = '';
-    document.getElementById('integratedRemarks').value = '';
+    // 入力フィールドをクリア
+    const inputIds = [
+        'integratedSealNo',
+        'integratedRoomName',
+        'integratedAssetNo',
+        'integratedEquipmentNo',
+        'integratedPurchaseDate',
+        'integratedWidth',
+        'integratedDepth',
+        'integratedHeight',
+        'integratedRemarks'
+    ];
+
+    inputIds.forEach(id => {
+        const element = document.getElementById(id);
+        if (element) element.value = '';
+    });
 
     // 一括登録モードをリセット
-    document.getElementById('bulkRegistrationMode').checked = false;
-    document.getElementById('bulkQuantity').value = '';
-    document.getElementById('bulkQuantityGroup').style.display = 'none';
-    document.getElementById('bulkPreview').style.display = 'none';
-    document.getElementById('sealNoLabel').textContent = 'シールNo.';
+    const bulkCheckbox = document.getElementById('bulkRegistrationMode');
+    if (bulkCheckbox) bulkCheckbox.checked = false;
+
+    const bulkQuantity = document.getElementById('bulkQuantity');
+    if (bulkQuantity) bulkQuantity.value = '';
+
+    const bulkQuantityGroup = document.getElementById('bulkQuantityGroup');
+    if (bulkQuantityGroup) bulkQuantityGroup.style.display = 'none';
+
+    const bulkPreview = document.getElementById('bulkPreview');
+    if (bulkPreview) bulkPreview.style.display = 'none';
+
+    const sealNoLabel = document.getElementById('sealNoLabel');
+    if (sealNoLabel) sealNoLabel.textContent = 'シールNo.';
 
     // トグルスイッチをリセット
     document.querySelectorAll('.survey-integrated-toggle-switch').forEach(sw => {
-        sw.classList.remove('active');
-        const label = sw.parentElement.querySelector('.survey-integrated-toggle-label');
-        if (label) label.textContent = 'オフ';
+        setToggleState(sw, false);
     });
 }
 

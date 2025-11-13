@@ -4,19 +4,30 @@
  */
 
 /**
+ * 画面遷移ヘルパー関数
+ * @param {string} fromPageId - 遷移元の画面ID
+ * @param {string} toPageId - 遷移先の画面ID
+ */
+function transitionPage(fromPageId, toPageId) {
+    const fromPage = document.getElementById(fromPageId);
+    const toPage = document.getElementById(toPageId);
+
+    if (fromPage) fromPage.classList.remove('active');
+    if (toPage) toPage.classList.add('active');
+}
+
+/**
  * QRコード管理画面への遷移
  */
 function handleQRManagement() {
-    document.getElementById('mainContainer').classList.remove('active');
-    document.getElementById('qrPage').classList.add('active');
+    transitionPage('mainContainer', 'qrPage');
 }
 
 /**
  * QRコード管理画面から戻る
  */
 function handleBackFromQR() {
-    document.getElementById('qrPage').classList.remove('active');
-    document.getElementById('mainContainer').classList.add('active');
+    transitionPage('qrPage', 'mainContainer');
 }
 
 /**
@@ -25,15 +36,11 @@ function handleBackFromQR() {
 function handleBackFromEdit() {
     if (window.currentEditingRow) {
         if (confirm('編集中のデータがあります。破棄して戻りますか？')) {
-            document.getElementById('registrationEditPage').classList.remove('active');
-            document.getElementById('mainContainer').classList.add('active');
-            // 個体管理リストモーダルを閉じる
+            transitionPage('registrationEditPage', 'mainContainer');
             closeListModal();
         }
     } else {
-        document.getElementById('registrationEditPage').classList.remove('active');
-        document.getElementById('mainContainer').classList.add('active');
-        // 個体管理リストモーダルを閉じる
+        transitionPage('registrationEditPage', 'mainContainer');
         closeListModal();
     }
 }
@@ -42,16 +49,14 @@ function handleBackFromEdit() {
  * QRコード詳細画面から一覧に戻る
  */
 function handleBackFromQRDetail() {
-    document.getElementById('qrDetailPage').classList.remove('active');
-    document.getElementById('qrPage').classList.add('active');
+    transitionPage('qrDetailPage', 'qrPage');
 }
 
 /**
  * QRコード新規発行画面から一覧に戻る
  */
 function handleBackFromQRIssue() {
-    document.getElementById('qrIssuePage').classList.remove('active');
-    document.getElementById('qrPage').classList.add('active');
+    transitionPage('qrIssuePage', 'qrPage');
 }
 
 /**
@@ -59,14 +64,8 @@ function handleBackFromQRIssue() {
  * 呼び出し元に応じて戻る先を変更
  */
 function handleBackFromQRPrint() {
-    document.getElementById('qrPrintPage').classList.remove('active');
-
-    // 呼び出し元に応じて戻る先を変更
-    if (window.qrPrintFromPage === 'detail') {
-        document.getElementById('qrDetailPage').classList.add('active');
-    } else {
-        document.getElementById('qrPage').classList.add('active');
-    }
+    const toPageId = window.qrPrintFromPage === 'detail' ? 'qrDetailPage' : 'qrPage';
+    transitionPage('qrPrintPage', toPageId);
     window.qrPrintFromPage = '';
 }
 
@@ -74,25 +73,21 @@ function handleBackFromQRPrint() {
  * 現有資産調査画面から検索画面に戻る
  */
 function handleBackFromSurvey() {
-    document.getElementById('surveyPage').classList.remove('active');
-    document.getElementById('offlinePrepPage').classList.add('active');
+    transitionPage('surveyPage', 'offlinePrepPage');
 }
 
 /**
  * 現有資産調査画面から統合画面へ遷移
  */
 function handleSurveyNext() {
-    document.getElementById('surveyPage').classList.remove('active');
-    document.getElementById('assetSurveyIntegratedPage').classList.add('active');
+    transitionPage('surveyPage', 'assetSurveyIntegratedPage');
 }
 
 /**
  * オフライン準備画面から検索画面に戻る
  */
 function handleBackFromOfflinePrep() {
-    document.getElementById('offlinePrepPage').classList.remove('active');
-    document.getElementById('mainContainer').classList.add('active');
-    // 個体管理リストモーダルを閉じる
+    transitionPage('offlinePrepPage', 'mainContainer');
     closeListModal();
 }
 
@@ -100,16 +95,12 @@ function handleBackFromOfflinePrep() {
  * 個体管理リストモーダルからデータ突合画面へ遷移
  */
 function handleDataMatchingFromModal() {
-    // モーダルを閉じる
     if (typeof closeListModal === 'function') {
         closeListModal();
     }
 
-    // データ突合画面を表示
-    document.getElementById('mainContainer').classList.remove('active');
-    document.getElementById('dataMatchingPage').classList.add('active');
+    transitionPage('mainContainer', 'dataMatchingPage');
 
-    // データ突合画面の初期化
     if (typeof renderSurveyList === 'function') {
         renderSurveyList();
     }
@@ -119,9 +110,8 @@ function handleDataMatchingFromModal() {
  * オフライン準備画面から現有資産調査画面へ遷移
  */
 function handleStartSurvey() {
-    document.getElementById('offlinePrepPage').classList.remove('active');
-    document.getElementById('surveyPage').classList.add('active');
-    // マスタデータをロードして選択肢を設定
+    transitionPage('offlinePrepPage', 'surveyPage');
+
     if (typeof loadSurveyMasterData === 'function') {
         loadSurveyMasterData();
     }
@@ -131,51 +121,49 @@ function handleStartSurvey() {
  * 現有資産調査統合画面から履歴表示画面へ遷移
  */
 function handleShowHistoryList() {
-    document.getElementById('assetSurveyIntegratedPage').classList.remove('active');
-    document.getElementById('historyListPage').classList.add('active');
+    transitionPage('assetSurveyIntegratedPage', 'historyListPage');
 }
 
 /**
  * 履歴表示画面から現有資産調査統合画面に戻る
  */
 function handleBackFromHistoryList() {
-    document.getElementById('historyListPage').classList.remove('active');
-    document.getElementById('assetSurveyIntegratedPage').classList.add('active');
+    transitionPage('historyListPage', 'assetSurveyIntegratedPage');
 }
 
 /**
  * 部門入力へボタンで現有資産調査画面へ遷移
  */
 function handleGoToSurvey() {
-    // 統合画面を非表示
-    document.getElementById('assetSurveyIntegratedPage').classList.remove('active');
-    document.getElementById('historyListPage').classList.remove('active');
+    // 統合画面と履歴画面を非表示
+    const assetSurveyIntegrated = document.getElementById('assetSurveyIntegratedPage');
+    const historyList = document.getElementById('historyListPage');
+
+    if (assetSurveyIntegrated) assetSurveyIntegrated.classList.remove('active');
+    if (historyList) historyList.classList.remove('active');
 
     // 現有資産調査画面を表示
-    document.getElementById('surveyPage').classList.add('active');
+    const surveyPage = document.getElementById('surveyPage');
+    if (surveyPage) surveyPage.classList.add('active');
 }
 
 /**
  * 資産台帳取込画面への遷移（個体管理リストモーダルから）
  */
 function handleAssetImport() {
-    // モーダルを閉じる
     if (typeof closeListModal === 'function') {
         closeListModal();
     }
 
-    // 資産台帳取込画面を表示
-    document.getElementById('mainContainer').classList.remove('active');
-    document.getElementById('assetImportPage').classList.add('active');
+    transitionPage('mainContainer', 'assetImportPage');
 }
 
 /**
  * 資産台帳取込画面から戻る
  */
 function handleBackFromImport() {
-    document.getElementById('assetImportPage').classList.remove('active');
-    document.getElementById('mainContainer').classList.add('active');
-    // 個体管理リストモーダルを再度開く
+    transitionPage('assetImportPage', 'mainContainer');
+
     if (typeof showListModal === 'function') {
         showListModal();
     }
@@ -185,28 +173,18 @@ function handleBackFromImport() {
  * インポート画面から突き合わせ画面へ遷移
  */
 function handleImportToMatching() {
-    document.getElementById('assetImportPage').classList.remove('active');
-    document.getElementById('assetMatchingPage').classList.add('active');
+    transitionPage('assetImportPage', 'assetMatchingPage');
 }
 
 /**
  * 突き合わせ画面から戻る（資産検索画面に戻る）
  */
 function handleBackFromMatching() {
-    document.getElementById('assetMatchingPage').classList.remove('active');
-    document.getElementById('mainContainer').classList.add('active');
-    // 個体管理リストモーダルは表示しない
+    transitionPage('assetMatchingPage', 'mainContainer');
+
     if (typeof closeListModal === 'function') {
         closeListModal();
     }
-}
-
-/**
- * インポート画面の「次へ」ボタン処理
- * レイアウト確認用のため、ファイル選択の有無に関わらず遷移可能
- */
-function handleUploadAndNext() {
-    handleImportToMatching();
 }
 
 /**
@@ -214,6 +192,7 @@ function handleUploadAndNext() {
  */
 function handleViewSearchResult() {
     console.log('=== handleViewSearchResult called ===');
+
     const mainContainer = document.getElementById('mainContainer');
     const searchResultPage = document.getElementById('searchResultPage');
 
@@ -222,8 +201,7 @@ function handleViewSearchResult() {
         return;
     }
 
-    mainContainer.classList.remove('active');
-    searchResultPage.classList.add('active');
+    transitionPage('mainContainer', 'searchResultPage');
 
     console.log('=== Screen transition complete ===');
 
@@ -241,8 +219,7 @@ function handleViewSearchResult() {
  * 資産検索結果画面から資産検索画面に戻る
  */
 function handleBackFromSearchResult() {
-    document.getElementById('searchResultPage').classList.remove('active');
-    document.getElementById('mainContainer').classList.add('active');
+    transitionPage('searchResultPage', 'mainContainer');
 }
 
 // グローバルスコープに関数を公開
@@ -264,6 +241,5 @@ window.handleAssetImport = handleAssetImport;
 window.handleBackFromImport = handleBackFromImport;
 window.handleImportToMatching = handleImportToMatching;
 window.handleBackFromMatching = handleBackFromMatching;
-window.handleUploadAndNext = handleUploadAndNext;
 window.handleViewSearchResult = handleViewSearchResult;
 window.handleBackFromSearchResult = handleBackFromSearchResult;
