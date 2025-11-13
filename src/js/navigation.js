@@ -97,19 +97,6 @@ function handleBackFromOfflinePrep() {
 }
 
 /**
- * オフライン準備画面からデータ突合画面へ遷移
- */
-function handleGoToDataMatching() {
-    document.getElementById('offlinePrepPage').classList.remove('active');
-    document.getElementById('dataMatchingPage').classList.add('active');
-
-    // データ突合画面の初期化
-    if (typeof renderSurveyList === 'function') {
-        renderSurveyList();
-    }
-}
-
-/**
  * 個体管理リストモーダルからデータ突合画面へ遷移
  */
 function handleDataMatchingFromModal() {
@@ -310,7 +297,6 @@ window.handleBackFromQRPrint = handleBackFromQRPrint;
 window.handleBackFromSurvey = handleBackFromSurvey;
 window.handleSurveyNext = handleSurveyNext;
 window.handleBackFromOfflinePrep = handleBackFromOfflinePrep;
-window.handleGoToDataMatching = handleGoToDataMatching;
 window.handleDataMatchingFromModal = handleDataMatchingFromModal;
 window.handleStartSurvey = handleStartSurvey;
 window.handleBackFromQRScan = handleBackFromQRScan;
