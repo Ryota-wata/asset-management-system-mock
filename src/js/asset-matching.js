@@ -177,6 +177,25 @@ async function toggleEditMode(index) {
                             removeItemButton: false
                         });
 
+                        // ドロップダウンアイテムに強制的にスタイルを適用
+                        setTimeout(() => {
+                            const dropdown = select.parentElement.querySelector('.choices__list--dropdown');
+                            if (dropdown) {
+                                const items = dropdown.querySelectorAll('.choices__item');
+                                items.forEach(item => {
+                                    item.style.display = 'block';
+                                    item.style.height = 'auto';
+                                    item.style.minHeight = '30px';
+                                    item.style.padding = '10px 12px';
+                                    item.style.color = '#333333';
+                                    item.style.fontSize = '14px';
+                                    item.style.backgroundColor = 'white';
+                                    item.style.visibility = 'visible';
+                                    item.style.opacity = '1';
+                                });
+                            }
+                        }, 100);
+
                         console.log(`${field} Choices.js initialized with ${choices.length} items`);
                     } catch (error) {
                         console.error(`Failed to initialize Choices.js for ${field}:`, error);
