@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>資産台帳リスト（参照用）</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+
+        .header {
+            background: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            font-size: 18px;
+            color: #2c3e50;
+        }
+
+        .stats {
+            display: flex;
+            gap: 20px;
+            font-size: 14px;
+            color: #7f8c8d;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .stat-label {
+            font-weight: 500;
+        }
+
+        .stat-value {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .search-bar {
+            display: flex;
+            gap: 10px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .export-btn {
+            padding: 8px 16px;
+            background: #27ae60;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .export-btn:hover {
+            background: #229954;
+        }
+
+        .table-container {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            max-height: calc(100vh - 200px);
+            overflow-y: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: #ecf0f1;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        th {
+            padding: 12px 10px;
+            text-align: left;
+            font-size: 13px;
+            font-weight: 600;
+            color: #2c3e50;
+            border-bottom: 2px solid #bdc3c7;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 10px;
+            border-bottom: 1px solid #e0e0e0;
+            font-size: 13px;
+            color: #2c3e50;
+        }
+
+        tbody tr:hover {
+            background: #f8f9fa;
+        }
+
+        tbody tr.selected {
+            background: #e3f2fd;
+        }
+
+        .matched-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .matched-badge.matched {
+            background: #d5f4e6;
+            color: #27ae60;
+        }
+
+        .matched-badge.unmatched {
+            background: #ecf0f1;
+            color: #7f8c8d;
+        }
+
+        .select-btn {
+            padding: 6px 12px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .select-btn:hover {
+            background: #2980b9;
+        }
+
+        .select-btn:disabled {
+            background: #95a5a6;
+            cursor: not-allowed;
+        }
+
+        .filter-info {
+            padding: 10px 15px;
+            background: #e8f5e9;
+            border-left: 4px solid #27ae60;
+            margin-bottom: 10px;
+            font-size: 13px;
+            color: #2c3e50;
+        }
+
+        .filter-info strong {
+            color: #27ae60;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-top">
+            <h1>資産台帳リスト（参照用）</h1>
+            <div class="stats">
+                <div class="stat-item">
+                    <span class="stat-label">全件数:</span>
+                    <span class="stat-value" id="totalCount">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">未突合:</span>
+                    <span class="stat-value" id="unmatchedCount">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">表示件数:</span>
+                    <span class="stat-value" id="displayCount">0</span>
+                </div>
+            </div>
+        </div>
+        <div class="search-bar">
+            <input type="text" class="search-input" id="searchInput" placeholder="資産番号、品目、メーカーで検索..." onkeyup="filterTable()">
+            <button class="export-btn" onclick="exportToExcel()">📊 Excel出力</button>
+        </div>
+    </div>
+
+    <div id="filterInfo" class="filter-info" style="display: none;">
+        <strong>フィルター適用中:</strong> <span id="filterText"></span>
+    </div>
+
+    <div class="table-container">
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 80px;">突合状態</th>
+                        <th style="width: 100px;">資産番号</th>
+                        <th style="width: 120px;">部署</th>
+                        <th style="width: 150px;">品目</th>
+                        <th style="width: 120px;">メーカー</th>
+                        <th style="width: 120px;">型式</th>
+                        <th style="width: 100px;">購入日</th>
+                        <th style="width: 80px;">操作</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <!-- データはJSで生成 -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // メインウィンドウから受け取ったデータ
+        let ledgerData = [];
+        let currentFilters = {
+            status: 'all',
+            department: '',
+            item: '',
+            maker: '',
+            keyword: ''
+        };
+
+        /**
+         * 初期化
+         */
+        window.addEventListener('DOMContentLoaded', function() {
+            // メインウィンドウからのメッセージを受信
+            window.addEventListener('message', function(event) {
+                if (event.data.type === 'FILTER_UPDATE') {
+                    currentFilters = event.data.filters;
+                    applyFilters();
+                }
+            });
+
+            // メインウィンドウからデータを取得
+            if (window.opener && window.opener.ledgerData) {
+                ledgerData = window.opener.ledgerData;
+                renderTable();
+            }
+        });
+
+        /**
+         * テーブルをレンダリング
+         */
+        function renderTable() {
+            const tbody = document.getElementById('tableBody');
+            if (!tbody) return;
+
+            // フィルタリング
+            let filteredData = ledgerData.filter(item => {
+                // メインウィンドウのフィルターを適用
+                if (currentFilters.department && item.department !== currentFilters.department) return false;
+                if (currentFilters.item && item.item !== currentFilters.item) return false;
+                if (currentFilters.maker && item.maker !== currentFilters.maker) return false;
+
+                // ローカルの検索キーワード
+                const searchKeyword = document.getElementById('searchInput').value.toLowerCase();
+                if (searchKeyword) {
+                    const searchText = `${item.assetNo} ${item.department} ${item.item} ${item.maker} ${item.model}`.toLowerCase();
+                    if (!searchText.includes(searchKeyword)) return false;
+                }
+
+                return true;
+            });
+
+            tbody.innerHTML = '';
+
+            if (filteredData.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 40px; color: #7f8c8d;">該当するデータがありません</td></tr>';
+            } else {
+                filteredData.forEach(item => {
+                    const tr = document.createElement('tr');
+                    tr.setAttribute('data-id', item.id);
+
+                    const matchedBadge = item.matched
+                        ? '<span class="matched-badge matched">✓済</span>'
+                        : '<span class="matched-badge unmatched">未</span>';
+
+                    tr.innerHTML = `
+                        <td>${matchedBadge}</td>
+                        <td>${item.assetNo}</td>
+                        <td>${item.department}</td>
+                        <td>${item.item}</td>
+                        <td>${item.maker}</td>
+                        <td>${item.model}</td>
+                        <td>${item.purchaseDate}</td>
+                        <td>
+                            <button class="select-btn" onclick="selectLedgerItem(${item.id})" ${item.matched ? 'disabled' : ''}>
+                                選択
+                            </button>
+                        </td>
+                    `;
+
+                    tbody.appendChild(tr);
+                });
+            }
+
+            // カウント更新
+            updateCounts(filteredData.length);
+            updateFilterInfo();
+        }
+
+        /**
+         * カウント更新
+         */
+        function updateCounts(displayCount) {
+            const total = ledgerData.length;
+            const unmatched = ledgerData.filter(item => !item.matched).length;
+
+            document.getElementById('totalCount').textContent = total;
+            document.getElementById('unmatchedCount').textContent = unmatched;
+            document.getElementById('displayCount').textContent = displayCount;
+        }
+
+        /**
+         * フィルター情報を更新
+         */
+        function updateFilterInfo() {
+            const filterInfo = document.getElementById('filterInfo');
+            const filterText = document.getElementById('filterText');
+
+            const filters = [];
+            if (currentFilters.department) filters.push(`部署: ${currentFilters.department}`);
+            if (currentFilters.item) filters.push(`品目: ${currentFilters.item}`);
+            if (currentFilters.maker) filters.push(`メーカー: ${currentFilters.maker}`);
+
+            if (filters.length > 0) {
+                filterText.textContent = filters.join(', ');
+                filterInfo.style.display = 'block';
+            } else {
+                filterInfo.style.display = 'none';
+            }
+        }
+
+        /**
+         * フィルターを適用
+         */
+        function applyFilters() {
+            renderTable();
+        }
+
+        /**
+         * テーブルをフィルター（ローカル検索）
+         */
+        function filterTable() {
+            renderTable();
+        }
+
+        /**
+         * 資産台帳項目を選択
+         */
+        function selectLedgerItem(id) {
+            if (!window.opener || window.opener.closed) {
+                alert('メインウィンドウが閉じられています');
+                return;
+            }
+
+            const item = ledgerData.find(l => l.id === id);
+            if (!item) return;
+
+            // メインウィンドウに通知
+            window.opener.postMessage({
+                type: 'LEDGER_SELECTED',
+                ledgerId: id,
+                assetNo: item.assetNo
+            }, '*');
+
+            // 自動的に資産番号を設定
+            if (window.opener.document) {
+                const linkedAssetNoInput = window.opener.document.getElementById('linkedAssetNo');
+                if (linkedAssetNoInput) {
+                    linkedAssetNoInput.value = item.assetNo;
+                }
+            }
+
+            alert(`資産番号「${item.assetNo}」を選択しました`);
+        }
+
+        /**
+         * Excel出力
+         */
+        function exportToExcel() {
+            alert('Excel出力機能は実装中です');
+        }
+
+        // ウィンドウが閉じられる前にメインウィンドウに通知
+        window.addEventListener('beforeunload', function() {
+            if (window.opener && !window.opener.closed) {
+                window.opener.ledgerSubWindow = null;
+            }
+        });
+    </script>
+</body>
+</html>

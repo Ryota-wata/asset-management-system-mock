@@ -1,0 +1,747 @@
+/**
+ * データ突合画面のスタイル
+ */
+
+.data-matching-page {
+    display: none;
+    background: #f5f5f5;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.data-matching-page.active {
+    display: block;
+}
+
+/* ヘッダー */
+.data-matching-page .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 15px 20px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.data-matching-page .header-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.data-matching-page .back-btn {
+    padding: 8px 16px;
+    background: #3498db;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.data-matching-page .back-btn:hover {
+    background: #2980b9;
+}
+
+.data-matching-page .back-arrow {
+    font-size: 16px;
+}
+
+.data-matching-page .page-title {
+    font-size: 20px;
+    font-weight: bold;
+    color: #2c3e50;
+    margin: 0;
+}
+
+.data-matching-page .open-sub-window-btn {
+    padding: 10px 20px;
+    background: #27ae60;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.data-matching-page .open-sub-window-btn:hover {
+    background: #229954;
+}
+
+.data-matching-page .icon {
+    font-size: 16px;
+}
+
+/* 進捗バー */
+.progress-bar-container {
+    background: white;
+    padding: 15px 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.progress-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.progress-label {
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+.progress-value {
+    color: #7f8c8d;
+}
+
+/* フィルターパネル */
+.filter-panel-matching {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.filter-row {
+    display: flex;
+    gap: 15px;
+    align-items: flex-end;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.filter-group label {
+    font-size: 12px;
+    color: #555;
+    font-weight: 500;
+}
+
+.filter-select {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    min-width: 120px;
+}
+
+.search-input {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    min-width: 200px;
+}
+
+.reset-filter-btn {
+    padding: 8px 16px;
+    background: #95a5a6;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.reset-filter-btn:hover {
+    background: #7f8c8d;
+}
+
+.action-row {
+    display: flex;
+    gap: 10px;
+}
+
+.action-btn {
+    padding: 10px 20px;
+    background: #3498db;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.action-btn:hover {
+    background: #2980b9;
+}
+
+/* メインテーブル */
+.main-table-container {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.table-header-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.table-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: #2c3e50;
+    margin: 0;
+}
+
+.table-count {
+    color: #7f8c8d;
+    font-size: 14px;
+}
+
+.table-scroll-container {
+    overflow-x: auto;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.data-matching-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.data-matching-table thead {
+    background: #ecf0f1;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.data-matching-table th {
+    padding: 12px 10px;
+    text-align: left;
+    font-size: 13px;
+    font-weight: 600;
+    color: #2c3e50;
+    border-bottom: 2px solid #bdc3c7;
+    white-space: nowrap;
+}
+
+.data-matching-table td {
+    padding: 10px;
+    border-bottom: 1px solid #e0e0e0;
+    font-size: 13px;
+    color: #2c3e50;
+}
+
+.data-matching-table tbody tr:hover {
+    background: #f8f9fa;
+}
+
+.data-matching-table tbody tr.selected {
+    background: #e3f2fd;
+}
+
+/* カラム幅 */
+.th-checkbox { width: 40px; }
+.th-status { width: 120px; }
+.th-seal-no { width: 100px; }
+.th-asset-no { width: 100px; }
+.th-department { width: 100px; }
+.th-item { width: 150px; }
+.th-maker { width: 120px; }
+.th-model { width: 120px; }
+.th-quantity { width: 60px; }
+.th-purchase-date { width: 100px; }
+.th-actions { width: 100px; }
+
+/* ステータスバッジ */
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.status-badge.pending {
+    background: #ecf0f1;
+    color: #7f8c8d;
+}
+
+.status-badge.completed {
+    background: #d5f4e6;
+    color: #27ae60;
+}
+
+.status-badge.review {
+    background: #fff3cd;
+    color: #f39c12;
+}
+
+.status-badge.mismatch {
+    background: #f8d7da;
+    color: #e74c3c;
+}
+
+/* アクションボタン */
+.match-btn {
+    padding: 6px 12px;
+    background: #3498db;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.match-btn:hover {
+    background: #2980b9;
+}
+
+/* 詳細パネル */
+.detail-panel {
+    display: none;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.detail-panel.active {
+    display: block;
+}
+
+.detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    border-bottom: 1px solid #e0e0e0;
+    background: #ecf0f1;
+}
+
+.detail-header h3 {
+    margin: 0;
+    font-size: 16px;
+    color: #2c3e50;
+}
+
+.close-detail-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #7f8c8d;
+    cursor: pointer;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.close-detail-btn:hover {
+    color: #2c3e50;
+}
+
+.detail-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    padding: 20px;
+}
+
+.detail-left h4,
+.detail-right h4 {
+    margin: 0 0 15px 0;
+    font-size: 14px;
+    color: #2c3e50;
+    font-weight: 600;
+    border-bottom: 2px solid #3498db;
+    padding-bottom: 8px;
+}
+
+.detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.detail-item {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.detail-label {
+    font-size: 12px;
+    color: #7f8c8d;
+    font-weight: 500;
+}
+
+.detail-value {
+    font-size: 14px;
+    color: #2c3e50;
+    font-weight: 500;
+}
+
+.view-photo-btn {
+    padding: 8px 16px;
+    background: #9b59b6;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+    width: 100%;
+}
+
+.view-photo-btn:hover {
+    background: #8e44ad;
+}
+
+/* ステータス選択 */
+.status-selection {
+    margin-bottom: 20px;
+}
+
+.status-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 10px;
+}
+
+.status-radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.status-section {
+    border-left: 3px solid #3498db;
+    padding-left: 15px;
+}
+
+.status-section-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #3498db;
+    margin-bottom: 8px;
+}
+
+.radio-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: #2c3e50;
+    cursor: pointer;
+    padding: 4px 0;
+}
+
+.radio-label input[type="radio"] {
+    cursor: pointer;
+}
+
+.radio-label:hover {
+    color: #3498db;
+}
+
+/* 紐付けセクション */
+.linking-section {
+    margin-bottom: 15px;
+}
+
+.linking-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 8px;
+}
+
+.linking-input-group {
+    display: flex;
+    gap: 10px;
+}
+
+.linking-input {
+    flex: 1;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.select-from-ledger-btn {
+    padding: 8px 16px;
+    background: #27ae60;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+    white-space: nowrap;
+}
+
+.select-from-ledger-btn:hover {
+    background: #229954;
+}
+
+/* 枝番セクション */
+.branch-number-section {
+    margin-bottom: 15px;
+}
+
+.branch-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 8px;
+}
+
+.branch-input {
+    width: 100px;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+/* 備考セクション */
+.remarks-section {
+    margin-bottom: 20px;
+}
+
+.remarks-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 8px;
+}
+
+.remarks-textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 13px;
+    resize: vertical;
+    font-family: inherit;
+}
+
+/* アクションボタン */
+.action-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-primary {
+    flex: 1;
+    padding: 12px 20px;
+    background: #27ae60;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.btn-primary:hover {
+    background: #229954;
+}
+
+.btn-secondary {
+    flex: 1;
+    padding: 12px 20px;
+    background: #f39c12;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.btn-secondary:hover {
+    background: #e67e22;
+}
+
+.btn-danger {
+    flex: 1;
+    padding: 12px 20px;
+    background: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.btn-danger:hover {
+    background: #c0392b;
+}
+
+/* モーダル */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 10000;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-overlay.active {
+    display: flex;
+}
+
+.ledger-select-modal {
+    background: white;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 1200px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.modal-header h3 {
+    margin: 0;
+    font-size: 18px;
+    color: #2c3e50;
+}
+
+.modal-close-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #7f8c8d;
+    cursor: pointer;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+}
+
+.modal-close-btn:hover {
+    color: #2c3e50;
+}
+
+.modal-body {
+    padding: 20px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.ledger-search-bar {
+    margin-bottom: 15px;
+}
+
+.ledger-table-container {
+    overflow-x: auto;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.ledger-select-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.ledger-select-table thead {
+    background: #ecf0f1;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.ledger-select-table th {
+    padding: 12px 10px;
+    text-align: left;
+    font-size: 13px;
+    font-weight: 600;
+    color: #2c3e50;
+    border-bottom: 2px solid #bdc3c7;
+}
+
+.ledger-select-table td {
+    padding: 10px;
+    border-bottom: 1px solid #e0e0e0;
+    font-size: 13px;
+    color: #2c3e50;
+}
+
+.ledger-select-table tbody tr:hover {
+    background: #f8f9fa;
+}
+
+.ledger-select-table tbody tr.selected {
+    background: #e3f2fd;
+}
+
+.modal-footer {
+    padding: 20px;
+    border-top: 1px solid #e0e0e0;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+/* レスポンシブ */
+@media (max-width: 1200px) {
+    .detail-content {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .filter-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .filter-select,
+    .search-input {
+        width: 100%;
+    }
+
+    .detail-grid {
+        grid-template-columns: 1fr;
+    }
+}

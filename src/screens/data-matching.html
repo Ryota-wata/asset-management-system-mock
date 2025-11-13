@@ -1,0 +1,311 @@
+<!-- データ突合画面 -->
+<div id="dataMatchingPage" class="data-matching-page">
+    <div class="page-header">
+        <div class="header-left">
+            <button class="back-btn" onclick="handleBackFromDataMatching()">
+                <span class="back-arrow">←</span> 戻る
+            </button>
+            <h1 class="page-title">データ突合</h1>
+        </div>
+        <div class="header-right">
+            <button class="open-sub-window-btn" onclick="openLedgerSubWindow()">
+                <span class="icon">🗗</span> 資産台帳を別窓で開く
+            </button>
+        </div>
+    </div>
+
+    <!-- 進捗状況 -->
+    <div class="progress-bar-container">
+        <div class="progress-info">
+            <span class="progress-label">進捗状況:</span>
+            <span class="progress-value" id="matchingProgressText">確定済 0/150件 | 未処理 150件</span>
+        </div>
+    </div>
+
+    <!-- フィルターパネル -->
+    <div class="filter-panel-matching">
+        <div class="filter-row">
+            <div class="filter-group">
+                <label>ステータス</label>
+                <select id="filterStatus" class="filter-select" onchange="applyMatchingFilters()">
+                    <option value="all">全て</option>
+                    <option value="pending">未処理</option>
+                    <option value="completed">確定済</option>
+                    <option value="review">要確認</option>
+                    <option value="mismatch">不一致</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label>部署</label>
+                <select id="filterDepartmentMatching" class="filter-select" onchange="applyMatchingFilters()">
+                    <option value="">全て</option>
+                    <option value="手術部門">手術部門</option>
+                    <option value="放射線科">放射線科</option>
+                    <option value="検査科">検査科</option>
+                    <option value="病理科">病理科</option>
+                    <option value="外来">外来</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label>品目</label>
+                <select id="filterItemMatching" class="filter-select" onchange="applyMatchingFilters()">
+                    <option value="">全て</option>
+                    <option value="電気メス">電気メス</option>
+                    <option value="CT装置">CT装置</option>
+                    <option value="MRI装置">MRI装置</option>
+                    <option value="血液分析装置">血液分析装置</option>
+                    <option value="顕微鏡">顕微鏡</option>
+                    <option value="診察台">診察台</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label>メーカー</label>
+                <select id="filterMakerMatching" class="filter-select" onchange="applyMatchingFilters()">
+                    <option value="">全て</option>
+                    <option value="オリンパス">オリンパス</option>
+                    <option value="GEヘルスケア">GEヘルスケア</option>
+                    <option value="シーメンス">シーメンス</option>
+                    <option value="シスメックス">シスメックス</option>
+                    <option value="ニコン">ニコン</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <input type="text" id="searchKeywordMatching" class="search-input" placeholder="キーワード検索..." onkeyup="applyMatchingFilters()">
+            </div>
+
+            <button class="reset-filter-btn" onclick="resetMatchingFilters()">フィルター解除</button>
+        </div>
+
+        <div class="action-row">
+            <button class="action-btn" onclick="bulkConfirmMatching()">
+                <span class="icon">✓</span> 選択項目を一括確定
+            </button>
+            <button class="action-btn" onclick="exportMatchingData()">
+                <span class="icon">📊</span> Excel出力
+            </button>
+        </div>
+    </div>
+
+    <!-- メインテーブル: 現有品調査リスト -->
+    <div class="main-table-container">
+        <div class="table-header-bar">
+            <h2 class="table-title">現有品調査リスト</h2>
+            <div class="table-count">
+                <span id="surveyListCount">表示: 150件</span>
+            </div>
+        </div>
+
+        <div class="table-scroll-container">
+            <table class="data-matching-table">
+                <thead>
+                    <tr>
+                        <th class="th-checkbox">
+                            <input type="checkbox" id="selectAllSurvey" onchange="toggleSelectAllSurvey(this)">
+                        </th>
+                        <th class="th-status">突合状態</th>
+                        <th class="th-seal-no">シールNo</th>
+                        <th class="th-asset-no">資産番号</th>
+                        <th class="th-department">部署</th>
+                        <th class="th-item">品目</th>
+                        <th class="th-maker">メーカー</th>
+                        <th class="th-model">型式</th>
+                        <th class="th-quantity">数量</th>
+                        <th class="th-purchase-date">購入日</th>
+                        <th class="th-actions">操作</th>
+                    </tr>
+                </thead>
+                <tbody id="surveyTableBody">
+                    <!-- データはJSで生成 -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- 詳細パネル -->
+    <div class="detail-panel" id="detailPanel">
+        <div class="detail-header">
+            <h3>選択項目の詳細と突合処理</h3>
+            <button class="close-detail-btn" onclick="closeDetailPanel()">×</button>
+        </div>
+
+        <div class="detail-content">
+            <div class="detail-left">
+                <h4>現有品調査データ</h4>
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <span class="detail-label">シールNo:</span>
+                        <span class="detail-value" id="detailSealNo">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">資産番号:</span>
+                        <span class="detail-value" id="detailAssetNo">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">部署:</span>
+                        <span class="detail-value" id="detailDepartment">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">品目:</span>
+                        <span class="detail-value" id="detailItem">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">メーカー:</span>
+                        <span class="detail-value" id="detailMaker">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">型式:</span>
+                        <span class="detail-value" id="detailModel">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">数量:</span>
+                        <span class="detail-value" id="detailQuantity">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">購入日:</span>
+                        <span class="detail-value" id="detailPurchaseDate">-</span>
+                    </div>
+                </div>
+                <button class="view-photo-btn" onclick="viewSurveyPhotos()">📷 写真を見る</button>
+            </div>
+
+            <div class="detail-right">
+                <h4>紐付け処理</h4>
+
+                <div class="status-selection">
+                    <label class="status-label">突合ステータス:</label>
+                    <div class="status-radio-group">
+                        <div class="status-section">
+                            <div class="status-section-title">A: 固定資産番号での突合</div>
+                            <label class="radio-label">
+                                <input type="radio" name="matchingStatus" value="A1" onchange="handleStatusChange()">
+                                <span>A1: 完全一致（1対1）</span>
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="matchingStatus" value="A2" onchange="handleStatusChange()">
+                                <span>A2: 完全一致（枝番付与が必要）</span>
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="matchingStatus" value="A3" onchange="handleStatusChange()">
+                                <span>A3: 数量不一致</span>
+                            </label>
+                        </div>
+
+                        <div class="status-section">
+                            <div class="status-section-title">B: 個体管理品目での突合（1台のみ）</div>
+                            <label class="radio-label">
+                                <input type="radio" name="matchingStatus" value="B1" onchange="handleStatusChange()">
+                                <span>B1: 完全一致</span>
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="matchingStatus" value="B2" onchange="handleStatusChange()">
+                                <span>B2: 型式不一致（要確認）</span>
+                            </label>
+                        </div>
+
+                        <div class="status-section">
+                            <div class="status-section-title">C: 個体管理品目での突合（複数台）</div>
+                            <label class="radio-label">
+                                <input type="radio" name="matchingStatus" value="C1" onchange="handleStatusChange()">
+                                <span>C1: 型式+購入日一致（部分一致）</span>
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="matchingStatus" value="C2" onchange="handleStatusChange()">
+                                <span>C2: 型式+部署一致（部分一致）</span>
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="matchingStatus" value="C3" onchange="handleStatusChange()">
+                                <span>C3: 部署一致、型式不一致</span>
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="matchingStatus" value="C4" onchange="handleStatusChange()">
+                                <span>C4: メーカー型式不明、部署一致</span>
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="matchingStatus" value="C5" onchange="handleStatusChange()">
+                                <span>C5: 部署も不一致</span>
+                            </label>
+                        </div>
+
+                        <div class="status-section">
+                            <div class="status-section-title">D: 不一致</div>
+                            <label class="radio-label">
+                                <input type="radio" name="matchingStatus" value="D1" onchange="handleStatusChange()">
+                                <span>D1: 台帳のみ存在（現場未確認）</span>
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="matchingStatus" value="D2" onchange="handleStatusChange()">
+                                <span>D2: 現場のみ存在（台帳未登録）</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="linking-section">
+                    <label class="linking-label">紐付け先資産番号:</label>
+                    <div class="linking-input-group">
+                        <input type="text" id="linkedAssetNo" class="linking-input" placeholder="資産番号を入力または選択" readonly>
+                        <button class="select-from-ledger-btn" onclick="selectFromLedger()">資産台帳から選択...</button>
+                    </div>
+                </div>
+
+                <div class="branch-number-section" id="branchNumberSection" style="display: none;">
+                    <label class="branch-label">枝番:</label>
+                    <input type="text" id="branchNumber" class="branch-input" placeholder="例: 01, 02">
+                </div>
+
+                <div class="remarks-section">
+                    <label class="remarks-label">備考:</label>
+                    <textarea id="matchingRemarks" class="remarks-textarea" rows="3" placeholder="特記事項があれば入力してください"></textarea>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn-primary" onclick="confirmMatching()">✓ 確定</button>
+                    <button class="btn-secondary" onclick="pendingMatching()">⏸ 保留</button>
+                    <button class="btn-danger" onclick="clearMatching()">⊗ 解除</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 資産台帳選択モーダル -->
+<div id="ledgerSelectModal" class="modal-overlay">
+    <div class="modal-container ledger-select-modal">
+        <div class="modal-header">
+            <h3>資産台帳から選択</h3>
+            <button class="modal-close-btn" onclick="closeLedgerSelectModal()">×</button>
+        </div>
+        <div class="modal-body">
+            <div class="ledger-search-bar">
+                <input type="text" id="ledgerSearchInput" class="search-input" placeholder="資産番号、品目、メーカーで検索..." onkeyup="filterLedgerModal()">
+            </div>
+            <div class="ledger-table-container">
+                <table class="ledger-select-table">
+                    <thead>
+                        <tr>
+                            <th>選択</th>
+                            <th>突合</th>
+                            <th>資産番号</th>
+                            <th>部署</th>
+                            <th>品目</th>
+                            <th>メーカー</th>
+                            <th>型式</th>
+                            <th>購入日</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ledgerModalTableBody">
+                        <!-- データはJSで生成 -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-primary" onclick="confirmLedgerSelection()">この資産と紐付ける</button>
+            <button class="btn-secondary" onclick="closeLedgerSelectModal()">キャンセル</button>
+        </div>
+    </div>
+</div>
