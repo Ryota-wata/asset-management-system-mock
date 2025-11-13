@@ -45,6 +45,9 @@ function toggleEditMode(index) {
     const editBtn = row.querySelector('.edit-btn-flat');
     const isEditing = row.classList.contains('editing');
 
+    // 編集可能なフィールド（固定資産台帳の大分類、中分類、個体管理品目のみ）
+    const editableFields = ['majorCategory', 'middleCategory', 'itemManagement'];
+
     if (isEditing) {
         // 編集モード終了：inputをspanに戻す
         row.querySelectorAll('.td-data-matching').forEach(td => {
@@ -62,26 +65,36 @@ function toggleEditMode(index) {
         editBtn.textContent = '編集';
         editBtn.classList.remove('editing');
     } else {
-        // 編集モード開始：spanをinputに変換
+        // 編集モード開始：編集可能なフィールドのみspanをinputに変換
         row.querySelectorAll('.td-data-matching').forEach(td => {
             const span = td.querySelector('.cell-value');
             if (span) {
-                const currentValue = span.textContent;
                 const field = span.getAttribute('data-field');
 
-                const input = document.createElement('input');
-                input.type = 'text';
-                input.className = 'cell-input-flat';
-                input.value = currentValue;
-                input.setAttribute('data-field', field);
+                // 編集可能なフィールドのみinputに変換
+                if (editableFields.includes(field)) {
+                    const currentValue = span.textContent;
 
-                td.replaceChild(input, span);
+                    const input = document.createElement('input');
+                    input.type = 'text';
+                    input.className = 'cell-input-flat';
+                    input.value = currentValue;
+                    input.setAttribute('data-field', field);
+
+                    td.replaceChild(input, span);
+                }
             }
         });
 
         row.classList.add('editing');
         editBtn.textContent = '保存';
         editBtn.classList.add('editing');
+
+        // 最初の編集可能フィールドにフォーカス
+        const firstInput = row.querySelector('.cell-input-flat');
+        if (firstInput) {
+            firstInput.focus();
+        }
     }
 }
 
