@@ -510,14 +510,9 @@ function goToNextPage() {
 }
 
 /**
- * 戻るボタン
+ * 戻るボタン（navigation.jsの関数を使用）
+ * この関数は削除してnavigation.jsの関数を使用
  */
-function handleBackFromMatching() {
-    if (confirm('編集中のデータは保存されません。戻ってよろしいですか？')) {
-        // 前の画面に戻る処理
-        console.log('前の画面に戻る');
-    }
-}
 
 // グローバルに公開
 window.toggleSelectAll = toggleSelectAll;
@@ -533,4 +528,4 @@ window.openAssetMasterWindow = openAssetMasterWindow;
 window.completeMatching = completeMatching;
 window.goToPreviousPage = goToPreviousPage;
 window.goToNextPage = goToNextPage;
-window.handleBackFromMatching = handleBackFromMatching;
+// handleBackFromMatchingはnavigation.jsで定義

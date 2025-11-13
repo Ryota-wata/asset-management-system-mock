@@ -213,11 +213,17 @@ function handleImportToMatching() {
 }
 
 /**
- * 突き合わせ画面から戻る
+ * 突き合わせ画面から戻る（資産検索画面に戻る）
  */
 function handleBackFromMatching() {
-    document.getElementById('assetMatchingPage').classList.remove('active');
-    document.getElementById('assetImportPage').classList.add('active');
+    if (confirm('編集中のデータは保存されません。戻ってよろしいですか？')) {
+        document.getElementById('assetMatchingPage').classList.remove('active');
+        document.getElementById('searchResultPage').classList.add('active');
+        // 個体管理リストモーダルは表示しない
+        if (typeof closeListModal === 'function') {
+            closeListModal();
+        }
+    }
 }
 
 /**
