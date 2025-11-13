@@ -387,7 +387,8 @@
 }
 
 .asset-matching-page .choices__list--dropdown .choices__list {
-    max-height: 300px;
+    max-height: 300px !important;
+    height: auto !important;
     overflow-y: auto;
 }
 
