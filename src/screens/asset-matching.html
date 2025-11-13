@@ -58,7 +58,7 @@
                             </th>
                             <th class="th-no-matching">No.</th>
                             <!-- 固定資産台帳カラム -->
-                            <th class="th-col-group-matching" colspan="12">固定資産台帳データ</th>
+                            <th class="th-col-group-matching" colspan="7">固定資産台帳データ</th>
                             <!-- AI推薦1 -->
                             <th class="th-col-group-matching" colspan="7">AI推薦1</th>
                             <!-- AI推薦2 -->
@@ -74,16 +74,11 @@
                             <!-- 固定資産台帳サブヘッダー -->
                             <th class="th-sub-matching">資産番号</th>
                             <th class="th-sub-matching">登録品目名</th>
+                            <th class="th-sub-matching">メーカー名</th>
+                            <th class="th-sub-matching">型式</th>
                             <th class="th-sub-matching">大分類</th>
                             <th class="th-sub-matching">中分類</th>
                             <th class="th-sub-matching">個体管理品目</th>
-                            <th class="th-sub-matching">メーカー名</th>
-                            <th class="th-sub-matching">型式</th>
-                            <th class="th-sub-matching">取得年月日</th>
-                            <th class="th-sub-matching">取得価額</th>
-                            <th class="th-sub-matching">耐用年数</th>
-                            <th class="th-sub-matching">設置場所</th>
-                            <th class="th-sub-matching">管理部門</th>
                             <!-- AI推薦1サブヘッダー -->
                             <th class="th-sub-matching th-select-matching">選択</th>
                             <th class="th-sub-matching">類似度</th>
@@ -123,16 +118,11 @@
                             <!-- 固定資産台帳データ -->
                             <td class="td-data-matching"><span class="cell-value" data-field="assetNo">A-001-2023</span></td>
                             <td class="td-data-matching"><span class="cell-value" data-field="productName">MRI装置 シーメンス MAGNETOM</span></td>
-                            <td class="td-data-matching"><span class="cell-value" data-field="majorCategory">医療機器</span></td>
-                            <td class="td-data-matching"><span class="cell-value" data-field="middleCategory">画像診断装置</span></td>
-                            <td class="td-data-matching"><span class="cell-value" data-field="itemManagement">MRI装置</span></td>
                             <td class="td-data-matching"><span class="cell-value" data-field="manufacturer">シーメンスヘルスケア</span></td>
                             <td class="td-data-matching"><span class="cell-value" data-field="model">MAGNETOM Vida 3T</span></td>
-                            <td class="td-data-matching"><span class="cell-value" data-field="acquisitionDate">2023/04/15</span></td>
-                            <td class="td-data-matching"><span class="cell-value" data-field="acquisitionPrice">¥85,000,000</span></td>
-                            <td class="td-data-matching"><span class="cell-value" data-field="usefulLife">6年</span></td>
-                            <td class="td-data-matching"><span class="cell-value" data-field="location">放射線科</span></td>
-                            <td class="td-data-matching"><span class="cell-value" data-field="department">医療機器管理部</span></td>
+                            <td class="td-data-matching"><span class="cell-value" data-field="majorCategory"></span></td>
+                            <td class="td-data-matching"><span class="cell-value" data-field="middleCategory"></span></td>
+                            <td class="td-data-matching"><span class="cell-value" data-field="itemManagement"></span></td>
                             <!-- AI推薦1 -->
                             <td class="td-select-matching">
                                 <input type="radio" name="ai-select-0" class="ai-select-radio" value="rec1" checked onchange="selectAIRecommendation(0, 1)">
@@ -181,16 +171,11 @@
                             <!-- 固定資産台帳データ -->
                             <td class="td-data-matching"><span class="cell-value" data-field="assetNo">A-002-2023</span></td>
                             <td class="td-data-matching"><span class="cell-value" data-field="productName">CT装置 GE Healthcare Revolution</span></td>
-                            <td class="td-data-matching"><span class="cell-value" data-field="majorCategory">医療機器</span></td>
-                            <td class="td-data-matching"><span class="cell-value" data-field="middleCategory">画像診断装置</span></td>
-                            <td class="td-data-matching"><span class="cell-value" data-field="itemManagement">CT装置</span></td>
                             <td class="td-data-matching"><span class="cell-value" data-field="manufacturer">GEヘルスケア</span></td>
                             <td class="td-data-matching"><span class="cell-value" data-field="model">Revolution CT</span></td>
-                            <td class="td-data-matching"><span class="cell-value" data-field="acquisitionDate">2023/03/20</span></td>
-                            <td class="td-data-matching"><span class="cell-value" data-field="acquisitionPrice">¥65,000,000</span></td>
-                            <td class="td-data-matching"><span class="cell-value" data-field="usefulLife">6年</span></td>
-                            <td class="td-data-matching"><span class="cell-value" data-field="location">放射線科</span></td>
-                            <td class="td-data-matching"><span class="cell-value" data-field="department">医療機器管理部</span></td>
+                            <td class="td-data-matching"><span class="cell-value" data-field="majorCategory"></span></td>
+                            <td class="td-data-matching"><span class="cell-value" data-field="middleCategory"></span></td>
+                            <td class="td-data-matching"><span class="cell-value" data-field="itemManagement"></span></td>
                             <!-- AI推薦1 -->
                             <td class="td-select-matching">
                                 <input type="radio" name="ai-select-1" class="ai-select-radio" value="rec1" checked onchange="selectAIRecommendation(1, 1)">
@@ -239,16 +224,11 @@
                             <!-- 固定資産台帳データ -->
                             <td class="td-data-matching"><span class="cell-value" data-field="assetNo">A-003-2023</span></td>
                             <td class="td-data-matching"><span class="cell-value" data-field="productName">人工呼吸器 ドレーゲル Savina</span></td>
-                            <td class="td-data-matching"><span class="cell-value" data-field="majorCategory">医療機器</span></td>
-                            <td class="td-data-matching"><span class="cell-value" data-field="middleCategory">生命維持装置</span></td>
-                            <td class="td-data-matching"><span class="cell-value" data-field="itemManagement">人工呼吸器</span></td>
                             <td class="td-data-matching"><span class="cell-value" data-field="manufacturer">ドレーゲル</span></td>
                             <td class="td-data-matching"><span class="cell-value" data-field="model">Savina 300</span></td>
-                            <td class="td-data-matching"><span class="cell-value" data-field="acquisitionDate">2023/02/10</span></td>
-                            <td class="td-data-matching"><span class="cell-value" data-field="acquisitionPrice">¥4,500,000</span></td>
-                            <td class="td-data-matching"><span class="cell-value" data-field="usefulLife">5年</span></td>
-                            <td class="td-data-matching"><span class="cell-value" data-field="location">ICU</span></td>
-                            <td class="td-data-matching"><span class="cell-value" data-field="department">集中治療部</span></td>
+                            <td class="td-data-matching"><span class="cell-value" data-field="majorCategory"></span></td>
+                            <td class="td-data-matching"><span class="cell-value" data-field="middleCategory"></span></td>
+                            <td class="td-data-matching"><span class="cell-value" data-field="itemManagement"></span></td>
                             <!-- AI推薦1 -->
                             <td class="td-select-matching">
                                 <input type="radio" name="ai-select-2" class="ai-select-radio" value="rec1" checked onchange="selectAIRecommendation(2, 1)">
