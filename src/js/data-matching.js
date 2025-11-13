@@ -524,15 +524,11 @@ function openLedgerSubWindow() {
 }
 
 /**
- * 戻るボタン
+ * データ突合画面から資産検索画面に戻る
  */
 function handleBackFromDataMatching() {
-    if (typeof handleBackFromOfflinePrep === 'function') {
-        handleBackFromOfflinePrep();
-    } else {
-        document.getElementById('dataMatchingPage').classList.remove('active');
-        document.getElementById('offlinePrepPage').classList.add('active');
-    }
+    document.getElementById('dataMatchingPage').classList.remove('active');
+    document.getElementById('mainContainer').classList.add('active');
 }
 
 // グローバルに公開
