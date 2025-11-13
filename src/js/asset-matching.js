@@ -2,6 +2,32 @@
  * 資産管理台帳と資産マスタ突き合わせ画面のJavaScript
  */
 
+// 資産マスタデータを保持
+let assetMasterData = null;
+let choicesInstances = {}; // Choices.jsインスタンスを管理
+
+/**
+ * 資産マスタをロード
+ */
+async function loadAssetMasterForMatching() {
+    if (assetMasterData) {
+        return assetMasterData;
+    }
+
+    try {
+        const response = await fetch('/src/data/asset-master.json');
+        if (!response.ok) {
+            throw new Error('Failed to load asset master');
+        }
+        assetMasterData = await response.json();
+        console.log('Asset master loaded:', assetMasterData);
+        return assetMasterData;
+    } catch (error) {
+        console.error('Error loading asset master:', error);
+        return null;
+    }
+}
+
 /**
  * 全選択切り替え
  */
@@ -33,9 +59,9 @@ function selectAIRecommendation(index, recNumber) {
 }
 
 /**
- * 編集モード切り替え（修正版）
+ * 編集モード切り替え（修正版 - Choices.js対応）
  */
-function toggleEditMode(index) {
+async function toggleEditMode(index) {
     const row = document.querySelector(`.data-row-flat[data-index="${index}"]`);
     if (!row) {
         console.error(`Row with index ${index} not found`);
@@ -49,15 +75,24 @@ function toggleEditMode(index) {
     const editableFields = ['majorCategory', 'middleCategory', 'itemManagement'];
 
     if (isEditing) {
-        // 編集モード終了：inputをspanに戻す
+        // 編集モード終了：selectをspanに戻す & Choices.jsインスタンスを破棄
         row.querySelectorAll('.td-data-matching').forEach(td => {
-            const input = td.querySelector('.cell-input-flat');
-            if (input) {
+            const select = td.querySelector('select.cell-select-flat');
+            if (select) {
+                const field = select.getAttribute('data-field');
+
+                // Choices.jsインスタンスを破棄
+                const instanceKey = `${index}-${field}`;
+                if (choicesInstances[instanceKey]) {
+                    choicesInstances[instanceKey].destroy();
+                    delete choicesInstances[instanceKey];
+                }
+
                 const span = document.createElement('span');
                 span.className = 'cell-value';
-                span.textContent = input.value;
-                span.setAttribute('data-field', input.getAttribute('data-field'));
-                td.replaceChild(span, input);
+                span.textContent = select.value;
+                span.setAttribute('data-field', field);
+                td.replaceChild(span, select);
             }
         });
 
@@ -65,23 +100,66 @@ function toggleEditMode(index) {
         editBtn.textContent = '編集';
         editBtn.classList.remove('editing');
     } else {
-        // 編集モード開始：編集可能なフィールドのみspanをinputに変換
+        // 資産マスタをロード
+        const masterData = await loadAssetMasterForMatching();
+        if (!masterData) {
+            alert('資産マスタの読み込みに失敗しました');
+            return;
+        }
+
+        // 編集モード開始：編集可能なフィールドのみspanをselectに変換
         row.querySelectorAll('.td-data-matching').forEach(td => {
             const span = td.querySelector('.cell-value');
             if (span) {
                 const field = span.getAttribute('data-field');
 
-                // 編集可能なフィールドのみinputに変換
+                // 編集可能なフィールドのみselectに変換
                 if (editableFields.includes(field)) {
                     const currentValue = span.textContent;
 
-                    const input = document.createElement('input');
-                    input.type = 'text';
-                    input.className = 'cell-input-flat';
-                    input.value = currentValue;
-                    input.setAttribute('data-field', field);
+                    const select = document.createElement('select');
+                    select.className = 'cell-select-flat';
+                    select.setAttribute('data-field', field);
 
-                    td.replaceChild(input, span);
+                    // フィールドに応じたオプションを追加
+                    let options = [];
+                    if (field === 'majorCategory') {
+                        options = masterData.largeClasses.map(item => item.name);
+                    } else if (field === 'middleCategory') {
+                        options = masterData.mediumClasses.map(item => item.name);
+                    } else if (field === 'itemManagement') {
+                        options = masterData.items.map(item => item.name);
+                    }
+
+                    // 空のオプションを追加
+                    const emptyOption = document.createElement('option');
+                    emptyOption.value = '';
+                    emptyOption.textContent = '選択してください';
+                    select.appendChild(emptyOption);
+
+                    // オプションを追加
+                    options.forEach(optionText => {
+                        const option = document.createElement('option');
+                        option.value = optionText;
+                        option.textContent = optionText;
+                        if (optionText === currentValue) {
+                            option.selected = true;
+                        }
+                        select.appendChild(option);
+                    });
+
+                    td.replaceChild(select, span);
+
+                    // Choices.jsを適用
+                    const instanceKey = `${index}-${field}`;
+                    choicesInstances[instanceKey] = new Choices(select, {
+                        searchEnabled: true,
+                        shouldSort: false,
+                        itemSelectText: '',
+                        noResultsText: '該当なし',
+                        searchPlaceholderValue: '検索...',
+                        removeItemButton: false
+                    });
                 }
             }
         });
@@ -89,12 +167,6 @@ function toggleEditMode(index) {
         row.classList.add('editing');
         editBtn.textContent = '保存';
         editBtn.classList.add('editing');
-
-        // 最初の編集可能フィールドにフォーカス
-        const firstInput = row.querySelector('.cell-input-flat');
-        if (firstInput) {
-            firstInput.focus();
-        }
     }
 }
 

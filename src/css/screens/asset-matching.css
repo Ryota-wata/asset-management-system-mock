@@ -348,6 +348,46 @@
     box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
 }
 
+/* 編集モード時のselect（Choices.js用） */
+.asset-matching-page .cell-select-flat {
+    width: 100%;
+    font-size: 12px;
+}
+
+/* Choices.jsのスタイル調整 */
+.asset-matching-page .choices {
+    margin-bottom: 0;
+}
+
+.asset-matching-page .choices__inner {
+    min-height: 30px;
+    padding: 4px 6px;
+    border: 1px solid #4CAF50;
+    border-radius: 4px;
+    background: #f0fdf4;
+    font-size: 12px;
+}
+
+.asset-matching-page .choices__list--dropdown {
+    z-index: 100;
+    border: 1px solid #4CAF50;
+    border-radius: 4px;
+    font-size: 12px;
+}
+
+.asset-matching-page .choices__item--selectable {
+    padding: 6px 10px;
+}
+
+.asset-matching-page .choices__item--selectable.is-highlighted {
+    background-color: #4CAF50;
+}
+
+.asset-matching-page .choices__input {
+    font-size: 12px;
+    background-color: transparent;
+}
+
 /* 編集モード時の行スタイル */
 .asset-matching-page .data-row-flat.editing {
     background: #f0fdf4;
