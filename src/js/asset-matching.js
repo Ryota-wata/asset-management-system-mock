@@ -2,31 +2,8 @@
  * 資産管理台帳と資産マスタ突き合わせ画面のJavaScript
  */
 
-// 資産マスタデータを保持
-let assetMasterData = null;
-let choicesInstances = {}; // Choices.jsインスタンスを管理
-
-/**
- * 資産マスタをロード
- */
-async function loadAssetMasterForMatching() {
-    if (assetMasterData) {
-        return assetMasterData;
-    }
-
-    try {
-        const response = await fetch('/src/data/asset-master.json');
-        if (!response.ok) {
-            throw new Error('Failed to load asset master');
-        }
-        assetMasterData = await response.json();
-        console.log('Asset master loaded:', assetMasterData);
-        return assetMasterData;
-    } catch (error) {
-        console.error('Error loading asset master:', error);
-        return null;
-    }
-}
+// Choices.jsインスタンスを管理（グローバルスコープ汚染を避ける）
+const matchingChoicesInstances = {};
 
 /**
  * 全選択切り替え
@@ -59,7 +36,7 @@ function selectAIRecommendation(index, recNumber) {
 }
 
 /**
- * 編集モード切り替え（修正版 - Choices.js対応）
+ * 編集モード切り替え（Choices.js対応）
  */
 async function toggleEditMode(index) {
     const row = document.querySelector(`.data-row-flat[data-index="${index}"]`);
@@ -83,9 +60,9 @@ async function toggleEditMode(index) {
 
                 // Choices.jsインスタンスを破棄
                 const instanceKey = `${index}-${field}`;
-                if (choicesInstances[instanceKey]) {
-                    choicesInstances[instanceKey].destroy();
-                    delete choicesInstances[instanceKey];
+                if (matchingChoicesInstances[instanceKey]) {
+                    matchingChoicesInstances[instanceKey].destroy();
+                    delete matchingChoicesInstances[instanceKey];
                 }
 
                 const span = document.createElement('span');
@@ -100,8 +77,13 @@ async function toggleEditMode(index) {
         editBtn.textContent = '編集';
         editBtn.classList.remove('editing');
     } else {
-        // 資産マスタをロード
-        const masterData = await loadAssetMasterForMatching();
+        // 資産マスタをロード（既存のグローバル関数を使用）
+        if (typeof window.loadAssetMaster !== 'function') {
+            alert('資産マスタの読み込み関数が見つかりません');
+            return;
+        }
+
+        const masterData = await window.loadAssetMaster();
         if (!masterData) {
             alert('資産マスタの読み込みに失敗しました');
             return;
@@ -152,7 +134,7 @@ async function toggleEditMode(index) {
 
                     // Choices.jsを適用
                     const instanceKey = `${index}-${field}`;
-                    choicesInstances[instanceKey] = new Choices(select, {
+                    matchingChoicesInstances[instanceKey] = new Choices(select, {
                         searchEnabled: true,
                         shouldSort: false,
                         itemSelectText: '',
@@ -185,34 +167,9 @@ function confirmRowFlat(index) {
         toggleEditMode(index);
     }
 
-    // 選択されたAI推薦を取得
-    const selectedRadio = row.querySelector('.ai-select-radio:checked');
-    if (selectedRadio) {
-        const recNumber = selectedRadio.value.replace('rec', '');
-        console.log(`Row ${index}: AI推薦${recNumber}で確定しました`);
-
-        // 選択されたAI推薦のデータを固定資産台帳エリアに反映
-        // (実装時にサーバーに送信するロジックを追加)
-    }
-
-    // 確定済みマークを追加
+    // 行を確定状態に変更
     row.setAttribute('data-status', 'completed');
-
-    // ボタンを無効化
-    const editBtn = row.querySelector('.edit-btn-flat');
-    const confirmBtn = row.querySelector('.confirm-btn-flat');
-    if (editBtn) {
-        editBtn.disabled = true;
-    }
-    if (confirmBtn) {
-        confirmBtn.disabled = true;
-        confirmBtn.textContent = '確定済';
-    }
-
-    // ラジオボタンを無効化
-    row.querySelectorAll('.ai-select-radio').forEach(radio => {
-        radio.disabled = true;
-    });
+    row.style.backgroundColor = '#e8f5e9';
 
     // チェックボックスを無効化
     const checkbox = row.querySelector('.row-checkbox');
@@ -221,52 +178,103 @@ function confirmRowFlat(index) {
         checkbox.checked = false;
     }
 
-    // 進捗カウント更新
-    updateProgressCount();
+    // 編集ボタンを無効化
+    const editBtn = row.querySelector('.edit-btn-flat');
+    if (editBtn) {
+        editBtn.disabled = true;
+    }
+
+    // 確定ボタンを無効化
+    const confirmBtn = row.querySelector('.confirm-btn-flat');
+    if (confirmBtn) {
+        confirmBtn.disabled = true;
+        confirmBtn.textContent = '確定済';
+    }
+
+    // カウントを更新
+    updateMatchingCounts();
+
+    console.log(`Row ${index} confirmed`);
 }
 
 /**
  * 選択項目を一括確定
  */
 function bulkConfirmSelected() {
-    const selectedCheckboxes = document.querySelectorAll('.row-checkbox:checked:not(:disabled)');
-
-    if (selectedCheckboxes.length === 0) {
-        alert('確定する項目を選択してください。');
+    const checkedBoxes = document.querySelectorAll('.row-checkbox:checked:not(:disabled)');
+    if (checkedBoxes.length === 0) {
+        alert('確定する行を選択してください');
         return;
     }
 
-    if (confirm(`選択した${selectedCheckboxes.length}件を一括確定しますか？`)) {
-        selectedCheckboxes.forEach(checkbox => {
-            const index = checkbox.getAttribute('data-index');
-            confirmRowFlat(parseInt(index));
-        });
-
-        // 全選択チェックボックスを解除
-        const selectAllCheckbox = document.getElementById('selectAllCheckbox');
-        if (selectAllCheckbox) {
-            selectAllCheckbox.checked = false;
-        }
+    if (!confirm(`${checkedBoxes.length}件を一括確定しますか？`)) {
+        return;
     }
+
+    checkedBoxes.forEach(checkbox => {
+        const row = checkbox.closest('.data-row-flat');
+        const index = parseInt(row.getAttribute('data-index'));
+        confirmRowFlat(index);
+    });
 }
 
 /**
- * フィルター適用
+ * 進捗カウントを更新
  */
-function filterMatchingData(filterType) {
-    // フィルターボタンのアクティブ状態を更新
-    document.querySelectorAll('.filter-btn-matching').forEach(btn => {
-        btn.classList.remove('active');
-    });
-    const targetBtn = document.querySelector(`[data-filter="${filterType}"]`);
-    if (targetBtn) {
-        targetBtn.classList.add('active');
+function updateMatchingCounts() {
+    const allRows = document.querySelectorAll('.data-row-flat');
+    const completedRows = document.querySelectorAll('.data-row-flat[data-status="completed"]');
+
+    const progressCount = document.getElementById('progressCount');
+    const completedCount = document.getElementById('completedCount');
+
+    if (progressCount) {
+        progressCount.textContent = `${completedRows.length} / ${allRows.length}`;
+    }
+    if (completedCount) {
+        completedCount.textContent = `${completedRows.length}件`;
     }
 
-    // データ行をフィルタリング
-    document.querySelectorAll('.data-row-flat').forEach(row => {
-        const status = row.getAttribute('data-status');
+    // フィルターボタンのカウントも更新
+    updateFilterCounts();
+}
 
+/**
+ * フィルターボタンのカウントを更新
+ */
+function updateFilterCounts() {
+    const allRows = document.querySelectorAll('.data-row-flat');
+    const pendingRows = document.querySelectorAll('.data-row-flat[data-status="pending"]');
+    const completedRows = document.querySelectorAll('.data-row-flat[data-status="completed"]');
+
+    const allBtn = document.querySelector('[data-filter="all"] .filter-count-matching');
+    const pendingBtn = document.querySelector('[data-filter="pending"] .filter-count-matching');
+    const completedBtn = document.querySelector('[data-filter="completed"] .filter-count-matching');
+
+    if (allBtn) allBtn.textContent = `(${allRows.length})`;
+    if (pendingBtn) pendingBtn.textContent = `(${pendingRows.length})`;
+    if (completedBtn) completedBtn.textContent = `(${completedRows.length})`;
+}
+
+/**
+ * データをフィルタリング
+ */
+function filterMatchingData(filterType) {
+    const allRows = document.querySelectorAll('.data-row-flat');
+    const filterButtons = document.querySelectorAll('.filter-btn-matching');
+
+    // ボタンのアクティブ状態を更新
+    filterButtons.forEach(btn => {
+        if (btn.getAttribute('data-filter') === filterType) {
+            btn.classList.add('active');
+        } else {
+            btn.classList.remove('active');
+        }
+    });
+
+    // 行の表示/非表示を切り替え
+    allRows.forEach(row => {
+        const status = row.getAttribute('data-status');
         if (filterType === 'all') {
             row.style.display = '';
         } else if (filterType === status) {
@@ -278,144 +286,94 @@ function filterMatchingData(filterType) {
 }
 
 /**
- * 検索
+ * 検索機能
  */
-function searchImportData(searchTerm) {
-    const term = searchTerm.toLowerCase();
-    document.querySelectorAll('.data-row-flat').forEach(row => {
-        const cells = row.querySelectorAll('.td-data-matching');
+function searchImportData(query) {
+    const allRows = document.querySelectorAll('.data-row-flat');
+    const searchQuery = query.toLowerCase().trim();
+
+    allRows.forEach(row => {
+        if (!searchQuery) {
+            row.style.display = '';
+            return;
+        }
+
+        const cells = row.querySelectorAll('.cell-value');
         let found = false;
 
         cells.forEach(cell => {
             const text = cell.textContent.toLowerCase();
-            if (text.includes(term)) {
+            if (text.includes(searchQuery)) {
                 found = true;
             }
         });
 
-        if (found || term === '') {
-            row.style.display = '';
-        } else {
-            row.style.display = 'none';
-        }
+        row.style.display = found ? '' : 'none';
     });
 }
 
 /**
- * 進捗カウント更新
- */
-function updateProgressCount() {
-    const completedRows = document.querySelectorAll('.data-row-flat[data-status="completed"]').length;
-    const totalRows = document.querySelectorAll('.data-row-flat').length;
-
-    const progressCountEl = document.getElementById('progressCount');
-    const completedCountEl = document.getElementById('completedCount');
-
-    if (progressCountEl) {
-        progressCountEl.textContent = `${completedRows} / ${totalRows}`;
-    }
-    if (completedCountEl) {
-        completedCountEl.textContent = `${completedRows}件`;
-    }
-
-    // フィルターカウント更新
-    const pendingCount = document.querySelectorAll('.data-row-flat[data-status="pending"]').length;
-
-    const allFilter = document.querySelector('[data-filter="all"] .filter-count-matching');
-    const pendingFilter = document.querySelector('[data-filter="pending"] .filter-count-matching');
-    const completedFilter = document.querySelector('[data-filter="completed"] .filter-count-matching');
-
-    if (allFilter) allFilter.textContent = `(${totalRows})`;
-    if (pendingFilter) pendingFilter.textContent = `(${pendingCount})`;
-    if (completedFilter) completedFilter.textContent = `(${completedRows})`;
-}
-
-/**
- * 資産マスタを新しいウィンドウで開く
+ * 資産マスタを別ウィンドウで開く
  */
 function openAssetMasterWindow() {
-    const width = 1200;
-    const height = 800;
-    const left = (screen.width - width) / 2;
-    const top = (screen.height - height) / 2;
-
-    window.open(
-        'about:blank',
-        'assetMasterWindow',
-        `width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=yes`
-    );
-
-    alert('資産マスタを新しいウィンドウで開きます（実装時はデータを表示）');
-}
-
-/**
- * ページネーション
- */
-function goToPreviousPage() {
-    console.log('Go to previous page');
-}
-
-function goToNextPage() {
-    console.log('Go to next page');
+    // 資産マスタ画面を新しいウィンドウで開く
+    window.open('asset-master.html', 'AssetMaster', 'width=1200,height=800');
 }
 
 /**
  * 突き合わせ完了
  */
 function completeMatching() {
-    const pendingCount = document.querySelectorAll('.data-row-flat[data-status="pending"]').length;
+    const pendingRows = document.querySelectorAll('.data-row-flat[data-status="pending"]');
 
-    if (pendingCount > 0) {
-        if (!confirm(`未処理のデータが${pendingCount}件あります。このまま完了しますか？`)) {
+    if (pendingRows.length > 0) {
+        if (!confirm(`未処理の項目が${pendingRows.length}件あります。完了してよろしいですか？`)) {
             return;
         }
     }
 
-    if (confirm('突き合わせを完了してマスタに登録しますか？')) {
-        console.log('Completing matching process...');
-        alert('突き合わせが完了しました。');
+    alert('突き合わせが完了しました');
+    // 実際の実装では次の画面に遷移
+}
+
+/**
+ * 前のページへ
+ */
+function goToPreviousPage() {
+    console.log('前のページへ');
+    // ページネーション処理
+}
+
+/**
+ * 次のページへ
+ */
+function goToNextPage() {
+    console.log('次のページへ');
+    // ページネーション処理
+}
+
+/**
+ * 戻るボタン
+ */
+function handleBackFromMatching() {
+    if (confirm('編集中のデータは保存されません。戻ってよろしいですか？')) {
+        // 前の画面に戻る処理
+        console.log('前の画面に戻る');
     }
 }
 
-// グローバルスコープに関数を公開
+// グローバルに公開
 window.toggleSelectAll = toggleSelectAll;
 window.selectAIRecommendation = selectAIRecommendation;
 window.toggleEditMode = toggleEditMode;
 window.confirmRowFlat = confirmRowFlat;
 window.bulkConfirmSelected = bulkConfirmSelected;
+window.updateMatchingCounts = updateMatchingCounts;
+window.updateFilterCounts = updateFilterCounts;
 window.filterMatchingData = filterMatchingData;
 window.searchImportData = searchImportData;
-window.updateProgressCount = updateProgressCount;
 window.openAssetMasterWindow = openAssetMasterWindow;
+window.completeMatching = completeMatching;
 window.goToPreviousPage = goToPreviousPage;
 window.goToNextPage = goToNextPage;
-window.completeMatching = completeMatching;
-
-// 初期化（DOMContentLoadedまたはページ表示時）
-document.addEventListener('DOMContentLoaded', function() {
-    const matchingPage = document.getElementById('assetMatchingPage');
-    if (matchingPage) {
-        updateProgressCount();
-    }
-});
-
-// 画面が動的に読み込まれた場合の初期化
-// MutationObserverで監視し、画面が表示されたら初期化
-const observer = new MutationObserver(function(mutations) {
-    mutations.forEach(function(mutation) {
-        if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
-            const matchingPage = document.getElementById('assetMatchingPage');
-            if (matchingPage && matchingPage.classList.contains('active')) {
-                updateProgressCount();
-            }
-        }
-    });
-});
-
-// assetMatchingPageが存在する場合、監視を開始
-setTimeout(() => {
-    const matchingPage = document.getElementById('assetMatchingPage');
-    if (matchingPage) {
-        observer.observe(matchingPage, { attributes: true });
-    }
-}, 1000);
+window.handleBackFromMatching = handleBackFromMatching;
