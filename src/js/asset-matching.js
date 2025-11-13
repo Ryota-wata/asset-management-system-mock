@@ -6,13 +6,12 @@
 const matchingChoicesInstances = {};
 
 /**
- * 全選択切り替え
+ * 全選択切り替え（共通ヘルパー使用）
  */
 function toggleSelectAll(checkbox) {
-    const checkboxes = document.querySelectorAll('.row-checkbox:not(:disabled)');
-    checkboxes.forEach(cb => {
-        cb.checked = checkbox.checked;
-    });
+    if (window.TableHelper) {
+        window.TableHelper.toggleSelectAll(checkbox, '.row-checkbox:not(:disabled)');
+    }
 }
 
 /**
@@ -281,76 +280,34 @@ function updateMatchingCounts() {
 }
 
 /**
- * フィルターボタンのカウントを更新
+ * フィルターボタンのカウントを更新（共通ヘルパー使用）
  */
 function updateFilterCounts() {
-    const allRows = document.querySelectorAll('.data-row-flat');
-    const pendingRows = document.querySelectorAll('.data-row-flat[data-status="pending"]');
-    const completedRows = document.querySelectorAll('.data-row-flat[data-status="completed"]');
-
-    const allBtn = document.querySelector('[data-filter="all"] .filter-count-matching');
-    const pendingBtn = document.querySelector('[data-filter="pending"] .filter-count-matching');
-    const completedBtn = document.querySelector('[data-filter="completed"] .filter-count-matching');
-
-    if (allBtn) allBtn.textContent = `(${allRows.length})`;
-    if (pendingBtn) pendingBtn.textContent = `(${pendingRows.length})`;
-    if (completedBtn) completedBtn.textContent = `(${completedRows.length})`;
+    if (window.TableHelper) {
+        window.TableHelper.updateFilterCounts([
+            { buttonSelector: '[data-filter="all"] .filter-count-matching', rowSelector: '.data-row-flat', statusValue: null },
+            { buttonSelector: '[data-filter="pending"] .filter-count-matching', rowSelector: '.data-row-flat', statusValue: 'pending' },
+            { buttonSelector: '[data-filter="completed"] .filter-count-matching', rowSelector: '.data-row-flat', statusValue: 'completed' }
+        ]);
+    }
 }
 
 /**
- * データをフィルタリング
+ * データをフィルタリング（共通ヘルパー使用）
  */
 function filterMatchingData(filterType) {
-    const allRows = document.querySelectorAll('.data-row-flat');
-    const filterButtons = document.querySelectorAll('.filter-btn-matching');
-
-    // ボタンのアクティブ状態を更新
-    filterButtons.forEach(btn => {
-        if (btn.getAttribute('data-filter') === filterType) {
-            btn.classList.add('active');
-        } else {
-            btn.classList.remove('active');
-        }
-    });
-
-    // 行の表示/非表示を切り替え
-    allRows.forEach(row => {
-        const status = row.getAttribute('data-status');
-        if (filterType === 'all') {
-            row.style.display = '';
-        } else if (filterType === status) {
-            row.style.display = '';
-        } else {
-            row.style.display = 'none';
-        }
-    });
+    if (window.TableHelper) {
+        window.TableHelper.filterRows('.data-row-flat', filterType, 'data-status', '.filter-btn-matching');
+    }
 }
 
 /**
- * 検索機能
+ * 検索機能（共通ヘルパー使用）
  */
 function searchImportData(query) {
-    const allRows = document.querySelectorAll('.data-row-flat');
-    const searchQuery = query.toLowerCase().trim();
-
-    allRows.forEach(row => {
-        if (!searchQuery) {
-            row.style.display = '';
-            return;
-        }
-
-        const cells = row.querySelectorAll('.cell-value');
-        let found = false;
-
-        cells.forEach(cell => {
-            const text = cell.textContent.toLowerCase();
-            if (text.includes(searchQuery)) {
-                found = true;
-            }
-        });
-
-        row.style.display = found ? '' : 'none';
-    });
+    if (window.TableHelper) {
+        window.TableHelper.searchRows('.data-row-flat', query, '.cell-value');
+    }
 }
 
 /**

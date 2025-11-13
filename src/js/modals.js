@@ -4,10 +4,9 @@
  */
 
 /**
- * 個体管理リスト作成モーダルを表示
+ * 個体管理リスト作成モーダルを表示（共通ヘルパー使用）
  */
 function showListModal() {
-    const modal = document.getElementById('listModal');
     const modalContent = document.getElementById('listModalContent');
 
     // モーダル位置を中央にリセット（transform等をクリア）
@@ -15,27 +14,27 @@ function showListModal() {
         modalContent.style.transform = '';
     }
 
-    modal.classList.add('show');
-
-    // モーダル外クリックで閉じる処理を設定
-    setTimeout(() => {
-        const handleOutsideClick = function(event) {
-            if (event.target === modal) {
-                closeListModal();
-                modal.removeEventListener('click', handleOutsideClick);
-            }
-        };
-        modal.addEventListener('click', handleOutsideClick);
-    }, 0);
+    if (window.ModalHelper) {
+        window.ModalHelper.open('#listModal', {
+            activeClass: 'show',
+            showClass: null,
+            closeOnOutsideClick: true,
+            closeOnEscape: true
+        });
+    }
 }
 
 /**
- * 個体管理リスト作成モーダルを閉じる
+ * 個体管理リスト作成モーダルを閉じる（共通ヘルパー使用）
  */
 function closeListModal() {
-    const modal = document.getElementById('listModal');
-    modal.classList.remove('show');
     resetListModal();
+
+    if (window.ModalHelper) {
+        window.ModalHelper.close('#listModal', {
+            activeClass: 'show'
+        });
+    }
 }
 
 /**
@@ -117,10 +116,9 @@ function selectMenu(menuName) {
 }
 
 /**
- * マスター管理モーダルを表示
+ * マスター管理モーダルを表示（共通ヘルパー使用）
  */
 function showMasterModal() {
-    const modal = document.getElementById('masterModal');
     const modalContent = document.getElementById('masterModalContent');
 
     // モーダル位置を中央にリセット（transform等をクリア）
@@ -128,26 +126,25 @@ function showMasterModal() {
         modalContent.style.transform = '';
     }
 
-    modal.classList.add('show');
-
-    // モーダル外クリックで閉じる処理を設定
-    setTimeout(() => {
-        const handleOutsideClick = function(event) {
-            if (event.target === modal) {
-                closeMasterModal();
-                modal.removeEventListener('click', handleOutsideClick);
-            }
-        };
-        modal.addEventListener('click', handleOutsideClick);
-    }, 0);
+    if (window.ModalHelper) {
+        window.ModalHelper.open('#masterModal', {
+            activeClass: 'show',
+            showClass: null,
+            closeOnOutsideClick: true,
+            closeOnEscape: true
+        });
+    }
 }
 
 /**
- * マスター管理モーダルを閉じる
+ * マスター管理モーダルを閉じる（共通ヘルパー使用）
  */
 function closeMasterModal() {
-    const modal = document.getElementById('masterModal');
-    modal.classList.remove('show');
+    if (window.ModalHelper) {
+        window.ModalHelper.close('#masterModal', {
+            activeClass: 'show'
+        });
+    }
 }
 
 /**
@@ -174,11 +171,10 @@ function closeMobileColumn() {
 }
 
 /**
- * 写真モーダルを表示
+ * 写真モーダルを表示（共通ヘルパー使用）
  * @param {string} rowId - 行ID
  */
 function showPhotoModal(rowId) {
-    const modal = document.getElementById('photoModal');
     const modalBody = document.querySelector('.photo-grid-modal');
 
     // サンプル写真を表示（実際にはデータベースから取得）
@@ -199,18 +195,26 @@ function showPhotoModal(rowId) {
     }
 
     modalBody.innerHTML = photosHtml;
-    modal.classList.add('active');
 
-    // モーダルのドラッグ機能を初期化
-    initModalDrag();
+    if (window.ModalHelper) {
+        window.ModalHelper.open('#photoModal', {
+            closeOnOutsideClick: true,
+            closeOnEscape: true,
+            onOpen: () => {
+                // モーダルのドラッグ機能を初期化
+                initModalDrag();
+            }
+        });
+    }
 }
 
 /**
- * 写真モーダルを閉じる
+ * 写真モーダルを閉じる（共通ヘルパー使用）
  */
 function closePhotoModal() {
-    const modal = document.getElementById('photoModal');
-    modal.classList.remove('active');
+    if (window.ModalHelper) {
+        window.ModalHelper.close('#photoModal');
+    }
 }
 
 /**

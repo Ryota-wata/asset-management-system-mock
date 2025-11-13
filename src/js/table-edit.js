@@ -805,11 +805,13 @@ function confirmAllRegistrations() {
 }
 
 /**
- * 全チェックボックスの切り替え
+ * 全チェックボックスの切り替え（共通ヘルパー使用）
  * @param {HTMLElement} checkbox - チェックボックス要素
  */
 function toggleAllCheckboxes(checkbox) {
-    document.querySelectorAll('.row-checkbox').forEach(cb => cb.checked = checkbox.checked);
+    if (window.TableHelper) {
+        window.TableHelper.toggleSelectAll(checkbox, '.row-checkbox');
+    }
 }
 
 // グローバルスコープに関数とデータを公開

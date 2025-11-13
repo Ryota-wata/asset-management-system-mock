@@ -368,38 +368,36 @@ let searchResultFilter_assetMaster = null;
             syncSelections();
         }
 
-        // 全選択
+        // 全選択（共通ヘルパー使用）
         function handleSelectAll() {
             const selectAll = document.getElementById('selectAll');
-            const checkboxes = document.querySelectorAll('.row-checkbox');
-            
-            checkboxes.forEach(cb => {
-                cb.checked = selectAll.checked;
-                const no = parseInt(cb.getAttribute('data-no'));
-                if (selectAll.checked) {
-                    selectedItems.add(no);
-                } else {
-                    selectedItems.delete(no);
-                }
-            });
-            
+
+            if (window.TableHelper) {
+                window.TableHelper.toggleSelectAll(selectAll, '.row-checkbox', (checkboxes, isChecked) => {
+                    checkboxes.forEach(cb => {
+                        const no = parseInt(cb.getAttribute('data-no'));
+                        if (isChecked) {
+                            selectedItems.add(no);
+                        } else {
+                            selectedItems.delete(no);
+                        }
+                    });
+                });
+            }
+
             updateSelectionInfo();
             syncSelections();
         }
 
-        // 行選択
+        // 行選択（共通ヘルパー使用）
         function handleRowSelect() {
-            const checkboxes = document.querySelectorAll('.row-checkbox');
             const selectAll = document.getElementById('selectAll');
-            
-            selectedItems.clear();
-            checkboxes.forEach(cb => {
-                if (cb.checked) {
-                    selectedItems.add(parseInt(cb.getAttribute('data-no')));
-                }
-            });
-            
-            selectAll.checked = checkboxes.length === selectedItems.size;
+
+            if (window.TableHelper) {
+                selectedItems = window.TableHelper.getSelectedRows('.row-checkbox', 'data-no');
+                window.TableHelper.updateSelectAllState(selectAll, '.row-checkbox');
+            }
+
             updateSelectionInfo();
             syncSelections();
         }
@@ -543,10 +541,12 @@ let searchResultFilter_assetMaster = null;
         }
 
         function closeExportModal() {
-            document.getElementById('exportModal').classList.remove('active');
+            if (window.ModalHelper) {
+                window.ModalHelper.close('#exportModal');
+            }
         }
 
-        // Excel/PDF出力モーダルの枠外クリックで閉じる
+        // Excel/PDF出力モーダルの枠外クリックで閉じる（共通ヘルパー使用時は不要）
         function handleExportModalOutsideClick(event) {
             if (event.target.id === 'exportModal') {
                 closeExportModal();
@@ -649,10 +649,10 @@ let searchResultFilter_assetMaster = null;
             // window.location.href = '/quote-ocr';
         }
 
-        // 資産マスタモーダル
+        // 資産マスタモーダル（共通ヘルパー使用）
         function openAssetMasterModal() {
             selectedMasterItems.clear();
-            
+
             // 既存のChoices.jsインスタンスを先に破棄
             if (masterChoicesInstances) {
                 Object.values(masterChoicesInstances).forEach(instance => {
@@ -666,21 +666,25 @@ let searchResultFilter_assetMaster = null;
                 });
                 masterChoicesInstances = null;
             }
-            
-            // モーダルを表示
-            document.getElementById('assetMasterModal').classList.add('active');
-            
-            // 少し遅延させてからドロップダウンの選択肢を生成とChoices.js初期化
-            setTimeout(() => {
-                populateMasterDropdowns();
-                masterChoicesInstances = initMasterChoices();
-                updateMasterSelectionInfo();
-            }, 150);
+
+            // モーダルを表示（共通ヘルパー使用）
+            if (window.ModalHelper) {
+                window.ModalHelper.open('#assetMasterModal', {
+                    closeOnOutsideClick: true,
+                    closeOnEscape: true,
+                    onOpen: () => {
+                        // 少し遅延させてからドロップダウンの選択肢を生成とChoices.js初期化
+                        setTimeout(() => {
+                            populateMasterDropdowns();
+                            masterChoicesInstances = initMasterChoices();
+                            updateMasterSelectionInfo();
+                        }, 150);
+                    }
+                });
+            }
         }
 
         function closeAssetMasterModal() {
-            document.getElementById('assetMasterModal').classList.remove('active');
-            
             // Choices.jsインスタンスを破棄
             if (masterChoicesInstances) {
                 Object.values(masterChoicesInstances).forEach(instance => {
@@ -694,9 +698,14 @@ let searchResultFilter_assetMaster = null;
                 });
                 masterChoicesInstances = null;
             }
+
+            // モーダルを閉じる（共通ヘルパー使用）
+            if (window.ModalHelper) {
+                window.ModalHelper.close('#assetMasterModal');
+            }
         }
 
-        // モーダルの枠外クリックで閉じる
+        // モーダルの枠外クリックで閉じる（共通ヘルパー使用時は不要、後方互換性のため残存）
         function handleModalOutsideClick(event) {
             if (event.target.id === 'assetMasterModal') {
                 closeAssetMasterModal();
@@ -918,17 +927,19 @@ let searchResultFilter_assetMaster = null;
         }
         
         function closeApplicationInputModal() {
-            const modal = document.getElementById('applicationInputModal');
-            modal.classList.remove('active');
-            
             // フォームをリセット
             document.getElementById('appReason').value = '';
             document.getElementById('approver1').value = '';
             document.getElementById('approver2').value = '';
             document.getElementById('approver3').value = '';
             document.getElementById('quotationList').innerHTML = '';
+
+            // モーダルを閉じる（共通ヘルパー使用）
+            if (window.ModalHelper) {
+                window.ModalHelper.close('#applicationInputModal');
+            }
         }
-        
+
         function handleApplicationInputModalOutsideClick(event) {
             if (event.target.id === 'applicationInputModal') {
                 if (confirm('入力内容が失われますが、閉じてもよろしいですか？')) {
