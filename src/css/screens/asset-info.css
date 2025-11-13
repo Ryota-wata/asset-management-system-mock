@@ -371,7 +371,7 @@
 /* ========================================
    レスポンシブ対応（タブレット）
 ======================================== */
-@media (min-width: 769px) and (max-width: 1024px) {
+@media (min-width: 768px) and (max-width: 1024px) {
     .asset-info-page .main-container-asset {
         max-width: 768px;
     }
@@ -449,7 +449,7 @@
 /* ========================================
    レスポンシブ対応（スマートフォン）
 ======================================== */
-@media (max-width: 768px) {
+@media (max-width: 767px) {
     .asset-info-page .main-container-asset {
         max-width: 480px;
     }
