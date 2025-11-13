@@ -103,33 +103,7 @@ async function toggleEditMode(index) {
                     select.className = 'cell-select-flat';
                     select.setAttribute('data-field', field);
 
-                    // フィールドに応じたオプションを追加
-                    let options = [];
-                    if (field === 'majorCategory') {
-                        options = masterData.largeClasses.map(item => item.name);
-                    } else if (field === 'middleCategory') {
-                        options = masterData.mediumClasses.map(item => item.name);
-                    } else if (field === 'itemManagement') {
-                        options = masterData.items.map(item => item.name);
-                    }
-
-                    // 空のオプションを追加
-                    const emptyOption = document.createElement('option');
-                    emptyOption.value = '';
-                    emptyOption.textContent = '選択してください';
-                    select.appendChild(emptyOption);
-
-                    // オプションを追加
-                    options.forEach(optionText => {
-                        const option = document.createElement('option');
-                        option.value = optionText;
-                        option.textContent = optionText;
-                        if (optionText === currentValue) {
-                            option.selected = true;
-                        }
-                        select.appendChild(option);
-                    });
-
+                    // selectを追加（空の状態で）
                     td.replaceChild(select, span);
 
                     // Choices.jsを適用
@@ -140,8 +114,37 @@ async function toggleEditMode(index) {
                         itemSelectText: '',
                         noResultsText: '該当なし',
                         searchPlaceholderValue: '検索...',
-                        removeItemButton: false
+                        removeItemButton: false,
+                        position: 'bottom'
                     });
+
+                    // フィールドに応じた選択肢を作成
+                    let choices = [];
+                    if (field === 'majorCategory') {
+                        choices = masterData.largeClasses.map(item => ({
+                            value: item.name,
+                            label: item.name,
+                            selected: item.name === currentValue
+                        }));
+                    } else if (field === 'middleCategory') {
+                        choices = masterData.mediumClasses.map(item => ({
+                            value: item.name,
+                            label: item.name,
+                            selected: item.name === currentValue
+                        }));
+                    } else if (field === 'itemManagement') {
+                        choices = masterData.items.map(item => ({
+                            value: item.name,
+                            label: item.name,
+                            selected: item.name === currentValue
+                        }));
+                    }
+
+                    // setChoices()でデータを設定
+                    matchingChoicesInstances[instanceKey].setChoices([
+                        { value: '', label: '選択してください', selected: !currentValue },
+                        ...choices
+                    ], 'value', 'label', true);
                 }
             }
         });
