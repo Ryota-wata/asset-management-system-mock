@@ -54,22 +54,26 @@ async function toggleEditMode(index) {
     if (isEditing) {
         // 編集モード終了：selectをspanに戻す & Choices.jsインスタンスを破棄
         row.querySelectorAll('.td-data-matching').forEach(td => {
-            const select = td.querySelector('select.cell-select-flat');
-            if (select) {
-                const field = select.getAttribute('data-field');
+            const choicesContainer = td.querySelector('.choices');
+            if (choicesContainer) {
+                const select = choicesContainer.querySelector('select.cell-select-flat');
+                if (select) {
+                    const field = select.getAttribute('data-field');
 
-                // Choices.jsインスタンスを破棄
-                const instanceKey = `${index}-${field}`;
-                if (matchingChoicesInstances[instanceKey]) {
-                    matchingChoicesInstances[instanceKey].destroy();
-                    delete matchingChoicesInstances[instanceKey];
+                    // Choices.jsインスタンスを破棄
+                    const instanceKey = `${index}-${field}`;
+                    if (matchingChoicesInstances[instanceKey]) {
+                        matchingChoicesInstances[instanceKey].destroy();
+                        delete matchingChoicesInstances[instanceKey];
+                    }
+
+                    const span = document.createElement('span');
+                    span.className = 'cell-value';
+                    span.textContent = select.value || '';
+                    span.setAttribute('data-field', field);
+                    td.innerHTML = '';
+                    td.appendChild(span);
                 }
-
-                const span = document.createElement('span');
-                span.className = 'cell-value';
-                span.textContent = select.value;
-                span.setAttribute('data-field', field);
-                td.replaceChild(span, select);
             }
         });
 
@@ -89,6 +93,8 @@ async function toggleEditMode(index) {
             return;
         }
 
+        console.log('Asset master loaded for editing:', masterData);
+
         // 編集モード開始：編集可能なフィールドのみspanをselectに変換
         row.querySelectorAll('.td-data-matching').forEach(td => {
             const span = td.querySelector('.cell-value');
@@ -97,54 +103,69 @@ async function toggleEditMode(index) {
 
                 // 編集可能なフィールドのみselectに変換
                 if (editableFields.includes(field)) {
-                    const currentValue = span.textContent;
+                    const currentValue = span.textContent.trim();
 
                     const select = document.createElement('select');
                     select.className = 'cell-select-flat';
                     select.setAttribute('data-field', field);
 
-                    // selectを追加（空の状態で）
-                    td.replaceChild(select, span);
+                    // 初期オプションを追加（空のselect要素ではChoices.jsが動作しない）
+                    const initialOption = document.createElement('option');
+                    initialOption.value = '';
+                    initialOption.textContent = '選択してください';
+                    select.appendChild(initialOption);
+
+                    td.innerHTML = '';
+                    td.appendChild(select);
 
                     // Choices.jsを適用
                     const instanceKey = `${index}-${field}`;
-                    matchingChoicesInstances[instanceKey] = new Choices(select, {
-                        searchEnabled: true,
-                        shouldSort: false,
-                        itemSelectText: '',
-                        noResultsText: '該当なし',
-                        searchPlaceholderValue: '検索...',
-                        removeItemButton: false,
-                        position: 'bottom'
-                    });
+                    try {
+                        matchingChoicesInstances[instanceKey] = new Choices(select, {
+                            searchEnabled: true,
+                            shouldSort: false,
+                            itemSelectText: '',
+                            noResultsText: '該当なし',
+                            searchPlaceholderValue: '検索...',
+                            removeItemButton: false,
+                            position: 'bottom'
+                        });
 
-                    // フィールドに応じた選択肢を作成
-                    let choices = [];
-                    if (field === 'majorCategory') {
-                        choices = masterData.largeClasses.map(item => ({
-                            value: item.name,
-                            label: item.name,
-                            selected: item.name === currentValue
-                        }));
-                    } else if (field === 'middleCategory') {
-                        choices = masterData.mediumClasses.map(item => ({
-                            value: item.name,
-                            label: item.name,
-                            selected: item.name === currentValue
-                        }));
-                    } else if (field === 'itemManagement') {
-                        choices = masterData.items.map(item => ({
-                            value: item.name,
-                            label: item.name,
-                            selected: item.name === currentValue
-                        }));
+                        // フィールドに応じた選択肢を作成
+                        let choices = [];
+                        if (field === 'majorCategory') {
+                            choices = masterData.largeClasses.map(item => ({
+                                value: item.name,
+                                label: item.name,
+                                selected: item.name === currentValue
+                            }));
+                            console.log(`大分類の選択肢: ${choices.length}件`, choices);
+                        } else if (field === 'middleCategory') {
+                            choices = masterData.mediumClasses.map(item => ({
+                                value: item.name,
+                                label: item.name,
+                                selected: item.name === currentValue
+                            }));
+                            console.log(`中分類の選択肢: ${choices.length}件`, choices);
+                        } else if (field === 'itemManagement') {
+                            choices = masterData.items.map(item => ({
+                                value: item.name,
+                                label: item.name,
+                                selected: item.name === currentValue
+                            }));
+                            console.log(`個体管理品目の選択肢: ${choices.length}件`, choices);
+                        }
+
+                        // setChoices()でデータを設定（正しい方法：引数は1つだけ）
+                        matchingChoicesInstances[instanceKey].setChoices([
+                            { value: '', label: '選択してください', selected: !currentValue },
+                            ...choices
+                        ]);
+
+                        console.log(`${field} Choices.js initialized with ${choices.length} items`);
+                    } catch (error) {
+                        console.error(`Failed to initialize Choices.js for ${field}:`, error);
                     }
-
-                    // setChoices()でデータを設定
-                    matchingChoicesInstances[instanceKey].setChoices([
-                        { value: '', label: '選択してください', selected: !currentValue },
-                        ...choices
-                    ], 'value', 'label', true);
                 }
             }
         });
