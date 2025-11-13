@@ -205,11 +205,11 @@ let searchResultFilter_assetMaster = null;
         // グローバルに公開
         window.initSearchResultChoices = initSearchResultChoices;
 
-        // 資産マスタ検索用のChoices.js初期化
+        // 資産マスタ検索用のChoices.js初期化（共通ヘルパー使用）
         function initMasterChoices() {
             const masterSelectIds = ['masterCategory', 'masterLargeClass', 'masterMediumClass', 'masterIndividualItem', 'masterMaker', 'masterModel'];
             const instances = {};
-            
+
             // 各ドロップダウンのz-index（上の行ほど高く）
             const zIndexMap = {
                 'masterCategory': 100006,
@@ -219,73 +219,35 @@ let searchResultFilter_assetMaster = null;
                 'masterMaker': 100002,
                 'masterModel': 100002
             };
-            
-            // ドロップダウンリストのスタイルを強制設定する関数
-            function forceDropdownStyle(element, zIndex) {
-                const choicesContainer = element.parentElement.querySelector('.choices');
-                if (choicesContainer) {
-                    const dropdown = choicesContainer.querySelector('.choices__list--dropdown');
-                    if (dropdown) {
-                        dropdown.style.position = 'absolute';
-                        dropdown.style.zIndex = zIndex;
-                        dropdown.style.backgroundColor = 'white';
-                        dropdown.style.border = '1px solid #ccc';
-                        dropdown.style.borderRadius = '4px';
-                    }
-                }
-            }
-            
+
             masterSelectIds.forEach(id => {
                 const element = document.getElementById(id);
-                if (element) {
-                    instances[id] = new Choices(element, {
-                        searchEnabled: true,
-                        shouldSort: false,
-                        itemSelectText: '',
-                        noResultsText: '該当なし',
-                        placeholder: true,
-                        placeholderValue: '全て',
-                        searchPlaceholderValue: '検索...',
-                        removeItemButton: false
-                    });
-                    
-                    // ドロップダウンが開いたときに強制設定
+                if (element && window.ChoicesHelper) {
+                    // 共通ヘルパーを使用してChoices.jsを初期化
+                    instances[id] = window.ChoicesHelper.initChoices(
+                        element,
+                        {
+                            placeholder: true,
+                            placeholderValue: '全て',
+                            searchPlaceholderValue: '検索...'
+                        }
+                    );
+
+                    // z-indexのみカスタム設定
                     element.addEventListener('showDropdown', () => {
                         setTimeout(() => {
-                            forceDropdownStyle(element, zIndexMap[id]);
+                            const choicesContainer = element.parentElement?.querySelector('.choices');
+                            if (choicesContainer) {
+                                const dropdown = choicesContainer.querySelector('.choices__list--dropdown');
+                                if (dropdown) {
+                                    dropdown.style.zIndex = zIndexMap[id];
+                                }
+                            }
                         }, 10);
                     });
-                    
-                    // MutationObserverでドロップダウン要素の生成を監視
-                    const observer = new MutationObserver((mutations) => {
-                        mutations.forEach((mutation) => {
-                            mutation.addedNodes.forEach((node) => {
-                                if (node.classList && node.classList.contains('choices__list--dropdown')) {
-                                    node.style.position = 'absolute';
-                                    node.style.zIndex = zIndexMap[id];
-                                    node.style.backgroundColor = 'white';
-                                    node.style.border = '1px solid #ccc';
-                                    node.style.borderRadius = '4px';
-                                }
-                            });
-                        });
-                    });
-                    
-                    const choicesContainer = element.parentElement.querySelector('.choices');
-                    if (choicesContainer) {
-                        observer.observe(choicesContainer, {
-                            childList: true,
-                            subtree: true
-                        });
-                    }
-                    
-                    // 初期設定
-                    setTimeout(() => {
-                        forceDropdownStyle(element, zIndexMap[id]);
-                    }, 200);
                 }
             });
-            
+
             return instances;
         }
 

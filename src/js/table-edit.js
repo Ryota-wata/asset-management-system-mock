@@ -379,26 +379,23 @@ function convertCellToSelect(row, fieldName, options) {
 
     setTimeout(() => {
         const selectElement = document.getElementById(selectId);
-        if (selectElement && window.Choices) {
-            const choicesInstance = new Choices(selectElement, {
-                searchEnabled: true,
-                searchPlaceholderValue: '検索',
-                shouldSort: false,
-                itemSelectText: '',
-                noResultsText: '該当なし',
-                placeholder: false,
-                allowHTML: false,
-                removeItemButton: false
-            });
-
-            // ドロップダウンをbody直下に移動し、位置を動的に計算
-            moveDropdownToBody(selectElement, choicesInstance);
+        if (selectElement && window.Choices && window.ChoicesHelper) {
+            // 共通ヘルパーを使用してChoices.jsを初期化（body移動版）
+            const choicesInstance = window.ChoicesHelper.initChoicesForTableEditWithBodyMove(
+                selectElement,
+                {
+                    searchPlaceholderValue: '検索',
+                    placeholder: false,
+                    allowHTML: false
+                }
+            );
         }
     }, 10);
 }
 
 /**
  * Choices.jsのドロップダウンをbody直下に移動し、位置を動的に計算する関数
+ * @deprecated この関数はchoices-helper.jsに移動済み。後方互換性のため残存。
  * @param {HTMLElement} selectElement - select要素
  * @param {Object} choicesInstance - Choices.jsのインスタンス
  */

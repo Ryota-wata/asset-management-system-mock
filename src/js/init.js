@@ -48,95 +48,21 @@ async function initChoices() {
     // これらのIDは資産検索結果画面で使用されているため、init.jsでは初期化しない
     // 資産検索結果画面は独自の初期化処理（search-result-simple.js）を使用
 
-    // 現有資産調査画面のドロップダウン初期化
-    if (document.getElementById('surveyCategorySelect')) {
-        window.surveyCategoryChoice = new Choices('#surveyCategorySelect', {
-            searchEnabled: true,
-            searchPlaceholderValue: '検索またはフリー入力してEnterキーを押してください',
-            shouldSort: false,
-            itemSelectText: '',
-            noResultsText: '該当なし。Enterキーでフリー入力として追加できます',
-            noChoicesText: '選択肢がありません',
-            placeholder: true,
-            placeholderValue: '選択してください',
-            addItems: true,
-            addItemFilter: (value) => {
-                // フリー入力を許可
-                return value.length > 0;
-            },
-            removeItemButton: false,
-        });
-    }
+    // 現有資産調査画面のドロップダウン初期化（共通ヘルパー使用）
+    const surveyFields = [
+        { id: 'surveyCategorySelect', varName: 'surveyCategoryChoice' },
+        { id: 'surveyBuildingSelect', varName: 'surveyBuildingChoice' },
+        { id: 'surveyFloorSelect', varName: 'surveyFloorChoice' },
+        { id: 'surveyDepartmentSelect', varName: 'surveyDepartmentChoice' },
+        { id: 'surveySectionSelect', varName: 'surveySectionChoice' }
+    ];
 
-    if (document.getElementById('surveyBuildingSelect')) {
-        window.surveyBuildingChoice = new Choices('#surveyBuildingSelect', {
-            searchEnabled: true,
-            searchPlaceholderValue: '検索またはフリー入力してEnterキーを押してください',
-            shouldSort: false,
-            itemSelectText: '',
-            noResultsText: '該当なし。Enterキーでフリー入力として追加できます',
-            noChoicesText: '選択肢がありません',
-            placeholder: true,
-            placeholderValue: '選択してください',
-            addItems: true,
-            addItemFilter: (value) => {
-                return value.length > 0;
-            },
-            removeItemButton: false,
-        });
-    }
-
-    if (document.getElementById('surveyFloorSelect')) {
-        window.surveyFloorChoice = new Choices('#surveyFloorSelect', {
-            searchEnabled: true,
-            searchPlaceholderValue: '検索またはフリー入力してEnterキーを押してください',
-            shouldSort: false,
-            itemSelectText: '',
-            noResultsText: '該当なし。Enterキーでフリー入力として追加できます',
-            noChoicesText: '選択肢がありません',
-            placeholder: true,
-            placeholderValue: '選択してください',
-            addItems: true,
-            addItemFilter: (value) => {
-                return value.length > 0;
-            },
-            removeItemButton: false,
-        });
-    }
-
-    if (document.getElementById('surveyDepartmentSelect')) {
-        window.surveyDepartmentChoice = new Choices('#surveyDepartmentSelect', {
-            searchEnabled: true,
-            searchPlaceholderValue: '検索またはフリー入力してEnterキーを押してください',
-            shouldSort: false,
-            itemSelectText: '',
-            noResultsText: '該当なし。Enterキーでフリー入力として追加できます',
-            noChoicesText: '選択肢がありません',
-            placeholder: true,
-            placeholderValue: '選択してください',
-            addItems: true,
-            addItemFilter: (value) => {
-                return value.length > 0;
-            },
-            removeItemButton: false,
-        });
-    }
-
-    if (document.getElementById('surveySectionSelect')) {
-        window.surveySectionChoice = new Choices('#surveySectionSelect', {
-            searchEnabled: true,
-            searchPlaceholderValue: '検索またはフリー入力してEnterキーを押してください',
-            shouldSort: false,
-            itemSelectText: '',
-            noResultsText: '該当なし。Enterキーでフリー入力として追加できます',
-            noChoicesText: '選択肢がありません',
-            placeholder: true,
-            placeholderValue: '選択してください',
-            addItems: true,
-            addItemFilter: (value) => {
-                return value.length > 0;
-            },
-            removeItemButton: false,
+    if (window.ChoicesHelper) {
+        surveyFields.forEach(field => {
+            const element = document.getElementById(field.id);
+            if (element) {
+                window[field.varName] = window.ChoicesHelper.initChoicesWithFreeInput(element);
+            }
         });
     }
 
@@ -145,94 +71,21 @@ async function initChoices() {
         loadSearchMasterData();
     }
 
-    // 資産情報入力画面の分類情報ドロップダウン初期化（レスポンシブ統合版）
-    if (document.getElementById('assetLargeClassSelect')) {
-        window.assetLargeClassChoice = new Choices('#assetLargeClassSelect', {
-            searchEnabled: true,
-            searchPlaceholderValue: '検索またはフリー入力してEnterキーを押してください',
-            shouldSort: false,
-            itemSelectText: '',
-            noResultsText: '該当なし。Enterキーでフリー入力として追加できます',
-            noChoicesText: '選択肢がありません',
-            placeholder: true,
-            placeholderValue: '選択してください',
-            addItems: true,
-            addItemFilter: (value) => {
-                return value.length > 0;
-            },
-            removeItemButton: false,
-        });
-    }
+    // 資産情報入力画面の分類情報ドロップダウン初期化（共通ヘルパー使用）
+    const assetFields = [
+        { id: 'assetLargeClassSelect', varName: 'assetLargeClassChoice' },
+        { id: 'assetMediumClassSelect', varName: 'assetMediumClassChoice' },
+        { id: 'assetItemSelect', varName: 'assetItemChoice' },
+        { id: 'assetMakerSelect', varName: 'assetMakerChoice' },
+        { id: 'assetModelSelect', varName: 'assetModelChoice' }
+    ];
 
-    if (document.getElementById('assetMediumClassSelect')) {
-        window.assetMediumClassChoice = new Choices('#assetMediumClassSelect', {
-            searchEnabled: true,
-            searchPlaceholderValue: '検索またはフリー入力してEnterキーを押してください',
-            shouldSort: false,
-            itemSelectText: '',
-            noResultsText: '該当なし。Enterキーでフリー入力として追加できます',
-            noChoicesText: '選択肢がありません',
-            placeholder: true,
-            placeholderValue: '選択してください',
-            addItems: true,
-            addItemFilter: (value) => {
-                return value.length > 0;
-            },
-            removeItemButton: false,
-        });
-    }
-
-    if (document.getElementById('assetItemSelect')) {
-        window.assetItemChoice = new Choices('#assetItemSelect', {
-            searchEnabled: true,
-            searchPlaceholderValue: '検索またはフリー入力してEnterキーを押してください',
-            shouldSort: false,
-            itemSelectText: '',
-            noResultsText: '該当なし。Enterキーでフリー入力として追加できます',
-            noChoicesText: '選択肢がありません',
-            placeholder: true,
-            placeholderValue: '選択してください',
-            addItems: true,
-            addItemFilter: (value) => {
-                return value.length > 0;
-            },
-            removeItemButton: false,
-        });
-    }
-
-    if (document.getElementById('assetMakerSelect')) {
-        window.assetMakerChoice = new Choices('#assetMakerSelect', {
-            searchEnabled: true,
-            searchPlaceholderValue: '検索またはフリー入力してEnterキーを押してください',
-            shouldSort: false,
-            itemSelectText: '',
-            noResultsText: '該当なし。Enterキーでフリー入力として追加できます',
-            noChoicesText: '選択肢がありません',
-            placeholder: true,
-            placeholderValue: '選択してください',
-            addItems: true,
-            addItemFilter: (value) => {
-                return value.length > 0;
-            },
-            removeItemButton: false,
-        });
-    }
-
-    if (document.getElementById('assetModelSelect')) {
-        window.assetModelChoice = new Choices('#assetModelSelect', {
-            searchEnabled: true,
-            searchPlaceholderValue: '検索またはフリー入力してEnterキーを押してください',
-            shouldSort: false,
-            itemSelectText: '',
-            noResultsText: '該当なし。Enterキーでフリー入力として追加できます',
-            noChoicesText: '選択肢がありません',
-            placeholder: true,
-            placeholderValue: '選択してください',
-            addItems: true,
-            addItemFilter: (value) => {
-                return value.length > 0;
-            },
-            removeItemButton: false,
+    if (window.ChoicesHelper) {
+        assetFields.forEach(field => {
+            const element = document.getElementById(field.id);
+            if (element) {
+                window[field.varName] = window.ChoicesHelper.initChoicesWithFreeInput(element);
+            }
         });
     }
 

@@ -143,102 +143,34 @@ async function toggleEditMode(index) {
                     td.innerHTML = '';
                     td.appendChild(select);
 
-                    // Choices.jsを適用
+                    // Choices.jsを適用（共通ヘルパー使用）
                     const instanceKey = `${index}-${field}`;
                     try {
                         // フィールドごとの設定
-                        let fieldConfig = {
+                        let customOptions = {
                             searchPlaceholderValue: '検索...',
                             noResultsText: '該当なし'
                         };
 
                         if (field === 'majorCategory') {
-                            fieldConfig.searchPlaceholderValue = '大分類を検索...';
-                            fieldConfig.noResultsText = '該当する大分類が見つかりません';
+                            customOptions.searchPlaceholderValue = '大分類を検索...';
+                            customOptions.noResultsText = '該当する大分類が見つかりません';
                         } else if (field === 'middleCategory') {
-                            fieldConfig.searchPlaceholderValue = '中分類を検索...';
-                            fieldConfig.noResultsText = '該当する中分類が見つかりません';
+                            customOptions.searchPlaceholderValue = '中分類を検索...';
+                            customOptions.noResultsText = '該当する中分類が見つかりません';
                         } else if (field === 'itemManagement') {
-                            fieldConfig.searchPlaceholderValue = '品目を検索...';
-                            fieldConfig.noResultsText = '該当する品目が見つかりません';
+                            customOptions.searchPlaceholderValue = '品目を検索...';
+                            customOptions.noResultsText = '該当する品目が見つかりません';
                         }
 
-                        // master-data-loader.jsと完全に同じオプション設定
-                        const choicesInstance = new Choices(select, {
-                            searchEnabled: true,
-                            searchChoices: true,
-                            searchFloor: 1,
-                            searchResultLimit: 50,
-                            searchPlaceholderValue: fieldConfig.searchPlaceholderValue,
-                            itemSelectText: '',
-                            noResultsText: fieldConfig.noResultsText,
-                            noChoicesText: '選択肢がありません',
-                            shouldSort: false,
-                            removeItemButton: false,
-                            position: 'auto'
-                        });
+                        // 共通ヘルパーを使用してChoices.jsを初期化
+                        const choicesInstance = window.ChoicesHelper.initChoicesForTableEdit(
+                            select,
+                            customOptions,
+                            { zIndex: 10000 }
+                        );
 
                         matchingChoicesInstances[instanceKey] = choicesInstance;
-
-                        // ドロップダウンのスタイルと位置を設定する関数
-                        const setupDropdown = () => {
-                            const choicesContainer = select.closest('.choices');
-                            if (!choicesContainer) return;
-
-                            const dropdown = choicesContainer.querySelector('.choices__list--dropdown');
-                            if (!dropdown) return;
-
-                            const listbox = dropdown.querySelector('.choices__list[role="listbox"]');
-                            const items = dropdown.querySelectorAll('.choices__item');
-
-                            // リストボックスのスタイル
-                            if (listbox) {
-                                listbox.style.setProperty('display', 'block', 'important');
-                                listbox.style.setProperty('height', 'auto', 'important');
-                                listbox.style.setProperty('min-height', '150px', 'important');
-                                listbox.style.setProperty('max-height', '300px', 'important');
-                                listbox.style.setProperty('overflow-y', 'auto', 'important');
-                            }
-
-                            // アイテムのスタイル
-                            items.forEach(item => {
-                                item.style.setProperty('display', 'block', 'important');
-                                item.style.setProperty('height', 'auto', 'important');
-                                item.style.setProperty('min-height', '30px', 'important');
-                                item.style.setProperty('padding', '10px 12px', 'important');
-                                item.style.setProperty('color', '#333333', 'important');
-                                item.style.setProperty('font-size', '14px', 'important');
-                                item.style.setProperty('line-height', '1.5', 'important');
-                                item.style.setProperty('background-color', 'white', 'important');
-                            });
-
-                            // ドロップダウンの位置調整（下にスペースがない場合は上に表示）
-                            const rect = choicesContainer.getBoundingClientRect();
-                            const viewportHeight = window.innerHeight;
-                            const spaceBelow = viewportHeight - rect.bottom;
-                            const spaceAbove = rect.top;
-                            const dropdownHeight = 300;
-
-                            if (spaceBelow < dropdownHeight && spaceAbove > spaceBelow) {
-                                dropdown.style.top = 'auto';
-                                dropdown.style.bottom = '100%';
-                                dropdown.style.marginTop = '0';
-                                dropdown.style.marginBottom = '2px';
-                            } else {
-                                dropdown.style.top = '100%';
-                                dropdown.style.bottom = 'auto';
-                                dropdown.style.marginTop = '2px';
-                                dropdown.style.marginBottom = '0';
-                            }
-                        };
-
-                        // 初期化後にスタイルと位置を設定
-                        setTimeout(setupDropdown, 500);
-
-                        // ドロップダウンが開かれた時にも位置調整
-                        select.addEventListener('showDropdown', () => {
-                            setTimeout(setupDropdown, 10);
-                        });
                     } catch (error) {
                         console.error(`Failed to initialize Choices.js for ${field}:`, error);
                     }
