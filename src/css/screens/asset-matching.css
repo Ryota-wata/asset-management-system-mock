@@ -457,8 +457,7 @@
 }
 
 .asset-matching-page .choices.is-open .choices__list--dropdown,
-.asset-matching-page .choices__list--dropdown[aria-expanded="true"],
-.asset-matching-page .choices__list--dropdown {
+.asset-matching-page .choices__list--dropdown[aria-expanded="true"] {
     display: block !important;
     visibility: visible !important;
     opacity: 1 !important;
