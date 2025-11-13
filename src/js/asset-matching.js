@@ -180,8 +180,8 @@ async function toggleEditMode(index) {
 
                         matchingChoicesInstances[instanceKey] = choicesInstance;
 
-                        // ドロップダウンアイテムに強制的にインラインスタイルを適用する関数
-                        const applyDropdownStyles = () => {
+                        // ドロップダウンのスタイルと位置を設定する関数
+                        const setupDropdown = () => {
                             const choicesContainer = select.closest('.choices');
                             if (!choicesContainer) return;
 
@@ -191,12 +191,7 @@ async function toggleEditMode(index) {
                             const listbox = dropdown.querySelector('.choices__list[role="listbox"]');
                             const items = dropdown.querySelectorAll('.choices__item');
 
-                            // ドロップダウン
-                            dropdown.style.setProperty('display', 'block', 'important');
-                            dropdown.style.setProperty('visibility', 'visible', 'important');
-                            dropdown.style.setProperty('opacity', '1', 'important');
-
-                            // リストボックス
+                            // リストボックスのスタイル
                             if (listbox) {
                                 listbox.style.setProperty('display', 'block', 'important');
                                 listbox.style.setProperty('height', 'auto', 'important');
@@ -205,7 +200,7 @@ async function toggleEditMode(index) {
                                 listbox.style.setProperty('overflow-y', 'auto', 'important');
                             }
 
-                            // アイテム
+                            // アイテムのスタイル
                             items.forEach(item => {
                                 item.style.setProperty('display', 'block', 'important');
                                 item.style.setProperty('height', 'auto', 'important');
@@ -216,32 +211,20 @@ async function toggleEditMode(index) {
                                 item.style.setProperty('line-height', '1.5', 'important');
                                 item.style.setProperty('background-color', 'white', 'important');
                             });
-                        };
 
-                        // ドロップダウンの位置を調整する関数（下にスペースがない場合は上に表示）
-                        const adjustDropdownPosition = () => {
-                            const choicesContainer = select.closest('.choices');
-                            if (!choicesContainer) return;
-
-                            const dropdown = choicesContainer.querySelector('.choices__list--dropdown');
-                            if (!dropdown) return;
-
+                            // ドロップダウンの位置調整（下にスペースがない場合は上に表示）
                             const rect = choicesContainer.getBoundingClientRect();
                             const viewportHeight = window.innerHeight;
                             const spaceBelow = viewportHeight - rect.bottom;
                             const spaceAbove = rect.top;
-
-                            // ドロップダウンの高さ（最大300px）
                             const dropdownHeight = 300;
 
                             if (spaceBelow < dropdownHeight && spaceAbove > spaceBelow) {
-                                // 下にスペースがなく、上の方が広い場合は上に表示
                                 dropdown.style.top = 'auto';
                                 dropdown.style.bottom = '100%';
                                 dropdown.style.marginTop = '0';
                                 dropdown.style.marginBottom = '2px';
                             } else {
-                                // デフォルトは下に表示
                                 dropdown.style.top = '100%';
                                 dropdown.style.bottom = 'auto';
                                 dropdown.style.marginTop = '2px';
@@ -249,44 +232,13 @@ async function toggleEditMode(index) {
                             }
                         };
 
-                        // MutationObserverで継続的に監視・適用
-                        const choicesContainer = select.closest('.choices');
-                        if (choicesContainer) {
-                            const observer = new MutationObserver(() => {
-                                applyDropdownStyles();
-                                adjustDropdownPosition();
-                            });
-                            observer.observe(choicesContainer, {
-                                childList: true,
-                                subtree: true,
-                                attributes: true,
-                                attributeFilter: ['style', 'class']
-                            });
-                        }
-
-                        // 初期適用
-                        setTimeout(() => {
-                            applyDropdownStyles();
-                            adjustDropdownPosition();
-                        }, 100);
-                        setTimeout(() => {
-                            applyDropdownStyles();
-                            adjustDropdownPosition();
-                        }, 300);
-                        setTimeout(() => {
-                            applyDropdownStyles();
-                            adjustDropdownPosition();
-                        }, 500);
+                        // 初期化後にスタイルと位置を設定
+                        setTimeout(setupDropdown, 500);
 
                         // ドロップダウンが開かれた時にも位置調整
                         select.addEventListener('showDropdown', () => {
-                            setTimeout(() => {
-                                applyDropdownStyles();
-                                adjustDropdownPosition();
-                            }, 10);
+                            setTimeout(setupDropdown, 10);
                         });
-
-                        console.log(`${field} Choices.js initialized with ${choices.length} items`);
                     } catch (error) {
                         console.error(`Failed to initialize Choices.js for ${field}:`, error);
                     }
