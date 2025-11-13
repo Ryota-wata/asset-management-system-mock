@@ -418,8 +418,12 @@
     background-color: transparent;
 }
 
-.asset-matching-page .choices.is-open .choices__list--dropdown {
+.asset-matching-page .choices.is-open .choices__list--dropdown,
+.asset-matching-page .choices__list--dropdown[aria-expanded="true"],
+.asset-matching-page .choices__list--dropdown {
     display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
 }
 
 .asset-matching-page .choices[data-type*="select-one"] .choices__input {
