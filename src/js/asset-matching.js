@@ -121,14 +121,44 @@ async function toggleEditMode(index) {
                     // Choices.jsを適用
                     const instanceKey = `${index}-${field}`;
                     try {
+                        // フィールドごとの設定
+                        let fieldConfig = {
+                            searchPlaceholderValue: '検索...',
+                            placeholderValue: '選択してください',
+                            noResultsText: '該当なし'
+                        };
+
+                        if (field === 'majorCategory') {
+                            fieldConfig.searchPlaceholderValue = '大分類を検索...';
+                            fieldConfig.placeholderValue = '大分類を選択してください';
+                            fieldConfig.noResultsText = '該当する大分類が見つかりません';
+                        } else if (field === 'middleCategory') {
+                            fieldConfig.searchPlaceholderValue = '中分類を検索...';
+                            fieldConfig.placeholderValue = '中分類を選択してください';
+                            fieldConfig.noResultsText = '該当する中分類が見つかりません';
+                        } else if (field === 'itemManagement') {
+                            fieldConfig.searchPlaceholderValue = '品目を検索...';
+                            fieldConfig.placeholderValue = '品目を選択してください';
+                            fieldConfig.noResultsText = '該当する品目が見つかりません';
+                        }
+
+                        // master-data-loader.jsと完全に同じオプション設定
                         matchingChoicesInstances[instanceKey] = new Choices(select, {
                             searchEnabled: true,
-                            shouldSort: false,
+                            searchChoices: true,
+                            searchFloor: 1,
+                            searchResultLimit: 50,
+                            searchPlaceholderValue: fieldConfig.searchPlaceholderValue,
+                            placeholder: true,
+                            placeholderValue: fieldConfig.placeholderValue,
                             itemSelectText: '',
-                            noResultsText: '該当なし',
-                            searchPlaceholderValue: '検索...',
-                            removeItemButton: false,
-                            position: 'bottom'
+                            noResultsText: fieldConfig.noResultsText,
+                            noChoicesText: '選択肢がありません',
+                            shouldSort: false,
+                            fuseOptions: {
+                                threshold: 0.3,
+                                distance: 100
+                            }
                         });
 
                         // フィールドに応じた選択肢を作成
