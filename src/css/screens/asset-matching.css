@@ -327,6 +327,12 @@
     white-space: nowrap;
 }
 
+/* 編集モード時はoverflowをvisibleに */
+.asset-matching-page .data-row-flat.editing .td-data-matching {
+    overflow: visible;
+    position: relative;
+}
+
 .asset-matching-page .cell-value {
     display: block;
     width: 100%;
