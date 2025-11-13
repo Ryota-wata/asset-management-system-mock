@@ -181,60 +181,60 @@ async function toggleEditMode(index) {
 
                         // ドロップダウンアイテムに強制的にインラインスタイルを適用する関数
                         const applyDropdownStyles = () => {
-                            // .choicesコンテナを取得（select.parentElement.parentElementまたは.closest()）
                             const choicesContainer = select.closest('.choices');
-                            if (!choicesContainer) {
-                                console.error('Choices container not found for', field);
-                                return;
-                            }
+                            if (!choicesContainer) return;
 
                             const dropdown = choicesContainer.querySelector('.choices__list--dropdown');
-                            if (!dropdown) {
-                                console.error('Dropdown not found for', field);
-                                return;
-                            }
+                            if (!dropdown) return;
 
-                            // ドロップダウン自体のスタイルを確保
-                            dropdown.style.display = 'block';
-                            dropdown.style.visibility = 'visible';
-                            dropdown.style.opacity = '1';
-
-                            // 内側の.choices__list[role="listbox"]を取得してスタイル適用
                             const listbox = dropdown.querySelector('.choices__list[role="listbox"]');
+                            const items = dropdown.querySelectorAll('.choices__item');
+
+                            // ドロップダウン
+                            dropdown.style.setProperty('display', 'block', 'important');
+                            dropdown.style.setProperty('visibility', 'visible', 'important');
+                            dropdown.style.setProperty('opacity', '1', 'important');
+
+                            // リストボックス
                             if (listbox) {
-                                listbox.style.display = 'block';
-                                listbox.style.height = 'auto';
-                                listbox.style.minHeight = '100px';
-                                listbox.style.maxHeight = '300px';
-                                listbox.style.overflowY = 'auto';
-                                listbox.style.visibility = 'visible';
-                                listbox.style.opacity = '1';
+                                listbox.style.setProperty('display', 'block', 'important');
+                                listbox.style.setProperty('height', 'auto', 'important');
+                                listbox.style.setProperty('min-height', '150px', 'important');
+                                listbox.style.setProperty('max-height', '300px', 'important');
+                                listbox.style.setProperty('overflow-y', 'auto', 'important');
                             }
 
-                            const items = dropdown.querySelectorAll('.choices__item');
-                            console.log(`Applying styles to ${items.length} items for ${field}`);
-
+                            // アイテム
                             items.forEach(item => {
-                                item.style.display = 'block';
-                                item.style.height = 'auto';
-                                item.style.minHeight = '30px';
-                                item.style.padding = '10px 12px';
-                                item.style.color = '#333333';
-                                item.style.fontSize = '14px';
-                                item.style.lineHeight = '1.5';
-                                item.style.backgroundColor = 'white';
-                                item.style.visibility = 'visible';
-                                item.style.opacity = '1';
+                                item.style.setProperty('display', 'block', 'important');
+                                item.style.setProperty('height', 'auto', 'important');
+                                item.style.setProperty('min-height', '30px', 'important');
+                                item.style.setProperty('padding', '10px 12px', 'important');
+                                item.style.setProperty('color', '#333333', 'important');
+                                item.style.setProperty('font-size', '14px', 'important');
+                                item.style.setProperty('line-height', '1.5', 'important');
+                                item.style.setProperty('background-color', 'white', 'important');
                             });
                         };
 
-                        // 初期化直後に適用
-                        setTimeout(applyDropdownStyles, 200);
+                        // MutationObserverで継続的に監視・適用
+                        const choicesContainer = select.closest('.choices');
+                        if (choicesContainer) {
+                            const observer = new MutationObserver(() => {
+                                applyDropdownStyles();
+                            });
+                            observer.observe(choicesContainer, {
+                                childList: true,
+                                subtree: true,
+                                attributes: true,
+                                attributeFilter: ['style', 'class']
+                            });
+                        }
 
-                        // ドロップダウンが開かれた時にも適用
-                        select.addEventListener('showDropdown', () => {
-                            setTimeout(applyDropdownStyles, 10);
-                        });
+                        // 初期適用
+                        setTimeout(applyDropdownStyles, 100);
+                        setTimeout(applyDropdownStyles, 300);
+                        setTimeout(applyDropdownStyles, 500);
 
                         console.log(`${field} Choices.js initialized with ${choices.length} items`);
                     } catch (error) {
