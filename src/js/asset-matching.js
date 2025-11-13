@@ -109,12 +109,6 @@ async function toggleEditMode(index) {
                     select.className = 'cell-select-flat';
                     select.setAttribute('data-field', field);
 
-                    // 初期オプションを追加（空のselect要素ではChoices.jsが動作しない）
-                    const initialOption = document.createElement('option');
-                    initialOption.value = '';
-                    initialOption.textContent = '選択してください';
-                    select.appendChild(initialOption);
-
                     td.innerHTML = '';
                     td.appendChild(select);
 
@@ -186,11 +180,12 @@ async function toggleEditMode(index) {
                             console.log(`個体管理品目の選択肢: ${choices.length}件`, choices);
                         }
 
-                        // setChoices()でデータを設定（正しい方法：引数は1つだけ）
+                        // 既存の選択肢をクリアしてから新しいデータを設定
+                        matchingChoicesInstances[instanceKey].clearStore();
                         matchingChoicesInstances[instanceKey].setChoices([
                             { value: '', label: '選択してください', selected: !currentValue },
                             ...choices
-                        ]);
+                        ], 'value', 'label', false);
 
                         console.log(`${field} Choices.js initialized with ${choices.length} items`);
                     } catch (error) {
