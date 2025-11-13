@@ -181,8 +181,12 @@ async function toggleEditMode(index) {
 
                         // ドロップダウンアイテムに強制的にインラインスタイルを適用する関数
                         const applyDropdownStyles = () => {
-                            const choicesContainer = select.parentElement;
-                            if (!choicesContainer) return;
+                            // .choicesコンテナを取得（select.parentElement.parentElementまたは.closest()）
+                            const choicesContainer = select.closest('.choices');
+                            if (!choicesContainer) {
+                                console.error('Choices container not found for', field);
+                                return;
+                            }
 
                             const dropdown = choicesContainer.querySelector('.choices__list--dropdown');
                             if (!dropdown) {
