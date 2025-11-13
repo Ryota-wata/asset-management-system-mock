@@ -164,7 +164,7 @@ async function toggleEditMode(index) {
                         }
 
                         // master-data-loader.jsと完全に同じオプション設定
-                        matchingChoicesInstances[instanceKey] = new Choices(select, {
+                        const choicesInstance = new Choices(select, {
                             searchEnabled: true,
                             searchChoices: true,
                             searchFloor: 1,
@@ -177,24 +177,43 @@ async function toggleEditMode(index) {
                             removeItemButton: false
                         });
 
-                        // ドロップダウンアイテムに強制的にスタイルを適用
-                        setTimeout(() => {
-                            const dropdown = select.parentElement.querySelector('.choices__list--dropdown');
-                            if (dropdown) {
-                                const items = dropdown.querySelectorAll('.choices__item');
-                                items.forEach(item => {
-                                    item.style.display = 'block';
-                                    item.style.height = 'auto';
-                                    item.style.minHeight = '30px';
-                                    item.style.padding = '10px 12px';
-                                    item.style.color = '#333333';
-                                    item.style.fontSize = '14px';
-                                    item.style.backgroundColor = 'white';
-                                    item.style.visibility = 'visible';
-                                    item.style.opacity = '1';
-                                });
+                        matchingChoicesInstances[instanceKey] = choicesInstance;
+
+                        // ドロップダウンアイテムに強制的にインラインスタイルを適用する関数
+                        const applyDropdownStyles = () => {
+                            const choicesContainer = select.parentElement;
+                            if (!choicesContainer) return;
+
+                            const dropdown = choicesContainer.querySelector('.choices__list--dropdown');
+                            if (!dropdown) {
+                                console.error('Dropdown not found for', field);
+                                return;
                             }
-                        }, 100);
+
+                            const items = dropdown.querySelectorAll('.choices__item');
+                            console.log(`Applying styles to ${items.length} items for ${field}`);
+
+                            items.forEach(item => {
+                                item.style.display = 'block';
+                                item.style.height = 'auto';
+                                item.style.minHeight = '30px';
+                                item.style.padding = '10px 12px';
+                                item.style.color = '#333333';
+                                item.style.fontSize = '14px';
+                                item.style.lineHeight = '1.5';
+                                item.style.backgroundColor = 'white';
+                                item.style.visibility = 'visible';
+                                item.style.opacity = '1';
+                            });
+                        };
+
+                        // 初期化直後に適用
+                        setTimeout(applyDropdownStyles, 200);
+
+                        // ドロップダウンが開かれた時にも適用
+                        select.addEventListener('showDropdown', () => {
+                            setTimeout(applyDropdownStyles, 10);
+                        });
 
                         console.log(`${field} Choices.js initialized with ${choices.length} items`);
                     } catch (error) {
