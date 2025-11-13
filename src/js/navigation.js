@@ -79,11 +79,11 @@ function handleBackFromSurvey() {
 }
 
 /**
- * 現有資産調査画面からQR読取画面へ遷移
+ * 現有資産調査画面から統合画面へ遷移
  */
 function handleSurveyNext() {
     document.getElementById('surveyPage').classList.remove('active');
-    document.getElementById('qrScanPage').classList.add('active');
+    document.getElementById('assetSurveyIntegratedPage').classList.add('active');
 }
 
 /**
@@ -128,70 +128,28 @@ function handleStartSurvey() {
 }
 
 /**
- * QR読取画面から現有資産調査画面に戻る
- */
-function handleBackFromQRScan() {
-    document.getElementById('qrScanPage').classList.remove('active');
-    document.getElementById('surveyPage').classList.add('active');
-}
-
-/**
- * QR読取画面から写真撮影・資産番号入力画面へ遷移
- */
-function handleQRScanNext() {
-    document.getElementById('qrScanPage').classList.remove('active');
-    document.getElementById('photoInputPage').classList.add('active');
-}
-
-/**
- * 写真撮影・資産番号入力画面からQR読取画面に戻る
- */
-function handleBackFromPhotoInput() {
-    document.getElementById('photoInputPage').classList.remove('active');
-    document.getElementById('qrScanPage').classList.add('active');
-}
-
-/**
- * 写真撮影・資産番号入力画面から資産情報登録画面へ遷移
- */
-function handlePhotoInputNext() {
-    document.getElementById('photoInputPage').classList.remove('active');
-    document.getElementById('assetInfoPage').classList.add('active');
-}
-
-/**
- * 資産情報登録画面から写真撮影・資産番号入力画面に戻る
- */
-function handleBackFromAssetInfo() {
-    document.getElementById('assetInfoPage').classList.remove('active');
-    document.getElementById('photoInputPage').classList.add('active');
-}
-
-/**
- * 資産情報登録画面から履歴表示画面へ遷移
+ * 現有資産調査統合画面から履歴表示画面へ遷移
  */
 function handleShowHistoryList() {
-    document.getElementById('assetInfoPage').classList.remove('active');
+    document.getElementById('assetSurveyIntegratedPage').classList.remove('active');
     document.getElementById('historyListPage').classList.add('active');
 }
 
 /**
- * 履歴表示画面から資産情報登録画面に戻る
+ * 履歴表示画面から現有資産調査統合画面に戻る
  */
 function handleBackFromHistoryList() {
     document.getElementById('historyListPage').classList.remove('active');
-    document.getElementById('assetInfoPage').classList.add('active');
+    document.getElementById('assetSurveyIntegratedPage').classList.add('active');
 }
 
 /**
  * 部門入力へボタンで現有資産調査画面へ遷移
  */
 function handleGoToSurvey() {
-    // 全ての画面を非表示
-    document.getElementById('assetInfoPage').classList.remove('active');
+    // 統合画面を非表示
+    document.getElementById('assetSurveyIntegratedPage').classList.remove('active');
     document.getElementById('historyListPage').classList.remove('active');
-    document.getElementById('photoInputPage').classList.remove('active');
-    document.getElementById('qrScanPage').classList.remove('active');
 
     // 現有資産調査画面を表示
     document.getElementById('surveyPage').classList.add('active');
@@ -299,11 +257,6 @@ window.handleSurveyNext = handleSurveyNext;
 window.handleBackFromOfflinePrep = handleBackFromOfflinePrep;
 window.handleDataMatchingFromModal = handleDataMatchingFromModal;
 window.handleStartSurvey = handleStartSurvey;
-window.handleBackFromQRScan = handleBackFromQRScan;
-window.handleQRScanNext = handleQRScanNext;
-window.handleBackFromPhotoInput = handleBackFromPhotoInput;
-window.handlePhotoInputNext = handlePhotoInputNext;
-window.handleBackFromAssetInfo = handleBackFromAssetInfo;
 window.handleShowHistoryList = handleShowHistoryList;
 window.handleBackFromHistoryList = handleBackFromHistoryList;
 window.handleGoToSurvey = handleGoToSurvey;

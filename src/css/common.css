@@ -262,6 +262,7 @@ select:focus {
     margin-bottom: 0;
     position: relative;
     z-index: 100;
+    width: 100%;
 }
 
 .choices.is-open {
@@ -302,6 +303,8 @@ select:focus {
     z-index: 1000;
     background: white !important;
     opacity: 1 !important;
+    width: 100% !important;
+    min-width: 100% !important;
 }
 
 .choices__list--dropdown .choices__item--selectable {
@@ -316,6 +319,12 @@ select:focus {
 .choices[data-type*="select-one"] .choices__list--dropdown {
     top: 100%;
     bottom: auto;
+    width: 100% !important;
+}
+
+.choices[data-type*="select-one"].is-open .choices__list--dropdown {
+    width: 100% !important;
+    min-width: 100% !important;
 }
 
 /* ========================================

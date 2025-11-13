@@ -1,350 +1,388 @@
 /**
  * 履歴表示画面CSS
  *
- * このファイルには、履歴表示画面（レスポンシブ対応）のスタイルが含まれています。
+ * このファイルには、履歴表示画面（テーブル形式・レスポンシブ対応）のスタイルが含まれています。
  */
 
 /* ========================================
-   履歴表示画面（レスポンシブ統合版）
+   履歴表示画面
 ======================================== */
 .history-list-page {
     display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
     background: #f5f5f5;
-    z-index: 1000;
+    min-height: 100vh;
+    flex-direction: column;
 }
 
 .history-list-page.active {
-    display: block;
+    display: flex;
 }
 
-.history-list-page .main-container-history {
+/* ヘッダー（共通ヘッダーを使用） */
+.history-list-page .header {
+    border-radius: 0;
+}
+
+.history-list-page .header-center {
+    flex: 1;
     display: flex;
-    flex-direction: column;
-    height: 100vh;
-    overflow: hidden;
-    max-width: 1024px;
-    width: 100%;
+    justify-content: center;
+    align-items: center;
+}
+
+.history-page-title {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+    color: white;
+}
+
+/* メインコンテンツ */
+.history-main-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+    padding-bottom: 120px;
+}
+
+.history-container {
+    max-width: 1200px;
     margin: 0 auto;
 }
 
-.history-list-page .header-history {
-    background-color: #ffffff;
-    padding: 18px 24px;
-    border-bottom: 1px solid #e0e0e0;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    height: 60px;
-    flex-shrink: 0;
-}
-
-.history-list-page .header-title-history {
-    font-size: 20px;
-    font-weight: 600;
-    color: #333333;
-}
-
-.history-list-page .main-content-history {
-    flex: 1;
-    overflow-y: auto;
-    padding: 20px 24px;
-    padding-bottom: 50px;
-}
-
-.history-list-page .result-count-history {
+.history-result-count {
     font-size: 14px;
     color: #666666;
     margin-bottom: 16px;
 }
 
-.history-list-page .history-grid-history {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-}
-
-.history-list-page .history-card-history {
-    background: #ffffff;
-    border: 2px solid #e0e0e0;
-    border-radius: 12px;
-    padding: 20px;
-    cursor: pointer;
-    transition: all 0.3s;
-}
-
-.history-list-page .history-card-history:hover {
-    border-color: #4CAF50;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.history-list-page .history-card-history.selected {
-    background: #f0fdf4;
-    border-color: #4CAF50;
-    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.2);
-}
-
-.history-list-page .card-icon-history {
-    font-size: 24px;
-    margin-bottom: 12px;
-}
-
-.history-list-page .card-row-history {
-    margin-bottom: 10px;
-    display: flex;
-    align-items: baseline;
-}
-
-.history-list-page .card-row-history:last-of-type {
-    margin-bottom: 14px;
-}
-
-.history-list-page .card-label-history {
-    font-size: 13px;
-    color: #666666;
-    min-width: 70px;
-}
-
-.history-list-page .card-value-history {
-    font-size: 15px;
-    color: #333333;
-    font-weight: 500;
-}
-
-.history-list-page .card-date-history {
-    font-size: 13px;
-    color: #999999;
-    margin-bottom: 14px;
-    padding-top: 8px;
-    border-top: 1px solid #f0f0f0;
-}
-
-.history-list-page .card-button-history {
-    width: 100%;
-    padding: 10px 16px;
+/* テーブル */
+.history-table-wrapper {
+    background: white;
     border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.history-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.history-table thead {
+    background: #2c3e50;
+}
+
+.history-table thead th {
+    padding: 14px 12px;
+    text-align: left;
     font-size: 14px;
+    font-weight: 600;
+    color: white;
+    border-bottom: 2px solid #34495e;
+}
+
+.history-table tbody tr {
+    border-bottom: 1px solid #e0e0e0;
+    transition: background 0.2s;
+}
+
+.history-table tbody tr:hover {
+    background: #f8f9fa;
+}
+
+.history-table tbody tr.selected {
+    background: #e8f5e9;
+}
+
+.history-table tbody td {
+    padding: 14px 12px;
+    font-size: 14px;
+    color: #2c3e50;
+}
+
+/* アクションボタンコンテナ */
+.history-action-buttons {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+/* 使用ボタン */
+.history-use-button {
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 13px;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-}
-
-.history-list-page .history-card-history:not(.selected) .card-button-history {
+    white-space: nowrap;
     background: white;
-    border: 2px solid #4CAF50;
-    color: #4CAF50;
+    border: 2px solid #27ae60;
+    color: #27ae60;
 }
 
-.history-list-page .history-card-history:not(.selected) .card-button-history:hover {
-    background: #f0fdf4;
+.history-use-button:hover {
+    background: #d5f4e6;
 }
 
-.history-list-page .history-card-history.selected .card-button-history {
-    background: #4CAF50;
-    border: 2px solid #4CAF50;
+.history-use-button.selected {
+    background: #27ae60;
+    border: 2px solid #27ae60;
     color: white;
 }
 
-.history-list-page .footer-history {
+/* 編集ボタン */
+.history-edit-button {
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+    background: white;
+    border: 2px solid #3498db;
+    color: #3498db;
+}
+
+.history-edit-button:hover {
+    background: #e3f2fd;
+}
+
+/* 保存ボタン */
+.history-save-button {
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+    background: #27ae60;
+    border: 2px solid #27ae60;
+    color: white;
+}
+
+.history-save-button:hover {
+    background: #229954;
+}
+
+/* キャンセルボタン */
+.history-cancel-button {
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+    background: white;
+    border: 2px solid #95a5a6;
+    color: #95a5a6;
+}
+
+.history-cancel-button:hover {
+    background: #ecf0f1;
+}
+
+/* 編集モード */
+.history-row.editing {
+    background: #fff9e6;
+}
+
+.history-edit-select,
+.history-edit-input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 13px;
+}
+
+.history-edit-input:focus {
+    outline: none;
+    border-color: #3498db;
+}
+
+/* フッター */
+.history-footer {
     position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
-    max-width: 1024px;
-    margin: 0 auto;
-    background-color: #ffffff;
-    padding: 16px 40px;
-    border-top: 1px solid #e0e0e0;
-    box-shadow: 0 -2px 8px rgba(0,0,0,0.05);
+    background: white;
+    border-top: 1px solid #ddd;
     display: flex;
-    justify-content: space-around;
-    align-items: center;
-    height: 110px;
-    flex-shrink: 0;
+    justify-content: center;
+    padding: 10px;
+    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 100;
 }
 
-.history-list-page .footer-button-history {
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
+.history-footer-button {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 8px;
-    transition: all 0.3s;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    transition: background 0.3s;
+    border-radius: 8px;
+    min-width: 70px;
 }
 
-.history-list-page .footer-button-history:hover {
-    transform: translateY(-2px);
+.history-footer-button:hover {
+    background: #ecf0f1;
 }
 
-.history-list-page .icon-circle-history {
-    background-color: #4CAF50;
+.history-icon-circle {
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
-    width: 56px;
-    height: 56px;
+    background: #ecf0f1;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 4px 8px rgba(76, 175, 80, 0.3);
 }
 
-.history-list-page .footer-button-history:hover .icon-circle-history {
-    background-color: #45a049;
-    box-shadow: 0 6px 12px rgba(76, 175, 80, 0.4);
+.history-footer-button:hover .history-icon-circle {
+    background: #bdc3c7;
 }
 
-.history-list-page .button-text-history {
-    font-size: 14px;
-    font-weight: 500;
-    color: #333333;
+.history-button-text {
+    font-size: 12px;
+    color: #2c3e50;
 }
 
-.history-list-page .back-icon-history {
+.history-back-icon {
     width: 0;
     height: 0;
-    border-right: 12px solid #ffffff;
-    border-top: 8px solid transparent;
-    border-bottom: 8px solid transparent;
-    margin-right: 2px;
+    border-top: 6px solid transparent;
+    border-bottom: 6px solid transparent;
+    border-right: 10px solid #34495e;
 }
 
-.history-list-page .home-icon-history {
-    font-size: 28px;
-    color: #ffffff;
+/* レスポンシブ対応 - タブレット */
+@media (max-width: 1024px) {
+    .history-table {
+        font-size: 13px;
+    }
+
+    .history-table thead th {
+        padding: 12px 10px;
+        font-size: 13px;
+    }
+
+    .history-table tbody td {
+        padding: 12px 10px;
+        font-size: 13px;
+    }
+
+    .history-action-buttons {
+        gap: 6px;
+    }
+
+    .history-use-button,
+    .history-edit-button,
+    .history-save-button,
+    .history-cancel-button {
+        padding: 6px 12px;
+        font-size: 12px;
+    }
 }
 
-.history-list-page .main-content-history::-webkit-scrollbar {
-    width: 8px;
-}
-
-.history-list-page .main-content-history::-webkit-scrollbar-track {
-    background: #f1f1f1;
-}
-
-.history-list-page .main-content-history::-webkit-scrollbar-thumb {
-    background: #c0c0c0;
-    border-radius: 4px;
-}
-
-.history-list-page .main-content-history::-webkit-scrollbar-thumb:hover {
-    background: #a0a0a0;
-}
-
-/* ========================================
-   レスポンシブ対応（スマートフォン）
-======================================== */
+/* レスポンシブ対応 - スマートフォン */
 @media (max-width: 768px) {
-    .history-list-page .main-container-history {
-        max-width: 480px;
-    }
-
-    .history-list-page .header-history {
-        padding: 14px 16px;
-        height: 50px;
-    }
-
-    .history-list-page .header-title-history {
+    .history-page-title {
         font-size: 18px;
     }
 
-    .history-list-page .main-content-history {
-        padding: 16px;
-        padding-bottom: 40px;
+    .history-main-content {
+        padding: 16px 0;
+        padding-bottom: 100px;
     }
 
-    .history-list-page .result-count-history {
+    .history-container {
+        padding: 0 16px;
+    }
+
+    .history-result-count {
         font-size: 13px;
         margin-bottom: 12px;
     }
 
-    .history-list-page .history-grid-history {
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
+    /* 横スクロール対応 */
+    .history-table-wrapper {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        border-radius: 8px;
     }
 
-    .history-list-page .history-card-history {
-        padding: 16px;
-    }
-
-    .history-list-page .history-card-history:active {
-        transform: scale(0.98);
-    }
-
-    .history-list-page .card-icon-history {
-        font-size: 22px;
-        margin-bottom: 10px;
-    }
-
-    .history-list-page .card-row-history {
-        margin-bottom: 8px;
-    }
-
-    .history-list-page .card-row-history:last-of-type {
-        margin-bottom: 12px;
-    }
-
-    .history-list-page .card-label-history {
-        font-size: 12px;
-        min-width: 65px;
-    }
-
-    .history-list-page .card-value-history {
-        font-size: 14px;
-    }
-
-    .history-list-page .card-date-history {
-        font-size: 12px;
-        margin-bottom: 12px;
-    }
-
-    .history-list-page .card-button-history {
-        padding: 10px 14px;
-        font-size: 14px;
-    }
-
-    .history-list-page .history-card-history:not(.selected) .card-button-history:active {
-        background: #f0fdf4;
-    }
-
-    .history-list-page .footer-history {
-        padding: 12px 16px;
-        height: 90px;
-        max-width: 480px;
-    }
-
-    .history-list-page .icon-circle-history {
-        width: 48px;
-        height: 48px;
-    }
-
-    .history-list-page .button-text-history {
+    .history-table {
+        min-width: 800px;
         font-size: 12px;
     }
 
-    .history-list-page .back-icon-history {
-        border-right: 10px solid #ffffff;
-        border-top: 7px solid transparent;
-        border-bottom: 7px solid transparent;
+    .history-table thead th {
+        padding: 10px 8px;
+        font-size: 12px;
+        white-space: nowrap;
     }
 
-    .history-list-page .home-icon-history {
-        font-size: 24px;
+    .history-table tbody td {
+        padding: 10px 8px;
+        font-size: 12px;
     }
 
-    .history-list-page .main-content-history::-webkit-scrollbar {
-        width: 6px;
+    .history-action-buttons {
+        gap: 4px;
+        flex-wrap: wrap;
     }
 
-    .history-list-page .main-content-history::-webkit-scrollbar-thumb {
-        border-radius: 3px;
+    .history-use-button,
+    .history-edit-button {
+        padding: 6px 10px;
+        font-size: 11px;
     }
+
+    .history-footer {
+        padding: 8px;
+    }
+
+    .history-icon-circle {
+        width: 35px;
+        height: 35px;
+    }
+
+    .history-button-text {
+        font-size: 11px;
+    }
+
+    .history-back-icon {
+        border-right: 9px solid #34495e;
+        border-top: 5px solid transparent;
+        border-bottom: 5px solid transparent;
+    }
+}
+
+/* スクロールバーのスタイル（横スクロール用） */
+.history-table-wrapper::-webkit-scrollbar {
+    height: 8px;
+}
+
+.history-table-wrapper::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.history-table-wrapper::-webkit-scrollbar-thumb {
+    background: #c0c0c0;
+    border-radius: 4px;
+}
+
+.history-table-wrapper::-webkit-scrollbar-thumb:hover {
+    background: #a0a0a0;
 }

@@ -48,6 +48,27 @@ async function initChoices() {
     // これらのIDは資産検索結果画面で使用されているため、init.jsでは初期化しない
     // 資産検索結果画面は独自の初期化処理（search-result-simple.js）を使用
 
+    // 現有資産調査統合画面の分類情報プルダウン
+    if (document.getElementById('integratedLargeClassSelect')) {
+        window.integratedLargeClassChoice = await initLargeClassSelect('integratedLargeClassSelect');
+    }
+
+    if (document.getElementById('integratedMediumClassSelect')) {
+        window.integratedMediumClassChoice = await initMediumClassSelect('integratedMediumClassSelect');
+    }
+
+    if (document.getElementById('integratedItemSelect')) {
+        window.integratedItemChoice = await initItemSelect('integratedItemSelect');
+    }
+
+    if (document.getElementById('integratedMakerSelect')) {
+        window.integratedMakerChoice = await initManufacturerSelect('integratedMakerSelect');
+    }
+
+    if (document.getElementById('integratedModelSelect')) {
+        window.integratedModelChoice = await initModelSelect('integratedModelSelect');
+    }
+
     // 現有資産調査画面のドロップダウン初期化（共通ヘルパー使用）
     const surveyFields = [
         { id: 'surveyCategorySelect', varName: 'surveyCategoryChoice' },

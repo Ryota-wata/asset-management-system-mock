@@ -1,0 +1,474 @@
+/**
+ * 現有資産調査統合画面のスタイル
+ * QR読取・写真撮影・資産情報登録を1画面に統合
+ */
+
+.asset-survey-integrated-page {
+    display: none;
+    background: #f5f5f5;
+    min-height: 100vh;
+}
+
+.asset-survey-integrated-page.active {
+    display: flex;
+    flex-direction: column;
+}
+
+/* ヘッダー（共通ヘッダーを使用） */
+.asset-survey-integrated-page .header {
+    border-radius: 0;
+}
+
+.asset-survey-integrated-page .header-center {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.survey-integrated-page-title {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+    color: white;
+}
+
+/* メインコンテンツ */
+.survey-integrated-main-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+    padding-bottom: 100px; /* フッター分の余白 */
+}
+
+.survey-integrated-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* セクション */
+.survey-integrated-section {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.survey-integrated-section-title {
+    margin: 0 0 20px 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #2c3e50;
+    border-bottom: 2px solid #3498db;
+    padding-bottom: 10px;
+}
+
+.survey-integrated-subsection {
+    margin-bottom: 20px;
+}
+
+.survey-integrated-subsection:last-child {
+    margin-bottom: 0;
+}
+
+.survey-integrated-subsection-title {
+    margin: 0 0 15px 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #34495e;
+}
+
+/* フォームレイアウト */
+.survey-integrated-form-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.survey-integrated-form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.survey-integrated-form-group.full {
+    grid-column: 1 / -1;
+}
+
+.survey-integrated-form-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 8px;
+}
+
+/* 入力フィールド */
+.survey-integrated-text-input,
+.survey-integrated-date-input,
+.survey-integrated-select-input {
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: border-color 0.3s;
+}
+
+.survey-integrated-text-input:focus,
+.survey-integrated-date-input:focus,
+.survey-integrated-select-input:focus {
+    outline: none;
+    border-color: #3498db;
+}
+
+.survey-integrated-textarea {
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    min-height: 100px;
+    resize: vertical;
+    font-family: inherit;
+}
+
+.survey-integrated-textarea:focus {
+    outline: none;
+    border-color: #3498db;
+}
+
+.survey-integrated-input-hint {
+    font-size: 12px;
+    color: #7f8c8d;
+    margin-top: 4px;
+}
+
+/* トグルスイッチ（横並び用） */
+.survey-integrated-toggle-row {
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.survey-integrated-toggle-item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.survey-integrated-toggle-item-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: #34495e;
+}
+
+/* トグルスイッチ */
+.survey-integrated-toggle-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.survey-integrated-toggle-switch {
+    width: 50px;
+    height: 28px;
+    background: #bdc3c7;
+    border-radius: 14px;
+    position: relative;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.survey-integrated-toggle-switch.active {
+    background: #3498db;
+}
+
+.survey-integrated-toggle-knob {
+    width: 24px;
+    height: 24px;
+    background: white;
+    border-radius: 50%;
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    transition: transform 0.3s;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.survey-integrated-toggle-switch.active .survey-integrated-toggle-knob {
+    transform: translateX(22px);
+}
+
+.survey-integrated-toggle-label {
+    font-size: 14px;
+    color: #2c3e50;
+}
+
+/* チェックボックス */
+.survey-integrated-checkbox-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.survey-integrated-checkbox {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+.survey-integrated-checkbox-label {
+    font-size: 14px;
+    color: #2c3e50;
+    cursor: pointer;
+    margin: 0;
+}
+
+/* 一括登録プレビュー */
+.survey-integrated-bulk-preview {
+    margin-top: 20px;
+    padding: 15px;
+    background: #ecf0f1;
+    border-radius: 8px;
+    border: 1px solid #bdc3c7;
+}
+
+.survey-integrated-preview-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 10px;
+}
+
+.survey-integrated-preview-content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.survey-integrated-preview-item {
+    padding: 6px 12px;
+    background: white;
+    border: 1px solid #3498db;
+    border-radius: 4px;
+    font-size: 13px;
+    color: #2c3e50;
+}
+
+/* 表示エリア（QRコード・写真） */
+.survey-integrated-qr-display,
+.survey-integrated-photo-display {
+    margin-top: 15px;
+}
+
+.survey-integrated-display-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 8px;
+}
+
+.survey-integrated-display-area {
+    border: 2px dashed #bdc3c7;
+    border-radius: 8px;
+    padding: 40px;
+    text-align: center;
+    background: #ecf0f1;
+}
+
+.survey-integrated-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.survey-integrated-placeholder-icon {
+    font-size: 48px;
+}
+
+.survey-integrated-placeholder-text {
+    font-size: 14px;
+    color: #7f8c8d;
+}
+
+/* サイズ入力 */
+.survey-integrated-dimension-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-bottom: 10px;
+}
+
+.survey-integrated-dimension-input {
+    display: flex;
+    flex-direction: column;
+}
+
+.survey-integrated-dimension-input label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 8px;
+}
+
+.survey-integrated-dimension-input input {
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.survey-integrated-dimension-input input:focus {
+    outline: none;
+    border-color: #3498db;
+}
+
+/* フッター */
+.survey-integrated-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    border-top: 1px solid #ddd;
+    display: flex;
+    justify-content: space-around;
+    padding: 10px;
+    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+}
+
+.survey-integrated-footer-button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    transition: background 0.3s;
+    border-radius: 8px;
+    min-width: 70px;
+}
+
+.survey-integrated-footer-button:hover {
+    background: #ecf0f1;
+}
+
+.survey-integrated-footer-button.primary {
+    color: #27ae60;
+}
+
+.survey-integrated-footer-button.primary:hover {
+    background: #d5f4e6;
+}
+
+.survey-integrated-footer-button.camera {
+    color: #e74c3c;
+}
+
+.survey-integrated-footer-button.camera:hover {
+    background: #fadbd8;
+}
+
+.survey-integrated-icon-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #ecf0f1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.survey-integrated-footer-button:hover .survey-integrated-icon-circle {
+    background: #bdc3c7;
+}
+
+.survey-integrated-footer-button.primary .survey-integrated-icon-circle {
+    background: #d5f4e6;
+}
+
+.survey-integrated-footer-button.camera .survey-integrated-icon-circle {
+    background: #fadbd8;
+}
+
+.survey-integrated-button-text {
+    font-size: 12px;
+    color: #2c3e50;
+}
+
+.survey-integrated-footer-button.primary .survey-integrated-button-text {
+    color: #27ae60;
+}
+
+.survey-integrated-footer-button.camera .survey-integrated-button-text {
+    color: #e74c3c;
+}
+
+/* アイコン */
+.survey-integrated-back-icon {
+    width: 0;
+    height: 0;
+    border-top: 6px solid transparent;
+    border-bottom: 6px solid transparent;
+    border-right: 10px solid #34495e;
+}
+
+.survey-integrated-camera-icon {
+    font-size: 20px;
+}
+
+.survey-integrated-home-icon {
+    font-size: 20px;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+    .survey-integrated-form-row {
+        grid-template-columns: 1fr;
+    }
+
+    .survey-integrated-footer {
+        flex-wrap: wrap;
+        padding: 8px;
+    }
+
+    .survey-integrated-footer-button {
+        min-width: 60px;
+        padding: 5px;
+    }
+
+    .survey-integrated-icon-circle {
+        width: 35px;
+        height: 35px;
+    }
+
+    .survey-integrated-button-text {
+        font-size: 11px;
+    }
+}
+
+@media (max-width: 480px) {
+    .survey-integrated-main-content {
+        padding: 10px;
+    }
+
+    .survey-integrated-section {
+        padding: 15px;
+    }
+
+    .survey-integrated-section-title {
+        font-size: 16px;
+    }
+
+    .survey-integrated-subsection-title {
+        font-size: 14px;
+    }
+
+    .survey-integrated-dimension-row {
+        grid-template-columns: 1fr;
+    }
+}

@@ -20,13 +20,13 @@
     <link rel="stylesheet" href="src/css/screens/qr.css">
     <link rel="stylesheet" href="src/css/screens/survey.css">
     <link rel="stylesheet" href="src/css/screens/mobile.css">
-    <link rel="stylesheet" href="src/css/screens/asset-info.css">
     <link rel="stylesheet" href="src/css/screens/history.css">
     <link rel="stylesheet" href="src/css/screens/edit.css">
     <link rel="stylesheet" href="src/css/screens/asset-import.css">
     <link rel="stylesheet" href="src/css/screens/asset-matching.css">
     <link rel="stylesheet" href="src/css/screens/data-matching.css">
     <link rel="stylesheet" href="src/css/screens/search-result-simple.css">
+    <link rel="stylesheet" href="src/css/screens/asset-survey-integrated.css">
 
     <!-- Choices.js JS (外部ライブラリ) -->
     <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
@@ -99,15 +99,6 @@
         <!-- 現有資産調査画面 -->
         <div id="surveyPage"></div>
 
-        <!-- QR読取画面 -->
-        <div id="qrScanPage"></div>
-
-        <!-- 写真撮影・資産番号入力画面 -->
-        <div id="photoInputPage"></div>
-
-        <!-- 資産情報登録画面（レスポンシブ対応） -->
-        <div id="assetInfoPage"></div>
-
         <!-- 履歴表示画面（レスポンシブ対応） -->
         <div id="historyListPage"></div>
 
@@ -125,6 +116,9 @@
 
         <!-- 資産検索結果画面 -->
         <div id="searchResultPage"></div>
+
+        <!-- 現有資産調査統合画面 -->
+        <div id="assetSurveyIntegratedPage"></div>
     </div>
 
     <!-- JavaScript読み込み（依存関係順） -->
@@ -139,6 +133,7 @@
     <script src="src/js/modals.js"></script>
     <script src="src/js/qr-management.js"></script>
     <script src="src/js/asset-survey.js"></script>
+    <script src="src/js/asset-survey-integrated.js"></script>
     <script src="src/js/asset-matching.js"></script>
     <script src="src/js/data-matching.js"></script>
     <script src="src/js/search-result-simple.js"></script>
@@ -176,15 +171,13 @@
                 { id: 'qrPrintPage', file: 'qr-print.html' },
                 { id: 'offlinePrepPage', file: 'offline-prep.html' },
                 { id: 'surveyPage', file: 'survey.html' },
-                { id: 'qrScanPage', file: 'qr-scan.html' },
-                { id: 'photoInputPage', file: 'photo-input.html' },
-                { id: 'assetInfoPage', file: 'asset-info.html' },
                 { id: 'historyListPage', file: 'history.html' },
                 { id: 'assetImportPage', file: 'asset-import.html' },
                 { id: 'assetMatchingPage', file: 'asset-matching.html' },
                 { id: 'dataMatchingPage', file: 'data-matching.html' },
                 { id: 'assetMasterModal', file: 'asset-master-modal.html' },
-                { id: 'searchResultPage', file: 'search-result-simple.html' }
+                { id: 'searchResultPage', file: 'search-result-simple.html' },
+                { id: 'assetSurveyIntegratedPage', file: 'asset-survey-integrated.html' }
             ];
 
             // すべての画面を並行して読み込み
