@@ -387,9 +387,13 @@
 }
 
 .asset-matching-page .choices__list--dropdown .choices__list {
+    display: block !important;
     max-height: 300px !important;
     height: auto !important;
-    overflow-y: auto;
+    min-height: 50px !important;
+    overflow-y: auto !important;
+    visibility: visible !important;
+    opacity: 1 !important;
 }
 
 .asset-matching-page .choices__list--dropdown .choices__list .choices__item {
