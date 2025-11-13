@@ -297,6 +297,15 @@ async function toggleEditMode(index) {
         row.classList.add('editing');
         editBtn.textContent = '保存';
         editBtn.classList.add('editing');
+
+        // 最初のフィールド（大分類）にフォーカスしてドロップダウンを開く
+        setTimeout(() => {
+            const firstInstanceKey = `${index}-majorCategory`;
+            const firstInstance = matchingChoicesInstances[firstInstanceKey];
+            if (firstInstance) {
+                firstInstance.showDropdown();
+            }
+        }, 600); // スタイル適用後に実行
     }
 }
 
