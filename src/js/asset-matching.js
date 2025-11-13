@@ -174,7 +174,8 @@ async function toggleEditMode(index) {
                             noResultsText: fieldConfig.noResultsText,
                             noChoicesText: '選択肢がありません',
                             shouldSort: false,
-                            removeItemButton: false
+                            removeItemButton: false,
+                            position: 'auto'
                         });
 
                         matchingChoicesInstances[instanceKey] = choicesInstance;
@@ -217,11 +218,43 @@ async function toggleEditMode(index) {
                             });
                         };
 
+                        // ドロップダウンの位置を調整する関数（下にスペースがない場合は上に表示）
+                        const adjustDropdownPosition = () => {
+                            const choicesContainer = select.closest('.choices');
+                            if (!choicesContainer) return;
+
+                            const dropdown = choicesContainer.querySelector('.choices__list--dropdown');
+                            if (!dropdown) return;
+
+                            const rect = choicesContainer.getBoundingClientRect();
+                            const viewportHeight = window.innerHeight;
+                            const spaceBelow = viewportHeight - rect.bottom;
+                            const spaceAbove = rect.top;
+
+                            // ドロップダウンの高さ（最大300px）
+                            const dropdownHeight = 300;
+
+                            if (spaceBelow < dropdownHeight && spaceAbove > spaceBelow) {
+                                // 下にスペースがなく、上の方が広い場合は上に表示
+                                dropdown.style.top = 'auto';
+                                dropdown.style.bottom = '100%';
+                                dropdown.style.marginTop = '0';
+                                dropdown.style.marginBottom = '2px';
+                            } else {
+                                // デフォルトは下に表示
+                                dropdown.style.top = '100%';
+                                dropdown.style.bottom = 'auto';
+                                dropdown.style.marginTop = '2px';
+                                dropdown.style.marginBottom = '0';
+                            }
+                        };
+
                         // MutationObserverで継続的に監視・適用
                         const choicesContainer = select.closest('.choices');
                         if (choicesContainer) {
                             const observer = new MutationObserver(() => {
                                 applyDropdownStyles();
+                                adjustDropdownPosition();
                             });
                             observer.observe(choicesContainer, {
                                 childList: true,
@@ -232,9 +265,26 @@ async function toggleEditMode(index) {
                         }
 
                         // 初期適用
-                        setTimeout(applyDropdownStyles, 100);
-                        setTimeout(applyDropdownStyles, 300);
-                        setTimeout(applyDropdownStyles, 500);
+                        setTimeout(() => {
+                            applyDropdownStyles();
+                            adjustDropdownPosition();
+                        }, 100);
+                        setTimeout(() => {
+                            applyDropdownStyles();
+                            adjustDropdownPosition();
+                        }, 300);
+                        setTimeout(() => {
+                            applyDropdownStyles();
+                            adjustDropdownPosition();
+                        }, 500);
+
+                        // ドロップダウンが開かれた時にも位置調整
+                        select.addEventListener('showDropdown', () => {
+                            setTimeout(() => {
+                                applyDropdownStyles();
+                                adjustDropdownPosition();
+                            }, 10);
+                        });
 
                         console.log(`${field} Choices.js initialized with ${choices.length} items`);
                     } catch (error) {
