@@ -194,6 +194,23 @@ async function toggleEditMode(index) {
                                 return;
                             }
 
+                            // ドロップダウン自体のスタイルを確保
+                            dropdown.style.display = 'block';
+                            dropdown.style.visibility = 'visible';
+                            dropdown.style.opacity = '1';
+
+                            // 内側の.choices__list[role="listbox"]を取得してスタイル適用
+                            const listbox = dropdown.querySelector('.choices__list[role="listbox"]');
+                            if (listbox) {
+                                listbox.style.display = 'block';
+                                listbox.style.height = 'auto';
+                                listbox.style.minHeight = '100px';
+                                listbox.style.maxHeight = '300px';
+                                listbox.style.overflowY = 'auto';
+                                listbox.style.visibility = 'visible';
+                                listbox.style.opacity = '1';
+                            }
+
                             const items = dropdown.querySelectorAll('.choices__item');
                             console.log(`Applying styles to ${items.length} items for ${field}`);
 
