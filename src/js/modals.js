@@ -133,11 +133,11 @@ function showMasterModal() {
 
     if (consultantMenu && hospitalMenu) {
         if (userType === 'consultant') {
-            consultantMenu.style.display = 'block';
+            consultantMenu.style.display = 'grid';
             hospitalMenu.style.display = 'none';
         } else {
             consultantMenu.style.display = 'none';
-            hospitalMenu.style.display = 'block';
+            hospitalMenu.style.display = 'grid';
         }
     }
 
