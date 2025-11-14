@@ -126,6 +126,21 @@ function showMasterModal() {
         modalContent.style.transform = '';
     }
 
+    // ユーザー種別に応じてメニューを切り替え
+    const consultantMenu = document.querySelector('.consultant-menu');
+    const hospitalMenu = document.querySelector('.hospital-menu');
+    const userType = getUserType();
+
+    if (consultantMenu && hospitalMenu) {
+        if (userType === 'consultant') {
+            consultantMenu.style.display = 'block';
+            hospitalMenu.style.display = 'none';
+        } else {
+            consultantMenu.style.display = 'none';
+            hospitalMenu.style.display = 'block';
+        }
+    }
+
     if (window.ModalHelper) {
         window.ModalHelper.open('#masterModal', {
             activeClass: 'show',
@@ -134,6 +149,18 @@ function showMasterModal() {
             closeOnEscape: true
         });
     }
+}
+
+/**
+ * ユーザー種別を取得
+ * @returns {string} 'consultant' または 'hospital'
+ */
+function getUserType() {
+    // consultant-onlyボタンの表示状態で判定
+    const consultantButtons = document.querySelectorAll('.consultant-only');
+    return consultantButtons.length > 0 && consultantButtons[0].offsetParent !== null
+        ? 'consultant'
+        : 'hospital';
 }
 
 /**
@@ -152,8 +179,48 @@ function closeMasterModal() {
  * @param {string} menuName - 選択されたメニュー名
  */
 function selectMasterMenu(menuName) {
-    alert(`選択メニュー: ${menuName}\n\n${menuName}画面へ遷移します`);
     closeMasterModal();
+
+    // 「個別施設マスタ」の場合は病院選択モーダルを表示
+    if (menuName === '個別施設マスタ') {
+        if (typeof showHospitalSelectModal === 'function') {
+            showHospitalSelectModal();
+        } else {
+            alert('病院選択機能が読み込まれていません');
+        }
+        return;
+    }
+
+    // 「施設マスタ」の場合（病院ユーザー）は直接施設マスタ画面へ
+    if (menuName === '施設マスタ') {
+        const hospitalId = getCurrentHospitalId();
+        const hospitalName = getCurrentHospitalName();
+        if (typeof goToFacilityMaster === 'function') {
+            goToFacilityMaster(hospitalId, hospitalName);
+        } else {
+            alert(`${hospitalName}の施設マスタ画面へ遷移します\n（画面はまだ実装されていません）`);
+        }
+        return;
+    }
+
+    // その他のメニュー
+    alert(`選択メニュー: ${menuName}\n\n${menuName}画面へ遷移します`);
+}
+
+/**
+ * 現在ログイン中の病院IDを取得（モック用）
+ * @returns {string} 病院ID
+ */
+function getCurrentHospitalId() {
+    return 'hospital1';
+}
+
+/**
+ * 現在ログイン中の病院名を取得（モック用）
+ * @returns {string} 病院名
+ */
+function getCurrentHospitalName() {
+    return 'A総合病院';
 }
 
 /**
@@ -319,6 +386,9 @@ window.selectMenu = selectMenu;
 window.showMasterModal = showMasterModal;
 window.closeMasterModal = closeMasterModal;
 window.selectMasterMenu = selectMasterMenu;
+window.getUserType = getUserType;
+window.getCurrentHospitalId = getCurrentHospitalId;
+window.getCurrentHospitalName = getCurrentHospitalName;
 window.toggleMobileColumn = toggleMobileColumn;
 window.closeMobileColumn = closeMobileColumn;
 window.showPhotoModal = showPhotoModal;

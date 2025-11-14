@@ -3,55 +3,6 @@
  * 個別施設マスタ用の病院選択モーダル
  */
 
-/**
- * 個別施設マスタボタンクリック時の処理
- * ユーザー種別に応じて動線を分岐
- */
-function handleFacilityMaster() {
-    // ユーザー種別を判定（実際の実装ではセッションやAPIから取得）
-    const userType = getUserType();
-
-    if (userType === 'consultant') {
-        // 医療コンサルユーザー：病院選択モーダルを表示
-        showHospitalSelectModal();
-    } else {
-        // 病院ユーザー：直接、自病院の施設マスタ画面へ遷移
-        const hospitalId = getCurrentHospitalId(); // セッションから取得
-        const hospitalName = getCurrentHospitalName();
-        goToFacilityMaster(hospitalId, hospitalName);
-    }
-}
-
-/**
- * ユーザー種別を取得（モック用）
- * @returns {string} 'consultant' または 'hospital'
- */
-function getUserType() {
-    // 実際の実装ではセッションストレージやAPIから取得
-    // モックでは、consultant-onlyボタンの表示状態で判定
-    const consultantButtons = document.querySelectorAll('.consultant-only');
-    return consultantButtons.length > 0 && consultantButtons[0].offsetParent !== null
-        ? 'consultant'
-        : 'hospital';
-}
-
-/**
- * 現在ログイン中の病院IDを取得（モック用）
- * @returns {string} 病院ID
- */
-function getCurrentHospitalId() {
-    // 実際の実装ではセッションから取得
-    return 'hospital1';
-}
-
-/**
- * 現在ログイン中の病院名を取得（モック用）
- * @returns {string} 病院名
- */
-function getCurrentHospitalName() {
-    // 実際の実装ではセッションから取得
-    return 'A総合病院';
-}
 
 /**
  * 病院選択モーダルを表示
@@ -162,8 +113,8 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // グローバルに公開
-window.handleFacilityMaster = handleFacilityMaster;
 window.showHospitalSelectModal = showHospitalSelectModal;
 window.closeHospitalSelectModal = closeHospitalSelectModal;
 window.filterHospitalList = filterHospitalList;
 window.selectHospital = selectHospital;
+window.goToFacilityMaster = goToFacilityMaster;

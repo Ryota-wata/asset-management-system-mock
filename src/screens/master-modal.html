@@ -1,23 +1,39 @@
-<!-- SHIPマスタ管理モーダル -->
+<!-- マスタ管理モーダル -->
     <div id="masterModal" class="modal">
         <div class="modal-content" id="masterModalContent">
             <!-- モーダルヘッダー -->
             <div class="modal-header">
-                SHIPマスタ管理
+                マスタ管理
             </div>
-            
+
             <!-- モーダルボディ -->
             <div class="modal-body">
-                <!-- メニューボタン -->
-                <div class="menu-section">
+                <!-- メニューボタン（医療コンサル用） -->
+                <div class="menu-section consultant-menu" style="display: none;">
+                    <button class="menu-btn" onclick="selectMasterMenu('SHIP施設マスタ')">
+                        <span>SHIP施設マスタ</span>
+                    </button>
+                    <button class="menu-btn" onclick="selectMasterMenu('SHIP資産マスタ')">
+                        <span>SHIP資産マスタ</span>
+                    </button>
+                    <button class="menu-btn" onclick="selectMasterMenu('SHIP業務マスタ')">
+                        <span>SHIP業務マスタ</span>
+                    </button>
+                    <button class="menu-btn" onclick="selectMasterMenu('個別施設マスタ')">
+                        <span>個別施設マスタ</span>
+                    </button>
+                    <button class="menu-btn" onclick="selectMasterMenu('ユーザマスタ')">
+                        <span>ユーザマスタ</span>
+                    </button>
+                </div>
+
+                <!-- メニューボタン（病院ユーザー用） -->
+                <div class="menu-section hospital-menu" style="display: none;">
                     <button class="menu-btn" onclick="selectMasterMenu('施設マスタ')">
                         <span>施設マスタ</span>
                     </button>
-                    <button class="menu-btn" onclick="selectMasterMenu('資産マスタ')">
-                        <span>資産マスタ</span>
-                    </button>
-                    <button class="menu-btn" onclick="selectMasterMenu('業務マスタ')">
-                        <span>業務マスタ</span>
+                    <button class="menu-btn" onclick="selectMasterMenu('ユーザマスタ')">
+                        <span>ユーザマスタ</span>
                     </button>
                 </div>
             </div>

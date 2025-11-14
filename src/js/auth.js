@@ -61,37 +61,23 @@ function showPasswordReset(event) {
  */
 function handleLogout() {
     if (confirm('ログアウトしますか?')) {
-        // メインコンテナを非表示
-        document.getElementById('mainContainer').classList.remove('active');
-        // QRページを非表示
-        document.getElementById('qrPage').classList.remove('active');
-        // QRコード詳細画面を非表示
-        document.getElementById('qrDetailPage').classList.remove('active');
-        // QRコード新規発行画面を非表示
-        document.getElementById('qrIssuePage').classList.remove('active');
-        // QRコード印刷画面を非表示
-        document.getElementById('qrPrintPage').classList.remove('active');
-        // 現有資産調査画面を非表示
-        document.getElementById('surveyPage').classList.remove('active');
-        // QR読取画面を非表示
-        document.getElementById('qrScanPage').classList.remove('active');
-        // 写真撮影・資産番号入力画面を非表示
-        document.getElementById('photoInputPage').classList.remove('active');
-        // 資産情報登録画面（スマートフォン版）を非表示
-        document.getElementById('assetInfoSmartphonePage').classList.remove('active');
-        // 資産情報登録画面（タブレット版）を非表示
-        document.getElementById('assetInfoTabletPage').classList.remove('active');
-        // 履歴表示画面（スマートフォン版）を非表示
-        document.getElementById('historyListSmartphonePage').classList.remove('active');
-        // 履歴表示画面（タブレット版）を非表示
-        document.getElementById('historyListTabletPage').classList.remove('active');
-        // 登録内容修正画面を非表示
-        document.getElementById('registrationEditPage').classList.remove('active');
+        // すべてのアクティブな画面を非表示
+        const activeElements = document.querySelectorAll('.active, .show');
+        activeElements.forEach(el => {
+            el.classList.remove('active', 'show');
+        });
+
         // ログイン画面を表示
-        document.getElementById('loginPage').classList.remove('hidden');
+        const loginPage = document.getElementById('loginPage');
+        if (loginPage) {
+            loginPage.classList.remove('hidden');
+        }
+
         // フォームをリセット
-        document.getElementById('email').value = '';
-        document.getElementById('password').value = '';
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        if (emailInput) emailInput.value = '';
+        if (passwordInput) passwordInput.value = '';
     }
 }
 
