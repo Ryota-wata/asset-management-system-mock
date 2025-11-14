@@ -387,3 +387,40 @@ select:focus {
 @media (max-width: 480px) {
     /* スマホ最適化スタイル */
 }
+/* ========================================
+   テーブルカラムリサイズ機能
+======================================== */
+.resizable-table {
+    table-layout: auto;
+    position: relative;
+}
+
+.resizable-table th {
+    position: relative;
+    user-select: none;
+}
+
+.column-resizer {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 5px;
+    height: 100%;
+    cursor: col-resize;
+    z-index: 10;
+    background: transparent;
+    transition: background 0.2s;
+}
+
+.column-resizer:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.column-resizer.resizing {
+    background: rgba(52, 152, 219, 0.5);
+}
+
+/* リサイズ中のテーブルスタイル */
+.resizable-table.resizing {
+    user-select: none;
+}
