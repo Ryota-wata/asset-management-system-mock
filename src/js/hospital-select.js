@@ -32,43 +32,39 @@ function closeHospitalSelectModal() {
 }
 
 /**
- * 病院リストをフィルタリング
+ * 病院リストをフィルタリング（テーブル形式）
  */
 function filterHospitalList() {
     const searchInput = document.getElementById('hospitalSearchInput');
-    const hospitalItems = document.querySelectorAll('.hospital-item');
+    const tableBody = document.getElementById('hospitalTableBody');
+    const rows = tableBody?.querySelectorAll('tr');
 
-    if (!searchInput || !hospitalItems.length) return;
+    if (!searchInput || !rows) return;
 
     const searchTerm = searchInput.value.toLowerCase();
     let visibleCount = 0;
 
-    hospitalItems.forEach(item => {
-        const hospitalName = item.querySelector('.hospital-name')?.textContent || '';
-        const hospitalDetail = item.querySelector('.hospital-detail')?.textContent || '';
-        const searchText = (hospitalName + hospitalDetail).toLowerCase();
+    rows.forEach(row => {
+        // 各セルのテキストを取得
+        const cells = row.querySelectorAll('td');
+        let rowText = '';
+        cells.forEach(cell => {
+            rowText += cell.textContent + ' ';
+        });
 
-        if (searchText.includes(searchTerm)) {
-            item.style.display = 'flex';
+        // 検索語が含まれているかチェック
+        if (rowText.toLowerCase().includes(searchTerm)) {
+            row.style.display = '';
             visibleCount++;
         } else {
-            item.style.display = 'none';
+            row.style.display = 'none';
         }
     });
 
-    // 検索結果なしメッセージの表示制御
-    let noResultsMsg = document.querySelector('.no-results');
-    if (visibleCount === 0) {
-        if (!noResultsMsg) {
-            noResultsMsg = document.createElement('div');
-            noResultsMsg.className = 'no-results';
-            noResultsMsg.textContent = '該当する病院が見つかりませんでした';
-            document.getElementById('hospitalList').appendChild(noResultsMsg);
-        }
-    } else {
-        if (noResultsMsg) {
-            noResultsMsg.remove();
-        }
+    // 件数表示を更新
+    const pageInfo = document.querySelector('#hospitalSelectModal .asset-master-page-info');
+    if (pageInfo) {
+        pageInfo.textContent = `全 ${visibleCount} 件`;
     }
 }
 

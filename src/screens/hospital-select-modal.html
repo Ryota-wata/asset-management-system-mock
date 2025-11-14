@@ -1,70 +1,121 @@
 <!-- 病院選択モーダル（個別施設マスタ用） -->
-    <div id="hospitalSelectModal" class="modal">
-        <div class="modal-content hospital-select-modal-content">
+    <div id="hospitalSelectModal" class="asset-master-modal">
+        <div class="asset-master-modal-content">
             <!-- モーダルヘッダー -->
-            <div class="modal-header">
-                <h2 class="modal-title">病院選択</h2>
-                <button class="modal-close-btn" onclick="closeHospitalSelectModal()">×</button>
+            <div class="asset-master-modal-header">
+                <h2 class="asset-master-modal-title">病院選択</h2>
+                <button class="asset-master-modal-close" onclick="closeHospitalSelectModal()">×</button>
             </div>
 
-            <!-- モーダルボディ -->
-            <div class="modal-body">
-                <p class="modal-description">施設マスタを管理する病院を選択してください</p>
-
-                <!-- 検索フィルター -->
-                <div class="hospital-search-area">
+            <!-- 検索エリア -->
+            <div class="asset-master-search-area">
+                <div class="asset-master-search-box">
                     <input
                         type="text"
                         id="hospitalSearchInput"
-                        class="hospital-search-input"
-                        placeholder="病院名で検索..."
+                        class="asset-master-search-input"
+                        placeholder="病院名、都道府県、病床規模で検索..."
                         oninput="filterHospitalList()"
                     />
-                </div>
-
-                <!-- 病院リスト -->
-                <div class="hospital-list" id="hospitalList">
-                    <div class="hospital-item" onclick="selectHospital('hospital1', 'A総合病院')">
-                        <div class="hospital-icon">🏥</div>
-                        <div class="hospital-info">
-                            <div class="hospital-name">A総合病院</div>
-                            <div class="hospital-detail">東京都 | 500床</div>
-                        </div>
-                        <div class="hospital-arrow">→</div>
-                    </div>
-
-                    <div class="hospital-item" onclick="selectHospital('hospital2', 'B医療センター')">
-                        <div class="hospital-icon">🏥</div>
-                        <div class="hospital-info">
-                            <div class="hospital-name">B医療センター</div>
-                            <div class="hospital-detail">大阪府 | 300床</div>
-                        </div>
-                        <div class="hospital-arrow">→</div>
-                    </div>
-
-                    <div class="hospital-item" onclick="selectHospital('hospital3', 'Cクリニック')">
-                        <div class="hospital-icon">🏥</div>
-                        <div class="hospital-info">
-                            <div class="hospital-name">Cクリニック</div>
-                            <div class="hospital-detail">神奈川県 | 100床</div>
-                        </div>
-                        <div class="hospital-arrow">→</div>
-                    </div>
-
-                    <div class="hospital-item" onclick="selectHospital('hospital4', 'D病院')">
-                        <div class="hospital-icon">🏥</div>
-                        <div class="hospital-info">
-                            <div class="hospital-name">D病院</div>
-                            <div class="hospital-detail">愛知県 | 200床</div>
-                        </div>
-                        <div class="hospital-arrow">→</div>
-                    </div>
+                    <span class="asset-master-search-icon">🔍</span>
                 </div>
             </div>
 
+            <!-- テーブルコンテナ -->
+            <div class="asset-master-table-container">
+                <table class="asset-master-table" id="hospitalTable">
+                    <thead>
+                        <tr>
+                            <th>病院ID</th>
+                            <th>病院名</th>
+                            <th>都道府県</th>
+                            <th>病床規模</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="hospitalTableBody">
+                        <tr>
+                            <td>H-001</td>
+                            <td>A総合病院</td>
+                            <td>東京都</td>
+                            <td>500床</td>
+                            <td>
+                                <button class="asset-master-select-btn" onclick="selectHospital('hospital1', 'A総合病院')">選択</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>H-002</td>
+                            <td>B医療センター</td>
+                            <td>大阪府</td>
+                            <td>300床</td>
+                            <td>
+                                <button class="asset-master-select-btn" onclick="selectHospital('hospital2', 'B医療センター')">選択</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>H-003</td>
+                            <td>Cクリニック</td>
+                            <td>神奈川県</td>
+                            <td>100床</td>
+                            <td>
+                                <button class="asset-master-select-btn" onclick="selectHospital('hospital3', 'Cクリニック')">選択</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>H-004</td>
+                            <td>D病院</td>
+                            <td>愛知県</td>
+                            <td>200床</td>
+                            <td>
+                                <button class="asset-master-select-btn" onclick="selectHospital('hospital4', 'D病院')">選択</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>H-005</td>
+                            <td>E大学病院</td>
+                            <td>京都府</td>
+                            <td>600床</td>
+                            <td>
+                                <button class="asset-master-select-btn" onclick="selectHospital('hospital5', 'E大学病院')">選択</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>H-006</td>
+                            <td>F地域病院</td>
+                            <td>福岡県</td>
+                            <td>250床</td>
+                            <td>
+                                <button class="asset-master-select-btn" onclick="selectHospital('hospital6', 'F地域病院')">選択</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>H-007</td>
+                            <td>G専門病院</td>
+                            <td>北海道</td>
+                            <td>150床</td>
+                            <td>
+                                <button class="asset-master-select-btn" onclick="selectHospital('hospital7', 'G専門病院')">選択</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>H-008</td>
+                            <td>H中央病院</td>
+                            <td>広島県</td>
+                            <td>400床</td>
+                            <td>
+                                <button class="asset-master-select-btn" onclick="selectHospital('hospital8', 'H中央病院')">選択</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
             <!-- モーダルフッター -->
-            <div class="modal-footer">
-                <button class="modal-btn secondary" onclick="closeHospitalSelectModal()">キャンセル</button>
+            <div class="asset-master-modal-footer">
+                <div class="asset-master-pagination">
+                    <span class="asset-master-page-info">全 8 件</span>
+                </div>
+                <button class="asset-master-close-btn" onclick="closeHospitalSelectModal()">閉じる</button>
             </div>
         </div>
     </div>
