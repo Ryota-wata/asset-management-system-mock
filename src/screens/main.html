@@ -12,7 +12,9 @@
             <div class="header-actions">
                 <button class="header-btn success consultant-only" onclick="showListModal()">個体管理リスト作成</button>
                 <button class="header-btn secondary consultant-only" onclick="showMasterModal()">SHIPマスタ管理</button>
-                <button class="header-btn secondary consultant-only">ユーザー管理</button>
+                <button class="header-btn secondary consultant-only">ユーザー管理（全病院）</button>
+                <button class="header-btn secondary" onclick="handleFacilityMaster()">個別施設マスタ</button>
+                <button class="header-btn secondary hospital-only">ユーザー管理</button>
                 <button class="header-btn success hospital-only" onclick="handleQRManagement()">QRコード管理</button>
                 <button class="header-btn logout" onclick="handleLogout()">ログアウト</button>
             </div>

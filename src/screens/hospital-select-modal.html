@@ -1,0 +1,70 @@
+<!-- 病院選択モーダル（個別施設マスタ用） -->
+    <div id="hospitalSelectModal" class="modal">
+        <div class="modal-content hospital-select-modal-content">
+            <!-- モーダルヘッダー -->
+            <div class="modal-header">
+                <h2 class="modal-title">病院選択</h2>
+                <button class="modal-close-btn" onclick="closeHospitalSelectModal()">×</button>
+            </div>
+
+            <!-- モーダルボディ -->
+            <div class="modal-body">
+                <p class="modal-description">施設マスタを管理する病院を選択してください</p>
+
+                <!-- 検索フィルター -->
+                <div class="hospital-search-area">
+                    <input
+                        type="text"
+                        id="hospitalSearchInput"
+                        class="hospital-search-input"
+                        placeholder="病院名で検索..."
+                        oninput="filterHospitalList()"
+                    />
+                </div>
+
+                <!-- 病院リスト -->
+                <div class="hospital-list" id="hospitalList">
+                    <div class="hospital-item" onclick="selectHospital('hospital1', 'A総合病院')">
+                        <div class="hospital-icon">🏥</div>
+                        <div class="hospital-info">
+                            <div class="hospital-name">A総合病院</div>
+                            <div class="hospital-detail">東京都 | 500床</div>
+                        </div>
+                        <div class="hospital-arrow">→</div>
+                    </div>
+
+                    <div class="hospital-item" onclick="selectHospital('hospital2', 'B医療センター')">
+                        <div class="hospital-icon">🏥</div>
+                        <div class="hospital-info">
+                            <div class="hospital-name">B医療センター</div>
+                            <div class="hospital-detail">大阪府 | 300床</div>
+                        </div>
+                        <div class="hospital-arrow">→</div>
+                    </div>
+
+                    <div class="hospital-item" onclick="selectHospital('hospital3', 'Cクリニック')">
+                        <div class="hospital-icon">🏥</div>
+                        <div class="hospital-info">
+                            <div class="hospital-name">Cクリニック</div>
+                            <div class="hospital-detail">神奈川県 | 100床</div>
+                        </div>
+                        <div class="hospital-arrow">→</div>
+                    </div>
+
+                    <div class="hospital-item" onclick="selectHospital('hospital4', 'D病院')">
+                        <div class="hospital-icon">🏥</div>
+                        <div class="hospital-info">
+                            <div class="hospital-name">D病院</div>
+                            <div class="hospital-detail">愛知県 | 200床</div>
+                        </div>
+                        <div class="hospital-arrow">→</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- モーダルフッター -->
+            <div class="modal-footer">
+                <button class="modal-btn secondary" onclick="closeHospitalSelectModal()">キャンセル</button>
+            </div>
+        </div>
+    </div>

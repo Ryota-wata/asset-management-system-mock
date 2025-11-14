@@ -27,6 +27,7 @@
     <link rel="stylesheet" href="src/css/screens/data-matching.css">
     <link rel="stylesheet" href="src/css/screens/search-result-simple.css">
     <link rel="stylesheet" href="src/css/screens/asset-survey-integrated.css">
+    <link rel="stylesheet" href="src/css/screens/hospital-select-modal.css">
 
     <!-- Choices.js JS (外部ライブラリ) -->
     <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
@@ -71,6 +72,9 @@
 
         <!-- マスター管理モーダル -->
         <div id="masterModal"></div>
+
+        <!-- 病院選択モーダル -->
+        <div id="hospitalSelectModal"></div>
 
         <!-- モバイルカラム選択モーダル -->
         <div id="mobileColumnModal"></div>
@@ -132,6 +136,7 @@
     <script src="src/js/navigation.js"></script>
     <script src="src/js/modals.js"></script>
     <script src="src/js/qr-management.js"></script>
+    <script src="src/js/hospital-select.js"></script>
     <script src="src/js/asset-survey.js"></script>
     <script src="src/js/asset-survey-integrated.js"></script>
     <script src="src/js/asset-matching.js"></script>
@@ -163,6 +168,7 @@
                 { id: 'mainContainer', file: 'main.html' },
                 { id: 'listModal', file: 'list-modal.html' },
                 { id: 'masterModal', file: 'master-modal.html' },
+                { id: 'hospitalSelectModal', file: 'hospital-select-modal.html' },
                 { id: 'mobileColumnModal', file: 'mobile-column-modal.html' },
                 { id: 'registrationEditPage', file: 'registration-edit.html' },
                 { id: 'photoModal', file: 'photo-modal.html' },
