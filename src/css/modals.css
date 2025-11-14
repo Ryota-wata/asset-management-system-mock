@@ -117,19 +117,19 @@
 }
 
 .menu-btn {
-    padding: 20px 24px;
+    padding: 14px 18px;
     background: white;
     color: #2c3e50;
     border: 2px solid #27ae60;
-    border-radius: 8px;
+    border-radius: 6px;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 600;
     transition: all 0.3s;
     text-align: center;
     position: relative;
     overflow: hidden;
-    min-height: 60px;
+    min-height: 50px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -253,15 +253,14 @@
     }
 
     .menu-section {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 20px;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
     }
 
-    /* 病院ユーザーで2つのボタンの場合、1列表示 */
+    /* 病院ユーザーは2列（横並び） */
     .hospital-menu.menu-section {
-        grid-template-columns: 1fr;
-        max-width: 400px;
-        margin: 0 auto;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
     }
 }
 
@@ -279,21 +278,20 @@
     }
 
     .menu-btn {
-        padding: 24px 28px;
-        font-size: 17px;
-        min-height: 70px;
+        padding: 16px 20px;
+        font-size: 16px;
+        min-height: 55px;
     }
 
     .menu-section {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 24px;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 18px;
     }
 
-    /* 病院ユーザーで2つのボタンの場合、1列表示 */
+    /* 病院ユーザーは2列（横並び） */
     .hospital-menu.menu-section {
-        grid-template-columns: 1fr;
-        max-width: 450px;
-        margin: 0 auto;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 18px;
     }
 }
 
