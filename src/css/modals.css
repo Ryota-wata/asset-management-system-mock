@@ -240,6 +240,7 @@
 @media (min-width: 768px) {
     .modal-content {
         max-width: 750px;
+        margin: 0 auto;
     }
 
     .modal-header {
@@ -255,6 +256,13 @@
         grid-template-columns: repeat(2, 1fr);
         gap: 20px;
     }
+
+    /* 病院ユーザーで2つのボタンの場合、1列表示 */
+    .hospital-menu.menu-section {
+        grid-template-columns: 1fr;
+        max-width: 400px;
+        margin: 0 auto;
+    }
 }
 
 /* ========================================
@@ -262,7 +270,8 @@
 ======================================== */
 @media (min-width: 1024px) {
     .modal-content {
-        max-width: 850px;
+        max-width: 900px;
+        margin: 0 auto;
     }
 
     .modal-body {
@@ -276,12 +285,15 @@
     }
 
     .menu-section {
+        grid-template-columns: repeat(2, 1fr);
         gap: 24px;
     }
 
-    /* マスター管理モーダルはコンサル・病院共に2列表示 */
-    #masterModal .menu-section {
-        grid-template-columns: repeat(2, 1fr);
+    /* 病院ユーザーで2つのボタンの場合、1列表示 */
+    .hospital-menu.menu-section {
+        grid-template-columns: 1fr;
+        max-width: 450px;
+        margin: 0 auto;
     }
 }
 
