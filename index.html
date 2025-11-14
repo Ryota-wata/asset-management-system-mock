@@ -193,6 +193,14 @@
             } else {
                 console.error('initChoices function not found');
             }
+
+            // テーブルリサイズ機能を初期化
+            if (typeof window.initializeResizableTables === 'function') {
+                window.initializeResizableTables();
+                console.log('Table resize feature initialized successfully');
+            } else {
+                console.error('initializeResizableTables function not found');
+            }
         });
     </script>
 </body>

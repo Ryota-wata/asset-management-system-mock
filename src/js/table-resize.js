@@ -80,15 +80,9 @@ function makeTableResizable(table) {
 function initializeResizableTables() {
     const tables = document.querySelectorAll('.resizable-table');
     tables.forEach(table => makeTableResizable(table));
+    console.log(`Initialized ${tables.length} resizable tables`);
 }
 
-// ページ読み込み時に初期化
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initializeResizableTables);
-} else {
-    initializeResizableTables();
-}
-
-// グローバルに公開（動的に追加されたテーブル用）
+// グローバルに公開
 window.makeTableResizable = makeTableResizable;
 window.initializeResizableTables = initializeResizableTables;
