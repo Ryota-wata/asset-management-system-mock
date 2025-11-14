@@ -223,6 +223,7 @@ function handleBackFromSearchResult() {
 }
 
 // グローバルスコープに関数を公開
+window.transitionPage = transitionPage;
 window.handleQRManagement = handleQRManagement;
 window.handleBackFromQR = handleBackFromQR;
 window.handleBackFromEdit = handleBackFromEdit;

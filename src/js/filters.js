@@ -3,6 +3,17 @@
  * 検索条件の保存・読み込み、フィルタリング、条件クリアなどの機能を提供します。
  */
 
+// フィルターIDの定数定義
+const FILTER_IDS = [
+    'filterBuilding',
+    'filterFloor',
+    'filterDepartment',
+    'filterSection',
+    'filterCategory',
+    'filterLargeClass',
+    'filterMediumClass'
+];
+
 /**
  * フォームをクリア
  */
@@ -33,16 +44,17 @@ function viewList() {
  * フィルター適用
  */
 function applyFilters() {
-    const building = document.getElementById('filterBuilding') ? document.getElementById('filterBuilding').value : '';
-    const floor = document.getElementById('filterFloor') ? document.getElementById('filterFloor').value : '';
-    const department = document.getElementById('filterDepartment') ? document.getElementById('filterDepartment').value : '';
-    const section = document.getElementById('filterSection') ? document.getElementById('filterSection').value : '';
-    const category = document.getElementById('filterCategory') ? document.getElementById('filterCategory').value : '';
-    const largeClass = document.getElementById('filterLargeClass') ? document.getElementById('filterLargeClass').value : '';
-    const mediumClass = document.getElementById('filterMediumClass') ? document.getElementById('filterMediumClass').value : '';
+    const filters = {};
+
+    FILTER_IDS.forEach(id => {
+        const element = document.getElementById(id);
+        if (element) {
+            filters[id] = element.value || '';
+        }
+    });
 
     // フィルター処理の実装
-    console.log('フィルター実行:', { building, floor, department, section, category, largeClass, mediumClass });
+    console.log('フィルター実行:', filters);
     alert('絞り込みを実行しました');
 }
 
@@ -50,9 +62,7 @@ function applyFilters() {
  * フィルタークリア
  */
 function clearFilters() {
-    // Choices.jsのインスタンスをリセット
-    const filterIds = ['filterBuilding', 'filterFloor', 'filterDepartment', 'filterSection', 'filterCategory', 'filterLargeClass', 'filterMediumClass'];
-    filterIds.forEach(id => {
+    FILTER_IDS.forEach(id => {
         const element = document.getElementById(id);
         if (element) {
             if (element.choices) {

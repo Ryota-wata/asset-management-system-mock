@@ -11,10 +11,14 @@ window.qrPrintFromPage = '';
  * @param {string} qrNumber - QR番号
  */
 function showQRDetail(qrNumber) {
-    // QRコード管理画面を非表示
-    document.getElementById('qrPage').classList.remove('active');
-    // QRコード詳細画面を表示
-    document.getElementById('qrDetailPage').classList.add('active');
+    // QRコード管理画面から詳細画面へ遷移（navigation.jsの関数を使用）
+    if (typeof transitionPage === 'function') {
+        transitionPage('qrPage', 'qrDetailPage');
+    } else {
+        // フォールバック
+        document.getElementById('qrPage').classList.remove('active');
+        document.getElementById('qrDetailPage').classList.add('active');
+    }
 
     // QR番号を設定
     document.getElementById('qrDetailHeaderNumber').textContent = qrNumber;
@@ -26,8 +30,13 @@ function showQRDetail(qrNumber) {
  * QRコード新規発行画面を表示
  */
 function showQRIssue() {
-    document.getElementById('qrPage').classList.remove('active');
-    document.getElementById('qrIssuePage').classList.add('active');
+    if (typeof transitionPage === 'function') {
+        transitionPage('qrPage', 'qrIssuePage');
+    } else {
+        // フォールバック
+        document.getElementById('qrPage').classList.remove('active');
+        document.getElementById('qrIssuePage').classList.add('active');
+    }
 }
 
 /**
@@ -45,7 +54,7 @@ function switchQRIssueTab(tabName) {
     document.querySelectorAll('.qr-issue-tab-content').forEach(content => {
         content.classList.remove('active');
     });
-    document.getElementById('qr-issue-' + tabName + '-tab').classList.add('active');
+    document.getElementById(`qr-issue-${tabName}-tab`).classList.add('active');
 }
 
 /**
@@ -70,12 +79,9 @@ function handleQRDetailPrint() {
  */
 function handleBulkPrint() {
     const checkedBoxes = document.querySelectorAll('.qr-table-container tbody input[type="checkbox"]:checked');
-    const qrNumbers = [];
-
-    checkedBoxes.forEach(checkbox => {
+    const qrNumbers = Array.from(checkedBoxes).map(checkbox => {
         const row = checkbox.closest('tr');
-        const qrNumber = row.querySelector('.qr-number').textContent;
-        qrNumbers.push(qrNumber);
+        return row.querySelector('.qr-number').textContent;
     });
 
     if (qrNumbers.length > 0) {
@@ -85,32 +91,52 @@ function handleBulkPrint() {
 }
 
 /**
+ * 印刷対象リストのテーブル行を生成
+ * @param {string} qrNumber - QR番号
+ * @param {number} index - インデックス
+ * @returns {string} テーブル行のHTML
+ */
+function createPrintTableRow(qrNumber, index) {
+    return `
+        <tr>
+            <td>${index + 1}</td>
+            <td class="qr-print-qr-number-cell">${qrNumber}</td>
+            <td>印刷待機中</td>
+        </tr>
+    `;
+}
+
+/**
  * QRコード印刷画面を表示
  * @param {string[]} qrNumbers - 印刷するQR番号の配列
  */
 function showQRPrint(qrNumbers) {
-    // 印刷画面を表示
-    document.getElementById('qrPage').classList.remove('active');
-    document.getElementById('qrDetailPage').classList.remove('active');
-    document.getElementById('qrPrintPage').classList.add('active');
+    // 印刷画面へ遷移
+    const fromPageId = window.qrPrintFromPage === 'detail' ? 'qrDetailPage' : 'qrPage';
+
+    if (typeof transitionPage === 'function') {
+        transitionPage(fromPageId, 'qrPrintPage');
+    } else {
+        // フォールバック
+        document.getElementById('qrPage').classList.remove('active');
+        document.getElementById('qrDetailPage').classList.remove('active');
+        document.getElementById('qrPrintPage').classList.add('active');
+    }
 
     // 印刷対象リストを更新
     const tbody = document.getElementById('qrPrintTableBody');
-    tbody.innerHTML = '';
-
-    qrNumbers.forEach((qrNumber, index) => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-            <td>${index + 1}</td>
-            <td class="qr-print-qr-number-cell">${qrNumber}</td>
-            <td>印刷待機中</td>
-        `;
-        tbody.appendChild(row);
-    });
+    if (tbody) {
+        tbody.innerHTML = qrNumbers.map((qrNumber, index) =>
+            createPrintTableRow(qrNumber, index)
+        ).join('');
+    }
 
     // プレビューに最初のQR番号を表示
     if (qrNumbers.length > 0) {
-        document.getElementById('qrPrintPreviewNumber').textContent = qrNumbers[0];
+        const previewElement = document.getElementById('qrPrintPreviewNumber');
+        if (previewElement) {
+            previewElement.textContent = qrNumbers[0];
+        }
     }
 }
 
@@ -119,10 +145,13 @@ function showQRPrint(qrNumbers) {
  */
 function updateQRActionButtons() {
     const checked = document.querySelectorAll('.qr-table-container tbody input[type="checkbox"]:checked').length;
-    const actionButtons = document.querySelectorAll('.qr-action-btn');
-    actionButtons.forEach(btn => {
+
+    // アクションボタンの有効/無効を設定
+    document.querySelectorAll('.qr-action-btn').forEach(btn => {
         btn.disabled = checked === 0;
     });
+
+    // 選択数を表示
     const selectedCountElement = document.querySelector('.qr-selected-count');
     if (selectedCountElement) {
         selectedCountElement.textContent = `${checked}件選択中`;
