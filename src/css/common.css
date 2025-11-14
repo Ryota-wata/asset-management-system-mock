@@ -83,6 +83,36 @@ body {
     gap: 10px;
 }
 
+/* ボタンの表示順序制御 */
+.header-actions .consultant-only {
+    order: 1;
+}
+
+.header-actions .master-mgmt-btn {
+    order: 2;
+}
+
+.header-actions .hospital-only {
+    order: 3;
+}
+
+.header-actions .logout {
+    order: 4;
+}
+
+/* 病院ユーザーの場合: QRコード管理を先に表示 */
+.header-actions .hospital-only.visible {
+    order: 1;
+}
+
+.header-actions .hospital-only.visible ~ .master-mgmt-btn {
+    order: 2;
+}
+
+.header-actions .hospital-only.visible ~ .logout {
+    order: 3;
+}
+
 .header-btn {
     padding: 8px 16px;
     background: #27ae60;

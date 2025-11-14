@@ -113,15 +113,15 @@
 .menu-section {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 12px;
+    gap: 16px;
 }
 
 .menu-btn {
-    padding: 18px 20px;
+    padding: 20px 24px;
     background: white;
     color: #2c3e50;
     border: 2px solid #27ae60;
-    border-radius: 6px;
+    border-radius: 8px;
     cursor: pointer;
     font-size: 16px;
     font-weight: 600;
@@ -129,6 +129,10 @@
     text-align: center;
     position: relative;
     overflow: hidden;
+    min-height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .menu-btn::before {
@@ -235,7 +239,7 @@
 ======================================== */
 @media (min-width: 768px) {
     .modal-content {
-        max-width: 700px;
+        max-width: 750px;
     }
 
     .modal-header {
@@ -244,12 +248,12 @@
     }
 
     .modal-body {
-        padding: 32px;
+        padding: 36px 32px;
     }
 
     .menu-section {
         grid-template-columns: repeat(2, 1fr);
-        gap: 16px;
+        gap: 20px;
     }
 }
 
@@ -258,17 +262,26 @@
 ======================================== */
 @media (min-width: 1024px) {
     .modal-content {
-        max-width: 800px;
+        max-width: 850px;
+    }
+
+    .modal-body {
+        padding: 40px;
     }
 
     .menu-btn {
-        padding: 24px 20px;
+        padding: 24px 28px;
         font-size: 17px;
+        min-height: 70px;
     }
 
-    /* マスター管理モーダルは3列表示 */
+    .menu-section {
+        gap: 24px;
+    }
+
+    /* マスター管理モーダルはコンサル・病院共に2列表示 */
     #masterModal .menu-section {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(2, 1fr);
     }
 }
 
