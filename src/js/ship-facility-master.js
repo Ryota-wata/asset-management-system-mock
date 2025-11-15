@@ -2,6 +2,119 @@
  * SHIP施設マスタ一覧画面のJavaScript
  */
 
+// グローバル変数
+let facilityMasterConfig = null;
+let facilityMasterData = [];
+
+/**
+ * facility-master.jsonを読み込む
+ */
+async function loadFacilityMasterConfig() {
+    try {
+        const response = await fetch('data/facility-master.json');
+        const config = await response.json();
+        facilityMasterConfig = config;
+        facilityMasterData = config.data;
+        return config;
+    } catch (error) {
+        console.error('Failed to load facility-master.json:', error);
+        return null;
+    }
+}
+
+/**
+ * テーブルヘッダーを動的に生成
+ */
+function renderFacilityTableHeader() {
+    if (!facilityMasterConfig) return;
+
+    const thead = document.querySelector('#facilityTableBody').closest('table').querySelector('thead tr');
+    if (!thead) return;
+
+    thead.innerHTML = '';
+
+    facilityMasterConfig.columns.forEach(column => {
+        const th = document.createElement('th');
+
+        if (column.type === 'checkbox') {
+            th.innerHTML = '<input type="checkbox" id="selectAllFacilities" onchange="handleSelectAllFacilities()">';
+        } else {
+            th.textContent = column.label;
+        }
+
+        if (column.width) {
+            th.style.width = column.width;
+        }
+
+        thead.appendChild(th);
+    });
+}
+
+/**
+ * テーブルボディを動的に生成
+ */
+function renderFacilityTableBody() {
+    if (!facilityMasterConfig || !facilityMasterData) return;
+
+    const tbody = document.getElementById('facilityTableBody');
+    if (!tbody) return;
+
+    tbody.innerHTML = '';
+
+    facilityMasterData.forEach((facility, index) => {
+        const tr = document.createElement('tr');
+        tr.dataset.facilityId = facility.facilityId;
+
+        facilityMasterConfig.columns.forEach(column => {
+            const td = document.createElement('td');
+
+            switch (column.type) {
+                case 'checkbox':
+                    td.innerHTML = '<input type="checkbox" class="row-checkbox" onchange="handleFacilityRowSelect()">';
+                    break;
+
+                case 'number':
+                    if (column.id === 'no') {
+                        td.textContent = index + 1;
+                    }
+                    break;
+
+                case 'actions':
+                    td.innerHTML = `<button class="table-action-btn edit" onclick="showFacilityEditModal('${facility.facilityId}')">編集</button>`;
+                    break;
+
+                default:
+                    const value = facility[column.field];
+                    td.textContent = value || '-';
+                    break;
+            }
+
+            tr.appendChild(td);
+        });
+
+        tbody.appendChild(tr);
+    });
+
+    // 件数を更新
+    updateFacilityCount();
+}
+
+/**
+ * 件数表示を更新
+ */
+function updateFacilityCount() {
+    const visibleRows = document.querySelectorAll('#facilityTableBody tr:not([style*="display: none"])');
+    const countElement = document.getElementById('facilityCount');
+    if (countElement) {
+        countElement.textContent = `${visibleRows.length}件`;
+    }
+
+    const totalElement = document.getElementById('totalFacilities');
+    const endElement = document.getElementById('displayEnd');
+    if (totalElement) totalElement.textContent = visibleRows.length;
+    if (endElement) endElement.textContent = visibleRows.length;
+}
+
 /**
  * フィルター表示/非表示切り替え
  */
@@ -75,16 +188,7 @@ function filterFacilityTable() {
     });
 
     // 件数表示を更新
-    const countElement = document.getElementById('facilityCount');
-    if (countElement) {
-        countElement.textContent = `${visibleCount}件`;
-    }
-
-    // ページネーション情報を更新
-    const totalElement = document.getElementById('totalFacilities');
-    const endElement = document.getElementById('displayEnd');
-    if (totalElement) totalElement.textContent = visibleCount;
-    if (endElement) endElement.textContent = visibleCount;
+    updateFacilityCount();
 }
 
 /**
@@ -238,32 +342,26 @@ function handleFacilityNewSubmit(event) {
 
     console.log('新規施設データ:', formData);
 
-    // テーブルに新しい行を追加
-    const tableBody = document.getElementById('facilityTableBody');
-    const newRow = document.createElement('tr');
-    newRow.dataset.facilityId = formData.facilityId;
+    // facilityMasterDataに追加
+    const newFacility = {
+        facilityId: formData.facilityId,
+        facilityName: formData.facilityName,
+        facilityNameKana: formData.facilityNameKana,
+        prefecture: formData.prefecture,
+        city: formData.city,
+        bedSize: formData.bedSize ? formData.bedSize + '床' : '',
+        phoneNumber: formData.phoneNumber,
+        postalCode: formData.postalCode,
+        address: formData.address,
+        faxNumber: formData.faxNumber,
+        establishedDate: formData.establishedDate,
+        notes: formData.notes
+    };
 
-    const rowCount = tableBody.querySelectorAll('tr').length + 1;
+    facilityMasterData.push(newFacility);
 
-    newRow.innerHTML = `
-        <td><input type="checkbox" class="row-checkbox" onchange="handleFacilityRowSelect()"></td>
-        <td>${rowCount}</td>
-        <td>${formData.facilityId}</td>
-        <td>${formData.facilityName}</td>
-        <td>${formData.facilityNameKana}</td>
-        <td>${formData.prefecture}</td>
-        <td>${formData.city}</td>
-        <td>${formData.bedSize ? formData.bedSize + '床' : '-'}</td>
-        <td>${formData.phoneNumber || '-'}</td>
-        <td>
-            <button class="table-action-btn edit" onclick="showFacilityEditModal('${formData.facilityId}')">編集</button>
-        </td>
-    `;
-
-    tableBody.appendChild(newRow);
-
-    // 件数を更新
-    filterFacilityTable();
+    // テーブルを再描画
+    renderFacilityTableBody();
 
     // モーダルを閉じる
     closeFacilityNewModal();
@@ -305,7 +403,7 @@ function goToNextPage() {
 /**
  * SHIP施設マスタ画面を表示
  */
-function showShipFacilityMaster() {
+async function showShipFacilityMaster() {
     // すべての画面を非表示
     const allPages = document.querySelectorAll('.active');
     allPages.forEach(page => page.classList.remove('active'));
@@ -315,20 +413,15 @@ function showShipFacilityMaster() {
     if (shipFacilityPage) {
         shipFacilityPage.classList.add('active');
 
-        // 初期表示時にフィルターを実行
-        filterFacilityTable();
+        // JSONを読み込んでテーブルを生成
+        await loadFacilityMasterConfig();
+        renderFacilityTableHeader();
+        renderFacilityTableBody();
     }
 }
 
 // 初期化
 document.addEventListener('DOMContentLoaded', function() {
-    // 初期件数を設定
-    const totalRows = document.querySelectorAll('#facilityTableBody tr').length;
-    const countElement = document.getElementById('facilityCount');
-    if (countElement) {
-        countElement.textContent = `${totalRows}件`;
-    }
-
     // モーダル外クリックで閉じる
     const newModal = document.getElementById('facilityNewModal');
     if (newModal) {

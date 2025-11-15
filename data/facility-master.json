@@ -1,0 +1,198 @@
+{
+  "columns": [
+    {
+      "id": "checkbox",
+      "label": "",
+      "field": "checkbox",
+      "type": "checkbox",
+      "width": "50px",
+      "sortable": false
+    },
+    {
+      "id": "no",
+      "label": "No.",
+      "field": "no",
+      "type": "number",
+      "width": "60px",
+      "sortable": true
+    },
+    {
+      "id": "facilityId",
+      "label": "施設ID",
+      "field": "facilityId",
+      "type": "text",
+      "width": "100px",
+      "sortable": true
+    },
+    {
+      "id": "facilityName",
+      "label": "施設名",
+      "field": "facilityName",
+      "type": "text",
+      "width": "200px",
+      "sortable": true
+    },
+    {
+      "id": "facilityNameKana",
+      "label": "施設名（カナ）",
+      "field": "facilityNameKana",
+      "type": "text",
+      "width": "200px",
+      "sortable": true
+    },
+    {
+      "id": "prefecture",
+      "label": "都道府県",
+      "field": "prefecture",
+      "type": "text",
+      "width": "100px",
+      "sortable": true
+    },
+    {
+      "id": "city",
+      "label": "市区町村",
+      "field": "city",
+      "type": "text",
+      "width": "150px",
+      "sortable": true
+    },
+    {
+      "id": "bedSize",
+      "label": "病床規模",
+      "field": "bedSize",
+      "type": "text",
+      "width": "100px",
+      "sortable": true
+    },
+    {
+      "id": "phoneNumber",
+      "label": "電話番号",
+      "field": "phoneNumber",
+      "type": "text",
+      "width": "150px",
+      "sortable": false
+    },
+    {
+      "id": "actions",
+      "label": "操作",
+      "field": "actions",
+      "type": "actions",
+      "width": "100px",
+      "sortable": false
+    }
+  ],
+  "data": [
+    {
+      "facilityId": "F-001",
+      "facilityName": "東京総合医療センター",
+      "facilityNameKana": "トウキョウソウゴウイリョウセンター",
+      "prefecture": "東京都",
+      "city": "千代田区",
+      "bedSize": "500床",
+      "phoneNumber": "03-1234-5678",
+      "postalCode": "100-0001",
+      "address": "丸の内1-1-1",
+      "faxNumber": "03-1234-5679",
+      "establishedDate": "1980-04-01",
+      "notes": ""
+    },
+    {
+      "facilityId": "F-002",
+      "facilityName": "大阪中央病院",
+      "facilityNameKana": "オオサカチュウオウビョウイン",
+      "prefecture": "大阪府",
+      "city": "大阪市北区",
+      "bedSize": "400床",
+      "phoneNumber": "06-9876-5432",
+      "postalCode": "530-0001",
+      "address": "梅田1-2-3",
+      "faxNumber": "06-9876-5433",
+      "establishedDate": "1985-06-15",
+      "notes": ""
+    },
+    {
+      "facilityId": "F-003",
+      "facilityName": "横浜市立医療センター",
+      "facilityNameKana": "ヨコハマシリツイリョウセンター",
+      "prefecture": "神奈川県",
+      "city": "横浜市",
+      "bedSize": "350床",
+      "phoneNumber": "045-1111-2222",
+      "postalCode": "220-0001",
+      "address": "みなとみらい2-3-4",
+      "faxNumber": "045-1111-2223",
+      "establishedDate": "1990-10-20",
+      "notes": ""
+    },
+    {
+      "facilityId": "F-004",
+      "facilityName": "名古屋第一病院",
+      "facilityNameKana": "ナゴヤダイイチビョウイン",
+      "prefecture": "愛知県",
+      "city": "名古屋市",
+      "bedSize": "250床",
+      "phoneNumber": "052-3333-4444",
+      "postalCode": "460-0001",
+      "address": "栄3-4-5",
+      "faxNumber": "052-3333-4445",
+      "establishedDate": "1995-03-10",
+      "notes": ""
+    },
+    {
+      "facilityId": "F-005",
+      "facilityName": "京都大学医学部附属病院",
+      "facilityNameKana": "キョウトダイガクイガクブフゾクビョウイン",
+      "prefecture": "京都府",
+      "city": "京都市左京区",
+      "bedSize": "600床",
+      "phoneNumber": "075-5555-6666",
+      "postalCode": "606-0001",
+      "address": "吉田本町4-5-6",
+      "faxNumber": "075-5555-6667",
+      "establishedDate": "1970-05-25",
+      "notes": "大学附属病院"
+    },
+    {
+      "facilityId": "F-006",
+      "facilityName": "福岡県立総合病院",
+      "facilityNameKana": "フクオカケンリツソウゴウビョウイン",
+      "prefecture": "福岡県",
+      "city": "福岡市",
+      "bedSize": "450床",
+      "phoneNumber": "092-7777-8888",
+      "postalCode": "810-0001",
+      "address": "天神5-6-7",
+      "faxNumber": "092-7777-8889",
+      "establishedDate": "1975-08-30",
+      "notes": ""
+    },
+    {
+      "facilityId": "F-007",
+      "facilityName": "札幌北海道医療センター",
+      "facilityNameKana": "サッポロホッカイドウイリョウセンター",
+      "prefecture": "北海道",
+      "city": "札幌市",
+      "bedSize": "300床",
+      "phoneNumber": "011-9999-0000",
+      "postalCode": "060-0001",
+      "address": "中央区6-7-8",
+      "faxNumber": "011-9999-0001",
+      "establishedDate": "2000-12-01",
+      "notes": ""
+    },
+    {
+      "facilityId": "F-008",
+      "facilityName": "広島中央クリニック",
+      "facilityNameKana": "ヒロシマチュウオウクリニック",
+      "prefecture": "広島県",
+      "city": "広島市",
+      "bedSize": "150床",
+      "phoneNumber": "082-1234-5678",
+      "postalCode": "730-0001",
+      "address": "中区7-8-9",
+      "faxNumber": "082-1234-5679",
+      "establishedDate": "2005-02-14",
+      "notes": ""
+    }
+  ]
+}
