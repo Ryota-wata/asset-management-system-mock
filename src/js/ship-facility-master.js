@@ -20,8 +20,15 @@ async function loadFacilityMasterConfig() {
 
         const config = await response.json();
         console.log('Loaded config:', config);
+        console.log('config.columns:', config.columns);
+        console.log('config.data:', config.data);
+        console.log('config.facilities:', config.facilities);
+        console.log('All config keys:', Object.keys(config));
 
         if (!config.columns || !config.data) {
+            console.error('Missing required fields!');
+            console.error('Has columns?', !!config.columns);
+            console.error('Has data?', !!config.data);
             throw new Error('Invalid JSON structure: missing columns or data');
         }
 
