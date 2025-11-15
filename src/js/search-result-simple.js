@@ -258,15 +258,42 @@ let searchResultFilter_assetMaster = null;
                         }
                     }
 
+                    // 個体管理品目のみフリー入力可能にする
+                    const isIndividualItem = id === 'masterIndividualItem';
+                    const choicesConfig = {
+                        placeholder: true,
+                        placeholderValue: '全て',
+                        searchPlaceholderValue: isIndividualItem ? '検索 or フリー入力' : '検索...',
+                        // フリー入力設定（個体管理品目のみ）
+                        addItems: isIndividualItem,
+                        removeItems: isIndividualItem,
+                        allowHTML: false,
+                        shouldSort: false,
+                        noResultsText: isIndividualItem ? '該当なし。Enterで新規追加' : '該当なし',
+                        itemSelectText: '選択',
+                        addItemText: (value) => `Enter押下で「${value}」を追加`
+                    };
+
                     // 共通ヘルパーを使用してChoices.jsを初期化
-                    instances[id] = window.ChoicesHelper.initChoices(
-                        element,
-                        {
-                            placeholder: true,
-                            placeholderValue: '全て',
-                            searchPlaceholderValue: '検索...'
-                        }
-                    );
+                    instances[id] = window.ChoicesHelper.initChoices(element, choicesConfig);
+
+                    // 個体管理品目の場合、フリー入力後にフォーカスが外れたら自動的に値を確定
+                    if (isIndividualItem) {
+                        element.addEventListener('hideDropdown', () => {
+                            setTimeout(() => {
+                                const inputElement = instances[id]?.input?.element;
+                                const inputValue = inputElement?.value?.trim();
+                                const currentValue = instances[id]?.getValue(true);
+
+                                // 入力値があり、まだ選択されていない場合、自動的に追加
+                                if (inputValue && (!currentValue || currentValue === '全て')) {
+                                    instances[id].setChoices([
+                                        { value: inputValue, label: inputValue, selected: true }
+                                    ], 'value', 'label', false);
+                                }
+                            }, 100);
+                        });
+                    }
 
                     // z-indexのみカスタム設定
                     element.addEventListener('showDropdown', () => {
@@ -1031,9 +1058,64 @@ let searchResultFilter_assetMaster = null;
                     }
                 });
             }
+        }
 
-            filteredMasterData = [...searchResult_assetMasterData];
-            renderAssetMasterTable();
+        // プルダウンから選択した内容を選択済みリストに追加
+        let assetIdCounter = 10000; // 新規追加用のID
+
+        function addSelectedAssetFromDropdowns() {
+            // プルダウンの値を取得（getValue(true)で文字列として取得）
+            const category = masterChoicesInstances?.masterCategory?.getValue(true) || '';
+            const largeClass = masterChoicesInstances?.masterLargeClass?.getValue(true) || '';
+            const mediumClass = masterChoicesInstances?.masterMediumClass?.getValue(true) || '';
+            const maker = masterChoicesInstances?.masterMaker?.getValue(true) || '';
+            const model = masterChoicesInstances?.masterModel?.getValue(true) || '';
+
+            // 個体管理品目：選択値 or 入力中の値（フリー入力対応）
+            let individualItem = masterChoicesInstances?.masterIndividualItem?.getValue(true) || '';
+
+            // 値が空または「全て」の場合、入力フィールドの値をチェック（フリー入力対応）
+            if (!individualItem || individualItem === '全て') {
+                const inputElement = masterChoicesInstances?.masterIndividualItem?.input?.element;
+                const inputValue = inputElement?.value?.trim();
+                if (inputValue) {
+                    // 入力値をChoices.jsに選択肢として追加
+                    masterChoicesInstances.masterIndividualItem.setChoices([
+                        { value: inputValue, label: inputValue, selected: true }
+                    ], 'value', 'label', false);
+                    individualItem = inputValue;
+                }
+            }
+
+            // 個体管理品目は必須（プレースホルダー値も除外）
+            if (!individualItem || individualItem === '全て') {
+                alert('個体管理品目を入力してください');
+                return;
+            }
+
+            // 新しい資産オブジェクトを作成
+            const newAsset = {
+                id: assetIdCounter++,
+                category: category || '未設定',
+                largeClass: largeClass || '未設定',
+                mediumClass: mediumClass || '未設定',
+                individualItem: individualItem,
+                maker: maker || '未設定',
+                model: model || '未設定'
+            };
+
+            // 資産マスタデータに追加
+            searchResult_assetMasterData.push(newAsset);
+
+            // 選択済みアイテムに追加
+            selectedMasterItems.add(newAsset.id);
+
+            // 表示を更新
+            renderSelectedAssets();
+            updateMasterSelectionInfo();
+
+            // プルダウンをクリア
+            resetMasterFilter();
         }
 
         // 選択した条件で資産を追加
@@ -1087,23 +1169,233 @@ let searchResultFilter_assetMaster = null;
         // 選択済み資産を表示
         function renderSelectedAssets() {
             const container = document.getElementById('selectedAssetsList');
-            
+
             if (selectedMasterItems.size === 0) {
                 container.innerHTML = '<p style="color: #999; text-align: center;">資産が選択されていません</p>';
                 return;
             }
 
             const selectedAssets = searchResult_assetMasterData.filter(item => selectedMasterItems.has(item.id));
-            
-            container.innerHTML = selectedAssets.map(asset => `
-                <div class="selected-asset-card">
-                    <div class="selected-asset-info">
-                        <strong>${asset.individualItem}</strong> - ${asset.maker} ${asset.model}<br>
-                        <small>${asset.category} > ${asset.largeClass} > ${asset.mediumClass}</small>
-                    </div>
-                    <button class="selected-asset-remove" onclick="removeSelectedAsset(${asset.id})">削除</button>
+
+            container.innerHTML = `
+                <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+                    <thead style="background: #f8f9fa; position: sticky; top: 0;">
+                        <tr>
+                            <th style="padding: 8px; border: 1px solid #ddd; text-align: left; min-width: 100px;">Category</th>
+                            <th style="padding: 8px; border: 1px solid #ddd; text-align: left; min-width: 120px;">大分類</th>
+                            <th style="padding: 8px; border: 1px solid #ddd; text-align: left; min-width: 120px;">中分類</th>
+                            <th style="padding: 8px; border: 1px solid #ddd; text-align: left; min-width: 150px;">個体管理品目</th>
+                            <th style="padding: 8px; border: 1px solid #ddd; text-align: left; min-width: 120px;">メーカー</th>
+                            <th style="padding: 8px; border: 1px solid #ddd; text-align: left; min-width: 120px;">型式</th>
+                            <th style="padding: 8px; border: 1px solid #ddd; text-align: center; width: 100px;">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${selectedAssets.map(asset => `
+                            <tr data-asset-id="${asset.id}">
+                                <td style="padding: 8px; border: 1px solid #ddd;" class="editable-cell" data-field="category">${asset.category}</td>
+                                <td style="padding: 8px; border: 1px solid #ddd;" class="editable-cell" data-field="largeClass">${asset.largeClass}</td>
+                                <td style="padding: 8px; border: 1px solid #ddd;" class="editable-cell" data-field="mediumClass">${asset.mediumClass}</td>
+                                <td style="padding: 8px; border: 1px solid #ddd;" class="editable-cell" data-field="individualItem"><strong>${asset.individualItem}</strong></td>
+                                <td style="padding: 8px; border: 1px solid #ddd;" class="editable-cell" data-field="maker">${asset.maker}</td>
+                                <td style="padding: 8px; border: 1px solid #ddd;" class="editable-cell" data-field="model">${asset.model}</td>
+                                <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">
+                                    <button class="selected-asset-edit" onclick="editSelectedAssetRow(${asset.id})" title="編集">✏️</button>
+                                    <button class="selected-asset-remove" onclick="removeSelectedAsset(${asset.id})" title="削除">🗑️</button>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+        }
+
+        // 編集用Choices.jsインスタンスを保持
+        let editChoicesInstances = {};
+
+        // 選択済み資産の行を編集
+        function editSelectedAssetRow(id) {
+            const row = document.querySelector(`tr[data-asset-id="${id}"]`);
+            if (!row) return;
+
+            const asset = searchResult_assetMasterData.find(a => a.id === id);
+            if (!asset) return;
+
+            // 編集中フラグをセット
+            if (row.classList.contains('editing')) return;
+            row.classList.add('editing');
+
+            // 各セルをプルダウン（Choices.js）に変換
+            const fields = [
+                { name: 'category', options: getUniqueValues('category'), allowFreeInput: false },
+                { name: 'largeClass', options: getUniqueValues('largeClass'), allowFreeInput: false },
+                { name: 'mediumClass', options: getUniqueValues('mediumClass'), allowFreeInput: false },
+                { name: 'individualItem', options: getUniqueValues('individualItem'), allowFreeInput: true },
+                { name: 'maker', options: getUniqueValues('maker'), allowFreeInput: false },
+                { name: 'model', options: getUniqueValues('model'), allowFreeInput: false }
+            ];
+
+            fields.forEach(field => {
+                const cell = row.querySelector(`td[data-field="${field.name}"]`);
+                const currentValue = asset[field.name];
+
+                // selectタグを生成
+                const selectId = `edit-${field.name}-${id}`;
+                const select = document.createElement('select');
+                select.id = selectId;
+                select.className = 'edit-select';
+                select.style.cssText = 'width: 100%;';
+
+                // オプションを追加
+                field.options.forEach(opt => {
+                    const option = document.createElement('option');
+                    option.value = opt;
+                    option.textContent = opt;
+                    if (opt === currentValue) {
+                        option.selected = true;
+                    }
+                    select.appendChild(option);
+                });
+
+                cell.innerHTML = '';
+                cell.appendChild(select);
+
+                // Choices.jsで初期化
+                const choicesConfig = {
+                    searchEnabled: true,
+                    searchPlaceholderValue: field.allowFreeInput ? '検索 or フリー入力' : '検索...',
+                    addItems: field.allowFreeInput,
+                    removeItems: field.allowFreeInput,
+                    shouldSort: false,
+                    itemSelectText: '選択',
+                    noResultsText: field.allowFreeInput ? '該当なし。Enterで新規追加' : '該当なし',
+                    addItemText: (value) => `Enter押下で「${value}」を追加`
+                };
+
+                editChoicesInstances[selectId] = new Choices(select, choicesConfig);
+
+                // ドロップダウンが開いた時に位置を動的に計算（position: fixed用）
+                select.addEventListener('showDropdown', () => {
+                    setTimeout(() => {
+                        const choicesContainer = cell.querySelector('.choices');
+                        const dropdown = cell.querySelector('.choices__list--dropdown');
+                        if (choicesContainer && dropdown) {
+                            const rect = choicesContainer.getBoundingClientRect();
+                            dropdown.style.top = `${rect.bottom}px`;
+                            dropdown.style.left = `${rect.left}px`;
+                            dropdown.style.width = 'auto';
+                            dropdown.style.minWidth = `${rect.width}px`;
+                            dropdown.style.maxWidth = '400px';
+                        }
+                    }, 0);
+                });
+            });
+
+            // 操作列を保存・キャンセルボタンに変更（横並び）
+            const actionCell = row.querySelector('td:last-child');
+            actionCell.innerHTML = `
+                <div style="display: flex; gap: 4px; justify-content: center;">
+                    <button onclick="saveSelectedAssetRow(${id})" style="background: #27ae60; color: white; border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer; white-space: nowrap;">✓ 保存</button>
+                    <button onclick="cancelSelectedAssetRowEdit(${id})" style="background: #95a5a6; color: white; border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer; white-space: nowrap;">✕</button>
                 </div>
-            `).join('');
+            `;
+        }
+
+        // ユニークな値を取得するヘルパー関数
+        function getUniqueValues(field) {
+            const values = new Set();
+
+            // 資産マスタデータから値を収集
+            searchResult_assetMasterData.forEach(item => {
+                if (item[field] && item[field] !== '未設定') {
+                    values.add(item[field]);
+                }
+            });
+
+            // マスタフィルタのChoices.jsインスタンスからも選択肢を取得
+            const masterFieldMap = {
+                'category': 'masterCategory',
+                'largeClass': 'masterLargeClass',
+                'mediumClass': 'masterMediumClass',
+                'individualItem': 'masterIndividualItem',
+                'maker': 'masterMaker',
+                'model': 'masterModel'
+            };
+
+            const masterField = masterFieldMap[field];
+            if (masterField && masterChoicesInstances[masterField]) {
+                const choices = masterChoicesInstances[masterField]._store._state.choices;
+                choices.forEach(choice => {
+                    if (choice.value && choice.value !== '' && choice.value !== '全て') {
+                        values.add(choice.value);
+                    }
+                });
+            }
+
+            return Array.from(values).sort();
+        }
+
+        // 選択済み資産の行編集を保存
+        function saveSelectedAssetRow(id) {
+            const row = document.querySelector(`tr[data-asset-id="${id}"]`);
+            if (!row) return;
+
+            const asset = searchResult_assetMasterData.find(a => a.id === id);
+            if (!asset) return;
+
+            // 各フィールドの値を取得
+            const fields = ['category', 'largeClass', 'mediumClass', 'individualItem', 'maker', 'model'];
+            fields.forEach(field => {
+                const selectId = `edit-${field}-${id}`;
+                const instance = editChoicesInstances[selectId];
+                if (instance) {
+                    let value = instance.getValue(true);
+
+                    // フリー入力の場合、入力フィールドの値もチェック
+                    if (field === 'individualItem' && (!value || value === '全て')) {
+                        const inputValue = instance.input?.element?.value?.trim();
+                        if (inputValue) {
+                            instance.setChoices([
+                                { value: inputValue, label: inputValue, selected: true }
+                            ], 'value', 'label', false);
+                            value = inputValue;
+                        }
+                    }
+
+                    if (value && value !== '全て') {
+                        asset[field] = value;
+                    }
+
+                    // Choices.jsインスタンスを破棄
+                    instance.destroy();
+                    delete editChoicesInstances[selectId];
+                }
+            });
+
+            // 編集中フラグを解除して再描画
+            row.classList.remove('editing');
+            renderSelectedAssets();
+        }
+
+        // 選択済み資産の行編集をキャンセル
+        function cancelSelectedAssetRowEdit(id) {
+            const row = document.querySelector(`tr[data-asset-id="${id}"]`);
+            if (!row) return;
+
+            // 編集用Choices.jsインスタンスを破棄
+            const fields = ['category', 'largeClass', 'mediumClass', 'individualItem', 'maker', 'model'];
+            fields.forEach(field => {
+                const selectId = `edit-${field}-${id}`;
+                const instance = editChoicesInstances[selectId];
+                if (instance) {
+                    instance.destroy();
+                    delete editChoicesInstances[selectId];
+                }
+            });
+
+            // 編集中フラグを解除して再描画
+            row.classList.remove('editing');
+            renderSelectedAssets();
         }
 
         // 選択済み資産を削除
@@ -1438,3 +1730,6 @@ async function initSearchResultPage() {
 
 // グローバルに公開
 window.initSearchResultPage = initSearchResultPage;
+window.editSelectedAssetItem = editSelectedAssetItem;
+window.addSelectedAssetFromDropdowns = addSelectedAssetFromDropdowns;
+window.resetMasterFilter = resetMasterFilter;

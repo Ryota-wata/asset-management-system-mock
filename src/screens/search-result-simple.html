@@ -262,40 +262,11 @@
 
                 <div style="display: flex; gap: 10px; margin-top: 15px;">
                     <button class="modal-button secondary" onclick="resetMasterFilter()" style="flex: 1;">
-                        🔄 フィルタークリア
+                        🔄 クリア
                     </button>
-                </div>
-            </div>
-
-            <!-- 資産マスタ一覧テーブル -->
-            <div style="margin-bottom: 20px;">
-                <h3 style="font-size: 14px; color: #2c3e50; margin-bottom: 10px;">
-                    検索結果
-                    <span id="assetMasterResultCount" style="color: #3498db; font-weight: bold;">0件</span>
-                </h3>
-                <div style="max-height: 400px; overflow-y: auto; border: 1px solid #ddd; border-radius: 4px;">
-                    <table id="assetMasterTable" style="width: 100%; border-collapse: collapse; font-size: 13px;">
-                        <thead style="position: sticky; top: 0; background: #f8f9fa; z-index: 10;">
-                            <tr>
-                                <th style="padding: 10px; border-bottom: 2px solid #ddd; text-align: left; width: 50px;">
-                                    <input type="checkbox" id="selectAllMaster" onchange="handleSelectAllMaster()">
-                                </th>
-                                <th style="padding: 10px; border-bottom: 2px solid #ddd; text-align: left;">Category</th>
-                                <th style="padding: 10px; border-bottom: 2px solid #ddd; text-align: left;">大分類</th>
-                                <th style="padding: 10px; border-bottom: 2px solid #ddd; text-align: left;">中分類</th>
-                                <th style="padding: 10px; border-bottom: 2px solid #ddd; text-align: left;">品目</th>
-                                <th style="padding: 10px; border-bottom: 2px solid #ddd; text-align: left;">メーカー</th>
-                                <th style="padding: 10px; border-bottom: 2px solid #ddd; text-align: left;">型式</th>
-                            </tr>
-                        </thead>
-                        <tbody id="assetMasterTableBody">
-                            <tr>
-                                <td colspan="7" style="padding: 20px; text-align: center; color: #999;">
-                                    検索条件を指定して検索してください
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <button class="modal-button" onclick="addSelectedAssetFromDropdowns()" style="flex: 2; background: #27ae60; color: white;">
+                        ➕ 選択リストに追加
+                    </button>
                 </div>
             </div>
 
@@ -305,7 +276,7 @@
                     選択済み資産
                     <span id="masterSelectionInfo" style="color: #27ae60; font-weight: bold;">0件選択中</span>
                 </h3>
-                <div id="selectedAssetsList" style="min-height: 80px; max-height: 200px; overflow-y: auto; border: 1px solid #ddd; border-radius: 4px; padding: 10px; background: #f9f9f9;">
+                <div id="selectedAssetsList" style="min-height: 80px; max-height: 200px; overflow-y: auto; overflow-x: visible; border: 1px solid #ddd; border-radius: 4px; padding: 10px; background: #f9f9f9;">
                     <p style="color: #999; text-align: center;">資産が選択されていません</p>
                 </div>
             </div>

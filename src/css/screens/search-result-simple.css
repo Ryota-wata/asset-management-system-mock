@@ -1127,6 +1127,20 @@
             color: #2c3e50;
         }
         
+        .search-result-page .selected-asset-edit {
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            padding: 4px 8px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .search-result-page .selected-asset-edit:hover {
+            background: #2980b9;
+        }
+
         .search-result-page .selected-asset-remove {
             background: #e74c3c;
             color: white;
@@ -1136,7 +1150,7 @@
             font-size: 12px;
             cursor: pointer;
         }
-        
+
         .search-result-page .selected-asset-remove:hover {
             background: #c0392b;
         }
@@ -1343,4 +1357,46 @@
     outline: none;
     border-color: #27ae60;
     box-shadow: 0 0 0 2px rgba(39, 174, 96, 0.1);
+}
+
+/* ========================================
+   選択済み資産リスト - 編集時のドロップダウン表示対応
+======================================== */
+#selectedAssetsList {
+    overflow: visible !important;
+}
+
+#selectedAssetsList table {
+    position: relative;
+}
+
+#selectedAssetsList tbody tr.editing td {
+    overflow: visible;
+    position: relative;
+}
+
+/* 編集時のChoices.jsドロップダウンをモーダル外まで表示 */
+/* specificityを上げるために.search-result-pageと組み合わせる */
+.search-result-page #selectedAssetsList .choices[data-type*="select-one"] .choices__list--dropdown {
+    position: fixed !important;
+    z-index: 100003 !important;
+    max-height: 200px !important;
+    overflow-y: auto !important;
+    white-space: nowrap !important;
+    width: auto !important;
+    min-width: 150px !important;
+    max-width: 400px !important;
+    /* 位置はJavaScriptで動的に設定 */
+}
+
+.search-result-page #selectedAssetsList .choices__list--dropdown .choices__item {
+    white-space: nowrap !important;
+}
+
+#selectedAssetsList .editing .choices {
+    position: relative;
+}
+
+#selectedAssetsList .editing .choices__inner {
+    min-height: 38px;
 }
