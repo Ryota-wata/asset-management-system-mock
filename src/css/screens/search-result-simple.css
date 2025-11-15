@@ -1400,3 +1400,100 @@
 #selectedAssetsList .editing .choices__inner {
     min-height: 38px;
 }
+
+/* ========================================
+   申請入力フォームのレイアウト
+======================================== */
+.search-result-page .form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-top: 16px;
+}
+
+.search-result-page .application-form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.search-result-page .application-form-group label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 6px;
+}
+
+.search-result-page .application-form-group input,
+.search-result-page .application-form-group select,
+.search-result-page .application-form-group textarea {
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.search-result-page .application-form-group input:focus,
+.search-result-page .application-form-group select:focus,
+.search-result-page .application-form-group textarea:focus {
+    outline: none;
+    border-color: #27ae60;
+    box-shadow: 0 0 0 2px rgba(39, 174, 96, 0.1);
+}
+
+.search-result-page .required {
+    color: #e74c3c;
+    font-weight: bold;
+}
+
+/* ========================================
+   システム関連情報グリッド
+======================================== */
+.search-result-page .system-info-grid {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    gap: 12px;
+    align-items: center;
+    margin-top: 16px;
+}
+
+.search-result-page .system-info-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #333;
+}
+
+.search-result-page .system-info-fields {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+
+.search-result-page .radio-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.search-result-page .radio-label input[type="radio"] {
+    cursor: pointer;
+}
+
+/* ========================================
+   レスポンシブ対応
+======================================== */
+@media (max-width: 768px) {
+    .search-result-page .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .search-result-page .system-info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .search-result-page .system-info-fields {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}

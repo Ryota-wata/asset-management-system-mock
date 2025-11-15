@@ -1,0 +1,92 @@
+<!-- 見積依頼一覧画面 -->
+<div id="rfqListPage" class="rfq-list-page">
+
+    <div class="result-container">
+        <!-- ヘッダー -->
+        <header class="result-header">
+            <div class="result-header-left">
+                <div class="logo">
+                    <div class="logo-icon">SHIP</div>
+                    <div class="result-header-title">見積依頼一覧</div>
+                </div>
+                <span class="result-count" id="rfqCount">0件</span>
+            </div>
+            <div class="result-header-actions">
+                <button class="header-btn" onclick="goToApplicationListFromRfq()">申請一覧へ</button>
+                <button class="header-btn back" onclick="handleBackFromRfqList()">戻る</button>
+            </div>
+        </header>
+
+        <!-- フィルターヘッダー -->
+        <div class="filter-header">
+            <div class="filter-row-single">
+                <div class="filter-group">
+                    <label>購入先店舗</label>
+                    <input type="text" id="filterVendor" class="filter-input" placeholder="購入先店舗名で検索" onchange="filterRfqList()">
+                </div>
+                <div class="filter-group">
+                    <label>依頼状態</label>
+                    <select id="filterRfqStatus" class="filter-select" onchange="filterRfqList()">
+                        <option value="">すべて</option>
+                        <option value="依頼書作成待">📄 依頼書作成待</option>
+                        <option value="見積依頼済">📧 見積依頼済</option>
+                        <option value="見積登録済">✅ 見積登録済</option>
+                        <option value="承認済">🟢 承認済</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>依頼日（開始）</label>
+                    <input type="date" id="filterRfqDateFrom" class="filter-input" onchange="filterRfqList()">
+                </div>
+                <div class="filter-group">
+                    <label>依頼日（終了）</label>
+                    <input type="date" id="filterRfqDateTo" class="filter-input" onchange="filterRfqList()">
+                </div>
+                <div class="filter-group">
+                    <button class="filter-clear-btn" onclick="clearRfqFilters()">🔄 クリア</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- メインコンテンツエリア -->
+        <div class="main-content-area">
+            <div class="content-wrapper">
+                <!-- テーブル表示 -->
+                <div class="list-view">
+                    <table class="resizable-table data-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 140px;">見積依頼No</th>
+                                <th style="width: 100px;">依頼日</th>
+                                <th style="width: 200px;">購入先店舗</th>
+                                <th style="width: 80px;">申請件数</th>
+                                <th style="width: 120px;">合計金額</th>
+                                <th style="width: 140px;">状態</th>
+                                <th style="width: 200px;">アクション</th>
+                            </tr>
+                        </thead>
+                        <tbody id="rfqTableBody">
+                            <!-- データ行はJavaScriptで生成 -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 見積依頼詳細モーダル -->
+    <div class="modal" id="rfqDetailModal" onclick="handleRfqDetailModalOutsideClick(event)">
+        <div class="modal-content" style="max-width: 900px;">
+            <h2 class="modal-title">見積依頼詳細</h2>
+            <div id="rfqDetailContent">
+                <!-- 詳細内容はJavaScriptで生成 -->
+            </div>
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button class="modal-button secondary" onclick="closeRfqDetailModal()" style="flex: 1;">閉じる</button>
+                <button class="modal-button" id="generateRfqPdfBtn" onclick="generateRfqPdf()" style="flex: 1; background: #3498db;">依頼書PDF生成</button>
+                <button class="modal-button" id="registerQuotationBtn" onclick="registerQuotation()" style="flex: 1; background: #27ae60;">見積書登録</button>
+            </div>
+        </div>
+    </div>
+
+</div>

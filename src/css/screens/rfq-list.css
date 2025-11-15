@@ -1,0 +1,223 @@
+/**
+ * 見積依頼一覧画面のスタイル
+ */
+
+.rfq-list-page {
+    display: none;
+    width: 100%;
+    min-height: 100vh;
+    background: #f5f7fa;
+}
+
+.rfq-list-page.active {
+    display: block;
+}
+
+/* 見積依頼No */
+.rfq-number {
+    font-family: 'Courier New', monospace;
+    font-weight: 700;
+    color: #2c3e50;
+    font-size: 13px;
+}
+
+/* 申請件数バッジ */
+.application-count-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 12px;
+    background: #3498db;
+    color: white;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+/* 合計金額 */
+.total-amount {
+    font-weight: 700;
+    color: #27ae60;
+    font-size: 14px;
+}
+
+.total-amount.not-calculated {
+    color: #95a5a6;
+    font-style: italic;
+}
+
+/* RFQ状態バッジ */
+.rfq-status-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.rfq-status-badge.pending-doc {
+    background: #95a5a6;
+    color: white;
+}
+
+.rfq-status-badge.requested {
+    background: #f39c12;
+    color: white;
+}
+
+.rfq-status-badge.quotation-registered {
+    background: #27ae60;
+    color: white;
+}
+
+.rfq-status-badge.approved {
+    background: #2ecc71;
+    color: white;
+}
+
+/* RFQアクションボタン */
+.rfq-action-buttons {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.rfq-action-btn {
+    padding: 6px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: white;
+    color: #34495e;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.rfq-action-btn:hover {
+    background: #f8f9fa;
+    border-color: #3498db;
+    color: #3498db;
+}
+
+.rfq-action-btn.detail {
+    border-color: #3498db;
+    color: #3498db;
+}
+
+.rfq-action-btn.pdf {
+    border-color: #9b59b6;
+    color: #9b59b6;
+}
+
+.rfq-action-btn.register {
+    border-color: #27ae60;
+    color: #27ae60;
+}
+
+.rfq-action-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* 見積依頼詳細モーダル */
+#rfqDetailContent {
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+.rfq-detail-section {
+    margin-bottom: 20px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 4px;
+}
+
+.rfq-detail-section-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #3498db;
+}
+
+.rfq-detail-row {
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    gap: 10px;
+    margin-bottom: 10px;
+    font-size: 13px;
+}
+
+.rfq-detail-row .label {
+    font-weight: 600;
+    color: #7f8c8d;
+}
+
+.rfq-detail-row .value {
+    color: #2c3e50;
+}
+
+/* 紐づく申請テーブル */
+.rfq-applications-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+.rfq-applications-table th {
+    background: #34495e;
+    color: white;
+    padding: 10px;
+    text-align: left;
+    font-weight: 600;
+}
+
+.rfq-applications-table td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.rfq-applications-table tr:hover {
+    background: #f8f9fa;
+}
+
+/* 空状態 */
+.rfq-empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: #95a5a6;
+}
+
+.rfq-empty-state-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+}
+
+.rfq-empty-state-text {
+    font-size: 16px;
+    margin-bottom: 8px;
+}
+
+.rfq-empty-state-subtext {
+    font-size: 13px;
+}
+
+/* フィルタークリアボタン（申請一覧と名前被りを避ける） */
+.rfq-list-page .filter-clear-btn {
+    padding: 8px 16px;
+    border: 1px solid #3498db;
+    border-radius: 4px;
+    background: white;
+    color: #3498db;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+    height: 36px;
+    margin-top: 20px;
+}
+
+.rfq-list-page .filter-clear-btn:hover {
+    background: #3498db;
+    color: white;
+}

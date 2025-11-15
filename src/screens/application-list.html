@@ -1,0 +1,185 @@
+<!-- 申請一覧画面 -->
+<div id="applicationListPage" class="application-list-page">
+
+    <div class="result-container">
+        <!-- ヘッダー -->
+        <header class="result-header">
+            <div class="result-header-left">
+                <div class="logo">
+                    <div class="logo-icon">SHIP</div>
+                    <div class="result-header-title">申請一覧</div>
+                </div>
+                <span class="result-count" id="applicationCount">0件</span>
+            </div>
+            <div class="result-header-actions">
+                <button class="header-btn" onclick="goToRfqListFromApplication()">見積依頼一覧へ</button>
+                <button class="header-btn back" onclick="handleBackFromApplicationList()">戻る</button>
+            </div>
+        </header>
+
+        <!-- フィルターヘッダー -->
+        <div class="filter-header">
+            <div class="filter-row-single">
+                <div class="filter-group">
+                    <label>申請種別</label>
+                    <select id="filterApplicationType" class="filter-select" onchange="filterApplications()">
+                        <option value="">すべて</option>
+                        <option value="新規購入申請">新規購入申請</option>
+                        <option value="増設購入申請">増設購入申請</option>
+                        <option value="更新購入申請">更新購入申請</option>
+                        <option value="移動申請">移動申請</option>
+                        <option value="廃棄申請">廃棄申請</option>
+                        <option value="保留申請">保留申請</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>状態</label>
+                    <select id="filterStatus" class="filter-select" onchange="filterApplications()">
+                        <option value="">すべて</option>
+                        <option value="下書き">下書き</option>
+                        <option value="承認待ち">承認待ち</option>
+                        <option value="承認済み">承認済み</option>
+                        <option value="差し戻し">差し戻し</option>
+                        <option value="却下">却下</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>見積依頼No</label>
+                    <input type="text" id="filterRfqNo" class="filter-input" placeholder="RFQ-2025-0001" onchange="filterApplications()">
+                </div>
+                <div class="filter-group">
+                    <label>申請日（開始）</label>
+                    <input type="date" id="filterDateFrom" class="filter-input" onchange="filterApplications()">
+                </div>
+                <div class="filter-group">
+                    <label>申請日（終了）</label>
+                    <input type="date" id="filterDateTo" class="filter-input" onchange="filterApplications()">
+                </div>
+                <div class="filter-group">
+                    <label>キーワード</label>
+                    <input type="text" id="filterKeyword" class="filter-input" placeholder="申請番号、資産名で検索" onchange="filterApplications()">
+                </div>
+                <div class="filter-group">
+                    <button class="filter-clear-btn" onclick="clearFilters()">🔄 クリア</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- メインコンテンツエリア -->
+        <div class="main-content-area">
+            <div class="content-wrapper">
+                <!-- テーブル表示 -->
+                <div class="list-view">
+                    <table class="resizable-table data-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 50px;"><input type="checkbox" id="selectAllApplications" onchange="toggleSelectAll()"></th>
+                                <th style="width: 120px;">申請番号</th>
+                                <th style="width: 100px;">申請日</th>
+                                <th style="width: 120px;">申請種別</th>
+                                <th style="width: 200px;">資産情報</th>
+                                <th style="width: 80px;">数量</th>
+                                <th style="width: 120px;">見積依頼No</th>
+                                <th style="width: 150px;">購入先店舗</th>
+                                <th style="width: 100px;">状態</th>
+                                <th style="width: 100px;">承認進捗</th>
+                                <th style="width: 150px;">アクション</th>
+                            </tr>
+                        </thead>
+                        <tbody id="applicationTableBody">
+                            <!-- データ行はJavaScriptで生成 -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 一括操作バー -->
+    <div class="bulk-operation-bar" id="bulkOperationBar">
+        <div class="bulk-operation-content">
+            <div class="bulk-selection-info">
+                <span class="bulk-selection-count" id="bulkSelectionCount">0件選択中</span>
+            </div>
+            <div class="bulk-operation-actions">
+                <button class="bulk-action-btn secondary" onclick="clearSelection()">選択解除</button>
+                <button class="bulk-action-btn primary" onclick="openRfqGroupingModal()">見積グルーピング</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 申請詳細モーダル -->
+    <div class="modal" id="applicationDetailModal" onclick="handleDetailModalOutsideClick(event)">
+        <div class="modal-content" style="max-width: 800px;">
+            <h2 class="modal-title">申請詳細</h2>
+            <div id="applicationDetailContent">
+                <!-- 詳細内容はJavaScriptで生成 -->
+            </div>
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button class="modal-button secondary" onclick="closeApplicationDetailModal()" style="flex: 1;">閉じる</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 見積グルーピングモーダル -->
+    <div class="modal" id="rfqGroupingModal" onclick="handleRfqGroupingModalOutsideClick(event)">
+        <div class="modal-content" style="max-width: 600px;">
+            <h2 class="modal-title">見積グルーピング</h2>
+            <div id="rfqGroupingContent">
+                <div class="application-section">
+                    <div class="application-section-title">📦 選択した申請</div>
+                    <div id="selectedApplicationsList" style="padding: 15px; background: #f8f9fa; border-radius: 4px; margin-bottom: 20px; max-height: 200px; overflow-y: auto;">
+                        <!-- 選択した申請リストはJavaScriptで生成 -->
+                    </div>
+                </div>
+
+                <div class="application-section">
+                    <div class="application-section-title">📋 見積依頼の作成</div>
+                    <div style="padding: 15px; background: #f8f9fa; border-radius: 4px;">
+                        <div class="application-form-group" style="margin-bottom: 20px;">
+                            <label>見積依頼No <span style="color: #95a5a6; font-size: 12px;">(自動採番)</span></label>
+                            <input type="text" id="newRfqNo" readonly style="background: #ecf0f1; cursor: not-allowed;">
+                        </div>
+                        <div class="application-form-group">
+                            <label>購入先店舗 <span class="required">*</span></label>
+                            <input type="text" id="newRfqVendor" placeholder="購入先店舗を入力してください" style="width: 100%;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button class="modal-button secondary" onclick="closeRfqGroupingModal()" style="flex: 1;">キャンセル</button>
+                <button class="modal-button" onclick="createRfqAndAssign()" style="flex: 1; background: #27ae60; color: white;">見積依頼を作成</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 申請編集モーダル（見積依頼No付与） -->
+    <div class="modal" id="applicationEditModal" onclick="handleEditModalOutsideClick(event)">
+        <div class="modal-content" style="max-width: 600px;">
+            <h2 class="modal-title">申請編集</h2>
+            <div id="applicationEditContent">
+                <div class="application-section">
+                    <div class="application-section-title">📋 基本情報</div>
+                    <div id="editBasicInfo" style="padding: 15px; background: #f8f9fa; border-radius: 4px; margin-bottom: 20px;">
+                        <!-- 基本情報はJavaScriptで生成 -->
+                    </div>
+                </div>
+
+                <div class="application-section">
+                    <div class="application-section-title">🏪 見積依頼Noの付与</div>
+                    <div style="padding: 15px; background: #f8f9fa; border-radius: 4px;">
+                        <div id="rfqGroupingOptions">
+                            <!-- 見積依頼No選択肢はJavaScriptで生成 -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button class="modal-button secondary" onclick="closeApplicationEditModal()" style="flex: 1;">キャンセル</button>
+                <button class="modal-button" onclick="saveApplicationEdit()" style="flex: 1; background: #27ae60; color: white;">保存</button>
+            </div>
+        </div>
+    </div>
+
+</div>

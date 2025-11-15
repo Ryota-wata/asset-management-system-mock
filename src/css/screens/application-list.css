@@ -1,0 +1,364 @@
+/**
+ * 申請一覧画面のスタイル
+ */
+
+.application-list-page {
+    display: none;
+    width: 100%;
+    min-height: 100vh;
+    background: #f5f7fa;
+}
+
+.application-list-page.active {
+    display: block;
+}
+
+/* ステータスバッジ */
+.status-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.status-badge.draft {
+    background: #95a5a6;
+    color: white;
+}
+
+.status-badge.pending {
+    background: #f39c12;
+    color: white;
+}
+
+.status-badge.approved {
+    background: #27ae60;
+    color: white;
+}
+
+.status-badge.rejected {
+    background: #e74c3c;
+    color: white;
+}
+
+.status-badge.returned {
+    background: #e67e22;
+    color: white;
+}
+
+/* 申請種別バッジ */
+.application-type-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.application-type-badge.new-purchase {
+    background: #3498db;
+    color: white;
+}
+
+.application-type-badge.expansion {
+    background: #9b59b6;
+    color: white;
+}
+
+.application-type-badge.renewal {
+    background: #1abc9c;
+    color: white;
+}
+
+.application-type-badge.move {
+    background: #34495e;
+    color: white;
+}
+
+.application-type-badge.disposal {
+    background: #c0392b;
+    color: white;
+}
+
+.application-type-badge.hold {
+    background: #7f8c8d;
+    color: white;
+}
+
+/* 資産情報セル */
+.asset-info-cell {
+    line-height: 1.6;
+}
+
+.asset-info-cell .asset-name {
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 2px;
+}
+
+.asset-info-cell .asset-model {
+    font-size: 12px;
+    color: #7f8c8d;
+}
+
+/* 承認進捗 */
+.approval-progress {
+    font-size: 13px;
+    color: #34495e;
+}
+
+.approval-progress .progress-text {
+    font-weight: 600;
+}
+
+/* アクションボタン */
+.action-buttons {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.app-action-btn {
+    padding: 6px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: white;
+    color: #34495e;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.app-action-btn:hover {
+    background: #f8f9fa;
+    border-color: #3498db;
+    color: #3498db;
+}
+
+.app-action-btn.detail {
+    border-color: #3498db;
+    color: #3498db;
+}
+
+.app-action-btn.edit {
+    border-color: #27ae60;
+    color: #27ae60;
+}
+
+.app-action-btn.delete {
+    border-color: #e74c3c;
+    color: #e74c3c;
+}
+
+.app-action-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* フィルタークリアボタン */
+.filter-clear-btn {
+    padding: 8px 16px;
+    border: 1px solid #3498db;
+    border-radius: 4px;
+    background: white;
+    color: #3498db;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+    height: 36px;
+    margin-top: 20px;
+}
+
+.filter-clear-btn:hover {
+    background: #3498db;
+    color: white;
+}
+
+/* 見積依頼No */
+.rfq-no {
+    font-family: 'Courier New', monospace;
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.rfq-no.empty {
+    color: #95a5a6;
+    font-style: italic;
+}
+
+/* 申請詳細モーダル */
+#applicationDetailContent {
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+.detail-section {
+    margin-bottom: 20px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 4px;
+}
+
+.detail-section-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #3498db;
+}
+
+.detail-row {
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    gap: 10px;
+    margin-bottom: 10px;
+    font-size: 13px;
+}
+
+.detail-row .label {
+    font-weight: 600;
+    color: #7f8c8d;
+}
+
+.detail-row .value {
+    color: #2c3e50;
+}
+
+/* 見積依頼グルーピング */
+.rfq-grouping-option {
+    padding: 12px;
+    margin-bottom: 10px;
+    border: 2px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.rfq-grouping-option:hover {
+    border-color: #3498db;
+    background: #f8f9fa;
+}
+
+.rfq-grouping-option.selected {
+    border-color: #3498db;
+    background: #ebf5fb;
+}
+
+.rfq-grouping-option input[type="radio"] {
+    margin-right: 10px;
+}
+
+.rfq-grouping-option .rfq-label {
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 4px;
+}
+
+.rfq-grouping-option .rfq-info {
+    font-size: 12px;
+    color: #7f8c8d;
+    margin-left: 24px;
+}
+
+/* チェックボックス */
+.application-list-page input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+/* 一括操作バー */
+.bulk-operation-bar {
+    position: fixed;
+    bottom: -80px;
+    left: 0;
+    right: 0;
+    background: #2c3e50;
+    color: white;
+    padding: 20px;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.2);
+    transition: bottom 0.3s ease;
+    z-index: 1000;
+}
+
+.bulk-operation-bar.active {
+    bottom: 0;
+}
+
+.bulk-operation-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.bulk-selection-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.bulk-selection-count {
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.bulk-operation-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.bulk-action-btn {
+    padding: 10px 24px;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.bulk-action-btn.secondary {
+    background: #95a5a6;
+    color: white;
+}
+
+.bulk-action-btn.secondary:hover {
+    background: #7f8c8d;
+}
+
+.bulk-action-btn.primary {
+    background: #27ae60;
+    color: white;
+}
+
+.bulk-action-btn.primary:hover {
+    background: #229954;
+}
+
+/* 空状態 */
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: #95a5a6;
+}
+
+.empty-state-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+}
+
+.empty-state-text {
+    font-size: 16px;
+    margin-bottom: 8px;
+}
+
+.empty-state-subtext {
+    font-size: 13px;
+}

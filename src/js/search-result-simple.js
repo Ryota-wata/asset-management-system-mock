@@ -692,11 +692,46 @@ let searchResultFilter_assetMaster = null;
         // 画面遷移関数
         function goToApplicationList() {
             closeAllDropdowns();
-            alert('申請一覧画面に遷移します');
-            // 実装: 申請一覧画面へのナビゲーション
-            // window.location.href = '/application-list';
+
+            // 資産検索結果画面を非表示
+            const searchResultPage = document.getElementById('searchResultPage');
+            if (searchResultPage) {
+                searchResultPage.classList.remove('active');
+            }
+
+            // 申請一覧画面を表示
+            const applicationListPage = document.getElementById('applicationListPage');
+            if (applicationListPage) {
+                applicationListPage.classList.add('active');
+
+                // 申請一覧画面を初期化
+                if (typeof window.initApplicationListPage === 'function') {
+                    window.initApplicationListPage();
+                }
+            }
         }
-        
+
+        function goToRfqList() {
+            closeAllDropdowns();
+
+            // 資産検索結果画面を非表示
+            const searchResultPage = document.getElementById('searchResultPage');
+            if (searchResultPage) {
+                searchResultPage.classList.remove('active');
+            }
+
+            // 見積依頼一覧画面を表示
+            const rfqListPage = document.getElementById('rfqListPage');
+            if (rfqListPage) {
+                rfqListPage.classList.add('active');
+
+                // 見積依頼一覧画面を初期化
+                if (typeof window.initRfqListPage === 'function') {
+                    window.initRfqListPage();
+                }
+            }
+        }
+
         function goToExecutionPendingList() {
             closeAllDropdowns();
             alert('執行待ち一覧画面に遷移します');
@@ -773,6 +808,10 @@ let searchResultFilter_assetMaster = null;
             renderAssetMasterTable();
 
             updateMasterSelectionInfo();
+
+            // 申請入力フォームの初期化
+            renderAssetQuantityForm();
+            initializeFacilityOptions();
         }
 
         // 資産マスタデータをJSONから読み込む
@@ -940,13 +979,13 @@ let searchResultFilter_assetMaster = null;
             renderAssetMasterTable();
         }
 
-        // テーブル描画
+        // テーブル描画（単一選択仕様では不要 - 安全な実装）
         function renderAssetMasterTable() {
             const tbody = document.getElementById('assetMasterTableBody');
             const resultCount = document.getElementById('assetMasterResultCount');
 
+            // テーブル要素が存在しない場合は何もしない（単一選択仕様では削除済み）
             if (!tbody || !resultCount) {
-                console.error('Table elements not found');
                 return;
             }
 
@@ -958,87 +997,52 @@ let searchResultFilter_assetMaster = null;
 
             resultCount.textContent = `${filteredMasterData.length}件`;
 
+            // 単一選択のため、ラジオボタン形式で表示
+            const selectedId = selectedMasterItems.size > 0 ? Array.from(selectedMasterItems)[0] : null;
+
             tbody.innerHTML = filteredMasterData.map(asset => `
-                <tr>
+                <tr style="cursor: pointer; ${selectedId === asset.id ? 'background: #e8f5e9;' : ''}"
+                    onmouseover="if(${selectedId !== asset.id}) this.style.background='#f8f9fa'"
+                    onmouseout="if(${selectedId !== asset.id}) this.style.background='white'"
+                    onclick="handleMasterRowSelect(${asset.id})">
                     <td style="padding: 10px; text-align: center;">
-                        <input type="checkbox" class="master-row-checkbox" data-id="${asset.id}"
-                               ${selectedMasterItems.has(asset.id) ? 'checked' : ''}
+                        <input type="radio" name="assetMasterRadio" value="${asset.id}"
+                               ${selectedId === asset.id ? 'checked' : ''}
                                onchange="handleMasterRowSelect(${asset.id})">
                     </td>
-                    <td>${asset.category}</td>
-                    <td>${asset.largeClass}</td>
-                    <td>${asset.mediumClass}</td>
-                    <td>${asset.individualItem}</td>
-                    <td>${asset.maker}</td>
-                    <td>${asset.model}</td>
+                    <td style="padding: 8px;">${asset.category}</td>
+                    <td style="padding: 8px;">${asset.largeClass}</td>
+                    <td style="padding: 8px;">${asset.mediumClass}</td>
+                    <td style="padding: 8px;"><strong>${asset.individualItem}</strong></td>
+                    <td style="padding: 8px;">${asset.maker}</td>
+                    <td style="padding: 8px;">${asset.model}</td>
                 </tr>
             `).join('');
-
-            console.log('Table rendered with', filteredMasterData.length, 'rows');
         }
 
-        // 行選択
+        // 行選択（単一選択）
         function handleMasterRowSelect(id) {
+            // 既に選択されている場合は選択解除
             if (selectedMasterItems.has(id)) {
-                selectedMasterItems.delete(id);
+                selectedMasterItems.clear();
             } else {
+                // 他の選択を解除して、新しく選択
+                selectedMasterItems.clear();
                 selectedMasterItems.add(id);
             }
-            renderSelectedAssets();
             updateMasterSelectionInfo();
+            renderAssetQuantityForm();
+            renderAssetMasterTable(); // テーブルを再描画して選択状態を反映
         }
 
-        // 全選択
-        function handleSelectAllMaster() {
-            const selectAll = document.getElementById('selectAllMaster');
-            const checkboxes = document.querySelectorAll('.master-row-checkbox');
 
-            checkboxes.forEach(cb => {
-                const id = parseInt(cb.getAttribute('data-id'));
-                if (selectAll.checked) {
-                    selectedMasterItems.add(id);
-                    cb.checked = true;
-                } else {
-                    selectedMasterItems.delete(id);
-                    cb.checked = false;
-                }
-            });
-
-            renderSelectedAssets();
-            updateMasterSelectionInfo();
-        }
-
-        // 選択済み資産を表示
-        function renderSelectedAssets() {
-            const container = document.getElementById('selectedAssetsList');
-            if (!container) return;
-
-            if (selectedMasterItems.size === 0) {
-                container.innerHTML = '<p style="color: #999; text-align: center; margin: 20px 0;">資産が選択されていません</p>';
-                return;
-            }
-
-            const selectedAssets = searchResult_assetMasterData.filter(asset =>
-                selectedMasterItems.has(asset.id)
-            );
-
-            container.innerHTML = selectedAssets.map(asset => `
-                <div style="background: white; padding: 8px 12px; margin-bottom: 8px; border-radius: 4px; border-left: 3px solid #27ae60; display: flex; justify-content: space-between; align-items: center;">
-                    <div>
-                        <strong>${asset.category}</strong> - ${asset.largeClass} - ${asset.mediumClass} - ${asset.individualItem}<br>
-                        <small>${asset.maker} / ${asset.model}</small>
-                    </div>
-                    <button onclick="removeSelectedAsset(${asset.id})" style="background: #e74c3c; color: white; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 12px;">削除</button>
-                </div>
-            `).join('');
-        }
 
         // 選択解除
         function removeSelectedAsset(id) {
-            selectedMasterItems.delete(id);
-            renderSelectedAssets();
+            selectedMasterItems.clear();
             updateMasterSelectionInfo();
             renderAssetMasterTable();
+            renderAssetQuantityForm();
         }
 
         // フィルタークリア
@@ -1107,12 +1111,12 @@ let searchResultFilter_assetMaster = null;
             // 資産マスタデータに追加
             searchResult_assetMasterData.push(newAsset);
 
-            // 選択済みアイテムに追加
+            // 複数選択：選択リストに追加
             selectedMasterItems.add(newAsset.id);
 
             // 表示を更新
-            renderSelectedAssets();
             updateMasterSelectionInfo();
+            renderAssetQuantityForm();
 
             // プルダウンをクリア
             resetMasterFilter();
@@ -1155,261 +1159,29 @@ let searchResultFilter_assetMaster = null;
                 return;
             }
 
-            // 1件該当：追加
+            // 1件該当：選択済みリストに追加（単一選択のため既存を置き換え）
             const asset = matchedAssets[0];
-            if (!selectedMasterItems.has(asset.id)) {
-                selectedMasterItems.add(asset.id);
-                renderSelectedAssets();
-                updateMasterSelectionInfo();
-            } else {
+
+            // 既に同じ資産が選択されている場合
+            if (selectedMasterItems.has(asset.id)) {
                 alert('この資産は既に選択されています');
-            }
-        }
-
-        // 選択済み資産を表示
-        function renderSelectedAssets() {
-            const container = document.getElementById('selectedAssetsList');
-
-            if (selectedMasterItems.size === 0) {
-                container.innerHTML = '<p style="color: #999; text-align: center;">資産が選択されていません</p>';
                 return;
             }
 
-            const selectedAssets = searchResult_assetMasterData.filter(item => selectedMasterItems.has(item.id));
-
-            container.innerHTML = `
-                <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
-                    <thead style="background: #f8f9fa; position: sticky; top: 0;">
-                        <tr>
-                            <th style="padding: 8px; border: 1px solid #ddd; text-align: left; min-width: 100px;">Category</th>
-                            <th style="padding: 8px; border: 1px solid #ddd; text-align: left; min-width: 120px;">大分類</th>
-                            <th style="padding: 8px; border: 1px solid #ddd; text-align: left; min-width: 120px;">中分類</th>
-                            <th style="padding: 8px; border: 1px solid #ddd; text-align: left; min-width: 150px;">個体管理品目</th>
-                            <th style="padding: 8px; border: 1px solid #ddd; text-align: left; min-width: 120px;">メーカー</th>
-                            <th style="padding: 8px; border: 1px solid #ddd; text-align: left; min-width: 120px;">型式</th>
-                            <th style="padding: 8px; border: 1px solid #ddd; text-align: center; width: 100px;">操作</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${selectedAssets.map(asset => `
-                            <tr data-asset-id="${asset.id}">
-                                <td style="padding: 8px; border: 1px solid #ddd;" class="editable-cell" data-field="category">${asset.category}</td>
-                                <td style="padding: 8px; border: 1px solid #ddd;" class="editable-cell" data-field="largeClass">${asset.largeClass}</td>
-                                <td style="padding: 8px; border: 1px solid #ddd;" class="editable-cell" data-field="mediumClass">${asset.mediumClass}</td>
-                                <td style="padding: 8px; border: 1px solid #ddd;" class="editable-cell" data-field="individualItem"><strong>${asset.individualItem}</strong></td>
-                                <td style="padding: 8px; border: 1px solid #ddd;" class="editable-cell" data-field="maker">${asset.maker}</td>
-                                <td style="padding: 8px; border: 1px solid #ddd;" class="editable-cell" data-field="model">${asset.model}</td>
-                                <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">
-                                    <button class="selected-asset-edit" onclick="editSelectedAssetRow(${asset.id})" title="編集">✏️</button>
-                                    <button class="selected-asset-remove" onclick="removeSelectedAsset(${asset.id})" title="削除">🗑️</button>
-                                </td>
-                            </tr>
-                        `).join('')}
-                    </tbody>
-                </table>
-            `;
-        }
-
-        // 編集用Choices.jsインスタンスを保持
-        let editChoicesInstances = {};
-
-        // 選択済み資産の行を編集
-        function editSelectedAssetRow(id) {
-            const row = document.querySelector(`tr[data-asset-id="${id}"]`);
-            if (!row) return;
-
-            const asset = searchResult_assetMasterData.find(a => a.id === id);
-            if (!asset) return;
-
-            // 編集中フラグをセット
-            if (row.classList.contains('editing')) return;
-            row.classList.add('editing');
-
-            // 各セルをプルダウン（Choices.js）に変換
-            const fields = [
-                { name: 'category', options: getUniqueValues('category'), allowFreeInput: false },
-                { name: 'largeClass', options: getUniqueValues('largeClass'), allowFreeInput: false },
-                { name: 'mediumClass', options: getUniqueValues('mediumClass'), allowFreeInput: false },
-                { name: 'individualItem', options: getUniqueValues('individualItem'), allowFreeInput: true },
-                { name: 'maker', options: getUniqueValues('maker'), allowFreeInput: false },
-                { name: 'model', options: getUniqueValues('model'), allowFreeInput: false }
-            ];
-
-            fields.forEach(field => {
-                const cell = row.querySelector(`td[data-field="${field.name}"]`);
-                const currentValue = asset[field.name];
-
-                // selectタグを生成
-                const selectId = `edit-${field.name}-${id}`;
-                const select = document.createElement('select');
-                select.id = selectId;
-                select.className = 'edit-select';
-                select.style.cssText = 'width: 100%;';
-
-                // オプションを追加
-                field.options.forEach(opt => {
-                    const option = document.createElement('option');
-                    option.value = opt;
-                    option.textContent = opt;
-                    if (opt === currentValue) {
-                        option.selected = true;
-                    }
-                    select.appendChild(option);
-                });
-
-                cell.innerHTML = '';
-                cell.appendChild(select);
-
-                // Choices.jsで初期化
-                const choicesConfig = {
-                    searchEnabled: true,
-                    searchPlaceholderValue: field.allowFreeInput ? '検索 or フリー入力' : '検索...',
-                    addItems: field.allowFreeInput,
-                    removeItems: field.allowFreeInput,
-                    shouldSort: false,
-                    itemSelectText: '選択',
-                    noResultsText: field.allowFreeInput ? '該当なし。Enterで新規追加' : '該当なし',
-                    addItemText: (value) => `Enter押下で「${value}」を追加`
-                };
-
-                editChoicesInstances[selectId] = new Choices(select, choicesConfig);
-
-                // ドロップダウンが開いた時に位置を動的に計算（position: fixed用）
-                select.addEventListener('showDropdown', () => {
-                    setTimeout(() => {
-                        const choicesContainer = cell.querySelector('.choices');
-                        const dropdown = cell.querySelector('.choices__list--dropdown');
-                        if (choicesContainer && dropdown) {
-                            const rect = choicesContainer.getBoundingClientRect();
-                            dropdown.style.top = `${rect.bottom}px`;
-                            dropdown.style.left = `${rect.left}px`;
-                            dropdown.style.width = 'auto';
-                            dropdown.style.minWidth = `${rect.width}px`;
-                            dropdown.style.maxWidth = '400px';
-                        }
-                    }, 0);
-                });
-            });
-
-            // 操作列を保存・キャンセルボタンに変更（横並び）
-            const actionCell = row.querySelector('td:last-child');
-            actionCell.innerHTML = `
-                <div style="display: flex; gap: 4px; justify-content: center;">
-                    <button onclick="saveSelectedAssetRow(${id})" style="background: #27ae60; color: white; border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer; white-space: nowrap;">✓ 保存</button>
-                    <button onclick="cancelSelectedAssetRowEdit(${id})" style="background: #95a5a6; color: white; border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer; white-space: nowrap;">✕</button>
-                </div>
-            `;
-        }
-
-        // ユニークな値を取得するヘルパー関数
-        function getUniqueValues(field) {
-            const values = new Set();
-
-            // 資産マスタデータから値を収集
-            searchResult_assetMasterData.forEach(item => {
-                if (item[field] && item[field] !== '未設定') {
-                    values.add(item[field]);
-                }
-            });
-
-            // マスタフィルタのChoices.jsインスタンスからも選択肢を取得
-            const masterFieldMap = {
-                'category': 'masterCategory',
-                'largeClass': 'masterLargeClass',
-                'mediumClass': 'masterMediumClass',
-                'individualItem': 'masterIndividualItem',
-                'maker': 'masterMaker',
-                'model': 'masterModel'
-            };
-
-            const masterField = masterFieldMap[field];
-            if (masterField && masterChoicesInstances[masterField]) {
-                const choices = masterChoicesInstances[masterField]._store._state.choices;
-                choices.forEach(choice => {
-                    if (choice.value && choice.value !== '' && choice.value !== '全て') {
-                        values.add(choice.value);
-                    }
-                });
-            }
-
-            return Array.from(values).sort();
-        }
-
-        // 選択済み資産の行編集を保存
-        function saveSelectedAssetRow(id) {
-            const row = document.querySelector(`tr[data-asset-id="${id}"]`);
-            if (!row) return;
-
-            const asset = searchResult_assetMasterData.find(a => a.id === id);
-            if (!asset) return;
-
-            // 各フィールドの値を取得
-            const fields = ['category', 'largeClass', 'mediumClass', 'individualItem', 'maker', 'model'];
-            fields.forEach(field => {
-                const selectId = `edit-${field}-${id}`;
-                const instance = editChoicesInstances[selectId];
-                if (instance) {
-                    let value = instance.getValue(true);
-
-                    // フリー入力の場合、入力フィールドの値もチェック
-                    if (field === 'individualItem' && (!value || value === '全て')) {
-                        const inputValue = instance.input?.element?.value?.trim();
-                        if (inputValue) {
-                            instance.setChoices([
-                                { value: inputValue, label: inputValue, selected: true }
-                            ], 'value', 'label', false);
-                            value = inputValue;
-                        }
-                    }
-
-                    if (value && value !== '全て') {
-                        asset[field] = value;
-                    }
-
-                    // Choices.jsインスタンスを破棄
-                    instance.destroy();
-                    delete editChoicesInstances[selectId];
-                }
-            });
-
-            // 編集中フラグを解除して再描画
-            row.classList.remove('editing');
-            renderSelectedAssets();
-        }
-
-        // 選択済み資産の行編集をキャンセル
-        function cancelSelectedAssetRowEdit(id) {
-            const row = document.querySelector(`tr[data-asset-id="${id}"]`);
-            if (!row) return;
-
-            // 編集用Choices.jsインスタンスを破棄
-            const fields = ['category', 'largeClass', 'mediumClass', 'individualItem', 'maker', 'model'];
-            fields.forEach(field => {
-                const selectId = `edit-${field}-${id}`;
-                const instance = editChoicesInstances[selectId];
-                if (instance) {
-                    instance.destroy();
-                    delete editChoicesInstances[selectId];
-                }
-            });
-
-            // 編集中フラグを解除して再描画
-            row.classList.remove('editing');
-            renderSelectedAssets();
-        }
-
-        // 選択済み資産を削除
-        function removeSelectedAsset(id) {
-            selectedMasterItems.delete(id);
-            renderSelectedAssets();
+            // 単一選択のため、既存の選択をクリアして新しく追加
+            selectedMasterItems.clear();
+            selectedMasterItems.add(asset.id);
             updateMasterSelectionInfo();
+            renderAssetQuantityForm();
         }
 
-        // 資産マスタの全選択
         // 資産マスタの選択情報更新
         function updateMasterSelectionInfo() {
             const info = document.getElementById('masterSelectionInfo');
-            info.textContent = `${selectedMasterItems.size}件選択中`;
+            if (info) {
+                info.textContent = `${selectedMasterItems.size}件選択中`;
+            }
+            // 要素が存在しない場合は何もしない（単一選択仕様では不要）
         }
 
         // 新規購入申請の実行
@@ -1423,39 +1195,156 @@ let searchResultFilter_assetMaster = null;
             closeAssetMasterModal();
         }
         
-        // 申請入力モーダルへ進む
-        let quotationCount = 0;
-        
-        function proceedToApplicationInput() {
+        // 数量設定フォームをレンダリング（複数資産用）
+        function renderAssetQuantityForm() {
+            const container = document.getElementById('assetQuantityForm');
+            if (!container) return;
+
             if (selectedMasterItems.size === 0) {
-                alert('資産を選択してください');
+                container.innerHTML = '<p style="color: #999; text-align: center; padding: 20px;">資産が選択されていません</p>';
                 return;
             }
-            
-            // 資産マスタモーダルを閉じる
-            closeAssetMasterModal();
-            
-            // 申請入力モーダルを開く
-            openApplicationInputModal();
+
+            // 選択された資産を取得
+            const selectedAssets = Array.from(selectedMasterItems).map(id =>
+                searchResult_assetMasterData.find(a => a.id === id)
+            ).filter(a => a);
+
+            if (selectedAssets.length === 0) {
+                container.innerHTML = '<p style="color: #999; text-align: center; padding: 20px;">資産が選択されていません</p>';
+                return;
+            }
+
+            // テーブル形式で表示
+            container.innerHTML = `
+                <div style="background: white; border: 1px solid #ddd; border-radius: 4px; overflow: hidden;">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr style="background: #34495e; color: white;">
+                                <th style="padding: 12px; text-align: left; font-size: 13px;">品目</th>
+                                <th style="padding: 12px; text-align: left; font-size: 13px; width: 200px;">メーカー/型式</th>
+                                <th style="padding: 12px; text-align: center; font-size: 13px; width: 120px;">数量 <span class="required">*</span></th>
+                                <th style="padding: 12px; text-align: center; font-size: 13px; width: 100px;">単位 <span class="required">*</span></th>
+                                <th style="padding: 12px; text-align: center; font-size: 13px; width: 60px;">削除</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${selectedAssets.map((asset, index) => `
+                                <tr style="border-bottom: 1px solid #eee;">
+                                    <td style="padding: 12px;">
+                                        <div style="font-weight: 600; color: #2c3e50; margin-bottom: 4px;">${asset.individualItem}</div>
+                                        <div style="font-size: 11px; color: #7f8c8d;">${asset.category} > ${asset.largeClass}</div>
+                                    </td>
+                                    <td style="padding: 12px; font-size: 12px; color: #34495e;">
+                                        ${asset.maker} / ${asset.model}
+                                    </td>
+                                    <td style="padding: 12px; text-align: center;">
+                                        <input type="number" id="assetQuantity_${asset.id}" value="1" min="1" max="999"
+                                               style="width: 80px; padding: 6px; border: 1px solid #ccc; border-radius: 4px; text-align: center;">
+                                    </td>
+                                    <td style="padding: 12px; text-align: center;">
+                                        <select id="assetUnit_${asset.id}" style="width: 70px; padding: 6px; border: 1px solid #ccc; border-radius: 4px;">
+                                            <option value="台" selected>台</option>
+                                            <option value="式">式</option>
+                                            <option value="個">個</option>
+                                        </select>
+                                    </td>
+                                    <td style="padding: 12px; text-align: center;">
+                                        <button onclick="removeAssetFromSelection(${asset.id})"
+                                                style="background: #e74c3c; color: white; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 11px;">
+                                            ×
+                                        </button>
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
         }
-        
-        function openApplicationInputModal() {
-            const modal = document.getElementById('applicationInputModal');
-            
-            // 現在の日付を設定
-            const today = new Date();
-            const dateStr = today.toISOString().split('T')[0];
-            document.getElementById('appDate').value = dateStr;
-            
-            // 選択された資産を表示
-            displaySelectedAssets();
-            
-            // 見積書フォームを初期化（1つ追加）
-            quotationCount = 0;
-            document.getElementById('quotationList').innerHTML = '';
-            addQuotationForm();
-            
-            modal.classList.add('active');
+
+        // 選択リストから資産を削除
+        function removeAssetFromSelection(assetId) {
+            selectedMasterItems.delete(assetId);
+            updateMasterSelectionInfo();
+            renderAssetQuantityForm();
+        }
+
+        // 設置情報の選択肢を初期化
+        function initializeFacilityOptions() {
+            // 施設マスタデータ（サンプル）
+            const buildingOptions = ['本館', '新館', '東棟', '西棟', '診療棟'];
+            const divisionOptions = ['内科', '外科', '手術部', '放射線科', '検査科', '薬剤部', '事務部'];
+            const sectionOptions = {
+                '内科': ['循環器内科', '消化器内科', '呼吸器内科'],
+                '外科': ['一般外科', '整形外科', '脳神経外科'],
+                '手術部': ['中央手術室', 'ICU', 'HCU'],
+                '放射線科': ['X線撮影室', 'CT室', 'MRI室'],
+                '検査科': ['検体検査室', '生理検査室', '病理検査室']
+            };
+            const roomRangeOptions = {
+                '循環器内科': ['外来診察室', '病棟', '処置室'],
+                '中央手術室': ['手術室1', '手術室2', '手術室3', 'リカバリー室']
+            };
+
+            // 棟の選択肢を設定
+            const buildingSelect = document.getElementById('building');
+            buildingSelect.innerHTML = '<option value="">選択してください</option>' +
+                buildingOptions.map(b => `<option value="${b}">${b}</option>`).join('');
+
+            // 部門の選択肢を設定
+            const divisionSelect = document.getElementById('division');
+            divisionSelect.innerHTML = '<option value="">選択してください</option>' +
+                divisionOptions.map(d => `<option value="${d}">${d}</option>`).join('');
+        }
+
+        // 部門選択時に部署の選択肢を更新
+        function updateSectionOptions() {
+            const division = document.getElementById('division').value;
+            const sectionSelect = document.getElementById('section');
+            const roomRangeSelect = document.getElementById('roomRange');
+
+            const sectionOptions = {
+                '内科': ['循環器内科', '消化器内科', '呼吸器内科'],
+                '外科': ['一般外科', '整形外科', '脳神経外科'],
+                '手術部': ['中央手術室', 'ICU', 'HCU'],
+                '放射線科': ['X線撮影室', 'CT室', 'MRI室'],
+                '検査科': ['検体検査室', '生理検査室', '病理検査室']
+            };
+
+            if (division && sectionOptions[division]) {
+                sectionSelect.innerHTML = '<option value="">選択してください</option>' +
+                    sectionOptions[division].map(s => `<option value="${s}">${s}</option>`).join('');
+            } else {
+                sectionSelect.innerHTML = '<option value="">選択してください</option>';
+            }
+
+            roomRangeSelect.innerHTML = '<option value="">選択してください</option>';
+        }
+
+        // 部署選択時に諸室名範囲の選択肢を更新
+        function updateRoomRangeOptions() {
+            const section = document.getElementById('section').value;
+            const roomRangeSelect = document.getElementById('roomRange');
+
+            const roomRangeOptions = {
+                '循環器内科': ['外来診察室', '病棟', '処置室'],
+                '中央手術室': ['手術室1', '手術室2', '手術室3', 'リカバリー室'],
+                'X線撮影室': ['一般撮影室', 'ポータブル撮影室', 'TV撮影室'],
+                'CT室': ['CT1号機室', 'CT2号機室', '操作室']
+            };
+
+            if (section && roomRangeOptions[section]) {
+                roomRangeSelect.innerHTML = '<option value="">選択してください</option>' +
+                    roomRangeOptions[section].map(r => `<option value="${r}">${r}</option>`).join('');
+            } else {
+                roomRangeSelect.innerHTML = '<option value="">選択してください</option>';
+            }
+        }
+
+        // 棟選択時（現状は何もしないが、将来的な拡張用）
+        function updateDepartmentOptions() {
+            // 必要に応じて棟ごとに部門を絞り込む処理を追加
         }
         
         // 申請種別を指定して申請入力モーダルを開く
@@ -1464,35 +1353,50 @@ let searchResultFilter_assetMaster = null;
                 alert('資産を選択してください');
                 return;
             }
-            
+
             const modal = document.getElementById('applicationInputModal');
-            
+
+            // モーダルが存在しない場合（削除済み）
+            if (!modal) {
+                alert('この機能は現在利用できません');
+                return;
+            }
+
             // 申請種別を設定
-            document.getElementById('applicationTypeTitle').textContent = applicationType;
-            document.getElementById('appType').value = applicationType;
-            
+            const titleElement = document.getElementById('applicationTypeTitle');
+            const typeElement = document.getElementById('appType');
+            if (titleElement) titleElement.textContent = applicationType;
+            if (typeElement) typeElement.value = applicationType;
+
             // 現在の日付を設定
             const today = new Date();
             const dateStr = today.toISOString().split('T')[0];
-            document.getElementById('appDate').value = dateStr;
-            
+            const dateElement = document.getElementById('appDate');
+            if (dateElement) dateElement.value = dateStr;
+
             // 選択された資産を表示（資産リストから選択されたもの）
             displaySelectedAssetsFromList();
-            
+
             // 見積書フォームを初期化（1つ追加）
             quotationCount = 0;
-            document.getElementById('quotationList').innerHTML = '';
-            addQuotationForm();
-            
+            const quotationList = document.getElementById('quotationList');
+            if (quotationList) {
+                quotationList.innerHTML = '';
+                addQuotationForm();
+            }
+
             modal.classList.add('active');
         }
         
         function displaySelectedAssetsFromList() {
             const container = document.getElementById('selectedAssetsDisplay');
-            
+
+            // 要素が存在しない場合は何もしない
+            if (!container) return;
+
             // サンプルデータから選択された資産を取得
             const selectedAssets = sampleData.filter(item => selectedItems.has(item.no));
-            
+
             container.innerHTML = selectedAssets.map(asset => `
                 <div class="selected-asset-display">
                     <div class="asset-name">${asset.name}</div>
@@ -1503,33 +1407,16 @@ let searchResultFilter_assetMaster = null;
                 </div>
             `).join('');
         }
-        
-        function closeApplicationInputModal() {
-            // フォームをリセット
-            document.getElementById('appReason').value = '';
-            document.getElementById('approver1').value = '';
-            document.getElementById('approver2').value = '';
-            document.getElementById('approver3').value = '';
-            document.getElementById('quotationList').innerHTML = '';
 
-            // モーダルを閉じる（共通ヘルパー使用）
-            if (window.ModalHelper) {
-                window.ModalHelper.close('#applicationInputModal');
-            }
-        }
 
-        function handleApplicationInputModalOutsideClick(event) {
-            if (event.target.id === 'applicationInputModal') {
-                if (confirm('入力内容が失われますが、閉じてもよろしいですか？')) {
-                    closeApplicationInputModal();
-                }
-            }
-        }
-        
         function displaySelectedAssets() {
             const container = document.getElementById('selectedAssetsDisplay');
+
+            // 要素が存在しない場合は何もしない
+            if (!container) return;
+
             const selectedAssets = searchResult_assetMasterData.filter(item => selectedMasterItems.has(item.id));
-            
+
             container.innerHTML = selectedAssets.map(asset => `
                 <div class="selected-asset-display">
                     <div class="asset-name">${asset.individualItem}</div>
@@ -1600,12 +1487,6 @@ let searchResultFilter_assetMaster = null;
             }
         }
         
-        function backToAssetSelection() {
-            if (confirm('入力内容が失われますが、資産選択に戻ってもよろしいですか？')) {
-                closeApplicationInputModal();
-                openAssetMasterModal();
-            }
-        }
         
         function saveDraft() {
             alert('下書きとして保存しました');
@@ -1613,51 +1494,108 @@ let searchResultFilter_assetMaster = null;
         }
         
         function submitApplication() {
-            // バリデーション
-            const reason = document.getElementById('appReason').value;
-            const approver1 = document.getElementById('approver1').value;
-            const approver2 = document.getElementById('approver2').value;
-            const approver3 = document.getElementById('approver3').value;
-            
-            if (!reason) {
-                alert('申請理由を入力してください');
+            // 資産選択チェック
+            if (selectedMasterItems.size === 0) {
+                alert('資産を選択してください');
                 return;
             }
-            
-            if (!approver1 || !approver2 || !approver3) {
-                alert('すべての承認者を選択してください');
+
+            // 選択された資産を取得
+            const selectedAssets = Array.from(selectedMasterItems).map(id =>
+                searchResult_assetMasterData.find(a => a.id === id)
+            ).filter(a => a);
+
+            if (selectedAssets.length === 0) {
+                alert('資産情報が見つかりません');
                 return;
             }
-            
-            // 見積書のチェック
-            const quotationItems = document.querySelectorAll('.quotation-item');
-            if (quotationItems.length === 0) {
-                alert('少なくとも1つの見積書を追加してください');
-                return;
-            }
-            
-            let hasValidQuotation = false;
-            quotationItems.forEach((item, index) => {
-                const id = item.id.replace('quotation', '');
-                const vendor = document.getElementById(`vendor${id}`)?.value;
-                const amount = document.getElementById(`amount${id}`)?.value;
-                const file = document.getElementById(`file${id}`)?.files[0];
-                
-                if (vendor && amount && file) {
-                    hasValidQuotation = true;
+
+            // 各資産の数量・単位をバリデーション
+            for (const asset of selectedAssets) {
+                const quantity = document.getElementById(`assetQuantity_${asset.id}`)?.value;
+                const unit = document.getElementById(`assetUnit_${asset.id}`)?.value;
+
+                if (!quantity || parseInt(quantity) < 1) {
+                    alert(`${asset.individualItem}の数量は1以上で入力してください`);
+                    return;
                 }
-            });
-            
-            if (!hasValidQuotation) {
-                alert('見積書の必須項目（業者名、金額、ファイル）を入力してください');
-                return;
             }
-            
-            // 申請を提出
-            if (confirm('申請を提出してもよろしいですか？')) {
-                alert('申請が提出されました\n申請番号: REQ-2025-' + Math.floor(Math.random() * 10000).toString().padStart(4, '0'));
-                closeApplicationInputModal();
-                
+
+            // 設置情報の取得（任意項目、全資産共通）
+            const building = document.getElementById('building').value;
+            const division = document.getElementById('division').value;
+            const section = document.getElementById('section').value;
+            const roomRange = document.getElementById('roomRange').value;
+            const roomName = document.getElementById('roomName').value || '';
+            const freeInput = document.getElementById('freeInput').value || '';
+            const executionYear = document.getElementById('executionYear').value || '';
+
+            // 申請内容の確認
+            const assetList = selectedAssets.map(asset => {
+                const quantity = document.getElementById(`assetQuantity_${asset.id}`)?.value;
+                const unit = document.getElementById(`assetUnit_${asset.id}`)?.value;
+                return `・${asset.individualItem} (${asset.maker}) × ${quantity}${unit}`;
+            }).join('\n');
+
+            const confirmMessage = `以下の内容で新規購入申請を提出します:\n\n` +
+                `【資産情報】(${selectedAssets.length}件)\n` +
+                `${assetList}\n\n` +
+                `【設置先】\n` +
+                `${building} ${division} ${section} ${roomRange}\n\n` +
+                `※申請一覧では資産ごとに${selectedAssets.length}件のレコードが作成されます。\n\n` +
+                `よろしいですか？`;
+
+            if (confirm(confirmMessage)) {
+                // 申請一覧にデータを追加
+                if (typeof window.applicationListData !== 'undefined') {
+                    const today = new Date();
+                    const dateStr = today.toISOString().split('T')[0];
+                    const createdApplications = [];
+
+                    // 各資産ごとに個別の申請レコードを作成
+                    selectedAssets.forEach((asset, index) => {
+                        const quantity = document.getElementById(`assetQuantity_${asset.id}`)?.value;
+                        const unit = document.getElementById(`assetUnit_${asset.id}`)?.value;
+                        const appNo = window.IdGenerator.generateRandomApplicationNo('REQ');
+
+                        const newApplication = {
+                            id: window.applicationListData.length + 1 + index,
+                            applicationNo: appNo,
+                            applicationDate: dateStr,
+                            applicationType: '新規購入申請',
+                            asset: {
+                                name: asset.individualItem,
+                                model: asset.model
+                            },
+                            vendor: '未設定',
+                            quantity: `${quantity}${unit}`,
+                            rfqNo: '',
+                            status: '下書き',
+                            approvalProgress: {
+                                current: 0,
+                                total: 3
+                            },
+                            facility: {
+                                building: building || '',
+                                floor: '',
+                                department: division || '',
+                                section: section || ''
+                            },
+                            freeInput: freeInput,
+                            executionYear: executionYear
+                        };
+
+                        window.applicationListData.push(newApplication);
+                        createdApplications.push(newApplication);
+                        console.log('申請一覧に追加しました:', newApplication);
+                    });
+
+                    const appNos = createdApplications.map(app => app.applicationNo).join(', ');
+                    alert(`申請が提出されました\n\n作成された申請: ${selectedAssets.length}件\n申請番号: ${appNos}`);
+                }
+
+                closeAssetMasterModal();
+
                 // 選択をクリア
                 selectedMasterItems.clear();
             }
@@ -1733,3 +1671,4 @@ window.initSearchResultPage = initSearchResultPage;
 window.editSelectedAssetItem = editSelectedAssetItem;
 window.addSelectedAssetFromDropdowns = addSelectedAssetFromDropdowns;
 window.resetMasterFilter = resetMasterFilter;
+window.removeAssetFromSelection = removeAssetFromSelection;

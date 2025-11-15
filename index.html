@@ -26,8 +26,9 @@
     <link rel="stylesheet" href="src/css/screens/asset-matching.css">
     <link rel="stylesheet" href="src/css/screens/data-matching.css">
     <link rel="stylesheet" href="src/css/screens/search-result-simple.css">
+    <link rel="stylesheet" href="src/css/screens/application-list.css">
+    <link rel="stylesheet" href="src/css/screens/rfq-list.css">
     <link rel="stylesheet" href="src/css/screens/asset-survey-integrated.css">
-    <!-- <link rel="stylesheet" href="src/css/screens/hospital-select-modal.css"> --> <!-- 資産マスタモーダルのスタイルを使用するため不要 -->
     <link rel="stylesheet" href="src/css/screens/ship-facility-form.css">
 
     <!-- Choices.js JS (外部ライブラリ) -->
@@ -119,6 +120,12 @@
         <!-- 資産検索結果画面 -->
         <div id="searchResultPage"></div>
 
+        <!-- 申請一覧画面 -->
+        <div id="applicationListPage"></div>
+
+        <!-- 見積依頼一覧画面 -->
+        <div id="rfqListPage"></div>
+
         <!-- 現有資産調査統合画面 -->
         <div id="assetSurveyIntegratedPage"></div>
 
@@ -146,6 +153,9 @@
     <script src="src/js/master-data.js"></script>
     <script src="src/js/table-helper.js"></script>
     <script src="src/js/modal-helper.js"></script>
+    <!-- 共通ヘルパー関数 -->
+    <script src="src/js/badge-helper.js"></script>
+    <script src="src/js/id-generator-helper.js"></script>
     <script src="src/js/choices-helper.js"></script>
     <script src="src/js/table-edit.js"></script>
     <script src="src/js/auth.js"></script>
@@ -169,6 +179,8 @@
     <script src="src/js/asset-matching.js"></script>
     <script src="src/js/data-matching.js"></script>
     <script src="src/js/search-result-simple.js"></script>
+    <script src="src/js/application-list.js"></script>
+    <script src="src/js/rfq-list.js"></script>
     <script src="src/js/filters.js"></script>
     <script src="src/js/table-resize.js"></script>
     <script src="src/js/init.js"></script>
@@ -211,6 +223,8 @@
                 { id: 'dataMatchingPage', file: 'data-matching.html' },
                 // { id: 'assetMasterModal', file: 'asset-master-modal.html' }, // 削除: search-result-simple.html内に統合済み
                 { id: 'searchResultPage', file: 'search-result-simple.html' },
+                { id: 'applicationListPage', file: 'application-list.html' },
+                { id: 'rfqListPage', file: 'rfq-list.html' },
                 { id: 'assetSurveyIntegratedPage', file: 'asset-survey-integrated.html' },
                 { id: 'shipFacilityMasterPage', file: 'ship-facility-master.html' },
                 { id: 'facilityNewModal', file: 'ship-facility-new-modal.html' },
