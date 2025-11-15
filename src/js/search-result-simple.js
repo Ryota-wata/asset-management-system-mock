@@ -81,26 +81,10 @@ let searchResultFilter_assetMaster = null;
         let selectedItems = new Set();
         let selectedMasterItems = new Set();
 
-        // 資産マスタのサンプルデータ
-        const searchResult_assetMasterData = [
-            { id: 1, category: '医療機器', largeClass: '画像診断機器', mediumClass: 'CT関連', individualItem: 'CT装置', maker: 'GEヘルスケア', model: 'Revolution CT' },
-            { id: 2, category: '医療機器', largeClass: '画像診断機器', mediumClass: 'MRI関連', individualItem: 'MRI装置', maker: 'シーメンス', model: 'MAGNETOM Vida' },
-            { id: 3, category: '医療機器', largeClass: '手術機器', mediumClass: '電気メス', individualItem: '電気メス', maker: 'オリンパス', model: 'ESG-400' },
-            { id: 4, category: '医療機器', largeClass: '手術機器', mediumClass: '手術台', individualItem: '手術台', maker: 'マッケ', model: 'Alphamaxx' },
-            { id: 5, category: '医療機器', largeClass: '検査機器', mediumClass: '超音波', individualItem: '超音波診断装置', maker: 'キヤノンメディカル', model: 'Aplio i800' },
-            { id: 6, category: '医療機器', largeClass: '検査機器', mediumClass: '心電図', individualItem: '心電計', maker: 'フクダ電子', model: 'FCP-8800' },
-            { id: 7, category: '医療機器', largeClass: '生命維持装置', mediumClass: '人工呼吸器', individualItem: '人工呼吸器', maker: 'ドレーゲル', model: 'Evita V800' },
-            { id: 8, category: '医療機器', largeClass: '生命維持装置', mediumClass: '透析装置', individualItem: '透析装置', maker: '日機装', model: 'DCS-200Si' },
-            { id: 9, category: '什器備品', largeClass: '事務機器', mediumClass: '複合機', individualItem: '複合機', maker: 'リコー', model: 'IM C6000' },
-            { id: 10, category: '什器備品', largeClass: '事務機器', mediumClass: 'プリンター', individualItem: 'プリンター', maker: 'エプソン', model: 'PX-M886FL' },
-            { id: 11, category: '医療機器', largeClass: '画像診断機器', mediumClass: 'X線', individualItem: 'X線撮影装置', maker: '富士フイルム', model: 'CALNEO Smart' },
-            { id: 12, category: '医療機器', largeClass: '内視鏡', mediumClass: '内視鏡システム', individualItem: '内視鏡システム', maker: 'オリンパス', model: 'EVIS X1' },
-            { id: 13, category: '医療機器', largeClass: '検査機器', mediumClass: '血液検査', individualItem: '血液分析装置', maker: 'シスメックス', model: 'XN-9000' },
-            { id: 14, category: '医療機器', largeClass: '治療機器', mediumClass: 'レーザー', individualItem: 'レーザー治療器', maker: 'ルミナス', model: 'M22' },
-            { id: 15, category: '什器備品', largeClass: '家具', mediumClass: 'ベッド', individualItem: '病院用ベッド', maker: 'パラマウントベッド', model: 'KA-9000' }
-        ];
+        // 資産マスタのデータ（JSONファイルから読み込み）
+        let searchResult_assetMasterData = [];
 
-        let filteredMasterData = [...searchResult_assetMasterData];
+        let filteredMasterData = [];
 
         // ========================================
         // マスタデータ読み込み
@@ -112,6 +96,48 @@ let searchResultFilter_assetMaster = null;
                 }
                 if (typeof window.loadAssetMaster === 'function') {
                     searchResultFilter_assetMaster = await window.loadAssetMaster();
+
+                    // 資産マスタデータを構築（資産マスタモーダル用）
+                    // JSONから取得したデータを使用して資産マスタ配列を構築
+                    searchResult_assetMasterData = [];
+                    let id = 1;
+
+                    // 各分類の組み合わせから資産データを生成
+                    if (searchResultFilter_assetMaster.items &&
+                        searchResultFilter_assetMaster.manufacturers) {
+
+                        // 品目とメーカーの組み合わせでデータを生成
+                        searchResultFilter_assetMaster.items.forEach(item => {
+                            searchResultFilter_assetMaster.manufacturers.forEach(maker => {
+                                // 中分類IDから中分類名を取得
+                                const mediumClass = searchResultFilter_assetMaster.mediumClasses?.find(
+                                    mc => mc.id === item.mediumClassId
+                                );
+
+                                // 大分類IDから大分類名を取得（中分類経由）
+                                const largeClass = mediumClass ?
+                                    searchResultFilter_assetMaster.largeClasses?.find(
+                                        lc => lc.id === mediumClass.largeClassId
+                                    ) : null;
+
+                                // モデルがある場合は最初の1つを使用
+                                const models = searchResultFilter_assetMaster.models || [{ name: '' }];
+                                const model = models[0] || { name: '' };
+
+                                searchResult_assetMasterData.push({
+                                    id: id++,
+                                    category: largeClass?.name || '医療機器',
+                                    largeClass: largeClass?.name || '',
+                                    mediumClass: mediumClass?.name || '',
+                                    individualItem: item.name,
+                                    maker: maker.name,
+                                    model: model.name
+                                });
+                            });
+                        });
+                    }
+
+                    filteredMasterData = [...searchResult_assetMasterData];
                 }
                 return true;
             } catch (error) {

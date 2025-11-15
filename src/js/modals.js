@@ -22,6 +22,56 @@ function showListModal() {
             closeOnEscape: true
         });
     }
+
+    // 施設選択のイベントリスナーを設定
+    setupFacilitySelectListener();
+}
+
+/**
+ * 施設選択のイベントリスナーを設定
+ */
+function setupFacilitySelectListener() {
+    const facilitySearchSelect = document.getElementById('facilitySearchSelect');
+    if (!facilitySearchSelect) return;
+
+    // Choices.jsのインスタンスを取得
+    const choicesInstance = window.facilitySearchChoice;
+    if (!choicesInstance) return;
+
+    // 既存のイベントリスナーを削除して再設定
+    facilitySearchSelect.removeEventListener('change', handleFacilityChange);
+    facilitySearchSelect.addEventListener('change', handleFacilityChange);
+}
+
+/**
+ * 施設選択時の処理
+ */
+function handleFacilityChange(event) {
+    const facilityCode = event.target.value;
+    const menuButtons = [
+        document.getElementById('btn1'),
+        document.getElementById('btn2'),
+        document.getElementById('btn3'),
+        document.getElementById('btn4'),
+        document.getElementById('btn5')
+    ];
+
+    if (facilityCode) {
+        // 施設が選択された場合、メニューボタンを有効化
+        window.selectedFacility = {
+            code: facilityCode,
+            name: event.target.options[event.target.selectedIndex].text
+        };
+        menuButtons.forEach(btn => {
+            if (btn) btn.disabled = false;
+        });
+    } else {
+        // 施設が未選択の場合、メニューボタンを無効化
+        window.selectedFacility = null;
+        menuButtons.forEach(btn => {
+            if (btn) btn.disabled = true;
+        });
+    }
 }
 
 /**
@@ -392,6 +442,8 @@ function openPhotoInNewWindow() {
 window.showListModal = showListModal;
 window.closeListModal = closeListModal;
 window.resetListModal = resetListModal;
+window.setupFacilitySelectListener = setupFacilitySelectListener;
+window.handleFacilityChange = handleFacilityChange;
 window.selectMenu = selectMenu;
 window.showMasterModal = showMasterModal;
 window.closeMasterModal = closeMasterModal;

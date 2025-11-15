@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>マスタデータ検証ページ</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #3498db;
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+
+        .section h2 {
+            color: #34495e;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 12px 24px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background: #2980b9;
+        }
+
+        button.danger {
+            background: #e74c3c;
+        }
+
+        button.danger:hover {
+            background: #c0392b;
+        }
+
+        button.success {
+            background: #2ecc71;
+        }
+
+        button.success:hover {
+            background: #27ae60;
+        }
+
+        .status {
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+
+        .status.success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+
+        .status.error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+
+        .status.info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+
+        .data-display {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            padding: 15px;
+            max-height: 400px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .count {
+            display: inline-block;
+            background: #3498db;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        table th,
+        table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        table th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        table tr:hover {
+            background: #f8f9fa;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 マスタデータ検証ツール</h1>
+
+        <div class="section">
+            <h2>キャッシュ管理</h2>
+            <div class="buttons">
+                <button onclick="clearCache()">ローカルストレージをクリア</button>
+                <button class="success" onclick="refreshData()">最新データを再読み込み</button>
+                <button class="danger" onclick="clearAllCache()">すべてのキャッシュをクリア</button>
+            </div>
+            <div id="cacheStatus"></div>
+        </div>
+
+        <div class="section">
+            <h2>施設マスタ (facility-master.json)</h2>
+            <button onclick="loadFacilityData()">施設マスタを読み込む</button>
+            <div id="facilityStatus"></div>
+            <div id="facilityData" class="data-display" style="display: none;"></div>
+        </div>
+
+        <div class="section">
+            <h2>資産マスタ (asset-master.json)</h2>
+            <button onclick="loadAssetData()">資産マスタを読み込む</button>
+            <div id="assetStatus"></div>
+            <div id="assetData" class="data-display" style="display: none;"></div>
+        </div>
+
+        <div class="section">
+            <h2>統合マスタデータ（ドロップダウン用）</h2>
+            <button onclick="loadIntegratedData()">統合データを読み込む</button>
+            <div id="integratedStatus"></div>
+            <div id="integratedData" class="data-display" style="display: none;"></div>
+        </div>
+    </div>
+
+    <!-- JavaScript読み込み -->
+    <script src="src/js/master-data-loader.js"></script>
+    <script src="src/js/master-data.js"></script>
+
+    <script>
+        // キャッシュクリア
+        function clearCache() {
+            const status = document.getElementById('cacheStatus');
+            if (window.clearMasterDataCache) {
+                window.clearMasterDataCache();
+                status.innerHTML = '<div class="status success">✓ ローカルストレージのマスタデータをクリアしました</div>';
+            } else {
+                status.innerHTML = '<div class="status error">✗ clearMasterDataCache関数が見つかりません</div>';
+            }
+        }
+
+        // すべてのキャッシュクリア
+        function clearAllCache() {
+            const status = document.getElementById('cacheStatus');
+            try {
+                localStorage.clear();
+                sessionStorage.clear();
+
+                // メモリキャッシュもクリア
+                if (window.facilityMasterCache) window.facilityMasterCache = null;
+                if (window.assetMasterCache) window.assetMasterCache = null;
+
+                status.innerHTML = '<div class="status success">✓ すべてのキャッシュ（localStorage, sessionStorage, メモリ）をクリアしました</div>';
+            } catch (error) {
+                status.innerHTML = `<div class="status error">✗ キャッシュクリアに失敗: ${error.message}</div>`;
+            }
+        }
+
+        // データ再読み込み
+        async function refreshData() {
+            const status = document.getElementById('cacheStatus');
+            status.innerHTML = '<div class="status info">⏳ マスタデータを再読み込み中... <span class="loading"></span></div>';
+
+            if (window.refreshMasterData) {
+                try {
+                    await window.refreshMasterData();
+                    status.innerHTML = '<div class="status success">✓ マスタデータを再読み込みしました（ページをリロードしてください）</div>';
+                } catch (error) {
+                    status.innerHTML = `<div class="status error">✗ 再読み込みに失敗: ${error.message}</div>`;
+                }
+            } else {
+                status.innerHTML = '<div class="status error">✗ refreshMasterData関数が見つかりません</div>';
+            }
+        }
+
+        // 施設マスタを読み込む
+        async function loadFacilityData() {
+            const status = document.getElementById('facilityStatus');
+            const dataDiv = document.getElementById('facilityData');
+
+            status.innerHTML = '<div class="status info">⏳ 読み込み中... <span class="loading"></span></div>';
+            dataDiv.style.display = 'none';
+
+            try {
+                const data = await window.loadFacilityMaster(true); // 強制再読み込み
+
+                if (data && data.facilities) {
+                    const count = data.facilities.length;
+                    status.innerHTML = `<div class="status success">✓ 施設マスタ読み込み成功 <span class="count">${count}件</span></div>`;
+
+                    // テーブル表示
+                    let html = '<table><thead><tr><th>ID</th><th>施設コード</th><th>施設名</th><th>部門</th><th>部署</th><th>都道府県</th></tr></thead><tbody>';
+                    data.facilities.forEach(f => {
+                        html += `<tr>
+                            <td>${f.id}</td>
+                            <td>${f.facilityCode}</td>
+                            <td>${f.facilityName}</td>
+                            <td>${f.department || '-'}</td>
+                            <td>${f.section || '-'}</td>
+                            <td>${f.region || '-'}</td>
+                        </tr>`;
+                    });
+                    html += '</tbody></table>';
+
+                    dataDiv.innerHTML = html;
+                    dataDiv.style.display = 'block';
+                } else {
+                    status.innerHTML = '<div class="status error">✗ 施設マスタの読み込みに失敗（データが空です）</div>';
+                }
+            } catch (error) {
+                status.innerHTML = `<div class="status error">✗ エラー: ${error.message}</div>`;
+            }
+        }
+
+        // 資産マスタを読み込む
+        async function loadAssetData() {
+            const status = document.getElementById('assetStatus');
+            const dataDiv = document.getElementById('assetData');
+
+            status.innerHTML = '<div class="status info">⏳ 読み込み中... <span class="loading"></span></div>';
+            dataDiv.style.display = 'none';
+
+            try {
+                const data = await window.loadAssetMaster(true); // 強制再読み込み
+
+                if (data) {
+                    const largeCount = data.largeClasses?.length || 0;
+                    const mediumCount = data.mediumClasses?.length || 0;
+                    const itemCount = data.items?.length || 0;
+
+                    status.innerHTML = `<div class="status success">✓ 資産マスタ読み込み成功
+                        <span class="count">大分類: ${largeCount}</span>
+                        <span class="count">中分類: ${mediumCount}</span>
+                        <span class="count">品目: ${itemCount}</span>
+                    </div>`;
+
+                    dataDiv.innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+                    dataDiv.style.display = 'block';
+                } else {
+                    status.innerHTML = '<div class="status error">✗ 資産マスタの読み込みに失敗（データが空です）</div>';
+                }
+            } catch (error) {
+                status.innerHTML = `<div class="status error">✗ エラー: ${error.message}</div>`;
+            }
+        }
+
+        // 統合データを読み込む
+        async function loadIntegratedData() {
+            const status = document.getElementById('integratedStatus');
+            const dataDiv = document.getElementById('integratedData');
+
+            status.innerHTML = '<div class="status info">⏳ 読み込み中... <span class="loading"></span></div>';
+            dataDiv.style.display = 'none';
+
+            try {
+                const data = await window.getMasterDataFromJSON();
+
+                if (data) {
+                    const facilityCount = data.facilities?.length || 0;
+                    const deptCount = data.departments?.length || 0;
+                    const sectionCount = data.sections?.length || 0;
+
+                    status.innerHTML = `<div class="status success">✓ 統合データ読み込み成功
+                        <span class="count">施設: ${facilityCount}</span>
+                        <span class="count">部門: ${deptCount}</span>
+                        <span class="count">部署: ${sectionCount}</span>
+                    </div>`;
+
+                    dataDiv.innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+                    dataDiv.style.display = 'block';
+                } else {
+                    status.innerHTML = '<div class="status error">✗ 統合データの読み込みに失敗（データが空です）</div>';
+                }
+            } catch (error) {
+                status.innerHTML = `<div class="status error">✗ エラー: ${error.message}</div>`;
+            }
+        }
+
+        // ページロード時の自動確認
+        window.addEventListener('load', function() {
+            const cacheStatus = document.getElementById('cacheStatus');
+            const storageData = localStorage.getItem('surveyMasterData');
+
+            if (storageData) {
+                try {
+                    const parsed = JSON.parse(storageData);
+                    const facilityCount = parsed.facilities?.length || 0;
+                    cacheStatus.innerHTML = `<div class="status info">ℹ️ ローカルストレージにキャッシュデータが存在します（施設: ${facilityCount}件）<br>最新データを取得するには「ローカルストレージをクリア」→ ページリロードしてください</div>`;
+                } catch (e) {
+                    cacheStatus.innerHTML = '<div class="status error">✗ ローカルストレージのデータが破損しています</div>';
+                }
+            } else {
+                cacheStatus.innerHTML = '<div class="status success">✓ ローカルストレージは空です（最新データが読み込まれます）</div>';
+            }
+        });
+    </script>
+</body>
+</html>

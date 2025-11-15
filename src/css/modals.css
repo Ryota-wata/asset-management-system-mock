@@ -319,6 +319,29 @@
     min-height: 44px;
 }
 
+/* Choices.jsドロップダウンリストの調整 */
+#listModal .choices__list--dropdown {
+    z-index: 1100 !important;
+    max-height: 400px !important;
+}
+
+#listModal .choices[data-type*="select-one"] .choices__list--dropdown {
+    z-index: 1100 !important;
+}
+
+/* モーダルのoverflowをvisibleにしてドロップダウンがはみ出せるようにする */
+#listModal .modal-content {
+    overflow: visible !important;
+}
+
+#listModal .modal-body {
+    overflow: visible !important;
+}
+
+#listModal .facility-select-wrapper {
+    overflow: visible !important;
+}
+
 /* ========================================
    資産マスタ表示モーダル
 ======================================== */

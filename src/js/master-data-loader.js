@@ -10,21 +10,25 @@ let facilityMasterCache = null;
 let assetMasterCache = null;
 
 /**
- * 施設マスタを読み込む
+ * 施設マスタを読み込む（キャッシュバスター付き）
+ * @param {boolean} forceRefresh - 強制的に再読み込みするか
  * @returns {Promise<Object>} 施設マスタデータ
  */
-async function loadFacilityMaster() {
-    if (facilityMasterCache) {
+async function loadFacilityMaster(forceRefresh = false) {
+    if (facilityMasterCache && !forceRefresh) {
         return facilityMasterCache;
     }
 
     try {
-        const response = await fetch('src/data/facility-master.json');
+        // キャッシュバスター: タイムスタンプを付与してブラウザキャッシュを回避
+        const timestamp = new Date().getTime();
+        const response = await fetch(`src/data/facility-master.json?v=${timestamp}`);
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         facilityMasterCache = await response.json();
         console.log('施設マスタを読み込みました:', facilityMasterCache);
+        console.log('施設データ件数:', facilityMasterCache.facilities?.length || 0);
         return facilityMasterCache;
     } catch (error) {
         console.error('施設マスタの読み込みに失敗しました:', error);
@@ -33,16 +37,19 @@ async function loadFacilityMaster() {
 }
 
 /**
- * 資産マスタを読み込む
+ * 資産マスタを読み込む（キャッシュバスター付き）
+ * @param {boolean} forceRefresh - 強制的に再読み込みするか
  * @returns {Promise<Object>} 資産マスタデータ
  */
-async function loadAssetMaster() {
-    if (assetMasterCache) {
+async function loadAssetMaster(forceRefresh = false) {
+    if (assetMasterCache && !forceRefresh) {
         return assetMasterCache;
     }
 
     try {
-        const response = await fetch('src/data/asset-master.json');
+        // キャッシュバスター: タイムスタンプを付与してブラウザキャッシュを回避
+        const timestamp = new Date().getTime();
+        const response = await fetch(`src/data/asset-master.json?v=${timestamp}`);
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -62,7 +69,10 @@ async function loadAssetMaster() {
  */
 async function initFacilityNameSelect(elementId) {
     const facilityMaster = await loadFacilityMaster();
-    if (!facilityMaster) return null;
+    if (!facilityMaster || !facilityMaster.facilities || facilityMaster.facilities.length === 0) {
+        console.error(`施設マスタの取得に失敗: ${elementId}`);
+        return null;
+    }
 
     const element = document.getElementById(elementId);
     if (!element) {
@@ -70,14 +80,22 @@ async function initFacilityNameSelect(elementId) {
         return null;
     }
 
-    const choices = facilityMaster.facilities.map(facility => ({
-        value: facility.id,
-        label: facility.name,
-        customProperties: {
-            code: facility.code,
-            region: facility.region
+    // ユニークな施設のみ抽出
+    const uniqueFacilities = [];
+    const seenCodes = new Set();
+
+    facilityMaster.facilities.forEach(facility => {
+        if (!seenCodes.has(facility.facilityCode)) {
+            seenCodes.add(facility.facilityCode);
+            uniqueFacilities.push({
+                value: facility.facilityCode,
+                label: facility.facilityName,
+                customProperties: {
+                    code: facility.facilityCode
+                }
+            });
         }
-    }));
+    });
 
     const choicesInstance = new Choices(element, {
         searchEnabled: true,
@@ -99,8 +117,8 @@ async function initFacilityNameSelect(elementId) {
 
     choicesInstance.setChoices([
         { value: '', label: '選択してください', selected: true },
-        ...choices
-    ]);
+        ...uniqueFacilities
+    ], 'value', 'label', true);
 
     return choicesInstance;
 }
@@ -120,14 +138,22 @@ async function initDepartmentSelect(elementId) {
         return null;
     }
 
-    const choices = facilityMaster.departments.map(dept => ({
-        value: dept.id,
-        label: dept.name,
-        customProperties: {
-            code: dept.code,
-            category: dept.category
+    // ユニークな部門のみ抽出
+    const uniqueDepartments = [];
+    const seenDepartments = new Set();
+
+    facilityMaster.facilities.forEach(facility => {
+        if (facility.department && !seenDepartments.has(facility.department)) {
+            seenDepartments.add(facility.department);
+            uniqueDepartments.push({
+                value: facility.department,
+                label: facility.department
+            });
         }
-    }));
+    });
+
+    // ソート
+    uniqueDepartments.sort((a, b) => a.label.localeCompare(b.label, 'ja'));
 
     const choicesInstance = new Choices(element, {
         searchEnabled: true,
@@ -149,7 +175,7 @@ async function initDepartmentSelect(elementId) {
 
     choicesInstance.setChoices([
         { value: '', label: '選択してください', selected: true },
-        ...choices
+        ...uniqueDepartments
     ]);
 
     return choicesInstance;
@@ -161,7 +187,7 @@ async function initDepartmentSelect(elementId) {
  * @param {number} departmentId - 部門ID（フィルタリング用）
  * @returns {Promise<Choices>} Choices.jsインスタンス
  */
-async function initSectionSelect(elementId, departmentId = null) {
+async function initSectionSelect(elementId, department = null) {
     const facilityMaster = await loadFacilityMaster();
     if (!facilityMaster) return null;
 
@@ -171,30 +197,41 @@ async function initSectionSelect(elementId, departmentId = null) {
         return null;
     }
 
-    let sections = facilityMaster.sections;
-    if (departmentId) {
-        sections = sections.filter(section => section.departmentId === departmentId);
-    }
+    // ユニークな部署のみ抽出（部門でフィルタリング可能）
+    const uniqueSections = [];
+    const seenSections = new Set();
 
-    const choices = sections.map(section => ({
-        value: section.id,
-        label: section.name,
-        customProperties: {
-            code: section.code,
-            departmentId: section.departmentId
+    facilityMaster.facilities.forEach(facility => {
+        // 部門が指定されている場合はフィルタリング
+        if (department && facility.department !== department) {
+            return;
         }
-    }));
+
+        if (facility.section && !seenSections.has(facility.section)) {
+            seenSections.add(facility.section);
+            uniqueSections.push({
+                value: facility.section,
+                label: facility.section,
+                customProperties: {
+                    department: facility.department
+                }
+            });
+        }
+    });
+
+    // ソート
+    uniqueSections.sort((a, b) => a.label.localeCompare(b.label, 'ja'));
 
     const choicesInstance = new Choices(element, {
         searchEnabled: true,
         searchChoices: true,
         searchFloor: 1,
         searchResultLimit: 50,
-        searchPlaceholderValue: '科を検索...',
+        searchPlaceholderValue: '部署を検索...',
         placeholder: true,
-        placeholderValue: '科を選択してください',
+        placeholderValue: '部署を選択してください',
         itemSelectText: '',
-        noResultsText: '該当する科が見つかりません',
+        noResultsText: '該当する部署が見つかりません',
         noChoicesText: '選択肢がありません',
         shouldSort: false,
         fuseOptions: {
@@ -205,7 +242,7 @@ async function initSectionSelect(elementId, departmentId = null) {
 
     choicesInstance.setChoices([
         { value: '', label: '選択してください', selected: true },
-        ...choices
+        ...uniqueSections
     ]);
 
     return choicesInstance;
@@ -547,15 +584,15 @@ async function setupFacilityCascade() {
         return;
     }
 
-    // 部門が変更されたら科を更新
+    // 部門が変更されたら部署を更新
     departmentSelect.addEventListener('change', async function(e) {
-        const departmentId = parseInt(e.target.value);
+        const department = e.target.value;
 
-        // 科を更新
+        // 部署を更新
         if (window.sectionChoice) {
             window.sectionChoice.destroy();
         }
-        window.sectionChoice = await initSectionSelect('sectionSelect', departmentId);
+        window.sectionChoice = await initSectionSelect('sectionSelect', department);
     });
 }
 
@@ -566,7 +603,10 @@ async function setupFacilityCascade() {
  */
 async function initFacilitySearchSelect(elementId) {
     const facilityMaster = await loadFacilityMaster();
-    if (!facilityMaster) return null;
+    if (!facilityMaster || !facilityMaster.facilities || facilityMaster.facilities.length === 0) {
+        console.error(`施設マスタの取得に失敗: ${elementId}`);
+        return null;
+    }
 
     const element = document.getElementById(elementId);
     if (!element) {
@@ -574,14 +614,22 @@ async function initFacilitySearchSelect(elementId) {
         return null;
     }
 
-    const choices = facilityMaster.facilities.map(facility => ({
-        value: facility.id,
-        label: facility.name,
-        customProperties: {
-            code: facility.code,
-            region: facility.region
+    // ユニークな施設のみ抽出
+    const uniqueFacilities = [];
+    const seenCodes = new Set();
+
+    facilityMaster.facilities.forEach(facility => {
+        if (!seenCodes.has(facility.facilityCode)) {
+            seenCodes.add(facility.facilityCode);
+            uniqueFacilities.push({
+                value: facility.facilityCode,
+                label: facility.facilityName,
+                customProperties: {
+                    code: facility.facilityCode
+                }
+            });
         }
-    }));
+    });
 
     const choicesInstance = new Choices(element, {
         searchEnabled: true,
@@ -603,18 +651,24 @@ async function initFacilitySearchSelect(elementId) {
 
     choicesInstance.setChoices([
         { value: '', label: '選択してください', selected: true },
-        ...choices
-    ]);
+        ...uniqueFacilities
+    ], 'value', 'label', true);
 
     // 施設選択時の処理
     element.addEventListener('change', function(event) {
         const selectedValue = event.target.value;
         if (selectedValue) {
-            // 選択された施設のIDから施設情報を取得
-            const facilityId = parseInt(selectedValue);
-            const facility = facilityMaster.facilities.find(f => f.id === facilityId);
+            // 選択された施設コードから施設情報を取得
+            const facility = facilityMaster.facilities.find(f => f.facilityCode === selectedValue);
             if (facility) {
-                window.selectedFacility = facility;
+                window.selectedFacility = {
+                    facilityCode: facility.facilityCode,
+                    facilityName: facility.facilityName,
+                    building: facility.building,
+                    floor: facility.floor,
+                    department: facility.department,
+                    section: facility.section
+                };
             }
             // メニューボタンを有効化
             const buttons = document.querySelectorAll('#listModal .menu-btn');

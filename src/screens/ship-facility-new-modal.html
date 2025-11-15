@@ -16,7 +16,7 @@
 
                     <div class="facility-form-row">
                         <div class="facility-form-group">
-                            <label class="facility-form-label required">施設ID</label>
+                            <label class="facility-form-label required">施設コード</label>
                             <input type="text" class="facility-form-input" id="facilityCode" placeholder="F001" required>
                             <small class="facility-form-hint">例: F001</small>
                         </div>
@@ -31,27 +31,23 @@
 
                     <div class="facility-form-row">
                         <div class="facility-form-group half">
-                            <label class="facility-form-label required">都道府県</label>
-                            <select class="facility-form-input" id="facilityRegion" required>
-                                <option value="">選択してください</option>
-                                <option value="北海道">北海道</option>
-                                <option value="宮城">宮城</option>
-                                <option value="東京">東京</option>
-                                <option value="神奈川">神奈川</option>
-                                <option value="愛知">愛知</option>
-                                <option value="大阪">大阪</option>
-                                <option value="福岡">福岡</option>
-                                <option value="広島">広島</option>
-                            </select>
+                            <label class="facility-form-label">棟</label>
+                            <input type="text" class="facility-form-input" id="facilityBuilding" placeholder="本館">
                         </div>
                         <div class="facility-form-group half">
-                            <label class="facility-form-label required">施設種別</label>
-                            <select class="facility-form-input" id="facilityType" required>
-                                <option value="">選択してください</option>
-                                <option value="総合病院">総合病院</option>
-                                <option value="医療センター">医療センター</option>
-                                <option value="クリニック">クリニック</option>
-                            </select>
+                            <label class="facility-form-label">階</label>
+                            <input type="text" class="facility-form-input" id="facilityFloor" placeholder="1F">
+                        </div>
+                    </div>
+
+                    <div class="facility-form-row">
+                        <div class="facility-form-group half">
+                            <label class="facility-form-label">部門</label>
+                            <input type="text" class="facility-form-input" id="facilityDepartment" placeholder="内科">
+                        </div>
+                        <div class="facility-form-group half">
+                            <label class="facility-form-label">部署</label>
+                            <input type="text" class="facility-form-input" id="facilitySection" placeholder="外来">
                         </div>
                     </div>
                 </div>

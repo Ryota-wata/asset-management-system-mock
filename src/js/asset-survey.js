@@ -26,8 +26,8 @@ const FIELD_MASTER_MAP = {
 /**
  * 現有資産調査画面にマスタデータをロード
  */
-function loadSurveyMasterData() {
-    const masterData = loadMasterDataFromStorage();
+async function loadSurveyMasterData() {
+    const masterData = await loadMasterDataFromStorage();
     const choicesMap = {
         surveyCategoryChoice: 'categories',
         surveyBuildingChoice: 'buildings',
@@ -38,7 +38,7 @@ function loadSurveyMasterData() {
 
     Object.entries(choicesMap).forEach(([choiceName, dataKey]) => {
         const choice = window[choiceName];
-        if (choice) {
+        if (choice && masterData[dataKey]) {
             choice.clearStore();
             choice.setChoices(masterData[dataKey], 'value', 'label', true);
         }
@@ -169,7 +169,7 @@ function applyHistoryToIntegratedForm(row) {
  * 履歴テーブル行の編集処理
  * @param {HTMLElement} button - クリックされた編集ボタン要素
  */
-function editHistoryRow(button) {
+async function editHistoryRow(button) {
     const row = button.closest('.history-row');
     if (!row || row.classList.contains('editing')) return;
 
@@ -195,7 +195,7 @@ function editHistoryRow(button) {
     cells[CELL_INDEX.SIZE].innerHTML = `<input type="text" class="history-edit-input" value="${data.サイズ}" placeholder="W×D×H">`;
 
     // Choices.jsを初期化
-    initializeEditChoices(row);
+    await initializeEditChoices(row);
 
     // 操作ボタンを変更
     cells[CELL_INDEX.ACTION].innerHTML = `
@@ -214,8 +214,8 @@ function editHistoryRow(button) {
  * 編集モードのChoices.jsを初期化
  * @param {HTMLElement} row - 行要素
  */
-function initializeEditChoices(row) {
-    const masterData = loadMasterDataFromStorage();
+async function initializeEditChoices(row) {
+    const masterData = await loadMasterDataFromStorage();
     const selects = row.querySelectorAll('.history-edit-select');
 
     selects.forEach(select => {

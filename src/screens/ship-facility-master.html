@@ -20,35 +20,12 @@
         <div class="filter-header" id="facilityFilterHeader">
             <div class="filter-row-single">
                 <div class="filter-group">
-                    <label>施設ID</label>
-                    <input type="text" id="filterFacilityId" class="filter-input" placeholder="F-001" oninput="filterFacilityTable()">
+                    <label>施設コード</label>
+                    <input type="text" id="filterFacilityId" class="filter-input" placeholder="F001" oninput="filterFacilityTable()">
                 </div>
                 <div class="filter-group">
                     <label>施設名</label>
                     <input type="text" id="filterFacilityName" class="filter-input" placeholder="施設名で検索" oninput="filterFacilityTable()">
-                </div>
-                <div class="filter-group">
-                    <label>都道府県</label>
-                    <select id="filterPrefecture" class="filter-select" onchange="filterFacilityTable()">
-                        <option value="">すべて</option>
-                        <option value="北海道">北海道</option>
-                        <option value="宮城">宮城</option>
-                        <option value="東京">東京</option>
-                        <option value="神奈川">神奈川</option>
-                        <option value="愛知">愛知</option>
-                        <option value="大阪">大阪</option>
-                        <option value="福岡">福岡</option>
-                        <option value="広島">広島</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <label>施設種別</label>
-                    <select id="filterType" class="filter-select" onchange="filterFacilityTable()">
-                        <option value="">すべて</option>
-                        <option value="総合病院">総合病院</option>
-                        <option value="医療センター">医療センター</option>
-                        <option value="クリニック">クリニック</option>
-                    </select>
                 </div>
                 <div class="filter-group">
                     <button class="filter-reset-btn" onclick="resetFacilityFilter()">リセット</button>

@@ -89,7 +89,7 @@ async function initChoices() {
 
     // Choices.js初期化後、検索画面の分類情報にマスタデータをロード
     if (typeof loadSearchMasterData === 'function') {
-        loadSearchMasterData();
+        await loadSearchMasterData();
     }
 
     // 資産情報入力画面の分類情報ドロップダウン初期化（共通ヘルパー使用）

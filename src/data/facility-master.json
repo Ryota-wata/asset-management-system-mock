@@ -1,399 +1,148 @@
 {
-  "columns": [
-    {
-      "id": "checkbox",
-      "label": "",
-      "field": "checkbox",
-      "type": "checkbox",
-      "width": "50px",
-      "sortable": false
-    },
-    {
-      "id": "no",
-      "label": "No.",
-      "field": "no",
-      "type": "number",
-      "width": "60px",
-      "sortable": true
-    },
-    {
-      "id": "code",
-      "label": "施設ID",
-      "field": "code",
-      "type": "text",
-      "width": "100px",
-      "sortable": true
-    },
-    {
-      "id": "name",
-      "label": "施設名",
-      "field": "name",
-      "type": "text",
-      "width": "200px",
-      "sortable": true
-    },
-    {
-      "id": "region",
-      "label": "都道府県",
-      "field": "region",
-      "type": "text",
-      "width": "100px",
-      "sortable": true
-    },
-    {
-      "id": "type",
-      "label": "施設種別",
-      "field": "type",
-      "type": "text",
-      "width": "150px",
-      "sortable": true
-    },
-    {
-      "id": "actions",
-      "label": "操作",
-      "field": "actions",
-      "type": "actions",
-      "width": "100px",
-      "sortable": false
-    }
-  ],
-  "data": [
+  "facilities": [
     {
       "id": 1,
-      "name": "東京中央総合病院",
-      "code": "F001",
-      "region": "東京",
-      "type": "総合病院"
+      "facilityCode": "F001",
+      "facilityName": "東京中央総合病院",
+      "building": "本館",
+      "floor": "1F",
+      "department": "内科",
+      "section": "外来"
     },
     {
       "id": 2,
-      "name": "東京第一クリニック",
-      "code": "F002",
-      "region": "東京",
-      "type": "クリニック"
+      "facilityCode": "F002",
+      "facilityName": "東京第一クリニック",
+      "building": "本館",
+      "floor": "1F",
+      "department": "内科",
+      "section": "外来"
     },
     {
       "id": 3,
-      "name": "横浜総合医療センター",
-      "code": "F003",
-      "region": "神奈川",
-      "type": "医療センター"
+      "facilityCode": "F003",
+      "facilityName": "横浜総合医療センター",
+      "building": "A棟",
+      "floor": "1F",
+      "department": "救急科",
+      "section": "救急外来"
     },
     {
       "id": 4,
-      "name": "横浜南病院",
-      "code": "F004",
-      "region": "神奈川",
-      "type": "総合病院"
+      "facilityCode": "F004",
+      "facilityName": "横浜南病院",
+      "building": "本館",
+      "floor": "1F",
+      "department": "内科",
+      "section": "外来"
     },
     {
       "id": 5,
-      "name": "大阪中央病院",
-      "code": "F005",
-      "region": "大阪",
-      "type": "総合病院"
+      "facilityCode": "F005",
+      "facilityName": "大阪中央病院",
+      "building": "本館",
+      "floor": "1F",
+      "department": "総合診療科",
+      "section": "外来"
     },
     {
       "id": 6,
-      "name": "大阪北部医療センター",
-      "code": "F006",
-      "region": "大阪",
-      "type": "医療センター"
+      "facilityCode": "F006",
+      "facilityName": "大阪北部医療センター",
+      "building": "A棟",
+      "floor": "1F",
+      "department": "救急科",
+      "section": "救急外来"
     },
     {
       "id": 7,
-      "name": "名古屋総合病院",
-      "code": "F007",
-      "region": "愛知",
-      "type": "総合病院"
+      "facilityCode": "F007",
+      "facilityName": "名古屋総合病院",
+      "building": "本館",
+      "floor": "1F",
+      "department": "内科",
+      "section": "外来"
     },
     {
       "id": 8,
-      "name": "名古屋東クリニック",
-      "code": "F008",
-      "region": "愛知",
-      "type": "クリニック"
+      "facilityCode": "F008",
+      "facilityName": "福岡中央病院",
+      "building": "本館",
+      "floor": "1F",
+      "department": "内科",
+      "section": "外来"
     },
     {
       "id": 9,
-      "name": "福岡中央病院",
-      "code": "F009",
-      "region": "福岡",
-      "type": "総合病院"
+      "facilityCode": "F009",
+      "facilityName": "札幌総合医療センター",
+      "building": "A棟",
+      "floor": "1F",
+      "department": "救急科",
+      "section": "救急外来"
     },
     {
       "id": 10,
-      "name": "福岡西部医療センター",
-      "code": "F010",
-      "region": "福岡",
-      "type": "医療センター"
+      "facilityCode": "F010",
+      "facilityName": "仙台中央病院",
+      "building": "本館",
+      "floor": "1F",
+      "department": "内科",
+      "section": "外来"
     },
     {
       "id": 11,
-      "name": "札幌総合病院",
-      "code": "F011",
-      "region": "北海道",
-      "type": "総合病院"
+      "facilityCode": "F011",
+      "facilityName": "広島総合病院",
+      "building": "本館",
+      "floor": "1F",
+      "department": "総合診療科",
+      "section": "外来"
     },
     {
       "id": 12,
-      "name": "札幌北クリニック",
-      "code": "F012",
-      "region": "北海道",
-      "type": "クリニック"
+      "facilityCode": "F012",
+      "facilityName": "神戸医療センター",
+      "building": "A棟",
+      "floor": "1F",
+      "department": "救急科",
+      "section": "救急外来"
     },
     {
       "id": 13,
-      "name": "仙台中央病院",
-      "code": "F013",
-      "region": "宮城",
-      "type": "総合病院"
+      "facilityCode": "F013",
+      "facilityName": "京都中央病院",
+      "building": "本館",
+      "floor": "1F",
+      "department": "内科",
+      "section": "外来"
     },
     {
       "id": 14,
-      "name": "仙台東部医療センター",
-      "code": "F014",
-      "region": "宮城",
-      "type": "医療センター"
+      "facilityCode": "F014",
+      "facilityName": "埼玉総合病院",
+      "building": "本館",
+      "floor": "1F",
+      "department": "内科",
+      "section": "外来"
     },
     {
       "id": 15,
-      "name": "広島総合病院",
-      "code": "F015",
-      "region": "広島",
-      "type": "総合病院"
-    }
-  ],
-  "departments": [
-    {
-      "id": 1,
-      "name": "内科",
-      "code": "D001",
-      "category": "診療部門"
-    },
-    {
-      "id": 2,
-      "name": "外科",
-      "code": "D002",
-      "category": "診療部門"
-    },
-    {
-      "id": 3,
-      "name": "整形外科",
-      "code": "D003",
-      "category": "診療部門"
-    },
-    {
-      "id": 4,
-      "name": "小児科",
-      "code": "D004",
-      "category": "診療部門"
-    },
-    {
-      "id": 5,
-      "name": "産婦人科",
-      "code": "D005",
-      "category": "診療部門"
-    },
-    {
-      "id": 6,
-      "name": "眼科",
-      "code": "D006",
-      "category": "診療部門"
-    },
-    {
-      "id": 7,
-      "name": "耳鼻咽喉科",
-      "code": "D007",
-      "category": "診療部門"
-    },
-    {
-      "id": 8,
-      "name": "皮膚科",
-      "code": "D008",
-      "category": "診療部門"
-    },
-    {
-      "id": 9,
-      "name": "精神科",
-      "code": "D009",
-      "category": "診療部門"
-    },
-    {
-      "id": 10,
-      "name": "放射線科",
-      "code": "D010",
-      "category": "診療部門"
-    },
-    {
-      "id": 11,
-      "name": "麻酔科",
-      "code": "D011",
-      "category": "診療部門"
-    },
-    {
-      "id": 12,
-      "name": "救急科",
-      "code": "D012",
-      "category": "診療部門"
-    },
-    {
-      "id": 13,
-      "name": "検査部門",
-      "code": "D013",
-      "category": "検査部門"
-    },
-    {
-      "id": 14,
-      "name": "薬剤部門",
-      "code": "D014",
-      "category": "薬剤部門"
-    },
-    {
-      "id": 15,
-      "name": "リハビリテーション",
-      "code": "D015",
-      "category": "リハビリ部門"
+      "facilityCode": "F015",
+      "facilityName": "千葉医療センター",
+      "building": "A棟",
+      "floor": "1F",
+      "department": "救急科",
+      "section": "救急外来"
     },
     {
       "id": 16,
-      "name": "栄養科",
-      "code": "D016",
-      "category": "管理部門"
-    },
-    {
-      "id": 17,
-      "name": "総務課",
-      "code": "D017",
-      "category": "管理部門"
-    },
-    {
-      "id": 18,
-      "name": "経理課",
-      "code": "D018",
-      "category": "管理部門"
-    }
-  ],
-  "sections": [
-    {
-      "id": 1,
-      "name": "外来",
-      "code": "S001",
-      "departmentId": 1
-    },
-    {
-      "id": 2,
-      "name": "病棟",
-      "code": "S002",
-      "departmentId": 1
-    },
-    {
-      "id": 3,
-      "name": "ICU",
-      "code": "S003",
-      "departmentId": 1
-    },
-    {
-      "id": 4,
-      "name": "手術室",
-      "code": "S004",
-      "departmentId": 2
-    },
-    {
-      "id": 5,
-      "name": "外来",
-      "code": "S005",
-      "departmentId": 2
-    },
-    {
-      "id": 6,
-      "name": "病棟",
-      "code": "S006",
-      "departmentId": 3
-    },
-    {
-      "id": 7,
-      "name": "外来",
-      "code": "S007",
-      "departmentId": 4
-    },
-    {
-      "id": 8,
-      "name": "NICU",
-      "code": "S008",
-      "departmentId": 4
-    },
-    {
-      "id": 9,
-      "name": "分娩室",
-      "code": "S009",
-      "departmentId": 5
-    },
-    {
-      "id": 10,
-      "name": "外来",
-      "code": "S010",
-      "departmentId": 5
-    },
-    {
-      "id": 11,
-      "name": "CT室",
-      "code": "S011",
-      "departmentId": 10
-    },
-    {
-      "id": 12,
-      "name": "MRI室",
-      "code": "S012",
-      "departmentId": 10
-    },
-    {
-      "id": 13,
-      "name": "X線撮影室",
-      "code": "S013",
-      "departmentId": 10
-    },
-    {
-      "id": 14,
-      "name": "病理検査",
-      "code": "S014",
-      "departmentId": 13
-    },
-    {
-      "id": 15,
-      "name": "生理検査",
-      "code": "S015",
-      "departmentId": 13
-    },
-    {
-      "id": 16,
-      "name": "臨床検査",
-      "code": "S016",
-      "departmentId": 13
-    },
-    {
-      "id": 17,
-      "name": "調剤室",
-      "code": "S017",
-      "departmentId": 14
-    },
-    {
-      "id": 18,
-      "name": "理学療法室",
-      "code": "S018",
-      "departmentId": 15
-    },
-    {
-      "id": 19,
-      "name": "作業療法室",
-      "code": "S019",
-      "departmentId": 15
-    },
-    {
-      "id": 20,
-      "name": "言語聴覚室",
-      "code": "S020",
-      "departmentId": 15
+      "facilityCode": "F016",
+      "facilityName": "ディズニー医療センター",
+      "building": "A棟",
+      "floor": "2F",
+      "department": "手術部門",
+      "section": "手術室"
     }
   ]
 }

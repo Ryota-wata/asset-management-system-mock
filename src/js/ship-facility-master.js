@@ -24,34 +24,35 @@ async function loadFacilityMasterConfig() {
         console.log('Loaded config:', config);
         console.log('All config keys:', Object.keys(config));
 
-        // columnsとdata/facilitiesの両方をチェック
-        const hasColumns = !!config.columns;
-        const hasData = !!(config.data || config.facilities);
+        // facilities/dataの存在チェック（必須）
+        const hasData = !!(config.facilities || config.data);
 
-        if (!hasColumns || !hasData) {
+        if (!hasData) {
             console.error('Missing required fields!');
-            console.error('Has columns?', hasColumns);
-            console.error('Has data?', !!config.data);
             console.error('Has facilities?', !!config.facilities);
-            throw new Error('Invalid JSON structure: missing columns or data/facilities');
+            console.error('Has data?', !!config.data);
+            throw new Error('Invalid JSON structure: missing facilities/data');
         }
 
-        // columnsがない場合は動的に生成
+        // columnsがない場合は動的に生成（フラット構造対応）
         if (!config.columns) {
+            console.log('Columns not found, generating default columns for flat structure...');
             config.columns = [
                 { id: "checkbox", label: "", field: "checkbox", type: "checkbox", width: "50px" },
                 { id: "no", label: "No.", field: "no", type: "number", width: "60px" },
-                { id: "code", label: "施設ID", field: "code", type: "text", width: "100px" },
-                { id: "name", label: "施設名", field: "name", type: "text", width: "200px" },
-                { id: "region", label: "都道府県", field: "region", type: "text", width: "100px" },
-                { id: "type", label: "施設種別", field: "type", type: "text", width: "150px" },
+                { id: "code", label: "施設コード", field: "facilityCode", type: "text", width: "100px" },
+                { id: "name", label: "施設名", field: "facilityName", type: "text", width: "200px" },
+                { id: "building", label: "棟", field: "building", type: "text", width: "100px" },
+                { id: "floor", label: "階", field: "floor", type: "text", width: "80px" },
+                { id: "department", label: "部門", field: "department", type: "text", width: "120px" },
+                { id: "section", label: "部署", field: "section", type: "text", width: "120px" },
                 { id: "actions", label: "操作", field: "actions", type: "actions", width: "100px" }
             ];
         }
 
         shipFacilityConfig = config;
-        // dataまたはfacilitiesを使用
-        shipFacilityData = config.data || config.facilities;
+        // facilitiesまたはdata（後方互換性）を使用
+        shipFacilityData = config.facilities || config.data;
         console.log('shipFacilityConfig set:', shipFacilityConfig);
         console.log('shipFacilityData set:', shipFacilityData);
         return config;
@@ -119,7 +120,7 @@ function renderFacilityTableBody() {
 
     shipFacilityData.forEach((facility, index) => {
         const tr = document.createElement('tr');
-        tr.dataset.facilityCode = facility.code;
+        tr.dataset.facilityCode = facility.facilityCode || facility.code;
 
         shipFacilityConfig.columns.forEach(column => {
             const td = document.createElement('td');
@@ -136,11 +137,17 @@ function renderFacilityTableBody() {
                     break;
 
                 case 'actions':
-                    td.innerHTML = `<button class="table-action-btn edit" onclick="showFacilityEditModal('${facility.code}')">編集</button>`;
+                    td.innerHTML = `<button class="table-action-btn edit" onclick="showFacilityEditModal('${facility.facilityCode || facility.code}')">編集</button>`;
                     break;
 
                 default:
-                    const value = facility[column.field];
+                    // フラット構造対応: facilityName, facilityCode等のフィールド名にも対応
+                    const fieldMapping = {
+                        'name': 'facilityName',
+                        'code': 'facilityCode'
+                    };
+                    const actualField = fieldMapping[column.field] || column.field;
+                    const value = facility[actualField] || facility[column.field];
                     td.textContent = value || '-';
                     break;
             }
@@ -191,8 +198,6 @@ function toggleFacilityFilter() {
 function resetFacilityFilter() {
     document.getElementById('filterFacilityId').value = '';
     document.getElementById('filterFacilityName').value = '';
-    document.getElementById('filterPrefecture').value = '';
-    document.getElementById('filterType').value = '';
     filterFacilityTable();
 }
 
@@ -202,26 +207,20 @@ function resetFacilityFilter() {
 function filterFacilityTable() {
     const facilityId = document.getElementById('filterFacilityId').value.toLowerCase();
     const facilityName = document.getElementById('filterFacilityName').value.toLowerCase();
-    const prefecture = document.getElementById('filterPrefecture').value;
-    const type = document.getElementById('filterType').value;
 
     const rows = document.querySelectorAll('#facilityTableBody tr');
     let visibleCount = 0;
 
     rows.forEach(row => {
         const cells = row.querySelectorAll('td');
-        // 新しいテーブル構造: [checkbox, No, 施設ID, 施設名, 都道府県, 施設種別, 操作]
+        // フラット構造のテーブル: [checkbox(0), No(1), 施設コード(2), 施設名(3), 棟(4), 階(5), 部門(6), 部署(7), 操作(8)]
         const rowFacilityId = cells[2]?.textContent.toLowerCase() || '';
         const rowFacilityName = cells[3]?.textContent.toLowerCase() || '';
-        const rowPrefecture = cells[4]?.textContent || '';
-        const rowType = cells[5]?.textContent || '';
 
         let matchFacilityId = !facilityId || rowFacilityId.includes(facilityId);
         let matchFacilityName = !facilityName || rowFacilityName.includes(facilityName);
-        let matchPrefecture = !prefecture || rowPrefecture === prefecture;
-        let matchType = !type || rowType === type;
 
-        if (matchFacilityId && matchFacilityName && matchPrefecture && matchType) {
+        if (matchFacilityId && matchFacilityName) {
             row.style.display = '';
             visibleCount++;
         } else {
@@ -368,10 +367,12 @@ function handleFacilityNewSubmit(event) {
 
     // フォームデータを取得
     const formData = {
-        code: document.getElementById('facilityCode').value,
-        name: document.getElementById('facilityName').value,
-        region: document.getElementById('facilityRegion').value,
-        type: document.getElementById('facilityType').value
+        facilityCode: document.getElementById('facilityCode').value,
+        facilityName: document.getElementById('facilityName').value,
+        building: document.getElementById('facilityBuilding')?.value || '本館',
+        floor: document.getElementById('facilityFloor')?.value || '1F',
+        department: document.getElementById('facilityDepartment')?.value || '-',
+        section: document.getElementById('facilitySection')?.value || '-'
     };
 
     console.log('新規施設データ:', formData);
@@ -381,13 +382,15 @@ function handleFacilityNewSubmit(event) {
         ? Math.max(...shipFacilityData.map(f => f.id))
         : 0;
 
-    // shipFacilityDataに追加
+    // shipFacilityDataに追加（フラット構造）
     const newFacility = {
         id: maxId + 1,
-        code: formData.code,
-        name: formData.name,
-        region: formData.region,
-        type: formData.type
+        facilityCode: formData.facilityCode,
+        facilityName: formData.facilityName,
+        building: formData.building,
+        floor: formData.floor,
+        department: formData.department,
+        section: formData.section
     };
 
     shipFacilityData.push(newFacility);
@@ -399,7 +402,7 @@ function handleFacilityNewSubmit(event) {
     closeFacilityNewModal();
 
     // 成功メッセージ
-    alert(`施設「${formData.name}」を登録しました`);
+    alert(`施設「${formData.facilityName}」を登録しました`);
 }
 
 /**

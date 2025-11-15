@@ -1,174 +1,102 @@
 /**
  * マスタデータ管理
  * マスタデータの取得、保存、ロード、同期などの機能を提供します。
+ * JSONファイルから動的に読み込みます。
  */
-
-// 施設マスタデータ
-const facilities = [
-    { id: 1, name: '東京中央総合病院' },
-    { id: 2, name: '東京第一クリニック' },
-    { id: 3, name: '横浜総合医療センター' },
-    { id: 4, name: '横浜南病院' },
-    { id: 5, name: '大阪中央病院' },
-    { id: 6, name: '大阪北部医療センター' },
-    { id: 7, name: '名古屋総合病院' },
-    { id: 8, name: '名古屋東クリニック' },
-    { id: 9, name: '福岡中央病院' },
-    { id: 10, name: '福岡西部医療センター' },
-    { id: 11, name: '札幌総合病院' },
-    { id: 12, name: '札幌北クリニック' },
-    { id: 13, name: '仙台中央病院' },
-    { id: 14, name: '仙台東部医療センター' },
-    { id: 15, name: '広島総合病院' }
-];
 
 // マスタデータのストレージキー
 const MASTER_DATA_KEY = 'surveyMasterData';
 
 /**
- * サンプルマスタデータを取得（実際はサーバーから取得）
- * @returns {Object} マスタデータオブジェクト
+ * マスタデータをJSONファイルから取得
+ * @returns {Promise<Object>} マスタデータオブジェクト
  */
-function getSampleMasterData() {
-    return {
-        categories: [
-            { value: 'medical', label: '医療機器' },
-            { value: 'furniture', label: '什器' },
-            { value: 'all', label: '全現調' },
-            { value: 'equipment', label: '設備機器' },
-            { value: 'it', label: 'IT機器' }
-        ],
-        buildings: [
-            { value: 'main', label: '本館' },
-            { value: 'east', label: '東館' },
-            { value: 'west', label: '西館' },
-            { value: 'north', label: '北館' },
-            { value: 'annex', label: '別館' }
-        ],
-        floors: [
-            { value: 'b2', label: 'B2F' },
-            { value: 'b1', label: 'B1F' },
-            { value: '1f', label: '1F' },
-            { value: '2f', label: '2F' },
-            { value: '3f', label: '3F' },
-            { value: '4f', label: '4F' },
-            { value: '5f', label: '5F' },
-            { value: '6f', label: '6F' },
-            { value: '7f', label: '7F' }
-        ],
-        departments: [
-            { value: 'examination', label: '検査部門' },
-            { value: 'medical', label: '診療部門' },
-            { value: 'administration', label: '管理部門' },
-            { value: 'pharmacy', label: '薬剤部門' },
-            { value: 'radiology', label: '放射線部門' },
-            { value: 'rehabilitation', label: 'リハビリ部門' }
-        ],
-        sections: [
-            { value: 'pathology', label: '病理検査' },
-            { value: 'physiology', label: '生理検査' },
-            { value: 'clinical', label: '臨床検査' },
-            { value: 'general', label: '総務課' },
-            { value: 'accounting', label: '経理課' },
-            { value: 'internal', label: '内科' },
-            { value: 'surgery', label: '外科' },
-            { value: 'emergency', label: '救急科' }
-        ],
-        largeClasses: [
-            { value: '医療機器', label: '医療機器' },
-            { value: '放射線関連機器', label: '放射線関連機器' },
-            { value: '検査機器', label: '検査機器' },
-            { value: '治療機器', label: '治療機器' },
-            { value: '手術機器', label: '手術機器' },
-            { value: '生命維持管理機器', label: '生命維持管理機器' },
-            { value: '滅菌・洗浄機器', label: '滅菌・洗浄機器' },
-            { value: '什器備品', label: '什器備品' },
-            { value: 'システム機器', label: 'システム機器' },
-            { value: '事務機器', label: '事務機器' },
-            { value: '家具', label: '家具' }
-        ],
-        mediumClasses: [
-            { value: 'CT関連', label: 'CT関連' },
-            { value: 'MRI関連', label: 'MRI関連' },
-            { value: 'X線関連', label: 'X線関連' },
-            { value: '超音波関連', label: '超音波関連' },
-            { value: '内視鏡関連', label: '内視鏡関連' },
-            { value: '血液検査関連', label: '血液検査関連' },
-            { value: '生化学検査関連', label: '生化学検査関連' },
-            { value: '人工呼吸器関連', label: '人工呼吸器関連' },
-            { value: '透析関連', label: '透析関連' },
-            { value: '手術台・照明', label: '手術台・照明' },
-            { value: '電気メス・レーザー', label: '電気メス・レーザー' },
-            { value: 'PC機器', label: 'PC機器' },
-            { value: '複合機', label: '複合機' },
-            { value: 'デスク', label: 'デスク' },
-            { value: 'チェア', label: 'チェア' }
-        ],
-        items: [
-            { value: 'CTスキャナ', label: 'CTスキャナ' },
-            { value: 'MRI装置', label: 'MRI装置' },
-            { value: '超音波診断装置', label: '超音波診断装置' },
-            { value: 'X線撮影装置', label: 'X線撮影装置' },
-            { value: '血管造影装置', label: '血管造影装置' },
-            { value: '内視鏡システム', label: '内視鏡システム' },
-            { value: '血液分析装置', label: '血液分析装置' },
-            { value: '生化学分析装置', label: '生化学分析装置' },
-            { value: '人工呼吸器', label: '人工呼吸器' },
-            { value: '透析装置', label: '透析装置' },
-            { value: '麻酔器', label: '麻酔器' },
-            { value: '手術台', label: '手術台' },
-            { value: '電気メス', label: '電気メス' },
-            { value: 'レーザー装置', label: 'レーザー装置' },
-            { value: '除細動器', label: '除細動器' },
-            { value: '心電計', label: '心電計' },
-            { value: '患者モニタ', label: '患者モニタ' },
-            { value: '輸液ポンプ', label: '輸液ポンプ' },
-            { value: 'シリンジポンプ', label: 'シリンジポンプ' },
-            { value: 'ノートPC', label: 'ノートPC' },
-            { value: 'デスクトップPC', label: 'デスクトップPC' },
-            { value: 'タブレット端末', label: 'タブレット端末' },
-            { value: '業務用複合機', label: '業務用複合機' },
-            { value: 'オフィスデスク', label: 'オフィスデスク' },
-            { value: 'オフィスチェア', label: 'オフィスチェア' }
-        ],
-        makers: [
-            { value: 'GEヘルスケア', label: 'GEヘルスケア' },
-            { value: 'シーメンス', label: 'シーメンス' },
-            { value: 'フィリップス', label: 'フィリップス' },
-            { value: '東芝メディカルシステムズ', label: '東芝メディカルシステムズ' },
-            { value: '日立製作所', label: '日立製作所' },
-            { value: 'オリンパス', label: 'オリンパス' },
-            { value: 'テルモ', label: 'テルモ' },
-            { value: '日本光電', label: '日本光電' },
-            { value: 'フクダ電子', label: 'フクダ電子' },
-            { value: 'キヤノンメディカル', label: 'キヤノンメディカル' },
-            { value: '富士フイルム', label: '富士フイルム' },
-            { value: 'HP', label: 'HP' },
-            { value: 'Dell', label: 'Dell' },
-            { value: 'Lenovo', label: 'Lenovo' },
-            { value: 'Apple', label: 'Apple' },
-            { value: 'Canon', label: 'Canon' },
-            { value: 'EPSON', label: 'EPSON' },
-            { value: 'RICOH', label: 'RICOH' }
-        ],
-        models: [
-            { value: 'Revolution CT', label: 'Revolution CT' },
-            { value: 'Optima CT660', label: 'Optima CT660' },
-            { value: 'MAGNETOM Vida', label: 'MAGNETOM Vida' },
-            { value: 'Ingenia 3.0T', label: 'Ingenia 3.0T' },
-            { value: 'Aquilion ONE', label: 'Aquilion ONE' },
-            { value: 'CF-HQ290ZI', label: 'CF-HQ290ZI' },
-            { value: 'BW-1200', label: 'BW-1200' },
-            { value: 'BNP-990', label: 'BNP-990' },
-            { value: 'TE-2700', label: 'TE-2700' },
-            { value: 'VS-1500', label: 'VS-1500' },
-            { value: 'ProBook 450', label: 'ProBook 450' },
-            { value: 'Latitude 5420', label: 'Latitude 5420' },
-            { value: 'ThinkPad X1', label: 'ThinkPad X1' },
-            { value: 'MacBook Pro', label: 'MacBook Pro' },
-            { value: 'imageRUNNER ADVANCE', label: 'imageRUNNER ADVANCE' }
-        ]
-    };
+async function getMasterDataFromJSON() {
+    try {
+        // 施設マスタと資産マスタを並行して読み込み
+        const [facilityMaster, assetMaster] = await Promise.all([
+            loadFacilityMaster(),
+            loadAssetMaster()
+        ]);
+
+        if (!facilityMaster || !assetMaster) {
+            throw new Error('マスタデータの読み込みに失敗しました');
+        }
+
+        // Choices.js用のフォーマットに変換（value, labelの形式）
+        const toChoicesFormat = (items) => {
+            if (!items || !Array.isArray(items)) return [];
+            return items.map(item => ({
+                value: item.id || item.value || item.code || item.facilityCode || '',
+                label: item.name || item.label || item.facilityName || '',
+                ...item
+            }));
+        };
+
+        // フラット構造からユニークな部門・部署を抽出
+        const getUniqueDepartments = (facilities) => {
+            const uniqueDepts = new Map();
+            facilities.forEach(f => {
+                if (f.department && !uniqueDepts.has(f.department)) {
+                    uniqueDepts.set(f.department, {
+                        value: f.department,
+                        label: f.department
+                    });
+                }
+            });
+            return Array.from(uniqueDepts.values());
+        };
+
+        const getUniqueSections = (facilities) => {
+            const uniqueSects = new Map();
+            facilities.forEach(f => {
+                if (f.section && !uniqueSects.has(f.section)) {
+                    uniqueSects.set(f.section, {
+                        value: f.section,
+                        label: f.section,
+                        department: f.department
+                    });
+                }
+            });
+            return Array.from(uniqueSects.values());
+        };
+
+        const facilities = facilityMaster.facilities || facilityMaster.data || [];
+
+        return {
+            // 施設関連（フラット構造対応）
+            facilities: toChoicesFormat(facilities),
+            departments: getUniqueDepartments(facilities),
+            sections: getUniqueSections(facilities),
+
+            // 資産関連
+            categories: toChoicesFormat(assetMaster.categories || []),
+            buildings: toChoicesFormat(assetMaster.buildings || []),
+            floors: toChoicesFormat(assetMaster.floors || []),
+            largeClasses: toChoicesFormat(assetMaster.largeClasses || []),
+            mediumClasses: toChoicesFormat(assetMaster.mediumClasses || []),
+            items: toChoicesFormat(assetMaster.items || []),
+            manufacturers: toChoicesFormat(assetMaster.manufacturers || assetMaster.makers || []),
+            makers: toChoicesFormat(assetMaster.manufacturers || assetMaster.makers || []),
+            models: toChoicesFormat(assetMaster.models || [])
+        };
+    } catch (error) {
+        console.error('JSONファイルからのマスタデータ取得に失敗:', error);
+        // フォールバック: 空のデータを返す
+        return {
+            facilities: [],
+            departments: [],
+            sections: [],
+            categories: [],
+            buildings: [],
+            floors: [],
+            largeClasses: [],
+            mediumClasses: [],
+            items: [],
+            makers: [],
+            models: []
+        };
+    }
 }
 
 /**
@@ -176,40 +104,84 @@ function getSampleMasterData() {
  * @param {Object} masterData - 保存するマスタデータ
  */
 function saveMasterDataToStorage(masterData) {
-    localStorage.setItem(MASTER_DATA_KEY, JSON.stringify(masterData));
+    try {
+        localStorage.setItem(MASTER_DATA_KEY, JSON.stringify(masterData));
+        console.log('マスタデータをローカルストレージに保存しました');
+    } catch (error) {
+        console.error('ローカルストレージへの保存に失敗:', error);
+    }
 }
 
 /**
  * マスタデータをローカルストレージから取得
- * @returns {Object} マスタデータ
+ * 常にJSONファイルを優先し、ローカルストレージはバックアップとして使用
+ * @returns {Promise<Object>} マスタデータ
  */
-function loadMasterDataFromStorage() {
-    const data = localStorage.getItem(MASTER_DATA_KEY);
-    if (data) {
-        return JSON.parse(data);
+async function loadMasterDataFromStorage() {
+    try {
+        // 常にJSONファイルから最新データを取得（ローカルストレージは使用しない）
+        console.log('JSONファイルから最新のマスタデータを読み込みます');
+        const masterData = await getMasterDataFromJSON();
+
+        // データ整合性チェック
+        const facilityCount = masterData.facilities?.length || 0;
+        const itemCount = masterData.items?.length || 0;
+        console.log(`マスタデータ読み込み完了: 施設${facilityCount}件, 品目${itemCount}件`);
+
+        // ローカルストレージに保存（オフライン時のバックアップ用）
+        saveMasterDataToStorage(masterData);
+
+        return masterData;
+    } catch (error) {
+        console.error('JSONファイルからの読み込みに失敗、ローカルストレージから復元を試みます:', error);
+
+        // JSONファイル読み込み失敗時のみ、ローカルストレージからフォールバック
+        try {
+            const data = localStorage.getItem(MASTER_DATA_KEY);
+            if (data) {
+                console.log('ローカルストレージからマスタデータを復元しました（フォールバック）');
+                return JSON.parse(data);
+            }
+        } catch (storageError) {
+            console.error('ローカルストレージからの復元も失敗:', storageError);
+        }
+
+        // 両方失敗した場合は空データを返す
+        console.error('マスタデータの読み込みに完全に失敗しました');
+        return {
+            facilities: [],
+            departments: [],
+            sections: [],
+            categories: [],
+            buildings: [],
+            floors: [],
+            largeClasses: [],
+            mediumClasses: [],
+            items: [],
+            makers: [],
+            models: []
+        };
     }
-    // データがない場合はサンプルデータを返す
-    return getSampleMasterData();
 }
 
 /**
  * 検索画面の分類情報にマスタデータをロード
  */
-function loadSearchMasterData() {
-    const masterData = loadMasterDataFromStorage();
+async function loadSearchMasterData() {
+    const masterData = await loadMasterDataFromStorage();
 
     // Choices.jsインスタンスが初期化されているか確認
-    if (window.largeClassChoice) {
+    if (window.largeClassChoice && masterData.largeClasses) {
         window.largeClassChoice.clearStore();
         window.largeClassChoice.setChoices(masterData.largeClasses, 'value', 'label', true);
     }
 
-    if (window.mediumClassChoice) {
+    if (window.mediumClassChoice && masterData.mediumClasses) {
         window.mediumClassChoice.clearStore();
         window.mediumClassChoice.setChoices(masterData.mediumClasses, 'value', 'label', true);
     }
 
-    if (window.itemChoice) {
+    if (window.itemChoice && masterData.items) {
         window.itemChoice.clearStore();
         window.itemChoice.setChoices(masterData.items, 'value', 'label', true);
     }
@@ -218,57 +190,57 @@ function loadSearchMasterData() {
 /**
  * 資産情報入力画面の分類情報にマスタデータをロード
  */
-function loadAssetInfoMasterData() {
-    const masterData = loadMasterDataFromStorage();
+async function loadAssetInfoMasterData() {
+    const masterData = await loadMasterDataFromStorage();
 
     // スマホ版
-    if (window.assetLargeClassChoice) {
+    if (window.assetLargeClassChoice && masterData.largeClasses) {
         window.assetLargeClassChoice.clearStore();
         window.assetLargeClassChoice.setChoices(masterData.largeClasses, 'value', 'label', true);
     }
 
-    if (window.assetMediumClassChoice) {
+    if (window.assetMediumClassChoice && masterData.mediumClasses) {
         window.assetMediumClassChoice.clearStore();
         window.assetMediumClassChoice.setChoices(masterData.mediumClasses, 'value', 'label', true);
     }
 
-    if (window.assetItemChoice) {
+    if (window.assetItemChoice && masterData.items) {
         window.assetItemChoice.clearStore();
         window.assetItemChoice.setChoices(masterData.items, 'value', 'label', true);
     }
 
-    if (window.assetMakerChoice) {
+    if (window.assetMakerChoice && masterData.makers) {
         window.assetMakerChoice.clearStore();
         window.assetMakerChoice.setChoices(masterData.makers, 'value', 'label', true);
     }
 
-    if (window.assetModelChoice) {
+    if (window.assetModelChoice && masterData.models) {
         window.assetModelChoice.clearStore();
         window.assetModelChoice.setChoices(masterData.models, 'value', 'label', true);
     }
 
     // タブレット版
-    if (window.assetLargeClassChoiceTb) {
+    if (window.assetLargeClassChoiceTb && masterData.largeClasses) {
         window.assetLargeClassChoiceTb.clearStore();
         window.assetLargeClassChoiceTb.setChoices(masterData.largeClasses, 'value', 'label', true);
     }
 
-    if (window.assetMediumClassChoiceTb) {
+    if (window.assetMediumClassChoiceTb && masterData.mediumClasses) {
         window.assetMediumClassChoiceTb.clearStore();
         window.assetMediumClassChoiceTb.setChoices(masterData.mediumClasses, 'value', 'label', true);
     }
 
-    if (window.assetItemChoiceTb) {
+    if (window.assetItemChoiceTb && masterData.items) {
         window.assetItemChoiceTb.clearStore();
         window.assetItemChoiceTb.setChoices(masterData.items, 'value', 'label', true);
     }
 
-    if (window.assetMakerChoiceTb) {
+    if (window.assetMakerChoiceTb && masterData.makers) {
         window.assetMakerChoiceTb.clearStore();
         window.assetMakerChoiceTb.setChoices(masterData.makers, 'value', 'label', true);
     }
 
-    if (window.assetModelChoiceTb) {
+    if (window.assetModelChoiceTb && masterData.models) {
         window.assetModelChoiceTb.clearStore();
         window.assetModelChoiceTb.setChoices(masterData.models, 'value', 'label', true);
     }
@@ -277,7 +249,7 @@ function loadAssetInfoMasterData() {
 /**
  * マスタデータダウンロード処理
  */
-function handleDownloadMaster() {
+async function handleDownloadMaster() {
     const button = document.getElementById('downloadMasterButton');
     const statusElement = document.getElementById('downloadStatus');
     const timeElement = document.getElementById('lastDownloadTime');
@@ -287,26 +259,26 @@ function handleDownloadMaster() {
     button.disabled = true;
     button.innerHTML = '<span class="offline-prep-button-icon">⏳</span><span>ダウンロード中...</span>';
 
-    // ダウンロード処理をシミュレート（実際はサーバーからfetchで取得）
-    setTimeout(() => {
-        // サンプルマスタデータを取得
-        const masterData = getSampleMasterData();
+    try {
+        // JSONファイルからマスタデータを取得
+        const masterData = await getMasterDataFromJSON();
 
         // ローカルストレージに保存
         saveMasterDataToStorage(masterData);
 
         // データ件数を計算
         const totalCount =
-            masterData.categories.length +
-            masterData.buildings.length +
-            masterData.floors.length +
-            masterData.departments.length +
-            masterData.sections.length +
-            masterData.largeClasses.length +
-            masterData.mediumClasses.length +
-            masterData.items.length +
-            masterData.makers.length +
-            masterData.models.length;
+            (masterData.categories?.length || 0) +
+            (masterData.buildings?.length || 0) +
+            (masterData.floors?.length || 0) +
+            (masterData.departments?.length || 0) +
+            (masterData.sections?.length || 0) +
+            (masterData.largeClasses?.length || 0) +
+            (masterData.mediumClasses?.length || 0) +
+            (masterData.items?.length || 0) +
+            (masterData.makers?.length || 0) +
+            (masterData.models?.length || 0) +
+            (masterData.facilities?.length || 0);
 
         // 現在時刻を取得
         const now = new Date();
@@ -323,12 +295,24 @@ function handleDownloadMaster() {
         button.innerHTML = '<span class="offline-prep-button-icon">📥</span><span>マスタデータをダウンロード</span>';
 
         // 検索画面の分類情報もロード
-        loadSearchMasterData();
+        await loadSearchMasterData();
         // 資産情報入力画面の分類情報もロード
-        loadAssetInfoMasterData();
+        await loadAssetInfoMasterData();
 
         alert('マスタデータのダウンロードが完了しました。\nオフライン環境でも調査が可能です。');
-    }, 2000);
+    } catch (error) {
+        console.error('マスタデータのダウンロードに失敗:', error);
+
+        // エラー時のステータス更新
+        statusElement.textContent = '✗ エラー';
+        statusElement.className = 'offline-prep-status-value error';
+
+        // ボタンを元に戻す
+        button.disabled = false;
+        button.innerHTML = '<span class="offline-prep-button-icon">📥</span><span>マスタデータをダウンロード</span>';
+
+        alert('マスタデータのダウンロードに失敗しました。\n' + error.message);
+    }
 }
 
 /**
@@ -379,13 +363,57 @@ function handleSyncData() {
     }, 3000);
 }
 
-// グローバルスコープに関数とデータを公開
-window.facilities = facilities;
-window.getSampleMasterData = getSampleMasterData;
+/**
+ * ローカルストレージのマスタデータをクリア
+ * 開発時やデータ更新時に使用
+ */
+function clearMasterDataCache() {
+    try {
+        localStorage.removeItem(MASTER_DATA_KEY);
+        console.log('ローカルストレージのマスタデータをクリアしました');
+        return true;
+    } catch (error) {
+        console.error('ローカルストレージのクリアに失敗:', error);
+        return false;
+    }
+}
+
+/**
+ * マスタデータを強制的に再読み込み
+ * キャッシュをクリアして最新データを取得
+ */
+async function refreshMasterData() {
+    console.log('マスタデータを強制再読み込みします...');
+
+    // ローカルストレージをクリア
+    clearMasterDataCache();
+
+    // メモリキャッシュもクリア
+    if (typeof window.loadFacilityMaster === 'function') {
+        window.facilityMasterCache = null;
+    }
+    if (typeof window.loadAssetMaster === 'function') {
+        window.assetMasterCache = null;
+    }
+
+    // 最新データを読み込み
+    const masterData = await getMasterDataFromJSON();
+
+    // ローカルストレージに保存
+    saveMasterDataToStorage(masterData);
+
+    console.log('マスタデータの再読み込みが完了しました');
+    return masterData;
+}
+
+// グローバルスコープに関数を公開
+window.getMasterDataFromJSON = getMasterDataFromJSON;
 window.saveMasterDataToStorage = saveMasterDataToStorage;
 window.loadMasterDataFromStorage = loadMasterDataFromStorage;
 window.loadSearchMasterData = loadSearchMasterData;
 window.loadAssetInfoMasterData = loadAssetInfoMasterData;
 window.handleDownloadMaster = handleDownloadMaster;
 window.handleSyncData = handleSyncData;
+window.clearMasterDataCache = clearMasterDataCache;
+window.refreshMasterData = refreshMasterData;
 window.selectedFacility = null;
