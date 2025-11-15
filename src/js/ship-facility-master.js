@@ -12,7 +12,9 @@ let shipFacilityData = [];
 async function loadFacilityMasterConfig() {
     try {
         console.log('Loading facility-master.json...');
-        const response = await fetch('src/data/facility-master.json');
+        // キャッシュバスターを追加してブラウザキャッシュを回避
+        const cacheBuster = new Date().getTime();
+        const response = await fetch(`src/data/facility-master.json?v=${cacheBuster}`);
 
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
@@ -20,20 +22,36 @@ async function loadFacilityMasterConfig() {
 
         const config = await response.json();
         console.log('Loaded config:', config);
-        console.log('config.columns:', config.columns);
-        console.log('config.data:', config.data);
-        console.log('config.facilities:', config.facilities);
         console.log('All config keys:', Object.keys(config));
 
-        if (!config.columns || !config.data) {
+        // columnsとdata/facilitiesの両方をチェック
+        const hasColumns = !!config.columns;
+        const hasData = !!(config.data || config.facilities);
+
+        if (!hasColumns || !hasData) {
             console.error('Missing required fields!');
-            console.error('Has columns?', !!config.columns);
+            console.error('Has columns?', hasColumns);
             console.error('Has data?', !!config.data);
-            throw new Error('Invalid JSON structure: missing columns or data');
+            console.error('Has facilities?', !!config.facilities);
+            throw new Error('Invalid JSON structure: missing columns or data/facilities');
+        }
+
+        // columnsがない場合は動的に生成
+        if (!config.columns) {
+            config.columns = [
+                { id: "checkbox", label: "", field: "checkbox", type: "checkbox", width: "50px" },
+                { id: "no", label: "No.", field: "no", type: "number", width: "60px" },
+                { id: "code", label: "施設ID", field: "code", type: "text", width: "100px" },
+                { id: "name", label: "施設名", field: "name", type: "text", width: "200px" },
+                { id: "region", label: "都道府県", field: "region", type: "text", width: "100px" },
+                { id: "type", label: "施設種別", field: "type", type: "text", width: "150px" },
+                { id: "actions", label: "操作", field: "actions", type: "actions", width: "100px" }
+            ];
         }
 
         shipFacilityConfig = config;
-        shipFacilityData = config.data;
+        // dataまたはfacilitiesを使用
+        shipFacilityData = config.data || config.facilities;
         console.log('shipFacilityConfig set:', shipFacilityConfig);
         console.log('shipFacilityData set:', shipFacilityData);
         return config;
