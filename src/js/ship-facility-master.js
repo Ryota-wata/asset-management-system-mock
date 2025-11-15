@@ -11,13 +11,28 @@ let shipFacilityData = [];
  */
 async function loadFacilityMasterConfig() {
     try {
+        console.log('Loading facility-master.json...');
         const response = await fetch('src/data/facility-master.json');
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
         const config = await response.json();
+        console.log('Loaded config:', config);
+
+        if (!config.columns || !config.data) {
+            throw new Error('Invalid JSON structure: missing columns or data');
+        }
+
         shipFacilityConfig = config;
         shipFacilityData = config.data;
+        console.log('shipFacilityConfig set:', shipFacilityConfig);
+        console.log('shipFacilityData set:', shipFacilityData);
         return config;
     } catch (error) {
         console.error('Failed to load facility-master.json:', error);
+        alert('施設マスタデータの読み込みに失敗しました: ' + error.message);
         return null;
     }
 }
@@ -26,10 +41,24 @@ async function loadFacilityMasterConfig() {
  * テーブルヘッダーを動的に生成
  */
 function renderFacilityTableHeader() {
-    if (!shipFacilityConfig) return;
+    console.log('renderFacilityTableHeader called');
+    console.log('shipFacilityConfig:', shipFacilityConfig);
+
+    if (!shipFacilityConfig) {
+        console.error('shipFacilityConfig is null or undefined');
+        return;
+    }
+
+    if (!shipFacilityConfig.columns) {
+        console.error('shipFacilityConfig.columns is undefined');
+        return;
+    }
 
     const thead = document.querySelector('#facilityTableBody').closest('table').querySelector('thead tr');
-    if (!thead) return;
+    if (!thead) {
+        console.error('thead not found');
+        return;
+    }
 
     thead.innerHTML = '';
 
@@ -48,6 +77,8 @@ function renderFacilityTableHeader() {
 
         thead.appendChild(th);
     });
+
+    console.log('Table header rendered successfully');
 }
 
 /**
@@ -380,6 +411,8 @@ function goToNextPage() {
  * SHIP施設マスタ画面を表示
  */
 async function showShipFacilityMaster() {
+    console.log('showShipFacilityMaster called');
+
     // すべての画面を非表示
     const allPages = document.querySelectorAll('.active');
     allPages.forEach(page => page.classList.remove('active'));
@@ -390,9 +423,20 @@ async function showShipFacilityMaster() {
         shipFacilityPage.classList.add('active');
 
         // JSONを読み込んでテーブルを生成
-        await loadFacilityMasterConfig();
+        const config = await loadFacilityMasterConfig();
+
+        if (!config) {
+            console.error('Failed to load facility master config');
+            alert('施設マスタの読み込みに失敗しました。');
+            return;
+        }
+
+        console.log('Config loaded successfully, rendering table...');
         renderFacilityTableHeader();
         renderFacilityTableBody();
+        console.log('Table rendered');
+    } else {
+        console.error('shipFacilityMasterPage element not found');
     }
 }
 
