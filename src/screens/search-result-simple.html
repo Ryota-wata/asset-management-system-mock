@@ -120,35 +120,35 @@
         <!-- アクションバー -->
         <div class="action-bar">
             <span class="selection-info" id="selectionInfo">0件選択中</span>
+
+            <!-- 新規購入申請（資産マスタから選択） -->
             <button class="action-btn new-purchase-action" onclick="handleNewPurchaseRequest()">
                 新規購入申請
             </button>
-            
-            <div class="dropdown-container">
-                <button class="dropdown-btn purchase-related" id="purchaseDropdownBtn" onclick="toggleDropdown('purchase')" disabled>
-                    <span>購入関連</span>
-                    <span class="dropdown-arrow">▼</span>
-                </button>
-                <div class="dropdown-menu" id="purchaseDropdownMenu">
-                    <div class="dropdown-menu-item" onclick="handleExpansionRequest()">増設購入申請</div>
-                    <div class="dropdown-menu-item" onclick="handleRenewalRequest()">更新購入申請</div>
-                </div>
-            </div>
-            
-            <div class="dropdown-container">
-                <button class="dropdown-btn management-related" id="managementDropdownBtn" onclick="toggleDropdown('management')" disabled>
-                    <span>管理関連</span>
-                    <span class="dropdown-arrow">▼</span>
-                </button>
-                <div class="dropdown-menu" id="managementDropdownMenu">
-                    <div class="dropdown-menu-item" onclick="handleMoveRequest()">移動・廃棄申請</div>
-                    <div class="dropdown-menu-item" onclick="handleRepairRequest()">修理申請</div>
-                    <div class="dropdown-menu-item" onclick="handleMaintenanceRequest()">保守申請</div>
-                    <div class="dropdown-menu-item" onclick="handleLendingRequest()">資産貸出申請</div>
-                </div>
-            </div>
-            
-            <button class="inventory-btn" id="inventoryBtn" onclick="handleInventory()" disabled>
+
+            <!-- 既存資産ベースの申請（資産選択必須） -->
+            <button class="action-btn expansion-action" id="expansionBtn" onclick="handleExpansionRequest()" disabled>
+                増設購入申請
+            </button>
+
+            <button class="action-btn renewal-action" id="renewalBtn" onclick="handleRenewalRequest()" disabled>
+                更新購入申請
+            </button>
+
+            <button class="action-btn move-action" id="moveBtn" onclick="handleMoveRequest()" disabled>
+                移動申請
+            </button>
+
+            <button class="action-btn disposal-action" id="disposalBtn" onclick="handleDisposalRequest()" disabled>
+                廃棄申請
+            </button>
+
+            <button class="action-btn hold-action" id="holdBtn" onclick="handleHoldRequest()" disabled>
+                保留申請
+            </button>
+
+            <!-- その他の機能 -->
+            <button class="action-btn inventory-action" id="inventoryBtn" onclick="handleInventory()" disabled>
                 資産棚卸し
             </button>
         </div>
@@ -215,66 +215,116 @@
 
     <!-- 資産マスタ検索モーダル（新規購入用） -->
     <div class="modal" id="assetMasterModal" onclick="handleModalOutsideClick(event)">
-        <div class="modal-content" style="max-width: 700px;">
+        <div class="modal-content">
             <h2 class="modal-title">資産マスタから選択（新規購入申請）</h2>
-            
+
             <!-- 検索フォーム -->
-            <div style="margin-bottom: 20px;">
-                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 15px;">
-                    <div id="categoryWrapper" style="position: relative; z-index: 100006;">
+            <div style="margin-bottom: 20px; background: #f8f9fa; padding: 15px; border-radius: 4px;">
+                <h4 style="font-size: 13px; color: #2c3e50; margin-bottom: 10px; font-weight: bold;">📋 プルダウン検索</h4>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 15px;">
+                    <div id="categoryWrapper" style="position: relative; z-index: 100008;">
                         <label style="font-size: 12px; color: #555; margin-bottom: 5px; display: block;">Category</label>
-                        <select id="masterCategory" class="master-filter-select">
+                        <select id="masterCategory" class="master-filter-select" onchange="filterAssetMasterTable()">
                             <option value="">全て</option>
                         </select>
                     </div>
-                    <div id="largeClassWrapper" style="position: relative; z-index: 100006;">
+                    <div id="largeClassWrapper" style="position: relative; z-index: 100007;">
                         <label style="font-size: 12px; color: #555; margin-bottom: 5px; display: block;">大分類</label>
-                        <select id="masterLargeClass" class="master-filter-select">
+                        <select id="masterLargeClass" class="master-filter-select" onchange="filterAssetMasterTable()">
                             <option value="">全て</option>
                         </select>
                     </div>
-                    <div id="mediumClassWrapper" style="position: relative; z-index: 100004;">
+                    <div id="mediumClassWrapper" style="position: relative; z-index: 100006;">
                         <label style="font-size: 12px; color: #555; margin-bottom: 5px; display: block;">中分類</label>
-                        <select id="masterMediumClass" class="master-filter-select">
+                        <select id="masterMediumClass" class="master-filter-select" onchange="filterAssetMasterTable()">
                             <option value="">全て</option>
                         </select>
                     </div>
-                    <div id="individualItemWrapper" style="position: relative; z-index: 100004;">
+                    <div id="individualItemWrapper" style="position: relative; z-index: 100005;">
                         <label style="font-size: 12px; color: #555; margin-bottom: 5px; display: block;">個体管理品目</label>
-                        <select id="masterIndividualItem" class="master-filter-select">
+                        <select id="masterIndividualItem" class="master-filter-select" onchange="filterAssetMasterTable()">
                             <option value="">全て</option>
                         </select>
                     </div>
-                    <div id="makerWrapper" style="position: relative; z-index: 100002;">
+                    <div id="makerWrapper" style="position: relative; z-index: 100004;">
                         <label style="font-size: 12px; color: #555; margin-bottom: 5px; display: block;">メーカー</label>
-                        <select id="masterMaker" class="master-filter-select">
+                        <select id="masterMaker" class="master-filter-select" onchange="filterAssetMasterTable()">
                             <option value="">全て</option>
                         </select>
                     </div>
-                    <div id="modelWrapper" style="position: relative; z-index: 100002;">
+                    <div id="modelWrapper" style="position: relative; z-index: 100003;">
                         <label style="font-size: 12px; color: #555; margin-bottom: 5px; display: block;">型式</label>
-                        <select id="masterModel" class="master-filter-select">
+                        <select id="masterModel" class="master-filter-select" onchange="filterAssetMasterTable()">
                             <option value="">全て</option>
                         </select>
                     </div>
                 </div>
-                
-                <button class="modal-button" onclick="addSelectedAsset()" style="width: 100%; margin-bottom: 10px;">選択した条件の資産を追加</button>
+
+                <div style="border-top: 1px solid #ddd; padding-top: 15px; margin-top: 10px;">
+                    <h4 style="font-size: 13px; color: #2c3e50; margin-bottom: 10px; font-weight: bold;">🔍 キーワード検索（曖昧検索）</h4>
+                    <input type="text" id="masterKeywordSearch" placeholder="Category、大分類、中分類、品目、メーカー、型式から検索..."
+                           style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 13px;"
+                           oninput="filterAssetMasterTable()">
+                    <small style="color: #777; display: block; margin-top: 5px;">※複数のキーワードをスペース区切りで入力できます（例: CT GE）</small>
+                </div>
+
+                <div style="display: flex; gap: 10px; margin-top: 15px;">
+                    <button class="modal-button secondary" onclick="resetMasterFilter()" style="flex: 1;">
+                        🔄 フィルタークリア
+                    </button>
+                    <button class="modal-button" onclick="filterAssetMasterTable()" style="flex: 2; background: #3498db; color: white;">
+                        🔍 検索実行
+                    </button>
+                </div>
             </div>
-            
+
+            <!-- 資産マスタ一覧テーブル -->
+            <div style="margin-bottom: 20px;">
+                <h3 style="font-size: 14px; color: #2c3e50; margin-bottom: 10px;">
+                    検索結果
+                    <span id="assetMasterResultCount" style="color: #3498db; font-weight: bold;">0件</span>
+                </h3>
+                <div style="max-height: 400px; overflow-y: auto; border: 1px solid #ddd; border-radius: 4px;">
+                    <table id="assetMasterTable" style="width: 100%; border-collapse: collapse; font-size: 13px;">
+                        <thead style="position: sticky; top: 0; background: #f8f9fa; z-index: 10;">
+                            <tr>
+                                <th style="padding: 10px; border-bottom: 2px solid #ddd; text-align: left; width: 50px;">
+                                    <input type="checkbox" id="selectAllMaster" onchange="handleSelectAllMaster()">
+                                </th>
+                                <th style="padding: 10px; border-bottom: 2px solid #ddd; text-align: left;">Category</th>
+                                <th style="padding: 10px; border-bottom: 2px solid #ddd; text-align: left;">大分類</th>
+                                <th style="padding: 10px; border-bottom: 2px solid #ddd; text-align: left;">中分類</th>
+                                <th style="padding: 10px; border-bottom: 2px solid #ddd; text-align: left;">品目</th>
+                                <th style="padding: 10px; border-bottom: 2px solid #ddd; text-align: left;">メーカー</th>
+                                <th style="padding: 10px; border-bottom: 2px solid #ddd; text-align: left;">型式</th>
+                            </tr>
+                        </thead>
+                        <tbody id="assetMasterTableBody">
+                            <tr>
+                                <td colspan="7" style="padding: 20px; text-align: center; color: #999;">
+                                    検索条件を指定して検索してください
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
             <!-- 選択済み資産リスト -->
             <div style="margin-bottom: 20px;">
-                <h3 style="font-size: 14px; color: #2c3e50; margin-bottom: 10px;">選択済み資産</h3>
-                <div id="selectedAssetsList" style="min-height: 100px; max-height: 300px; overflow-y: auto; border: 1px solid #ddd; border-radius: 4px; padding: 10px; background: #f9f9f9;">
+                <h3 style="font-size: 14px; color: #2c3e50; margin-bottom: 10px;">
+                    選択済み資産
+                    <span id="masterSelectionInfo" style="color: #27ae60; font-weight: bold;">0件選択中</span>
+                </h3>
+                <div id="selectedAssetsList" style="min-height: 80px; max-height: 200px; overflow-y: auto; border: 1px solid #ddd; border-radius: 4px; padding: 10px; background: #f9f9f9;">
                     <p style="color: #999; text-align: center;">資産が選択されていません</p>
                 </div>
-                <div style="margin-top: 10px; font-size: 13px; color: #555;">
-                    <span id="masterSelectionInfo">0件選択中</span>
-                </div>
             </div>
-            
-            <button class="modal-button" onclick="proceedToApplicationInput()">申請入力へ進む →</button>
-            <button class="modal-button secondary" onclick="closeAssetMasterModal()">キャンセル</button>
+
+            <div style="display: flex; gap: 10px;">
+                <button class="modal-button secondary" onclick="closeAssetMasterModal()" style="flex: 1;">キャンセル</button>
+                <button class="modal-button" onclick="proceedToApplicationInput()" style="flex: 2; background: #27ae60; color: white;">申請入力へ進む →</button>
+            </div>
         </div>
     </div>
 
@@ -540,26 +590,44 @@
         let selectedItems = new Set();
         let selectedMasterItems = new Set();
 
-        // 資産マスタのサンプルデータ
-        const assetMasterData = [
-            { id: 1, category: '医療機器', largeClass: '画像診断機器', mediumClass: 'CT関連', individualItem: 'CT装置', maker: 'GEヘルスケア', model: 'Revolution CT' },
-            { id: 2, category: '医療機器', largeClass: '画像診断機器', mediumClass: 'MRI関連', individualItem: 'MRI装置', maker: 'シーメンス', model: 'MAGNETOM Vida' },
-            { id: 3, category: '医療機器', largeClass: '手術機器', mediumClass: '電気メス', individualItem: '電気メス', maker: 'オリンパス', model: 'ESG-400' },
-            { id: 4, category: '医療機器', largeClass: '手術機器', mediumClass: '手術台', individualItem: '手術台', maker: 'マッケ', model: 'Alphamaxx' },
-            { id: 5, category: '医療機器', largeClass: '検査機器', mediumClass: '超音波', individualItem: '超音波診断装置', maker: 'キヤノンメディカル', model: 'Aplio i800' },
-            { id: 6, category: '医療機器', largeClass: '検査機器', mediumClass: '心電図', individualItem: '心電計', maker: 'フクダ電子', model: 'FCP-8800' },
-            { id: 7, category: '医療機器', largeClass: '生命維持装置', mediumClass: '人工呼吸器', individualItem: '人工呼吸器', maker: 'ドレーゲル', model: 'Evita V800' },
-            { id: 8, category: '医療機器', largeClass: '生命維持装置', mediumClass: '透析装置', individualItem: '透析装置', maker: '日機装', model: 'DCS-200Si' },
-            { id: 9, category: '什器備品', largeClass: '事務機器', mediumClass: '複合機', individualItem: '複合機', maker: 'リコー', model: 'IM C6000' },
-            { id: 10, category: '什器備品', largeClass: '事務機器', mediumClass: 'プリンター', individualItem: 'プリンター', maker: 'エプソン', model: 'PX-M886FL' },
-            { id: 11, category: '医療機器', largeClass: '画像診断機器', mediumClass: 'X線', individualItem: 'X線撮影装置', maker: '富士フイルム', model: 'CALNEO Smart' },
-            { id: 12, category: '医療機器', largeClass: '内視鏡', mediumClass: '内視鏡システム', individualItem: '内視鏡システム', maker: 'オリンパス', model: 'EVIS X1' },
-            { id: 13, category: '医療機器', largeClass: '検査機器', mediumClass: '血液検査', individualItem: '血液分析装置', maker: 'シスメックス', model: 'XN-9000' },
-            { id: 14, category: '医療機器', largeClass: '治療機器', mediumClass: 'レーザー', individualItem: 'レーザー治療器', maker: 'ルミナス', model: 'M22' },
-            { id: 15, category: '什器備品', largeClass: '家具', mediumClass: 'ベッド', individualItem: '病院用ベッド', maker: 'パラマウントベッド', model: 'KA-9000' }
-        ];
+        // 資産マスタデータ（動的読み込み）
+        let assetMasterData = [];
+        let filteredMasterData = [];
 
-        let filteredMasterData = [...assetMasterData];
+        // ========================================
+        // 注意: 以下の関数は search-result-simple.js に移動済みです
+        // JSファイルの関数が実際に使用されています
+        // HTML内のこれらの関数は古い実装で、使用されていません
+        // 削除予定ですが、念のため残しています
+        // ========================================
+
+        // 資産マスタデータを読み込む
+        async function loadAssetMasterData() {
+            try {
+                const cacheBuster = new Date().getTime();
+                const response = await fetch(`src/data/asset-master.json?v=${cacheBuster}`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                assetMasterData = data.assets.map(asset => ({
+                    id: asset.id,
+                    category: asset.category,
+                    largeClass: asset.largeClass,
+                    mediumClass: asset.mediumClass,
+                    individualItem: asset.item,
+                    maker: asset.manufacturer,
+                    model: asset.model
+                }));
+                filteredMasterData = [...assetMasterData];
+                console.log(`資産マスタ読み込み完了: ${assetMasterData.length}件`);
+                return true;
+            } catch (error) {
+                console.error('資産マスタの読み込みに失敗:', error);
+                alert('資産マスタデータの読み込みに失敗しました');
+                return false;
+            }
+        }
 
         // 初期化はsearch-result-simple.jsのinitSearchResultPage()に委任
 
@@ -843,76 +911,51 @@
         function updateSelectionInfo() {
             const info = document.getElementById('selectionInfo');
             info.textContent = `${selectedItems.size}件選択中`;
-            
-            // ドロップダウンボタンと棚卸しボタンの有効/無効
+
+            // 資産選択が必要なボタンの有効/無効
             const hasSelection = selectedItems.size > 0;
-            const purchaseBtn = document.getElementById('purchaseDropdownBtn');
-            if (purchaseBtn) {
-                purchaseBtn.disabled = !hasSelection;
-            }
-            const managementBtn = document.getElementById('managementDropdownBtn');
-            if (managementBtn) {
-                managementBtn.disabled = !hasSelection;
-            }
+
+            // 既存資産ベースの申請ボタン
+            const expansionBtn = document.getElementById('expansionBtn');
+            const renewalBtn = document.getElementById('renewalBtn');
+            const moveBtn = document.getElementById('moveBtn');
+            const disposalBtn = document.getElementById('disposalBtn');
+            const holdBtn = document.getElementById('holdBtn');
             const inventoryBtn = document.getElementById('inventoryBtn');
-            if (inventoryBtn) {
-                inventoryBtn.disabled = !hasSelection;
-            }
-        }
-        
-        // ドロップダウンメニューの制御
-        function toggleDropdown(type) {
-            const btn = document.getElementById(`${type}DropdownBtn`);
-            const menu = document.getElementById(`${type}DropdownMenu`);
-            
-            if (btn && btn.disabled) return;
-            
-            const isActive = menu.classList.contains('active');
-            
-            // 他のドロップダウンを閉じる
-            closeAllDropdowns();
-            
-            // クリックしたドロップダウンを開閉
-            if (!isActive) {
-                btn.classList.add('active');
-                menu.classList.add('active');
-            }
-        }
-        
-        // 全てのドロップダウンを閉じる
-        function closeAllDropdowns() {
-            const dropdownBtns = document.querySelectorAll('.dropdown-btn');
-            const dropdownMenus = document.querySelectorAll('.dropdown-menu');
-            const navMenuBtn = document.querySelector('.nav-menu-btn');
-            const navMenuDropdown = document.getElementById('navMenuDropdown');
-            
-            dropdownBtns.forEach(btn => btn.classList.remove('active'));
-            dropdownMenus.forEach(menu => menu.classList.remove('active'));
-            if (navMenuBtn) navMenuBtn.classList.remove('active');
-            if (navMenuDropdown) navMenuDropdown.classList.remove('active');
+
+            if (expansionBtn) expansionBtn.disabled = !hasSelection;
+            if (renewalBtn) renewalBtn.disabled = !hasSelection;
+            if (moveBtn) moveBtn.disabled = !hasSelection;
+            if (disposalBtn) disposalBtn.disabled = !hasSelection;
+            if (holdBtn) holdBtn.disabled = !hasSelection;
+            if (inventoryBtn) inventoryBtn.disabled = !hasSelection;
         }
         
         // ナビゲーションメニューの制御
         function toggleNavMenu() {
             const btn = document.querySelector('.nav-menu-btn');
             const menu = document.getElementById('navMenuDropdown');
-            
+
             const isActive = menu.classList.contains('active');
-            
-            // 他のドロップダウンを閉じる
-            closeAllDropdowns();
-            
-            // クリックしたメニューを開閉
-            if (!isActive) {
+
+            // メニューを開閉
+            if (isActive) {
+                btn.classList.remove('active');
+                menu.classList.remove('active');
+            } else {
                 btn.classList.add('active');
                 menu.classList.add('active');
             }
         }
-        
-        // ドロップダウンメニューの外側クリックで閉じる
+
+        // ナビゲーションメニューの外側クリックで閉じる
         document.addEventListener('click', function(event) {
-            if (!event.target.closest('.dropdown-container') && !event.target.closest('.nav-menu')) {
-                closeAllDropdowns();
+            const navMenu = document.getElementById('navMenuDropdown');
+            const navMenuBtn = document.querySelector('.nav-menu-btn');
+
+            if (navMenu && !event.target.closest('.nav-menu')) {
+                navMenu.classList.remove('active');
+                if (navMenuBtn) navMenuBtn.classList.remove('active');
             }
         });
 
@@ -969,86 +1012,100 @@
         // 申請処理
         function handleNewPurchaseRequest() {
             // 新規購入：資産マスタから選択
-            closeAllDropdowns();
             openAssetMasterModal();
         }
 
         function handleExpansionRequest() {
-            // 増設：選択した資産で申請
-            closeAllDropdowns();
+            // 増設：選択した資産と同じものを追加購入
+            if (selectedItems.size === 0) {
+                alert('増設購入申請を行う資産を選択してください');
+                return;
+            }
             openApplicationInputModalWithType('増設購入申請');
         }
 
         function handleRenewalRequest() {
-            // 更新：選択した資産で申請
-            closeAllDropdowns();
+            // 更新：選択した資産を新しいものに更新（旧資産は承認後に廃棄予定へ）
+            if (selectedItems.size === 0) {
+                alert('更新購入申請を行う資産を選択してください');
+                return;
+            }
             openApplicationInputModalWithType('更新購入申請');
         }
 
         function handleMoveRequest() {
-            closeAllDropdowns();
-            openApplicationInputModalWithType('移動・廃棄申請');
+            // 移動：選択した資産の設置場所を変更
+            if (selectedItems.size === 0) {
+                alert('移動申請を行う資産を選択してください');
+                return;
+            }
+            openApplicationInputModalWithType('移動申請');
         }
 
-        function handleRepairRequest() {
-            closeAllDropdowns();
-            openApplicationInputModalWithType('修理申請');
+        function handleDisposalRequest() {
+            // 廃棄：選択した資産を廃棄予定に
+            if (selectedItems.size === 0) {
+                alert('廃棄申請を行う資産を選択してください');
+                return;
+            }
+            openApplicationInputModalWithType('廃棄申請');
         }
 
-        function handleMaintenanceRequest() {
-            closeAllDropdowns();
-            openApplicationInputModalWithType('保守申請');
-        }
-
-        function handleLendingRequest() {
-            closeAllDropdowns();
-            openApplicationInputModalWithType('資産貸出申請');
+        function handleHoldRequest() {
+            // 保留：選択した資産を保留状態に
+            if (selectedItems.size === 0) {
+                alert('保留申請を行う資産を選択してください');
+                return;
+            }
+            openApplicationInputModalWithType('保留申請');
         }
         
         // 資産棚卸し処理
         function handleInventory() {
-            closeAllDropdowns();
             if (selectedItems.size === 0) {
                 alert('棚卸しを行う資産を選択してください');
                 return;
             }
-            
+
             // 棚卸しモーダルを表示（または別画面へ遷移）
             const confirmMsg = `選択した${selectedItems.size}件の資産の棚卸しを開始しますか？\n\n棚卸し内容：\n・資産の現物確認\n・設置場所の確認\n・状態の確認\n\n※廃棄・移動が必要な場合は申請画面へ遷移します`;
-            
+
             if (confirm(confirmMsg)) {
                 alert('棚卸し画面に遷移します');
                 // 実装: 棚卸し画面への遷移
                 // window.location.href = '/inventory?assets=' + Array.from(selectedItems).join(',');
             }
         }
-        
+
         // 画面遷移関数
         function goToApplicationList() {
-            closeAllDropdowns();
             alert('申請一覧画面に遷移します');
             // 実装: 申請一覧画面へのナビゲーション
             // window.location.href = '/application-list';
         }
-        
+
         function goToExecutionPendingList() {
-            closeAllDropdowns();
             alert('執行待ち一覧画面に遷移します');
             // 実装: 執行待ち一覧画面へのナビゲーション
             // window.location.href = '/execution-pending-list';
         }
-        
+
         function goToQuoteOCR() {
-            closeAllDropdowns();
             alert('見積書AI-OCR画面に遷移します');
             // 実装: 見積書AI-OCR画面へのナビゲーション
             // window.location.href = '/quote-ocr';
         }
 
         // 資産マスタモーダル
-        function openAssetMasterModal() {
+        async function openAssetMasterModal() {
             selectedMasterItems.clear();
-            
+
+            // データ未読み込みの場合は読み込む
+            if (assetMasterData.length === 0) {
+                const loaded = await loadAssetMasterData();
+                if (!loaded) return;
+            }
+
             // 既存のChoices.jsインスタンスを先に破棄
             if (masterChoicesInstances) {
                 Object.values(masterChoicesInstances).forEach(instance => {
@@ -1062,15 +1119,21 @@
                 });
                 masterChoicesInstances = null;
             }
-            
+
             // モーダルを表示
             document.getElementById('assetMasterModal').classList.add('active');
-            
+
             // 少し遅延させてからドロップダウンの選択肢を生成とChoices.js初期化
             setTimeout(() => {
-                populateMasterDropdowns();
+                // 先にChoices.jsを初期化（空の状態で）
                 masterChoicesInstances = initMasterChoices();
+
+                // 次にデータを取得して選択肢を設定
+                populateMasterDropdowns();
+
                 updateMasterSelectionInfo();
+                // 初期表示
+                renderAssetMasterTable();
             }, 150);
         }
 
@@ -1101,7 +1164,11 @@
 
         // 資産マスタのドロップダウン選択肢を生成
         function populateMasterDropdowns() {
-            // 各項目のユニークな値を取得
+            console.log('=== populateMasterDropdowns called ===');
+            console.log('assetMasterData.length:', assetMasterData.length);
+            console.log('assetMasterData sample:', assetMasterData.slice(0, 2));
+
+            // 各項目のユニークな値を取得（全データから）
             const categories = [...new Set(assetMasterData.map(item => item.category))].sort();
             const largeClasses = [...new Set(assetMasterData.map(item => item.largeClass))].sort();
             const mediumClasses = [...new Set(assetMasterData.map(item => item.mediumClass))].sort();
@@ -1109,13 +1176,131 @@
             const makers = [...new Set(assetMasterData.map(item => item.maker))].sort();
             const models = [...new Set(assetMasterData.map(item => item.model))].sort();
 
-            // 各ドロップダウンに選択肢を追加
+            console.log('categories:', categories);
+            console.log('largeClasses:', largeClasses);
+            console.log('individualItems:', individualItems);
+
+            // 全項目を初期設定（カスケードなしで全選択肢を表示）
             populateSelect('masterCategory', categories);
             populateSelect('masterLargeClass', largeClasses);
             populateSelect('masterMediumClass', mediumClasses);
             populateSelect('masterIndividualItem', individualItems);
             populateSelect('masterMaker', makers);
             populateSelect('masterModel', models);
+
+            // Choices.jsインスタンスが存在する場合は選択肢を更新
+            if (masterChoicesInstances) {
+                updateChoicesOptions('masterCategory', categories);
+                updateChoicesOptions('masterLargeClass', largeClasses);
+                updateChoicesOptions('masterMediumClass', mediumClasses);
+                updateChoicesOptions('masterIndividualItem', individualItems);
+                updateChoicesOptions('masterMaker', makers);
+                updateChoicesOptions('masterModel', models);
+            }
+
+            // カスケード用のイベントリスナー設定
+            setupMasterCascade();
+        }
+
+        // Choices.jsの選択肢を更新する関数
+        function updateChoicesOptions(selectId, options) {
+            console.log(`updateChoicesOptions called for ${selectId}`);
+            console.log('masterChoicesInstances:', masterChoicesInstances);
+            console.log('options:', options);
+
+            if (!masterChoicesInstances) {
+                alert(`ERROR: masterChoicesInstances is null for ${selectId}`);
+                return;
+            }
+
+            if (!masterChoicesInstances[selectId]) {
+                alert(`ERROR: masterChoicesInstances[${selectId}] is null`);
+                return;
+            }
+
+            const instance = masterChoicesInstances[selectId];
+            instance.clearStore();
+            const choices = [{ value: '', label: '全て', selected: true }].concat(
+                options.map(v => ({ value: v, label: v }))
+            );
+            instance.setChoices(choices, 'value', 'label', true);
+            console.log(`Updated Choices.js for ${selectId}: ${options.length} options`);
+            alert(`Successfully updated ${selectId} with ${options.length} options`);
+        }
+
+        // カスケード検索の設定（品目選択時にメーカー・型式を更新）
+        function setupMasterCascade() {
+            const categorySelect = document.getElementById('masterCategory');
+            const largeClassSelect = document.getElementById('masterLargeClass');
+            const mediumClassSelect = document.getElementById('masterMediumClass');
+            const individualItemSelect = document.getElementById('masterIndividualItem');
+            const makerSelect = document.getElementById('masterMaker');
+
+            // 品目変更時 → メーカー・型式を更新
+            if (individualItemSelect) {
+                individualItemSelect.addEventListener('change', function() {
+                    const category = categorySelect.value;
+                    const largeClass = largeClassSelect.value;
+                    const mediumClass = mediumClassSelect.value;
+                    const individualItem = this.value;
+
+                    let filteredData = assetMasterData;
+                    if (category) filteredData = filteredData.filter(item => item.category === category);
+                    if (largeClass) filteredData = filteredData.filter(item => item.largeClass === largeClass);
+                    if (mediumClass) filteredData = filteredData.filter(item => item.mediumClass === mediumClass);
+                    if (individualItem) filteredData = filteredData.filter(item => item.individualItem === individualItem);
+
+                    const makers = [...new Set(filteredData.map(item => item.maker))].sort();
+                    populateSelect('masterMaker', makers);
+
+                    // 型式をクリア
+                    const allModels = [...new Set(assetMasterData.map(item => item.model))].sort();
+                    populateSelect('masterModel', allModels);
+
+                    // Choices.jsのインスタンスを更新
+                    if (masterChoicesInstances?.masterMaker) {
+                        masterChoicesInstances.masterMaker.clearStore();
+                        masterChoicesInstances.masterMaker.setChoices(
+                            [{ value: '', label: '全て', selected: true }].concat(
+                                makers.map(v => ({ value: v, label: v }))
+                            ),
+                            'value', 'label', true
+                        );
+                    }
+                });
+            }
+
+            // メーカー変更時 → 型式を更新
+            if (makerSelect) {
+                makerSelect.addEventListener('change', function() {
+                    const category = categorySelect.value;
+                    const largeClass = largeClassSelect.value;
+                    const mediumClass = mediumClassSelect.value;
+                    const individualItem = individualItemSelect.value;
+                    const maker = this.value;
+
+                    let filteredData = assetMasterData;
+                    if (category) filteredData = filteredData.filter(item => item.category === category);
+                    if (largeClass) filteredData = filteredData.filter(item => item.largeClass === largeClass);
+                    if (mediumClass) filteredData = filteredData.filter(item => item.mediumClass === mediumClass);
+                    if (individualItem) filteredData = filteredData.filter(item => item.individualItem === individualItem);
+                    if (maker) filteredData = filteredData.filter(item => item.maker === maker);
+
+                    const models = [...new Set(filteredData.map(item => item.model))].sort();
+                    populateSelect('masterModel', models);
+
+                    // Choices.jsのインスタンスを更新
+                    if (masterChoicesInstances?.masterModel) {
+                        masterChoicesInstances.masterModel.clearStore();
+                        masterChoicesInstances.masterModel.setChoices(
+                            [{ value: '', label: '全て', selected: true }].concat(
+                                models.map(v => ({ value: v, label: v }))
+                            ),
+                            'value', 'label', true
+                        );
+                    }
+                });
+            }
         }
 
         // selectタグに選択肢を追加
@@ -1137,17 +1322,48 @@
             });
         }
 
-        // 選択した条件で資産を追加
-        function addSelectedAsset() {
+        // 資産マスタテーブルを描画
+        function renderAssetMasterTable() {
+            const tbody = document.getElementById('assetMasterTableBody');
+            const resultCount = document.getElementById('assetMasterResultCount');
+
+            if (filteredMasterData.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="padding: 20px; text-align: center; color: #999;">検索結果がありません</td></tr>';
+                resultCount.textContent = '0件';
+                return;
+            }
+
+            resultCount.textContent = `${filteredMasterData.length}件`;
+
+            tbody.innerHTML = filteredMasterData.map(asset => `
+                <tr style="border-bottom: 1px solid #eee; cursor: pointer;" onmouseover="this.style.background='#f8f9fa'" onmouseout="this.style.background='white'">
+                    <td style="padding: 10px;">
+                        <input type="checkbox" class="master-row-checkbox" data-id="${asset.id}"
+                               ${selectedMasterItems.has(asset.id) ? 'checked' : ''}
+                               onchange="handleMasterRowSelect(${asset.id})">
+                    </td>
+                    <td style="padding: 10px;">${asset.category}</td>
+                    <td style="padding: 10px;">${asset.largeClass}</td>
+                    <td style="padding: 10px;">${asset.mediumClass}</td>
+                    <td style="padding: 10px;">${asset.individualItem}</td>
+                    <td style="padding: 10px;">${asset.maker}</td>
+                    <td style="padding: 10px;">${asset.model}</td>
+                </tr>
+            `).join('');
+        }
+
+        // 資産マスタテーブルをフィルタリング
+        function filterAssetMasterTable() {
             const category = document.getElementById('masterCategory').value;
             const largeClass = document.getElementById('masterLargeClass').value;
             const mediumClass = document.getElementById('masterMediumClass').value;
             const individualItem = document.getElementById('masterIndividualItem').value;
             const maker = document.getElementById('masterMaker').value;
             const model = document.getElementById('masterModel').value;
+            const keyword = document.getElementById('masterKeywordSearch').value.trim();
 
-            // 条件に合致する資産を検索
-            const matchedAssets = assetMasterData.filter(item => {
+            // プルダウンフィルター（6項目すべて対応）
+            filteredMasterData = assetMasterData.filter(item => {
                 return (!category || item.category === category) &&
                        (!largeClass || item.largeClass === largeClass) &&
                        (!mediumClass || item.mediumClass === mediumClass) &&
@@ -1156,33 +1372,80 @@
                        (!model || item.model === model);
             });
 
-            // 条件が何も選択されていない場合
-            if (!category && !largeClass && !mediumClass && !individualItem && !maker && !model) {
-                alert('少なくとも1つの条件を選択してください');
-                return;
+            // キーワード検索（曖昧検索）
+            if (keyword) {
+                const keywords = keyword.toLowerCase().split(/\s+/);
+                filteredMasterData = filteredMasterData.filter(item => {
+                    const searchText = [
+                        item.category,
+                        item.largeClass,
+                        item.mediumClass,
+                        item.individualItem,
+                        item.maker,
+                        item.model
+                    ].join(' ').toLowerCase();
+
+                    return keywords.every(kw => searchText.includes(kw));
+                });
             }
 
-            // 複数該当した場合
-            if (matchedAssets.length > 1) {
-                alert(`${matchedAssets.length}件の資産が該当します。より詳細な条件を設定してください`);
-                return;
+            renderAssetMasterTable();
+        }
+
+        // フィルタークリア機能
+        function resetMasterFilter() {
+            // 全プルダウンをリセット
+            document.getElementById('masterCategory').value = '';
+            document.getElementById('masterLargeClass').value = '';
+            document.getElementById('masterMediumClass').value = '';
+            document.getElementById('masterIndividualItem').value = '';
+            document.getElementById('masterMaker').value = '';
+            document.getElementById('masterModel').value = '';
+            document.getElementById('masterKeywordSearch').value = '';
+
+            // Choices.jsインスタンスをリセット
+            if (masterChoicesInstances) {
+                Object.values(masterChoicesInstances).forEach(instance => {
+                    if (instance && instance.removeActiveItemsByValue) {
+                        instance.removeActiveItemsByValue('');
+                    }
+                });
             }
 
-            // 該当なし
-            if (matchedAssets.length === 0) {
-                alert('該当する資産がありません');
-                return;
-            }
+            // 全データを再表示
+            filteredMasterData = [...assetMasterData];
+            renderAssetMasterTable();
+        }
 
-            // 1件該当：追加
-            const asset = matchedAssets[0];
-            if (!selectedMasterItems.has(asset.id)) {
-                selectedMasterItems.add(asset.id);
-                renderSelectedAssets();
-                updateMasterSelectionInfo();
+        // マスタ行選択
+        function handleMasterRowSelect(id) {
+            if (selectedMasterItems.has(id)) {
+                selectedMasterItems.delete(id);
             } else {
-                alert('この資産は既に選択されています');
+                selectedMasterItems.add(id);
             }
+            renderSelectedAssets();
+            updateMasterSelectionInfo();
+        }
+
+        // マスタ全選択
+        function handleSelectAllMaster() {
+            const selectAll = document.getElementById('selectAllMaster');
+            const checkboxes = document.querySelectorAll('.master-row-checkbox');
+
+            checkboxes.forEach(cb => {
+                const id = parseInt(cb.getAttribute('data-id'));
+                if (selectAll.checked) {
+                    selectedMasterItems.add(id);
+                    cb.checked = true;
+                } else {
+                    selectedMasterItems.delete(id);
+                    cb.checked = false;
+                }
+            });
+
+            renderSelectedAssets();
+            updateMasterSelectionInfo();
         }
 
         // 選択済み資産を表示
@@ -1273,27 +1536,208 @@
                 alert('資産を選択してください');
                 return;
             }
-            
+
             const modal = document.getElementById('applicationInputModal');
-            
+
             // 申請種別を設定
             document.getElementById('applicationTypeTitle').textContent = applicationType;
             document.getElementById('appType').value = applicationType;
-            
+
             // 現在の日付を設定
             const today = new Date();
             const dateStr = today.toISOString().split('T')[0];
             document.getElementById('appDate').value = dateStr;
-            
+
             // 選択された資産を表示（資産リストから選択されたもの）
             displaySelectedAssetsFromList();
-            
-            // 見積書フォームを初期化（1つ追加）
-            quotationCount = 0;
-            document.getElementById('quotationList').innerHTML = '';
-            addQuotationForm();
-            
+
+            // 見積書セクションの表示/非表示を制御
+            const quotationSection = document.querySelector('.application-section:has(#quotationList)');
+            const needsQuotation = ['新規購入申請', '増設購入申請', '更新購入申請'].includes(applicationType);
+
+            if (quotationSection) {
+                if (needsQuotation) {
+                    quotationSection.style.display = 'block';
+                    // 見積書フォームを初期化（1つ追加）
+                    quotationCount = 0;
+                    document.getElementById('quotationList').innerHTML = '';
+                    addQuotationForm();
+                } else {
+                    quotationSection.style.display = 'none';
+                }
+            }
+
+            // 移動申請の場合は移動先情報セクションを表示
+            updateApplicationFormFields(applicationType);
+
             modal.classList.add('active');
+        }
+
+        // 申請種別に応じてフォームフィールドを更新
+        function updateApplicationFormFields(applicationType) {
+            // 対象資産情報セクションの後に追加情報を挿入
+            const targetAssetsSection = document.querySelector('.application-section:has(#selectedAssetsDisplay)');
+
+            // 既存の追加セクションを削除
+            const existingExtraSection = document.getElementById('extraApplicationSection');
+            if (existingExtraSection) {
+                existingExtraSection.remove();
+            }
+
+            // 申請種別に応じた追加フィールド
+            let extraHTML = '';
+
+            if (applicationType === '移動申請') {
+                extraHTML = `
+                    <div class="application-section" id="extraApplicationSection">
+                        <div class="application-section-title">📍 移動先情報</div>
+                        <div class="application-form-group">
+                            <label>移動先 棟 <span class="required">*</span></label>
+                            <select id="moveToBuilding">
+                                <option value="">選択してください</option>
+                                <option value="本館">本館</option>
+                                <option value="別館">別館</option>
+                                <option value="新館">新館</option>
+                                <option value="研究棟">研究棟</option>
+                            </select>
+                        </div>
+                        <div class="application-form-group">
+                            <label>移動先 階 <span class="required">*</span></label>
+                            <select id="moveToFloor">
+                                <option value="">選択してください</option>
+                                <option value="B1F">B1F</option>
+                                <option value="1F">1F</option>
+                                <option value="2F">2F</option>
+                                <option value="3F">3F</option>
+                                <option value="4F">4F</option>
+                                <option value="5F">5F</option>
+                            </select>
+                        </div>
+                        <div class="application-form-group">
+                            <label>移動先 部門 <span class="required">*</span></label>
+                            <input type="text" id="moveToDepartment" placeholder="例: 内科">
+                        </div>
+                        <div class="application-form-group">
+                            <label>移動先 部署 <span class="required">*</span></label>
+                            <input type="text" id="moveToSection" placeholder="例: 内科外来">
+                        </div>
+                        <div class="application-form-group">
+                            <label>移動予定日 <span class="required">*</span></label>
+                            <input type="date" id="moveDate">
+                        </div>
+                    </div>
+                `;
+            } else if (applicationType === '廃棄申請') {
+                extraHTML = `
+                    <div class="application-section" id="extraApplicationSection">
+                        <div class="application-section-title">🗑️ 廃棄情報</div>
+                        <div class="application-form-group">
+                            <label>廃棄理由 <span class="required">*</span></label>
+                            <select id="disposalReason">
+                                <option value="">選択してください</option>
+                                <option value="耐用年数超過">耐用年数超過</option>
+                                <option value="故障">故障（修理不可）</option>
+                                <option value="旧機種">旧機種（更新済み）</option>
+                                <option value="使用停止">使用停止</option>
+                                <option value="その他">その他</option>
+                            </select>
+                        </div>
+                        <div class="application-form-group">
+                            <label>廃棄予定日 <span class="required">*</span></label>
+                            <input type="date" id="disposalDate">
+                        </div>
+                        <div class="application-form-group">
+                            <label>廃棄方法</label>
+                            <select id="disposalMethod">
+                                <option value="">選択してください</option>
+                                <option value="産業廃棄物処理">産業廃棄物処理</option>
+                                <option value="リサイクル">リサイクル</option>
+                                <option value="メーカー引取">メーカー引取</option>
+                                <option value="その他">その他</option>
+                            </select>
+                        </div>
+                    </div>
+                `;
+            } else if (applicationType === '保留申請') {
+                extraHTML = `
+                    <div class="application-section" id="extraApplicationSection">
+                        <div class="application-section-title">⏸️ 保留情報</div>
+                        <div class="application-form-group">
+                            <label>保留理由 <span class="required">*</span></label>
+                            <select id="holdReason">
+                                <option value="">選択してください</option>
+                                <option value="故障中">故障中（修理待ち）</option>
+                                <option value="点検中">点検中</option>
+                                <option value="使用一時停止">使用一時停止</option>
+                                <option value="移動予定">移動予定</option>
+                                <option value="その他">その他</option>
+                            </select>
+                        </div>
+                        <div class="application-form-group">
+                            <label>保留期間（開始日） <span class="required">*</span></label>
+                            <input type="date" id="holdStartDate">
+                        </div>
+                        <div class="application-form-group">
+                            <label>保留期間（終了予定日）</label>
+                            <input type="date" id="holdEndDate">
+                        </div>
+                    </div>
+                `;
+            } else if (applicationType === '更新購入申請') {
+                extraHTML = `
+                    <div class="application-section" id="extraApplicationSection">
+                        <div class="application-section-title">🔄 更新情報</div>
+                        <div class="application-form-group">
+                            <label style="display: block; color: #e74c3c; font-weight: bold; margin-bottom: 10px;">
+                                ⚠️ 注意: この申請が最終承認されると、選択した資産は自動的に「廃棄予定」ステータスに変更されます
+                            </label>
+                        </div>
+                        <div class="application-form-group">
+                            <label>更新理由 <span class="required">*</span></label>
+                            <select id="renewalReason">
+                                <option value="">選択してください</option>
+                                <option value="耐用年数超過">耐用年数超過</option>
+                                <option value="性能不足">性能不足</option>
+                                <option value="故障頻発">故障頻発</option>
+                                <option value="保守終了">保守終了</option>
+                                <option value="その他">その他</option>
+                            </select>
+                        </div>
+                        <div class="application-form-group">
+                            <label>更新予定日 <span class="required">*</span></label>
+                            <input type="date" id="renewalDate">
+                        </div>
+                    </div>
+                `;
+            } else if (applicationType === '増設購入申請') {
+                extraHTML = `
+                    <div class="application-section" id="extraApplicationSection">
+                        <div class="application-section-title">➕ 増設情報</div>
+                        <div class="application-form-group">
+                            <label>増設台数 <span class="required">*</span></label>
+                            <input type="number" id="expansionQuantity" min="1" value="1" placeholder="例: 2">
+                        </div>
+                        <div class="application-form-group">
+                            <label>増設理由 <span class="required">*</span></label>
+                            <select id="expansionReason">
+                                <option value="">選択してください</option>
+                                <option value="業務拡大">業務拡大</option>
+                                <option value="利用頻度増加">利用頻度増加</option>
+                                <option value="バックアップ用">バックアップ用</option>
+                                <option value="その他">その他</option>
+                            </select>
+                        </div>
+                        <div class="application-form-group">
+                            <label>納入希望日 <span class="required">*</span></label>
+                            <input type="date" id="expansionDate">
+                        </div>
+                    </div>
+                `;
+            }
+
+            if (extraHTML && targetAssetsSection) {
+                targetAssetsSection.insertAdjacentHTML('afterend', extraHTML);
+            }
         }
         
         function displaySelectedAssetsFromList() {
@@ -1421,52 +1865,113 @@
         
         function submitApplication() {
             // バリデーション
+            const applicationType = document.getElementById('appType').value;
             const reason = document.getElementById('appReason').value;
             const approver1 = document.getElementById('approver1').value;
             const approver2 = document.getElementById('approver2').value;
             const approver3 = document.getElementById('approver3').value;
-            
+
+            // 基本項目のバリデーション
             if (!reason) {
                 alert('申請理由を入力してください');
                 return;
             }
-            
+
             if (!approver1 || !approver2 || !approver3) {
                 alert('すべての承認者を選択してください');
                 return;
             }
-            
-            // 見積書のチェック
-            const quotationItems = document.querySelectorAll('.quotation-item');
-            if (quotationItems.length === 0) {
-                alert('少なくとも1つの見積書を追加してください');
-                return;
-            }
-            
-            let hasValidQuotation = false;
-            quotationItems.forEach((item, index) => {
-                const id = item.id.replace('quotation', '');
-                const vendor = document.getElementById(`vendor${id}`)?.value;
-                const amount = document.getElementById(`amount${id}`)?.value;
-                const file = document.getElementById(`file${id}`)?.files[0];
-                
-                if (vendor && amount && file) {
-                    hasValidQuotation = true;
+
+            // 申請種別ごとの固有バリデーション
+            if (applicationType === '移動申請') {
+                const moveToBuilding = document.getElementById('moveToBuilding')?.value;
+                const moveToFloor = document.getElementById('moveToFloor')?.value;
+                const moveToDepartment = document.getElementById('moveToDepartment')?.value;
+                const moveToSection = document.getElementById('moveToSection')?.value;
+                const moveDate = document.getElementById('moveDate')?.value;
+
+                if (!moveToBuilding || !moveToFloor || !moveToDepartment || !moveToSection || !moveDate) {
+                    alert('移動先情報のすべての必須項目を入力してください');
+                    return;
                 }
-            });
-            
-            if (!hasValidQuotation) {
-                alert('見積書の必須項目（業者名、金額、ファイル）を入力してください');
-                return;
+            } else if (applicationType === '廃棄申請') {
+                const disposalReason = document.getElementById('disposalReason')?.value;
+                const disposalDate = document.getElementById('disposalDate')?.value;
+
+                if (!disposalReason || !disposalDate) {
+                    alert('廃棄情報のすべての必須項目を入力してください');
+                    return;
+                }
+            } else if (applicationType === '保留申請') {
+                const holdReason = document.getElementById('holdReason')?.value;
+                const holdStartDate = document.getElementById('holdStartDate')?.value;
+
+                if (!holdReason || !holdStartDate) {
+                    alert('保留情報のすべての必須項目を入力してください');
+                    return;
+                }
+            } else if (applicationType === '更新購入申請') {
+                const renewalReason = document.getElementById('renewalReason')?.value;
+                const renewalDate = document.getElementById('renewalDate')?.value;
+
+                if (!renewalReason || !renewalDate) {
+                    alert('更新情報のすべての必須項目を入力してください');
+                    return;
+                }
+            } else if (applicationType === '増設購入申請') {
+                const expansionQuantity = document.getElementById('expansionQuantity')?.value;
+                const expansionReason = document.getElementById('expansionReason')?.value;
+                const expansionDate = document.getElementById('expansionDate')?.value;
+
+                if (!expansionQuantity || !expansionReason || !expansionDate) {
+                    alert('増設情報のすべての必須項目を入力してください');
+                    return;
+                }
             }
-            
+
+            // 見積書が必要な申請のチェック
+            const needsQuotation = ['新規購入申請', '増設購入申請', '更新購入申請'].includes(applicationType);
+            if (needsQuotation) {
+                const quotationItems = document.querySelectorAll('.quotation-item');
+                if (quotationItems.length === 0) {
+                    alert('少なくとも1つの見積書を追加してください');
+                    return;
+                }
+
+                let hasValidQuotation = false;
+                quotationItems.forEach((item, index) => {
+                    const id = item.id.replace('quotation', '');
+                    const vendor = document.getElementById(`vendor${id}`)?.value;
+                    const amount = document.getElementById(`amount${id}`)?.value;
+                    const file = document.getElementById(`file${id}`)?.files[0];
+
+                    if (vendor && amount && file) {
+                        hasValidQuotation = true;
+                    }
+                });
+
+                if (!hasValidQuotation) {
+                    alert('見積書の必須項目（業者名、金額、ファイル）を入力してください');
+                    return;
+                }
+            }
+
             // 申請を提出
-            if (confirm('申請を提出してもよろしいですか？')) {
-                alert('申請が提出されました\n申請番号: REQ-2025-' + Math.floor(Math.random() * 10000).toString().padStart(4, '0'));
+            let confirmMessage = '申請を提出してもよろしいですか？';
+            if (applicationType === '更新購入申請') {
+                confirmMessage = '申請を提出してもよろしいですか？\n\n⚠️ この申請が最終承認されると、選択した資産は自動的に「廃棄予定」ステータスに変更されます。';
+            }
+
+            if (confirm(confirmMessage)) {
+                const appNumber = 'REQ-2025-' + Math.floor(Math.random() * 10000).toString().padStart(4, '0');
+                alert(`申請が提出されました\n申請番号: ${appNumber}\n申請種別: ${applicationType}`);
                 closeApplicationInputModal();
-                
+
                 // 選択をクリア
                 selectedMasterItems.clear();
+                selectedItems.clear();
+                updateSelectionInfo();
+                syncSelections();
             }
         }
 

@@ -224,7 +224,7 @@
             color: white;
             border-color: #3498db;
         }
-        
+
         .search-result-page .action-btn.new-purchase-action:hover {
             background: #2980b9;
             border-color: #2980b9;
@@ -916,29 +916,9 @@
             bottom: auto;
         }
         
-        /* モーダル */
-        .search-result-page .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            z-index: 2000;
-            align-items: center;
-            justify-content: center;
-        }
+        /* モーダル本体のスタイルはcommon.cssで定義済み */
         
-        /* 資産マスタモーダルは他の要素より確実に上に */
-        .search-result-page #assetMasterModal {
-            z-index: 4000;
-        }
-        
-        .search-result-page .modal.active {
-            display: flex;
-        }
-        
+        /* モーダルコンテンツ（汎用） */
         .search-result-page .modal-content {
             background: white;
             border-radius: 8px;
@@ -950,12 +930,11 @@
             position: relative;
             z-index: 2001;
         }
-        
-        /* 資産マスタモーダルのコンテンツは広く、overflow設定を調整 */
-        .search-result-page #assetMasterModal .modal-content {
-            max-width: 700px;
+
+        /* 資産マスタモーダルのコンテンツ - 直接指定（モーダルが.search-result-pageの外にあるため） */
+        #assetMasterModal .modal-content {
+            max-width: 1000px;
             max-height: 90vh;
-            overflow-y: auto;
             overflow-x: visible;
             z-index: 4001;
         }
@@ -1026,7 +1005,6 @@
             background: #f8f9fa;
         }
 
-        
         /* 資産マスタモーダル用のselect */
         .search-result-page .master-filter-select {
             width: 100%;

@@ -249,6 +249,15 @@ let searchResultFilter_assetMaster = null;
             masterSelectIds.forEach(id => {
                 const element = document.getElementById(id);
                 if (element && window.ChoicesHelper) {
+                    // 既存のChoicesインスタンスがあれば破棄
+                    if (element.choices) {
+                        try {
+                            element.choices.destroy();
+                        } catch (e) {
+                            console.log('Choices destroy error for', id, e);
+                        }
+                    }
+
                     // 共通ヘルパーを使用してChoices.jsを初期化
                     instances[id] = window.ChoicesHelper.initChoices(
                         element,
@@ -676,8 +685,18 @@ let searchResultFilter_assetMaster = null;
         }
 
         // 資産マスタモーダル（共通ヘルパー使用）
-        function openAssetMasterModal() {
+        async function openAssetMasterModal() {
             selectedMasterItems.clear();
+
+            // データ未読み込みの場合は読み込む
+            if (searchResult_assetMasterData.length === 0) {
+                console.log('Loading asset master data from JSON...');
+                const loaded = await loadAssetMasterDataFromJSON();
+                if (!loaded) {
+                    alert('資産マスタデータの読み込みに失敗しました');
+                    return;
+                }
+            }
 
             // 既存のChoices.jsインスタンスを先に破棄
             if (masterChoicesInstances) {
@@ -693,20 +712,66 @@ let searchResultFilter_assetMaster = null;
                 masterChoicesInstances = null;
             }
 
-            // モーダルを表示（共通ヘルパー使用）
-            if (window.ModalHelper) {
-                window.ModalHelper.open('#assetMasterModal', {
-                    closeOnOutsideClick: true,
-                    closeOnEscape: true,
-                    onOpen: () => {
-                        // 少し遅延させてからドロップダウンの選択肢を生成とChoices.js初期化
-                        setTimeout(() => {
-                            populateMasterDropdowns();
-                            masterChoicesInstances = initMasterChoices();
-                            updateMasterSelectionInfo();
-                        }, 150);
-                    }
-                });
+            // モーダルを表示（直接制御）
+            const modal = document.getElementById('assetMasterModal');
+            if (modal) {
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+
+                console.log('=== Asset Master Modal opened ===');
+                console.log('Modal classes:', modal.className);
+
+                // 少し遅延させてからドロップダウンの選択肢を生成とChoices.js初期化
+                setTimeout(() => {
+                    initModalContent();
+                }, 150);
+            } else {
+                console.error('Asset Master Modal not found');
+            }
+        }
+
+        // モーダルコンテンツ初期化（共通化）
+        function initModalContent() {
+            // 先にChoices.jsを初期化（空の状態で）
+            console.log('Initializing Choices.js...');
+            masterChoicesInstances = initMasterChoices();
+            console.log('masterChoicesInstances created:', masterChoicesInstances);
+
+            // 次にデータを取得して選択肢を設定
+            console.log('Populating dropdowns...');
+            populateMasterDropdowns();
+
+            // 初期表示（全件表示）
+            filteredMasterData = [...searchResult_assetMasterData];
+            renderAssetMasterTable();
+
+            updateMasterSelectionInfo();
+        }
+
+        // 資産マスタデータをJSONから読み込む
+        async function loadAssetMasterDataFromJSON() {
+            try {
+                const cacheBuster = new Date().getTime();
+                const response = await fetch(`src/data/asset-master.json?v=${cacheBuster}`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                searchResult_assetMasterData = data.assets.map(asset => ({
+                    id: asset.id,
+                    category: asset.category,
+                    largeClass: asset.largeClass,
+                    mediumClass: asset.mediumClass,
+                    individualItem: asset.item,
+                    maker: asset.manufacturer,
+                    model: asset.model
+                }));
+                filteredMasterData = [...searchResult_assetMasterData];
+                console.log(`資産マスタ読み込み完了: ${searchResult_assetMasterData.length}件`);
+                return true;
+            } catch (error) {
+                console.error('資産マスタの読み込みに失敗:', error);
+                return false;
             }
         }
 
@@ -725,9 +790,11 @@ let searchResultFilter_assetMaster = null;
                 masterChoicesInstances = null;
             }
 
-            // モーダルを閉じる（共通ヘルパー使用）
-            if (window.ModalHelper) {
-                window.ModalHelper.close('#assetMasterModal');
+            // モーダルを閉じる（直接制御）
+            const modal = document.getElementById('assetMasterModal');
+            if (modal) {
+                modal.classList.remove('active');
+                document.body.style.overflow = '';
             }
         }
 
@@ -740,6 +807,9 @@ let searchResultFilter_assetMaster = null;
 
         // 資産マスタのドロップダウン選択肢を生成
         function populateMasterDropdowns() {
+            console.log('=== populateMasterDropdowns called (from JS) ===');
+            console.log('searchResult_assetMasterData.length:', searchResult_assetMasterData.length);
+
             // 各項目のユニークな値を取得
             const categories = [...new Set(searchResult_assetMasterData.map(item => item.category))].sort();
             const largeClasses = [...new Set(searchResult_assetMasterData.map(item => item.largeClass))].sort();
@@ -748,6 +818,9 @@ let searchResultFilter_assetMaster = null;
             const makers = [...new Set(searchResult_assetMasterData.map(item => item.maker))].sort();
             const models = [...new Set(searchResult_assetMasterData.map(item => item.model))].sort();
 
+            console.log('categories:', categories);
+            console.log('largeClasses:', largeClasses);
+
             // 各ドロップダウンに選択肢を追加
             populateSelect('masterCategory', categories);
             populateSelect('masterLargeClass', largeClasses);
@@ -755,18 +828,57 @@ let searchResultFilter_assetMaster = null;
             populateSelect('masterIndividualItem', individualItems);
             populateSelect('masterMaker', makers);
             populateSelect('masterModel', models);
+
+            // Choices.jsインスタンスが存在する場合は選択肢を更新
+            if (masterChoicesInstances) {
+                updateChoicesOptions('masterCategory', categories);
+                updateChoicesOptions('masterLargeClass', largeClasses);
+                updateChoicesOptions('masterMediumClass', mediumClasses);
+                updateChoicesOptions('masterIndividualItem', individualItems);
+                updateChoicesOptions('masterMaker', makers);
+                updateChoicesOptions('masterModel', models);
+            }
+        }
+
+        // Choices.jsの選択肢を更新する関数
+        function updateChoicesOptions(selectId, options) {
+            console.log(`updateChoicesOptions called for ${selectId}, options: ${options.length}`);
+
+            if (!masterChoicesInstances) {
+                console.error('masterChoicesInstances is null');
+                return;
+            }
+
+            if (!masterChoicesInstances[selectId]) {
+                console.error(`masterChoicesInstances[${selectId}] is null`);
+                return;
+            }
+
+            const instance = masterChoicesInstances[selectId];
+
+            try {
+                // clearStoreの代わりにclearChoicesを使用
+                instance.clearChoices();
+                const choices = [{ value: '', label: '全て', selected: true }].concat(
+                    options.map(v => ({ value: v, label: v }))
+                );
+                instance.setChoices(choices, 'value', 'label', true);
+                console.log(`Successfully updated ${selectId} with ${options.length} options`);
+            } catch (e) {
+                console.error(`Error updating choices for ${selectId}:`, e);
+            }
         }
 
         // selectタグに選択肢を追加
         function populateSelect(selectId, options) {
             const select = document.getElementById(selectId);
             if (!select) return;
-            
+
             // 既存のオプション（「全て」以外）をクリア
             while (select.options.length > 1) {
                 select.remove(1);
             }
-            
+
             // 新しいオプションを追加
             options.forEach(option => {
                 const optionElement = document.createElement('option');
@@ -774,6 +886,154 @@ let searchResultFilter_assetMaster = null;
                 optionElement.textContent = option;
                 select.appendChild(optionElement);
             });
+        }
+
+        // フィルタリング実行
+        function filterAssetMasterTable() {
+            const category = document.getElementById('masterCategory')?.value || '';
+            const largeClass = document.getElementById('masterLargeClass')?.value || '';
+            const mediumClass = document.getElementById('masterMediumClass')?.value || '';
+            const individualItem = document.getElementById('masterIndividualItem')?.value || '';
+            const maker = document.getElementById('masterMaker')?.value || '';
+            const model = document.getElementById('masterModel')?.value || '';
+
+            console.log('Filtering with:', { category, largeClass, mediumClass, individualItem, maker, model });
+
+            // プルダウンフィルター
+            filteredMasterData = searchResult_assetMasterData.filter(item => {
+                return (!category || item.category === category) &&
+                       (!largeClass || item.largeClass === largeClass) &&
+                       (!mediumClass || item.mediumClass === mediumClass) &&
+                       (!individualItem || item.individualItem === individualItem) &&
+                       (!maker || item.maker === maker) &&
+                       (!model || item.model === model);
+            });
+
+            console.log('Filtered results:', filteredMasterData.length);
+            renderAssetMasterTable();
+        }
+
+        // テーブル描画
+        function renderAssetMasterTable() {
+            const tbody = document.getElementById('assetMasterTableBody');
+            const resultCount = document.getElementById('assetMasterResultCount');
+
+            if (!tbody || !resultCount) {
+                console.error('Table elements not found');
+                return;
+            }
+
+            if (filteredMasterData.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 40px; color: #999;">検索結果がありません</td></tr>';
+                resultCount.textContent = '0件';
+                return;
+            }
+
+            resultCount.textContent = `${filteredMasterData.length}件`;
+
+            tbody.innerHTML = filteredMasterData.map(asset => `
+                <tr>
+                    <td style="padding: 10px; text-align: center;">
+                        <input type="checkbox" class="master-row-checkbox" data-id="${asset.id}"
+                               ${selectedMasterItems.has(asset.id) ? 'checked' : ''}
+                               onchange="handleMasterRowSelect(${asset.id})">
+                    </td>
+                    <td>${asset.category}</td>
+                    <td>${asset.largeClass}</td>
+                    <td>${asset.mediumClass}</td>
+                    <td>${asset.individualItem}</td>
+                    <td>${asset.maker}</td>
+                    <td>${asset.model}</td>
+                </tr>
+            `).join('');
+
+            console.log('Table rendered with', filteredMasterData.length, 'rows');
+        }
+
+        // 行選択
+        function handleMasterRowSelect(id) {
+            if (selectedMasterItems.has(id)) {
+                selectedMasterItems.delete(id);
+            } else {
+                selectedMasterItems.add(id);
+            }
+            renderSelectedAssets();
+            updateMasterSelectionInfo();
+        }
+
+        // 全選択
+        function handleSelectAllMaster() {
+            const selectAll = document.getElementById('selectAllMaster');
+            const checkboxes = document.querySelectorAll('.master-row-checkbox');
+
+            checkboxes.forEach(cb => {
+                const id = parseInt(cb.getAttribute('data-id'));
+                if (selectAll.checked) {
+                    selectedMasterItems.add(id);
+                    cb.checked = true;
+                } else {
+                    selectedMasterItems.delete(id);
+                    cb.checked = false;
+                }
+            });
+
+            renderSelectedAssets();
+            updateMasterSelectionInfo();
+        }
+
+        // 選択済み資産を表示
+        function renderSelectedAssets() {
+            const container = document.getElementById('selectedAssetsList');
+            if (!container) return;
+
+            if (selectedMasterItems.size === 0) {
+                container.innerHTML = '<p style="color: #999; text-align: center; margin: 20px 0;">資産が選択されていません</p>';
+                return;
+            }
+
+            const selectedAssets = searchResult_assetMasterData.filter(asset =>
+                selectedMasterItems.has(asset.id)
+            );
+
+            container.innerHTML = selectedAssets.map(asset => `
+                <div style="background: white; padding: 8px 12px; margin-bottom: 8px; border-radius: 4px; border-left: 3px solid #27ae60; display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <strong>${asset.category}</strong> - ${asset.largeClass} - ${asset.mediumClass} - ${asset.individualItem}<br>
+                        <small>${asset.maker} / ${asset.model}</small>
+                    </div>
+                    <button onclick="removeSelectedAsset(${asset.id})" style="background: #e74c3c; color: white; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 12px;">削除</button>
+                </div>
+            `).join('');
+        }
+
+        // 選択解除
+        function removeSelectedAsset(id) {
+            selectedMasterItems.delete(id);
+            renderSelectedAssets();
+            updateMasterSelectionInfo();
+            renderAssetMasterTable();
+        }
+
+        // フィルタークリア
+        function resetMasterFilter() {
+            document.getElementById('masterCategory').value = '';
+            document.getElementById('masterLargeClass').value = '';
+            document.getElementById('masterMediumClass').value = '';
+            document.getElementById('masterIndividualItem').value = '';
+            document.getElementById('masterMaker').value = '';
+            document.getElementById('masterModel').value = '';
+
+            // Choices.jsインスタンスもリセット
+            if (masterChoicesInstances) {
+                Object.values(masterChoicesInstances).forEach(instance => {
+                    if (instance) {
+                        instance.setChoiceByValue('');
+                    }
+                });
+            }
+
+            filteredMasterData = [...searchResult_assetMasterData];
+            renderAssetMasterTable();
         }
 
         // 選択した条件で資産を追加

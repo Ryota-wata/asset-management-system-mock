@@ -248,7 +248,8 @@ select:focus {
     animation: fadeIn 0.2s ease-in-out;
 }
 
-.modal.show {
+.modal.show,
+.modal.active {
     display: flex;
     align-items: center;
     justify-content: center;
