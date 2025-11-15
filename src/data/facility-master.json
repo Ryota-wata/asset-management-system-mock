@@ -1,5 +1,63 @@
 {
-  "facilities": [
+  "columns": [
+    {
+      "id": "checkbox",
+      "label": "",
+      "field": "checkbox",
+      "type": "checkbox",
+      "width": "50px",
+      "sortable": false
+    },
+    {
+      "id": "no",
+      "label": "No.",
+      "field": "no",
+      "type": "number",
+      "width": "60px",
+      "sortable": true
+    },
+    {
+      "id": "code",
+      "label": "施設ID",
+      "field": "code",
+      "type": "text",
+      "width": "100px",
+      "sortable": true
+    },
+    {
+      "id": "name",
+      "label": "施設名",
+      "field": "name",
+      "type": "text",
+      "width": "200px",
+      "sortable": true
+    },
+    {
+      "id": "region",
+      "label": "都道府県",
+      "field": "region",
+      "type": "text",
+      "width": "100px",
+      "sortable": true
+    },
+    {
+      "id": "type",
+      "label": "施設種別",
+      "field": "type",
+      "type": "text",
+      "width": "150px",
+      "sortable": true
+    },
+    {
+      "id": "actions",
+      "label": "操作",
+      "field": "actions",
+      "type": "actions",
+      "width": "100px",
+      "sortable": false
+    }
+  ],
+  "data": [
     {
       "id": 1,
       "name": "東京中央総合病院",

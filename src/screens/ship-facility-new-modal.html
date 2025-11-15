@@ -1,6 +1,6 @@
 <!-- SHIP施設マスタ新規作成モーダル -->
 <div id="facilityNewModal" class="asset-master-modal">
-    <div class="asset-master-modal-content" style="max-width: 800px;">
+    <div class="asset-master-modal-content" style="max-width: 600px;">
         <!-- モーダルヘッダー -->
         <div class="asset-master-modal-header">
             <h2 class="asset-master-modal-title">SHIP施設マスタ新規作成</h2>
@@ -17,144 +17,41 @@
                     <div class="facility-form-row">
                         <div class="facility-form-group">
                             <label class="facility-form-label required">施設ID</label>
-                            <input type="text" class="facility-form-input" id="facilityId" placeholder="F-001" required>
-                            <small class="facility-form-hint">例: F-001</small>
+                            <input type="text" class="facility-form-input" id="facilityCode" placeholder="F001" required>
+                            <small class="facility-form-hint">例: F001</small>
                         </div>
                     </div>
 
                     <div class="facility-form-row">
                         <div class="facility-form-group">
                             <label class="facility-form-label required">施設名</label>
-                            <input type="text" class="facility-form-input" id="facilityName" placeholder="東京総合医療センター" required>
-                        </div>
-                    </div>
-
-                    <div class="facility-form-row">
-                        <div class="facility-form-group">
-                            <label class="facility-form-label required">施設名（カナ）</label>
-                            <input type="text" class="facility-form-input" id="facilityNameKana" placeholder="トウキョウソウゴウイリョウセンター" required>
-                        </div>
-                    </div>
-
-                    <div class="facility-form-row">
-                        <div class="facility-form-group half">
-                            <label class="facility-form-label">病床規模</label>
-                            <input type="number" class="facility-form-input" id="bedSize" placeholder="500" min="0">
-                            <small class="facility-form-hint">床数を入力</small>
-                        </div>
-                        <div class="facility-form-group half">
-                            <label class="facility-form-label">設立年月日</label>
-                            <input type="date" class="facility-form-input" id="establishedDate">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 所在地情報セクション -->
-                <div class="facility-form-section">
-                    <h3 class="facility-form-section-title">所在地情報</h3>
-
-                    <div class="facility-form-row">
-                        <div class="facility-form-group half">
-                            <label class="facility-form-label">郵便番号</label>
-                            <input type="text" class="facility-form-input" id="postalCode" placeholder="100-0001" pattern="\d{3}-\d{4}">
-                            <small class="facility-form-hint">例: 100-0001</small>
+                            <input type="text" class="facility-form-input" id="facilityName" placeholder="東京中央総合病院" required>
                         </div>
                     </div>
 
                     <div class="facility-form-row">
                         <div class="facility-form-group half">
                             <label class="facility-form-label required">都道府県</label>
-                            <select class="facility-form-input" id="prefecture" required>
+                            <select class="facility-form-input" id="facilityRegion" required>
                                 <option value="">選択してください</option>
                                 <option value="北海道">北海道</option>
-                                <option value="青森県">青森県</option>
-                                <option value="岩手県">岩手県</option>
-                                <option value="宮城県">宮城県</option>
-                                <option value="秋田県">秋田県</option>
-                                <option value="山形県">山形県</option>
-                                <option value="福島県">福島県</option>
-                                <option value="茨城県">茨城県</option>
-                                <option value="栃木県">栃木県</option>
-                                <option value="群馬県">群馬県</option>
-                                <option value="埼玉県">埼玉県</option>
-                                <option value="千葉県">千葉県</option>
-                                <option value="東京都">東京都</option>
-                                <option value="神奈川県">神奈川県</option>
-                                <option value="新潟県">新潟県</option>
-                                <option value="富山県">富山県</option>
-                                <option value="石川県">石川県</option>
-                                <option value="福井県">福井県</option>
-                                <option value="山梨県">山梨県</option>
-                                <option value="長野県">長野県</option>
-                                <option value="岐阜県">岐阜県</option>
-                                <option value="静岡県">静岡県</option>
-                                <option value="愛知県">愛知県</option>
-                                <option value="三重県">三重県</option>
-                                <option value="滋賀県">滋賀県</option>
-                                <option value="京都府">京都府</option>
-                                <option value="大阪府">大阪府</option>
-                                <option value="兵庫県">兵庫県</option>
-                                <option value="奈良県">奈良県</option>
-                                <option value="和歌山県">和歌山県</option>
-                                <option value="鳥取県">鳥取県</option>
-                                <option value="島根県">島根県</option>
-                                <option value="岡山県">岡山県</option>
-                                <option value="広島県">広島県</option>
-                                <option value="山口県">山口県</option>
-                                <option value="徳島県">徳島県</option>
-                                <option value="香川県">香川県</option>
-                                <option value="愛媛県">愛媛県</option>
-                                <option value="高知県">高知県</option>
-                                <option value="福岡県">福岡県</option>
-                                <option value="佐賀県">佐賀県</option>
-                                <option value="長崎県">長崎県</option>
-                                <option value="熊本県">熊本県</option>
-                                <option value="大分県">大分県</option>
-                                <option value="宮崎県">宮崎県</option>
-                                <option value="鹿児島県">鹿児島県</option>
-                                <option value="沖縄県">沖縄県</option>
+                                <option value="宮城">宮城</option>
+                                <option value="東京">東京</option>
+                                <option value="神奈川">神奈川</option>
+                                <option value="愛知">愛知</option>
+                                <option value="大阪">大阪</option>
+                                <option value="福岡">福岡</option>
+                                <option value="広島">広島</option>
                             </select>
                         </div>
                         <div class="facility-form-group half">
-                            <label class="facility-form-label required">市区町村</label>
-                            <input type="text" class="facility-form-input" id="city" placeholder="千代田区" required>
-                        </div>
-                    </div>
-
-                    <div class="facility-form-row">
-                        <div class="facility-form-group">
-                            <label class="facility-form-label">住所（詳細）</label>
-                            <input type="text" class="facility-form-input" id="address" placeholder="丸の内1-1-1">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 連絡先情報セクション -->
-                <div class="facility-form-section">
-                    <h3 class="facility-form-section-title">連絡先情報</h3>
-
-                    <div class="facility-form-row">
-                        <div class="facility-form-group half">
-                            <label class="facility-form-label">電話番号</label>
-                            <input type="tel" class="facility-form-input" id="phoneNumber" placeholder="03-1234-5678" pattern="\d{2,4}-\d{2,4}-\d{4}">
-                            <small class="facility-form-hint">例: 03-1234-5678</small>
-                        </div>
-                        <div class="facility-form-group half">
-                            <label class="facility-form-label">FAX番号</label>
-                            <input type="tel" class="facility-form-input" id="faxNumber" placeholder="03-1234-5679" pattern="\d{2,4}-\d{2,4}-\d{4}">
-                            <small class="facility-form-hint">例: 03-1234-5679</small>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- その他情報セクション -->
-                <div class="facility-form-section">
-                    <h3 class="facility-form-section-title">その他情報</h3>
-
-                    <div class="facility-form-row">
-                        <div class="facility-form-group">
-                            <label class="facility-form-label">備考</label>
-                            <textarea class="facility-form-textarea" id="notes" rows="3" placeholder="特記事項があれば記入してください"></textarea>
+                            <label class="facility-form-label required">施設種別</label>
+                            <select class="facility-form-input" id="facilityType" required>
+                                <option value="">選択してください</option>
+                                <option value="総合病院">総合病院</option>
+                                <option value="医療センター">医療センター</option>
+                                <option value="クリニック">クリニック</option>
+                            </select>
                         </div>
                     </div>
                 </div>

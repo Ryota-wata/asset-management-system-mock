@@ -11,7 +11,7 @@ let shipFacilityData = [];
  */
 async function loadFacilityMasterConfig() {
     try {
-        const response = await fetch('data/facility-master.json');
+        const response = await fetch('src/data/facility-master.json');
         const config = await response.json();
         shipFacilityConfig = config;
         shipFacilityData = config.data;
@@ -63,7 +63,7 @@ function renderFacilityTableBody() {
 
     shipFacilityData.forEach((facility, index) => {
         const tr = document.createElement('tr');
-        tr.dataset.facilityId = facility.facilityId;
+        tr.dataset.facilityCode = facility.code;
 
         shipFacilityConfig.columns.forEach(column => {
             const td = document.createElement('td');
@@ -80,7 +80,7 @@ function renderFacilityTableBody() {
                     break;
 
                 case 'actions':
-                    td.innerHTML = `<button class="table-action-btn edit" onclick="showFacilityEditModal('${facility.facilityId}')">編集</button>`;
+                    td.innerHTML = `<button class="table-action-btn edit" onclick="showFacilityEditModal('${facility.code}')">編集</button>`;
                     break;
 
                 default:
@@ -136,7 +136,7 @@ function resetFacilityFilter() {
     document.getElementById('filterFacilityId').value = '';
     document.getElementById('filterFacilityName').value = '';
     document.getElementById('filterPrefecture').value = '';
-    document.getElementById('filterBedSize').value = '';
+    document.getElementById('filterType').value = '';
     filterFacilityTable();
 }
 
@@ -147,39 +147,25 @@ function filterFacilityTable() {
     const facilityId = document.getElementById('filterFacilityId').value.toLowerCase();
     const facilityName = document.getElementById('filterFacilityName').value.toLowerCase();
     const prefecture = document.getElementById('filterPrefecture').value;
-    const bedSize = document.getElementById('filterBedSize').value;
+    const type = document.getElementById('filterType').value;
 
     const rows = document.querySelectorAll('#facilityTableBody tr');
     let visibleCount = 0;
 
     rows.forEach(row => {
         const cells = row.querySelectorAll('td');
+        // 新しいテーブル構造: [checkbox, No, 施設ID, 施設名, 都道府県, 施設種別, 操作]
         const rowFacilityId = cells[2]?.textContent.toLowerCase() || '';
         const rowFacilityName = cells[3]?.textContent.toLowerCase() || '';
-        const rowPrefecture = cells[5]?.textContent || '';
-        const rowBedSize = cells[7]?.textContent || '';
+        const rowPrefecture = cells[4]?.textContent || '';
+        const rowType = cells[5]?.textContent || '';
 
         let matchFacilityId = !facilityId || rowFacilityId.includes(facilityId);
         let matchFacilityName = !facilityName || rowFacilityName.includes(facilityName);
         let matchPrefecture = !prefecture || rowPrefecture === prefecture;
-        let matchBedSize = true;
+        let matchType = !type || rowType === type;
 
-        if (bedSize) {
-            const bedNumber = parseInt(rowBedSize);
-            if (bedSize === '100未満') {
-                matchBedSize = bedNumber < 100;
-            } else if (bedSize === '100-200') {
-                matchBedSize = bedNumber >= 100 && bedNumber < 200;
-            } else if (bedSize === '200-300') {
-                matchBedSize = bedNumber >= 200 && bedNumber < 300;
-            } else if (bedSize === '300-500') {
-                matchBedSize = bedNumber >= 300 && bedNumber < 500;
-            } else if (bedSize === '500以上') {
-                matchBedSize = bedNumber >= 500;
-            }
-        }
-
-        if (matchFacilityId && matchFacilityName && matchPrefecture && matchBedSize) {
+        if (matchFacilityId && matchFacilityName && matchPrefecture && matchType) {
             row.style.display = '';
             visibleCount++;
         } else {
@@ -326,36 +312,26 @@ function handleFacilityNewSubmit(event) {
 
     // フォームデータを取得
     const formData = {
-        facilityId: document.getElementById('facilityId').value,
-        facilityName: document.getElementById('facilityName').value,
-        facilityNameKana: document.getElementById('facilityNameKana').value,
-        bedSize: document.getElementById('bedSize').value,
-        establishedDate: document.getElementById('establishedDate').value,
-        postalCode: document.getElementById('postalCode').value,
-        prefecture: document.getElementById('prefecture').value,
-        city: document.getElementById('city').value,
-        address: document.getElementById('address').value,
-        phoneNumber: document.getElementById('phoneNumber').value,
-        faxNumber: document.getElementById('faxNumber').value,
-        notes: document.getElementById('notes').value
+        code: document.getElementById('facilityCode').value,
+        name: document.getElementById('facilityName').value,
+        region: document.getElementById('facilityRegion').value,
+        type: document.getElementById('facilityType').value
     };
 
     console.log('新規施設データ:', formData);
 
+    // IDを生成（既存データの最大ID + 1）
+    const maxId = shipFacilityData.length > 0
+        ? Math.max(...shipFacilityData.map(f => f.id))
+        : 0;
+
     // shipFacilityDataに追加
     const newFacility = {
-        facilityId: formData.facilityId,
-        facilityName: formData.facilityName,
-        facilityNameKana: formData.facilityNameKana,
-        prefecture: formData.prefecture,
-        city: formData.city,
-        bedSize: formData.bedSize ? formData.bedSize + '床' : '',
-        phoneNumber: formData.phoneNumber,
-        postalCode: formData.postalCode,
-        address: formData.address,
-        faxNumber: formData.faxNumber,
-        establishedDate: formData.establishedDate,
-        notes: formData.notes
+        id: maxId + 1,
+        code: formData.code,
+        name: formData.name,
+        region: formData.region,
+        type: formData.type
     };
 
     shipFacilityData.push(newFacility);
@@ -367,7 +343,7 @@ function handleFacilityNewSubmit(event) {
     closeFacilityNewModal();
 
     // 成功メッセージ
-    alert(`施設「${formData.facilityName}」を登録しました`);
+    alert(`施設「${formData.name}」を登録しました`);
 }
 
 /**
