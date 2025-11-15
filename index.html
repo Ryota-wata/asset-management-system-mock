@@ -28,6 +28,7 @@
     <link rel="stylesheet" href="src/css/screens/search-result-simple.css">
     <link rel="stylesheet" href="src/css/screens/asset-survey-integrated.css">
     <!-- <link rel="stylesheet" href="src/css/screens/hospital-select-modal.css"> --> <!-- 資産マスタモーダルのスタイルを使用するため不要 -->
+    <link rel="stylesheet" href="src/css/screens/ship-facility-form.css">
 
     <!-- Choices.js JS (外部ライブラリ) -->
     <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
@@ -126,6 +127,9 @@
 
         <!-- SHIP施設マスタ一覧画面 -->
         <div id="shipFacilityMasterPage"></div>
+
+        <!-- SHIP施設マスタ新規作成モーダル -->
+        <div id="facilityNewModal"></div>
     </div>
 
     <!-- JavaScript読み込み（依存関係順） -->
@@ -189,7 +193,8 @@
                 { id: 'assetMasterModal', file: 'asset-master-modal.html' },
                 { id: 'searchResultPage', file: 'search-result-simple.html' },
                 { id: 'assetSurveyIntegratedPage', file: 'asset-survey-integrated.html' },
-                { id: 'shipFacilityMasterPage', file: 'ship-facility-master.html' }
+                { id: 'shipFacilityMasterPage', file: 'ship-facility-master.html' },
+                { id: 'facilityNewModal', file: 'ship-facility-new-modal.html' }
             ];
 
             // すべての画面を並行して読み込み

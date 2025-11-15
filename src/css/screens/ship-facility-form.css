@@ -1,0 +1,209 @@
+/**
+ * SHIP施設マスタフォームのCSS
+ * 新規作成・編集モーダル用
+ */
+
+/* フォームコンテナ */
+.facility-form-container {
+    padding: 0;
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+/* フォームセクション */
+.facility-form-section {
+    padding: 24px 28px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.facility-form-section:last-of-type {
+    border-bottom: none;
+}
+
+.facility-form-section-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 20px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #4CAF50;
+}
+
+/* フォーム行 */
+.facility-form-row {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.facility-form-row:last-child {
+    margin-bottom: 0;
+}
+
+/* フォームグループ */
+.facility-form-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.facility-form-group.half {
+    flex: 1;
+}
+
+/* ラベル */
+.facility-form-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+}
+
+.facility-form-label.required::after {
+    content: '*';
+    color: #e74c3c;
+    margin-left: 4px;
+    font-size: 16px;
+}
+
+/* 入力フィールド */
+.facility-form-input {
+    padding: 10px 12px;
+    border: 2px solid #e0e0e0;
+    border-radius: 6px;
+    font-size: 14px;
+    color: #333;
+    transition: all 0.2s;
+    background: white;
+}
+
+.facility-form-input:focus {
+    outline: none;
+    border-color: #4CAF50;
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+}
+
+.facility-form-input::placeholder {
+    color: #999;
+}
+
+/* テキストエリア */
+.facility-form-textarea {
+    padding: 10px 12px;
+    border: 2px solid #e0e0e0;
+    border-radius: 6px;
+    font-size: 14px;
+    color: #333;
+    transition: all 0.2s;
+    resize: vertical;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.facility-form-textarea:focus {
+    outline: none;
+    border-color: #4CAF50;
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+}
+
+/* ヒントテキスト */
+.facility-form-hint {
+    font-size: 12px;
+    color: #666;
+    margin-top: 4px;
+    display: block;
+}
+
+/* フォームアクション */
+.facility-form-actions {
+    padding: 20px 28px;
+    border-top: 2px solid #f0f0f0;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    background: #f8f9fa;
+}
+
+.facility-form-btn {
+    padding: 12px 28px;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 120px;
+}
+
+.facility-form-btn.cancel {
+    background: #95a5a6;
+    color: white;
+}
+
+.facility-form-btn.cancel:hover {
+    background: #7f8c8d;
+    transform: translateY(-2px);
+}
+
+.facility-form-btn.submit {
+    background: #4CAF50;
+    color: white;
+}
+
+.facility-form-btn.submit:hover {
+    background: #45a049;
+    transform: translateY(-2px);
+}
+
+/* スクロールバー */
+.facility-form-container::-webkit-scrollbar {
+    width: 10px;
+}
+
+.facility-form-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.facility-form-container::-webkit-scrollbar-thumb {
+    background: #4CAF50;
+    border-radius: 5px;
+}
+
+.facility-form-container::-webkit-scrollbar-thumb:hover {
+    background: #45a049;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+    .facility-form-row {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .facility-form-group.half {
+        flex: auto;
+    }
+
+    .facility-form-section {
+        padding: 20px;
+    }
+
+    .facility-form-actions {
+        padding: 16px 20px;
+        flex-direction: column;
+    }
+
+    .facility-form-btn {
+        width: 100%;
+    }
+}
+
+/* バリデーションスタイル */
+.facility-form-input:invalid:not(:placeholder-shown) {
+    border-color: #e74c3c;
+}
+
+.facility-form-input:valid:not(:placeholder-shown) {
+    border-color: #4CAF50;
+}

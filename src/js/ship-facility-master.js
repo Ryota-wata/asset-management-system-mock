@@ -191,7 +191,85 @@ function handleFacilityBack() {
  * 新規作成モーダルを表示
  */
 function showFacilityNewModal() {
-    alert('新規施設作成機能は実装中です\n\n以下の項目を入力する画面を表示します：\n- 施設ID\n- 施設名\n- 施設名（カナ）\n- 郵便番号\n- 都道府県\n- 市区町村\n- 住所\n- 電話番号\n- FAX番号\n- 病床規模\n- 設立年月日\n- その他詳細情報');
+    const modal = document.getElementById('facilityNewModal');
+    if (modal) {
+        // フォームをリセット
+        const form = document.getElementById('facilityNewForm');
+        if (form) {
+            form.reset();
+        }
+
+        modal.classList.add('show');
+    }
+}
+
+/**
+ * 新規作成モーダルを閉じる
+ */
+function closeFacilityNewModal() {
+    const modal = document.getElementById('facilityNewModal');
+    if (modal) {
+        modal.classList.remove('show');
+    }
+}
+
+/**
+ * 新規施設登録フォーム送信処理
+ * @param {Event} event - フォーム送信イベント
+ */
+function handleFacilityNewSubmit(event) {
+    event.preventDefault();
+
+    // フォームデータを取得
+    const formData = {
+        facilityId: document.getElementById('facilityId').value,
+        facilityName: document.getElementById('facilityName').value,
+        facilityNameKana: document.getElementById('facilityNameKana').value,
+        bedSize: document.getElementById('bedSize').value,
+        establishedDate: document.getElementById('establishedDate').value,
+        postalCode: document.getElementById('postalCode').value,
+        prefecture: document.getElementById('prefecture').value,
+        city: document.getElementById('city').value,
+        address: document.getElementById('address').value,
+        phoneNumber: document.getElementById('phoneNumber').value,
+        faxNumber: document.getElementById('faxNumber').value,
+        notes: document.getElementById('notes').value
+    };
+
+    console.log('新規施設データ:', formData);
+
+    // テーブルに新しい行を追加
+    const tableBody = document.getElementById('facilityTableBody');
+    const newRow = document.createElement('tr');
+    newRow.dataset.facilityId = formData.facilityId;
+
+    const rowCount = tableBody.querySelectorAll('tr').length + 1;
+
+    newRow.innerHTML = `
+        <td><input type="checkbox" class="row-checkbox" onchange="handleFacilityRowSelect()"></td>
+        <td>${rowCount}</td>
+        <td>${formData.facilityId}</td>
+        <td>${formData.facilityName}</td>
+        <td>${formData.facilityNameKana}</td>
+        <td>${formData.prefecture}</td>
+        <td>${formData.city}</td>
+        <td>${formData.bedSize ? formData.bedSize + '床' : '-'}</td>
+        <td>${formData.phoneNumber || '-'}</td>
+        <td>
+            <button class="table-action-btn edit" onclick="showFacilityEditModal('${formData.facilityId}')">編集</button>
+        </td>
+    `;
+
+    tableBody.appendChild(newRow);
+
+    // 件数を更新
+    filterFacilityTable();
+
+    // モーダルを閉じる
+    closeFacilityNewModal();
+
+    // 成功メッセージ
+    alert(`施設「${formData.facilityName}」を登録しました`);
 }
 
 /**
@@ -250,6 +328,16 @@ document.addEventListener('DOMContentLoaded', function() {
     if (countElement) {
         countElement.textContent = `${totalRows}件`;
     }
+
+    // モーダル外クリックで閉じる
+    const newModal = document.getElementById('facilityNewModal');
+    if (newModal) {
+        newModal.addEventListener('click', function(e) {
+            if (e.target === newModal) {
+                closeFacilityNewModal();
+            }
+        });
+    }
 });
 
 // グローバルに公開
@@ -262,6 +350,8 @@ window.handleFacilityExport = handleFacilityExport;
 window.handleFacilityDelete = handleFacilityDelete;
 window.handleFacilityBack = handleFacilityBack;
 window.showFacilityNewModal = showFacilityNewModal;
+window.closeFacilityNewModal = closeFacilityNewModal;
+window.handleFacilityNewSubmit = handleFacilityNewSubmit;
 window.showFacilityEditModal = showFacilityEditModal;
 window.showFacilityDetailModal = showFacilityDetailModal;
 window.goToPreviousPage = goToPreviousPage;
