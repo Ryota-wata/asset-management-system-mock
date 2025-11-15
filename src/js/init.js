@@ -22,6 +22,10 @@ async function initChoices() {
     }
 
     // 資産情報のドロップダウン（マスタデータから取得）
+    if (document.getElementById('categorySelect')) {
+        window.categoryChoice = await initCategorySelect('categorySelect');
+    }
+
     if (document.getElementById('largeClassSelect')) {
         window.largeClassChoice = await initLargeClassSelect('largeClassSelect');
     }
@@ -49,6 +53,10 @@ async function initChoices() {
     // 資産検索結果画面は独自の初期化処理（search-result-simple.js）を使用
 
     // 現有資産調査統合画面の分類情報プルダウン
+    if (document.getElementById('integratedCategorySelect')) {
+        window.integratedCategoryChoice = await initCategorySelect('integratedCategorySelect');
+    }
+
     if (document.getElementById('integratedLargeClassSelect')) {
         window.integratedLargeClassChoice = await initLargeClassSelect('integratedLargeClassSelect');
     }

@@ -62,6 +62,22 @@ async function getMasterDataFromJSON() {
         };
 
         const facilities = facilityMaster.facilities || facilityMaster.data || [];
+        const assets = assetMaster.assets || [];
+
+        // フラット構造からユニークな資産分類を抽出
+        const getUniqueAssetField = (fieldName) => {
+            const uniqueValues = new Map();
+            assets.forEach(asset => {
+                const value = asset[fieldName];
+                if (value && !uniqueValues.has(value)) {
+                    uniqueValues.set(value, {
+                        value: value,
+                        label: value
+                    });
+                }
+            });
+            return Array.from(uniqueValues.values());
+        };
 
         return {
             // 施設関連（フラット構造対応）
@@ -69,16 +85,16 @@ async function getMasterDataFromJSON() {
             departments: getUniqueDepartments(facilities),
             sections: getUniqueSections(facilities),
 
-            // 資産関連
-            categories: toChoicesFormat(assetMaster.categories || []),
+            // 資産関連（フラット構造対応）
+            categories: getUniqueAssetField('category'),
             buildings: toChoicesFormat(assetMaster.buildings || []),
             floors: toChoicesFormat(assetMaster.floors || []),
-            largeClasses: toChoicesFormat(assetMaster.largeClasses || []),
-            mediumClasses: toChoicesFormat(assetMaster.mediumClasses || []),
-            items: toChoicesFormat(assetMaster.items || []),
-            manufacturers: toChoicesFormat(assetMaster.manufacturers || assetMaster.makers || []),
-            makers: toChoicesFormat(assetMaster.manufacturers || assetMaster.makers || []),
-            models: toChoicesFormat(assetMaster.models || [])
+            largeClasses: getUniqueAssetField('largeClass'),
+            mediumClasses: getUniqueAssetField('mediumClass'),
+            items: getUniqueAssetField('item'),
+            manufacturers: getUniqueAssetField('manufacturer'),
+            makers: getUniqueAssetField('manufacturer'),
+            models: getUniqueAssetField('model')
         };
     } catch (error) {
         console.error('JSONファイルからのマスタデータ取得に失敗:', error);

@@ -130,6 +130,18 @@
 
         <!-- SHIP施設マスタ新規作成モーダル -->
         <div id="facilityNewModal"></div>
+
+        <!-- SHIP施設マスタ編集モーダル -->
+        <div id="facilityEditModal"></div>
+
+        <!-- SHIP資産マスタ一覧画面 -->
+        <div id="shipAssetMasterPage"></div>
+
+        <!-- SHIP資産マスタ新規作成モーダル -->
+        <div id="assetNewModal"></div>
+
+        <!-- SHIP資産マスタ編集モーダル -->
+        <div id="assetEditModal"></div>
     </div>
 
     <!-- JavaScript読み込み（依存関係順） -->
@@ -144,7 +156,17 @@
     <script src="src/js/modals.js"></script>
     <script src="src/js/qr-management.js"></script>
     <script src="src/js/hospital-select.js"></script>
+    <!-- 共通マスタ管理モジュール -->
+    <script src="src/js/master-common/DataLoader.js"></script>
+    <script src="src/js/master-common/UIHelpers.js"></script>
+    <script src="src/js/master-common/TableRenderer.js"></script>
+    <script src="src/js/master-common/FilterManager.js"></script>
+    <script src="src/js/master-common/SelectionManager.js"></script>
+    <script src="src/js/master-common/CRUDManager.js"></script>
+    <script src="src/js/master-common/MasterTableManager.js"></script>
+    <!-- マスタ管理画面（共通モジュール使用） -->
     <script src="src/js/ship-facility-master.js"></script>
+    <script src="src/js/ship-asset-master.js"></script>
     <script src="src/js/asset-survey.js"></script>
     <script src="src/js/asset-survey-integrated.js"></script>
     <script src="src/js/asset-matching.js"></script>
@@ -194,7 +216,11 @@
                 { id: 'searchResultPage', file: 'search-result-simple.html' },
                 { id: 'assetSurveyIntegratedPage', file: 'asset-survey-integrated.html' },
                 { id: 'shipFacilityMasterPage', file: 'ship-facility-master.html' },
-                { id: 'facilityNewModal', file: 'ship-facility-new-modal.html' }
+                { id: 'facilityNewModal', file: 'ship-facility-new-modal.html' },
+                { id: 'facilityEditModal', file: 'ship-facility-edit-modal.html' },
+                { id: 'shipAssetMasterPage', file: 'ship-asset-master.html' },
+                { id: 'assetNewModal', file: 'ship-asset-new-modal.html' },
+                { id: 'assetEditModal', file: 'ship-asset-edit-modal.html' }
             ];
 
             // すべての画面を並行して読み込み

@@ -241,6 +241,16 @@ function selectMasterMenu(menuName) {
         return;
     }
 
+    // 「SHIP資産マスタ」の場合はSHIP資産マスタ画面へ遷移
+    if (menuName === 'SHIP資産マスタ') {
+        if (typeof showShipAssetMaster === 'function') {
+            showShipAssetMaster();
+        } else {
+            alert('SHIP資産マスタ画面が読み込まれていません');
+        }
+        return;
+    }
+
     // 「個別施設マスタ」の場合は病院選択モーダルを表示
     if (menuName === '個別施設マスタ') {
         if (typeof showHospitalSelectModal === 'function') {

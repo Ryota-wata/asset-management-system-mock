@@ -249,13 +249,13 @@ async function initSectionSelect(elementId, department = null) {
 }
 
 /**
- * 大分類プルダウンを初期化
+ * Categoryプルダウンを初期化
  * @param {string} elementId - プルダウンのID
  * @returns {Promise<Choices>} Choices.jsインスタンス
  */
-async function initLargeClassSelect(elementId) {
+async function initCategorySelect(elementId) {
     const assetMaster = await loadAssetMaster();
-    if (!assetMaster) return null;
+    if (!assetMaster || !assetMaster.assets) return null;
 
     const element = document.getElementById(elementId);
     if (!element) {
@@ -263,13 +263,87 @@ async function initLargeClassSelect(elementId) {
         return null;
     }
 
-    const choices = assetMaster.largeClasses.map(largeClass => ({
-        value: largeClass.id,
-        label: largeClass.name,
-        customProperties: {
-            code: largeClass.code
+    // ユニークなCategoryのみ抽出
+    const uniqueCategories = [];
+    const seenCategories = new Set();
+
+    assetMaster.assets.forEach(asset => {
+        if (asset.category && !seenCategories.has(asset.category)) {
+            seenCategories.add(asset.category);
+            uniqueCategories.push({
+                value: asset.category,
+                label: asset.category
+            });
         }
-    }));
+    });
+
+    uniqueCategories.sort((a, b) => a.label.localeCompare(b.label, 'ja'));
+
+    const choicesInstance = new Choices(element, {
+        searchEnabled: true,
+        searchChoices: true,
+        searchFloor: 1,
+        searchResultLimit: 50,
+        searchPlaceholderValue: 'Categoryを検索...',
+        placeholder: true,
+        placeholderValue: 'Categoryを選択してください',
+        itemSelectText: '',
+        noResultsText: '該当するCategoryが見つかりません',
+        noChoicesText: '選択肢がありません',
+        shouldSort: false,
+        fuseOptions: {
+            threshold: 0.3,
+            distance: 100
+        }
+    });
+
+    choicesInstance.setChoices([
+        { value: '', label: '選択してください', selected: true },
+        ...uniqueCategories
+    ], 'value', 'label', true);
+
+    return choicesInstance;
+}
+
+/**
+ * 大分類プルダウンを初期化
+ * @param {string} elementId - プルダウンのID
+ * @param {string} category - Category（フィルタリング用）
+ * @returns {Promise<Choices>} Choices.jsインスタンス
+ */
+async function initLargeClassSelect(elementId, category = null) {
+    const assetMaster = await loadAssetMaster();
+    if (!assetMaster || !assetMaster.assets) return null;
+
+    const element = document.getElementById(elementId);
+    if (!element) {
+        console.error(`Element not found: ${elementId}`);
+        return null;
+    }
+
+    // ユニークな大分類のみ抽出
+    const uniqueLargeClasses = [];
+    const seenLargeClasses = new Set();
+
+    assetMaster.assets.forEach(asset => {
+        // Categoryが指定されている場合はフィルタリング
+        if (category && asset.category !== category) {
+            return;
+        }
+
+        if (asset.largeClass && !seenLargeClasses.has(asset.largeClass)) {
+            seenLargeClasses.add(asset.largeClass);
+            uniqueLargeClasses.push({
+                value: asset.largeClass,
+                label: asset.largeClass,
+                customProperties: {
+                    category: asset.category
+                }
+            });
+        }
+    });
+
+    uniqueLargeClasses.sort((a, b) => a.label.localeCompare(b.label, 'ja'));
 
     const choicesInstance = new Choices(element, {
         searchEnabled: true,
@@ -291,8 +365,8 @@ async function initLargeClassSelect(elementId) {
 
     choicesInstance.setChoices([
         { value: '', label: '選択してください', selected: true },
-        ...choices
-    ]);
+        ...uniqueLargeClasses
+    ], 'value', 'label', true);
 
     return choicesInstance;
 }
@@ -300,12 +374,12 @@ async function initLargeClassSelect(elementId) {
 /**
  * 中分類プルダウンを初期化
  * @param {string} elementId - プルダウンのID
- * @param {number} largeClassId - 大分類ID（フィルタリング用）
+ * @param {string} largeClass - 大分類（フィルタリング用）
  * @returns {Promise<Choices>} Choices.jsインスタンス
  */
-async function initMediumClassSelect(elementId, largeClassId = null) {
+async function initMediumClassSelect(elementId, largeClass = null) {
     const assetMaster = await loadAssetMaster();
-    if (!assetMaster) return null;
+    if (!assetMaster || !assetMaster.assets) return null;
 
     const element = document.getElementById(elementId);
     if (!element) {
@@ -313,19 +387,29 @@ async function initMediumClassSelect(elementId, largeClassId = null) {
         return null;
     }
 
-    let mediumClasses = assetMaster.mediumClasses;
-    if (largeClassId) {
-        mediumClasses = mediumClasses.filter(mc => mc.largeClassId === largeClassId);
-    }
+    // ユニークな中分類のみ抽出
+    const uniqueMediumClasses = [];
+    const seenMediumClasses = new Set();
 
-    const choices = mediumClasses.map(mediumClass => ({
-        value: mediumClass.id,
-        label: mediumClass.name,
-        customProperties: {
-            code: mediumClass.code,
-            largeClassId: mediumClass.largeClassId
+    assetMaster.assets.forEach(asset => {
+        // 大分類が指定されている場合はフィルタリング
+        if (largeClass && asset.largeClass !== largeClass) {
+            return;
         }
-    }));
+
+        if (asset.mediumClass && !seenMediumClasses.has(asset.mediumClass)) {
+            seenMediumClasses.add(asset.mediumClass);
+            uniqueMediumClasses.push({
+                value: asset.mediumClass,
+                label: asset.mediumClass,
+                customProperties: {
+                    largeClass: asset.largeClass
+                }
+            });
+        }
+    });
+
+    uniqueMediumClasses.sort((a, b) => a.label.localeCompare(b.label, 'ja'));
 
     const choicesInstance = new Choices(element, {
         searchEnabled: true,
@@ -347,8 +431,8 @@ async function initMediumClassSelect(elementId, largeClassId = null) {
 
     choicesInstance.setChoices([
         { value: '', label: '選択してください', selected: true },
-        ...choices
-    ]);
+        ...uniqueMediumClasses
+    ], 'value', 'label', true);
 
     return choicesInstance;
 }
@@ -356,12 +440,12 @@ async function initMediumClassSelect(elementId, largeClassId = null) {
 /**
  * 品目プルダウンを初期化
  * @param {string} elementId - プルダウンのID
- * @param {number} mediumClassId - 中分類ID（フィルタリング用）
+ * @param {string} mediumClass - 中分類（フィルタリング用）
  * @returns {Promise<Choices>} Choices.jsインスタンス
  */
-async function initItemSelect(elementId, mediumClassId = null) {
+async function initItemSelect(elementId, mediumClass = null) {
     const assetMaster = await loadAssetMaster();
-    if (!assetMaster) return null;
+    if (!assetMaster || !assetMaster.assets) return null;
 
     const element = document.getElementById(elementId);
     if (!element) {
@@ -369,19 +453,29 @@ async function initItemSelect(elementId, mediumClassId = null) {
         return null;
     }
 
-    let items = assetMaster.items;
-    if (mediumClassId) {
-        items = items.filter(item => item.mediumClassId === mediumClassId);
-    }
+    // ユニークな品目のみ抽出
+    const uniqueItems = [];
+    const seenItems = new Set();
 
-    const choices = items.map(item => ({
-        value: item.id,
-        label: item.name,
-        customProperties: {
-            code: item.code,
-            mediumClassId: item.mediumClassId
+    assetMaster.assets.forEach(asset => {
+        // 中分類が指定されている場合はフィルタリング
+        if (mediumClass && asset.mediumClass !== mediumClass) {
+            return;
         }
-    }));
+
+        if (asset.item && !seenItems.has(asset.item)) {
+            seenItems.add(asset.item);
+            uniqueItems.push({
+                value: asset.item,
+                label: asset.item,
+                customProperties: {
+                    mediumClass: asset.mediumClass
+                }
+            });
+        }
+    });
+
+    uniqueItems.sort((a, b) => a.label.localeCompare(b.label, 'ja'));
 
     const choicesInstance = new Choices(element, {
         searchEnabled: true,
@@ -403,8 +497,8 @@ async function initItemSelect(elementId, mediumClassId = null) {
 
     choicesInstance.setChoices([
         { value: '', label: '選択してください', selected: true },
-        ...choices
-    ]);
+        ...uniqueItems
+    ], 'value', 'label', true);
 
     return choicesInstance;
 }
@@ -412,11 +506,12 @@ async function initItemSelect(elementId, mediumClassId = null) {
 /**
  * メーカープルダウンを初期化
  * @param {string} elementId - プルダウンのID
+ * @param {string} item - 品目（フィルタリング用）
  * @returns {Promise<Choices>} Choices.jsインスタンス
  */
-async function initManufacturerSelect(elementId) {
+async function initManufacturerSelect(elementId, item = null) {
     const assetMaster = await loadAssetMaster();
-    if (!assetMaster) return null;
+    if (!assetMaster || !assetMaster.assets) return null;
 
     const element = document.getElementById(elementId);
     if (!element) {
@@ -424,14 +519,29 @@ async function initManufacturerSelect(elementId) {
         return null;
     }
 
-    const choices = assetMaster.manufacturers.map(manufacturer => ({
-        value: manufacturer.id,
-        label: manufacturer.name,
-        customProperties: {
-            code: manufacturer.code,
-            country: manufacturer.country
+    // ユニークなメーカーのみ抽出
+    const uniqueManufacturers = [];
+    const seenManufacturers = new Set();
+
+    assetMaster.assets.forEach(asset => {
+        // 品目が指定されている場合はフィルタリング
+        if (item && asset.item !== item) {
+            return;
         }
-    }));
+
+        if (asset.manufacturer && !seenManufacturers.has(asset.manufacturer)) {
+            seenManufacturers.add(asset.manufacturer);
+            uniqueManufacturers.push({
+                value: asset.manufacturer,
+                label: asset.manufacturer,
+                customProperties: {
+                    item: asset.item
+                }
+            });
+        }
+    });
+
+    uniqueManufacturers.sort((a, b) => a.label.localeCompare(b.label, 'ja'));
 
     const choicesInstance = new Choices(element, {
         searchEnabled: true,
@@ -453,8 +563,8 @@ async function initManufacturerSelect(elementId) {
 
     choicesInstance.setChoices([
         { value: '', label: '選択してください', selected: true },
-        ...choices
-    ]);
+        ...uniqueManufacturers
+    ], 'value', 'label', true);
 
     return choicesInstance;
 }
@@ -462,13 +572,13 @@ async function initManufacturerSelect(elementId) {
 /**
  * 型式プルダウンを初期化
  * @param {string} elementId - プルダウンのID
- * @param {number} manufacturerId - メーカーID（フィルタリング用）
- * @param {number} itemId - 品目ID（フィルタリング用）
+ * @param {string} manufacturer - メーカー（フィルタリング用）
+ * @param {string} item - 品目（フィルタリング用）
  * @returns {Promise<Choices>} Choices.jsインスタンス
  */
-async function initModelSelect(elementId, manufacturerId = null, itemId = null) {
+async function initModelSelect(elementId, manufacturer = null, item = null) {
     const assetMaster = await loadAssetMaster();
-    if (!assetMaster) return null;
+    if (!assetMaster || !assetMaster.assets) return null;
 
     const element = document.getElementById(elementId);
     if (!element) {
@@ -476,23 +586,34 @@ async function initModelSelect(elementId, manufacturerId = null, itemId = null) 
         return null;
     }
 
-    let models = assetMaster.models;
-    if (manufacturerId) {
-        models = models.filter(model => model.manufacturerId === manufacturerId);
-    }
-    if (itemId) {
-        models = models.filter(model => model.itemId === itemId);
-    }
+    // ユニークな型式のみ抽出
+    const uniqueModels = [];
+    const seenModels = new Set();
 
-    const choices = models.map(model => ({
-        value: model.id,
-        label: model.name,
-        customProperties: {
-            code: model.code,
-            manufacturerId: model.manufacturerId,
-            itemId: model.itemId
+    assetMaster.assets.forEach(asset => {
+        // メーカーが指定されている場合はフィルタリング
+        if (manufacturer && asset.manufacturer !== manufacturer) {
+            return;
         }
-    }));
+        // 品目が指定されている場合はフィルタリング
+        if (item && asset.item !== item) {
+            return;
+        }
+
+        if (asset.model && !seenModels.has(asset.model)) {
+            seenModels.add(asset.model);
+            uniqueModels.push({
+                value: asset.model,
+                label: asset.model,
+                customProperties: {
+                    manufacturer: asset.manufacturer,
+                    item: asset.item
+                }
+            });
+        }
+    });
+
+    uniqueModels.sort((a, b) => a.label.localeCompare(b.label, 'ja'));
 
     const choicesInstance = new Choices(element, {
         searchEnabled: true,
@@ -514,58 +635,152 @@ async function initModelSelect(elementId, manufacturerId = null, itemId = null) 
 
     choicesInstance.setChoices([
         { value: '', label: '選択してください', selected: true },
-        ...choices
-    ]);
+        ...uniqueModels
+    ], 'value', 'label', true);
 
     return choicesInstance;
 }
 
 /**
  * 連動プルダウンの設定
- * 大分類 → 中分類 → 品目の連動
+ * Category → 大分類 → 中分類 → 品目 → メーカー → 型式の連動
  */
 async function setupAssetClassCascade() {
     const assetMaster = await loadAssetMaster();
     if (!assetMaster) return;
 
+    const categorySelect = document.getElementById('categorySelect');
     const largeClassSelect = document.getElementById('largeClassSelect');
     const mediumClassSelect = document.getElementById('mediumClassSelect');
     const itemSelect = document.getElementById('itemSelect');
 
-    if (!largeClassSelect || !mediumClassSelect || !itemSelect) {
-        console.warn('資産分類のプルダウンが見つかりません');
-        return;
+    // Category → 大分類の連動
+    if (categorySelect && largeClassSelect) {
+        categorySelect.addEventListener('change', async function(e) {
+            const category = e.target.value;
+
+            // 大分類を更新
+            if (window.largeClassChoice) {
+                window.largeClassChoice.destroy();
+            }
+            window.largeClassChoice = await initLargeClassSelect('largeClassSelect', category);
+
+            // 中分類、品目をクリア
+            if (window.mediumClassChoice) {
+                window.mediumClassChoice.clearStore();
+                window.mediumClassChoice.setChoices([
+                    { value: '', label: '選択してください', selected: true }
+                ], 'value', 'label', true);
+            }
+            if (window.itemChoice) {
+                window.itemChoice.clearStore();
+                window.itemChoice.setChoices([
+                    { value: '', label: '選択してください', selected: true }
+                ], 'value', 'label', true);
+            }
+        });
     }
 
-    // 大分類が変更されたら中分類を更新
-    largeClassSelect.addEventListener('change', async function(e) {
-        const largeClassId = parseInt(e.target.value);
+    // 大分類 → 中分類の連動
+    if (largeClassSelect && mediumClassSelect) {
+        largeClassSelect.addEventListener('change', async function(e) {
+            const largeClass = e.target.value;
 
-        // 中分類を更新
-        if (window.mediumClassChoice) {
-            window.mediumClassChoice.destroy();
-        }
-        window.mediumClassChoice = await initMediumClassSelect('mediumClassSelect', largeClassId);
+            // 中分類を更新
+            if (window.mediumClassChoice) {
+                window.mediumClassChoice.destroy();
+            }
+            window.mediumClassChoice = await initMediumClassSelect('mediumClassSelect', largeClass);
 
-        // 品目をクリア
-        if (window.itemChoice) {
-            window.itemChoice.clearStore();
-            window.itemChoice.setChoices([
-                { value: '', label: '選択してください', selected: true }
-            ]);
-        }
-    });
+            // 品目をクリア
+            if (window.itemChoice) {
+                window.itemChoice.clearStore();
+                window.itemChoice.setChoices([
+                    { value: '', label: '選択してください', selected: true }
+                ], 'value', 'label', true);
+            }
+        });
+    }
 
-    // 中分類が変更されたら品目を更新
-    mediumClassSelect.addEventListener('change', async function(e) {
-        const mediumClassId = parseInt(e.target.value);
+    // 中分類 → 品目の連動
+    if (mediumClassSelect && itemSelect) {
+        mediumClassSelect.addEventListener('change', async function(e) {
+            const mediumClass = e.target.value;
 
-        // 品目を更新
-        if (window.itemChoice) {
-            window.itemChoice.destroy();
-        }
-        window.itemChoice = await initItemSelect('itemSelect', mediumClassId);
-    });
+            // 品目を更新
+            if (window.itemChoice) {
+                window.itemChoice.destroy();
+            }
+            window.itemChoice = await initItemSelect('itemSelect', mediumClass);
+        });
+    }
+
+    // 現有資産調査統合画面の連動設定
+    const integratedCategorySelect = document.getElementById('integratedCategorySelect');
+    const integratedLargeClassSelect = document.getElementById('integratedLargeClassSelect');
+    const integratedMediumClassSelect = document.getElementById('integratedMediumClassSelect');
+    const integratedItemSelect = document.getElementById('integratedItemSelect');
+
+    // Category → 大分類の連動（統合画面）
+    if (integratedCategorySelect && integratedLargeClassSelect) {
+        integratedCategorySelect.addEventListener('change', async function(e) {
+            const category = e.target.value;
+
+            // 大分類を更新
+            if (window.integratedLargeClassChoice) {
+                window.integratedLargeClassChoice.destroy();
+            }
+            window.integratedLargeClassChoice = await initLargeClassSelect('integratedLargeClassSelect', category);
+
+            // 中分類、品目をクリア
+            if (window.integratedMediumClassChoice) {
+                window.integratedMediumClassChoice.clearStore();
+                window.integratedMediumClassChoice.setChoices([
+                    { value: '', label: '選択してください', selected: true }
+                ], 'value', 'label', true);
+            }
+            if (window.integratedItemChoice) {
+                window.integratedItemChoice.clearStore();
+                window.integratedItemChoice.setChoices([
+                    { value: '', label: '選択してください', selected: true }
+                ], 'value', 'label', true);
+            }
+        });
+    }
+
+    // 大分類 → 中分類の連動（統合画面）
+    if (integratedLargeClassSelect && integratedMediumClassSelect) {
+        integratedLargeClassSelect.addEventListener('change', async function(e) {
+            const largeClass = e.target.value;
+
+            // 中分類を更新
+            if (window.integratedMediumClassChoice) {
+                window.integratedMediumClassChoice.destroy();
+            }
+            window.integratedMediumClassChoice = await initMediumClassSelect('integratedMediumClassSelect', largeClass);
+
+            // 品目をクリア
+            if (window.integratedItemChoice) {
+                window.integratedItemChoice.clearStore();
+                window.integratedItemChoice.setChoices([
+                    { value: '', label: '選択してください', selected: true }
+                ], 'value', 'label', true);
+            }
+        });
+    }
+
+    // 中分類 → 品目の連動（統合画面）
+    if (integratedMediumClassSelect && integratedItemSelect) {
+        integratedMediumClassSelect.addEventListener('change', async function(e) {
+            const mediumClass = e.target.value;
+
+            // 品目を更新
+            if (window.integratedItemChoice) {
+                window.integratedItemChoice.destroy();
+            }
+            window.integratedItemChoice = await initItemSelect('integratedItemSelect', mediumClass);
+        });
+    }
 }
 
 /**
@@ -690,6 +905,7 @@ window.loadAssetMaster = loadAssetMaster;
 window.initFacilityNameSelect = initFacilityNameSelect;
 window.initDepartmentSelect = initDepartmentSelect;
 window.initSectionSelect = initSectionSelect;
+window.initCategorySelect = initCategorySelect;
 window.initLargeClassSelect = initLargeClassSelect;
 window.initMediumClassSelect = initMediumClassSelect;
 window.initItemSelect = initItemSelect;

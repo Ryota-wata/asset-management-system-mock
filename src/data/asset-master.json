@@ -1,573 +1,301 @@
 {
-  "largeClasses": [
+  "assets": [
     {
       "id": 1,
-      "name": "医療機器",
-      "code": "LC001"
+      "category": "医療機器",
+      "largeClass": "放射線関連機器",
+      "mediumClass": "CT関連",
+      "item": "CTスキャナ",
+      "manufacturer": "GEヘルスケア",
+      "model": "Revolution CT"
     },
     {
       "id": 2,
-      "name": "放射線関連機器",
-      "code": "LC002"
+      "category": "医療機器",
+      "largeClass": "放射線関連機器",
+      "mediumClass": "CT関連",
+      "item": "CTスキャナ",
+      "manufacturer": "GEヘルスケア",
+      "model": "Optima CT660"
     },
     {
       "id": 3,
-      "name": "検査機器",
-      "code": "LC003"
+      "category": "医療機器",
+      "largeClass": "放射線関連機器",
+      "mediumClass": "CT関連",
+      "item": "CTスキャナ",
+      "manufacturer": "東芝メディカルシステムズ",
+      "model": "Aquilion ONE"
     },
     {
       "id": 4,
-      "name": "治療機器",
-      "code": "LC004"
+      "category": "医療機器",
+      "largeClass": "放射線関連機器",
+      "mediumClass": "MRI関連",
+      "item": "MRI装置",
+      "manufacturer": "シーメンス",
+      "model": "MAGNETOM Vida"
     },
     {
       "id": 5,
-      "name": "手術機器",
-      "code": "LC005"
+      "category": "医療機器",
+      "largeClass": "放射線関連機器",
+      "mediumClass": "MRI関連",
+      "item": "MRI装置",
+      "manufacturer": "フィリップス",
+      "model": "Ingenia 3.0T"
     },
     {
       "id": 6,
-      "name": "生命維持管理機器",
-      "code": "LC006"
+      "category": "医療機器",
+      "largeClass": "医療機器",
+      "mediumClass": "超音波関連",
+      "item": "超音波診断装置",
+      "manufacturer": "日立製作所",
+      "model": "ARIETTA 850"
     },
     {
       "id": 7,
-      "name": "滅菌・洗浄機器",
-      "code": "LC007"
+      "category": "医療機器",
+      "largeClass": "医療機器",
+      "mediumClass": "超音波関連",
+      "item": "超音波診断装置",
+      "manufacturer": "フィリップス",
+      "model": "EPIQ Elite"
     },
     {
       "id": 8,
-      "name": "什器備品",
-      "code": "LC008"
+      "category": "医療機器",
+      "largeClass": "放射線関連機器",
+      "mediumClass": "X線関連",
+      "item": "X線撮影装置",
+      "manufacturer": "東芝メディカルシステムズ",
+      "model": "X-1000"
     },
     {
       "id": 9,
-      "name": "システム機器",
-      "code": "LC009"
+      "category": "医療機器",
+      "largeClass": "放射線関連機器",
+      "mediumClass": "X線関連",
+      "item": "血管造影装置",
+      "manufacturer": "シーメンス",
+      "model": "Artis Zee"
     },
     {
       "id": 10,
-      "name": "事務機器",
-      "code": "LC010"
+      "category": "医療機器",
+      "largeClass": "医療機器",
+      "mediumClass": "内視鏡関連",
+      "item": "内視鏡システム",
+      "manufacturer": "オリンパス",
+      "model": "CF-HQ290ZI"
     },
     {
       "id": 11,
-      "name": "家具",
-      "code": "LC011"
-    }
-  ],
-  "mediumClasses": [
-    {
-      "id": 1,
-      "name": "CT関連",
-      "code": "MC001",
-      "largeClassId": 2
-    },
-    {
-      "id": 2,
-      "name": "MRI関連",
-      "code": "MC002",
-      "largeClassId": 2
-    },
-    {
-      "id": 3,
-      "name": "X線関連",
-      "code": "MC003",
-      "largeClassId": 2
-    },
-    {
-      "id": 4,
-      "name": "超音波関連",
-      "code": "MC004",
-      "largeClassId": 1
-    },
-    {
-      "id": 5,
-      "name": "内視鏡関連",
-      "code": "MC005",
-      "largeClassId": 1
-    },
-    {
-      "id": 6,
-      "name": "血液検査関連",
-      "code": "MC006",
-      "largeClassId": 3
-    },
-    {
-      "id": 7,
-      "name": "生化学検査関連",
-      "code": "MC007",
-      "largeClassId": 3
-    },
-    {
-      "id": 8,
-      "name": "人工呼吸器関連",
-      "code": "MC008",
-      "largeClassId": 6
-    },
-    {
-      "id": 9,
-      "name": "透析関連",
-      "code": "MC009",
-      "largeClassId": 4
-    },
-    {
-      "id": 10,
-      "name": "手術台・照明",
-      "code": "MC010",
-      "largeClassId": 5
-    },
-    {
-      "id": 11,
-      "name": "電気メス・レーザー",
-      "code": "MC011",
-      "largeClassId": 5
+      "category": "医療機器",
+      "largeClass": "医療機器",
+      "mediumClass": "内視鏡関連",
+      "item": "内視鏡システム",
+      "manufacturer": "オリンパス",
+      "model": "EVIS X1"
     },
     {
       "id": 12,
-      "name": "PC機器",
-      "code": "MC012",
-      "largeClassId": 9
+      "category": "医療機器",
+      "largeClass": "検査機器",
+      "mediumClass": "血液検査関連",
+      "item": "血液分析装置",
+      "manufacturer": "日立製作所",
+      "model": "BA-7000"
     },
     {
       "id": 13,
-      "name": "複合機",
-      "code": "MC013",
-      "largeClassId": 10
+      "category": "医療機器",
+      "largeClass": "検査機器",
+      "mediumClass": "生化学検査関連",
+      "item": "生化学分析装置",
+      "manufacturer": "日立製作所",
+      "model": "7600-P"
     },
     {
       "id": 14,
-      "name": "デスク",
-      "code": "MC014",
-      "largeClassId": 11
+      "category": "医療機器",
+      "largeClass": "生命維持管理機器",
+      "mediumClass": "人工呼吸器関連",
+      "item": "人工呼吸器",
+      "manufacturer": "テルモ",
+      "model": "VS-1500"
     },
     {
       "id": 15,
-      "name": "チェア",
-      "code": "MC015",
-      "largeClassId": 11
+      "category": "医療機器",
+      "largeClass": "治療機器",
+      "mediumClass": "透析関連",
+      "item": "透析装置",
+      "manufacturer": "東レ",
+      "model": "TR-3300M"
     },
     {
       "id": 16,
-      "name": "心電図関連",
-      "code": "MC016",
-      "largeClassId": 1
+      "category": "医療機器",
+      "largeClass": "手術機器",
+      "mediumClass": "手術台・照明",
+      "item": "手術台",
+      "manufacturer": "タカラベルモント",
+      "model": "OT-1500"
     },
     {
       "id": 17,
-      "name": "モニタ関連",
-      "code": "MC017",
-      "largeClassId": 6
+      "category": "医療機器",
+      "largeClass": "手術機器",
+      "mediumClass": "電気メス・レーザー",
+      "item": "電気メス",
+      "manufacturer": "オリンパス",
+      "model": "ESG-400"
     },
     {
       "id": 18,
-      "name": "輸液ポンプ関連",
-      "code": "MC018",
-      "largeClassId": 4
-    }
-  ],
-  "items": [
-    {
-      "id": 1,
-      "name": "CTスキャナ",
-      "code": "IT001",
-      "mediumClassId": 1
-    },
-    {
-      "id": 2,
-      "name": "MRI装置",
-      "code": "IT002",
-      "mediumClassId": 2
-    },
-    {
-      "id": 3,
-      "name": "超音波診断装置",
-      "code": "IT003",
-      "mediumClassId": 4
-    },
-    {
-      "id": 4,
-      "name": "X線撮影装置",
-      "code": "IT004",
-      "mediumClassId": 3
-    },
-    {
-      "id": 5,
-      "name": "血管造影装置",
-      "code": "IT005",
-      "mediumClassId": 3
-    },
-    {
-      "id": 6,
-      "name": "内視鏡システム",
-      "code": "IT006",
-      "mediumClassId": 5
-    },
-    {
-      "id": 7,
-      "name": "血液分析装置",
-      "code": "IT007",
-      "mediumClassId": 6
-    },
-    {
-      "id": 8,
-      "name": "生化学分析装置",
-      "code": "IT008",
-      "mediumClassId": 7
-    },
-    {
-      "id": 9,
-      "name": "人工呼吸器",
-      "code": "IT009",
-      "mediumClassId": 8
-    },
-    {
-      "id": 10,
-      "name": "透析装置",
-      "code": "IT010",
-      "mediumClassId": 9
-    },
-    {
-      "id": 11,
-      "name": "麻酔器",
-      "code": "IT011",
-      "mediumClassId": 5
-    },
-    {
-      "id": 12,
-      "name": "手術台",
-      "code": "IT012",
-      "mediumClassId": 10
-    },
-    {
-      "id": 13,
-      "name": "電気メス",
-      "code": "IT013",
-      "mediumClassId": 11
-    },
-    {
-      "id": 14,
-      "name": "レーザー装置",
-      "code": "IT014",
-      "mediumClassId": 11
-    },
-    {
-      "id": 15,
-      "name": "除細動器",
-      "code": "IT015",
-      "mediumClassId": 6
-    },
-    {
-      "id": 16,
-      "name": "心電計",
-      "code": "IT016",
-      "mediumClassId": 16
-    },
-    {
-      "id": 17,
-      "name": "患者モニタ",
-      "code": "IT017",
-      "mediumClassId": 17
-    },
-    {
-      "id": 18,
-      "name": "輸液ポンプ",
-      "code": "IT018",
-      "mediumClassId": 18
+      "category": "医療機器",
+      "largeClass": "手術機器",
+      "mediumClass": "電気メス・レーザー",
+      "item": "レーザー装置",
+      "manufacturer": "日本光電",
+      "model": "LX-2000"
     },
     {
       "id": 19,
-      "name": "シリンジポンプ",
-      "code": "IT019",
-      "mediumClassId": 18
+      "category": "医療機器",
+      "largeClass": "医療機器",
+      "mediumClass": "心電図関連",
+      "item": "心電計",
+      "manufacturer": "日本光電",
+      "model": "BNP-990"
     },
     {
       "id": 20,
-      "name": "ノートPC",
-      "code": "IT020",
-      "mediumClassId": 12
+      "category": "医療機器",
+      "largeClass": "生命維持管理機器",
+      "mediumClass": "モニタ関連",
+      "item": "患者モニタ",
+      "manufacturer": "日本光電",
+      "model": "BW-1200"
     },
     {
       "id": 21,
-      "name": "デスクトップPC",
-      "code": "IT021",
-      "mediumClassId": 12
+      "category": "医療機器",
+      "largeClass": "治療機器",
+      "mediumClass": "輸液ポンプ関連",
+      "item": "輸液ポンプ",
+      "manufacturer": "テルモ",
+      "model": "TE-2700"
     },
     {
       "id": 22,
-      "name": "タブレット端末",
-      "code": "IT022",
-      "mediumClassId": 12
+      "category": "医療機器",
+      "largeClass": "治療機器",
+      "mediumClass": "輸液ポンプ関連",
+      "item": "シリンジポンプ",
+      "manufacturer": "テルモ",
+      "model": "TE-SS800"
     },
     {
       "id": 23,
-      "name": "業務用複合機",
-      "code": "IT023",
-      "mediumClassId": 13
+      "category": "什器備品",
+      "largeClass": "システム機器",
+      "mediumClass": "PC機器",
+      "item": "ノートPC",
+      "manufacturer": "HP",
+      "model": "ProBook 450"
     },
     {
       "id": 24,
-      "name": "オフィスデスク",
-      "code": "IT024",
-      "mediumClassId": 14
+      "category": "什器備品",
+      "largeClass": "システム機器",
+      "mediumClass": "PC機器",
+      "item": "ノートPC",
+      "manufacturer": "Dell",
+      "model": "Latitude 5420"
     },
     {
       "id": 25,
-      "name": "オフィスチェア",
-      "code": "IT025",
-      "mediumClassId": 15
-    }
-  ],
-  "manufacturers": [
-    {
-      "id": 1,
-      "name": "GEヘルスケア",
-      "code": "MF001",
-      "country": "アメリカ"
+      "category": "什器備品",
+      "largeClass": "システム機器",
+      "mediumClass": "PC機器",
+      "item": "ノートPC",
+      "manufacturer": "Lenovo",
+      "model": "ThinkPad X1"
     },
     {
-      "id": 2,
-      "name": "シーメンス",
-      "code": "MF002",
-      "country": "ドイツ"
+      "id": 26,
+      "category": "什器備品",
+      "largeClass": "システム機器",
+      "mediumClass": "PC機器",
+      "item": "ノートPC",
+      "manufacturer": "Apple",
+      "model": "MacBook Pro"
     },
     {
-      "id": 3,
-      "name": "フィリップス",
-      "code": "MF003",
-      "country": "オランダ"
+      "id": 27,
+      "category": "什器備品",
+      "largeClass": "システム機器",
+      "mediumClass": "PC機器",
+      "item": "デスクトップPC",
+      "manufacturer": "Dell",
+      "model": "OptiPlex 7090"
     },
     {
-      "id": 4,
-      "name": "東芝メディカルシステムズ",
-      "code": "MF004",
-      "country": "日本"
+      "id": 28,
+      "category": "什器備品",
+      "largeClass": "システム機器",
+      "mediumClass": "PC機器",
+      "item": "タブレット端末",
+      "manufacturer": "Apple",
+      "model": "iPad Pro"
     },
     {
-      "id": 5,
-      "name": "日立製作所",
-      "code": "MF005",
-      "country": "日本"
+      "id": 29,
+      "category": "什器備品",
+      "largeClass": "事務機器",
+      "mediumClass": "複合機",
+      "item": "業務用複合機",
+      "manufacturer": "Canon",
+      "model": "imageRUNNER ADVANCE"
     },
     {
-      "id": 6,
-      "name": "オリンパス",
-      "code": "MF006",
-      "country": "日本"
+      "id": 30,
+      "category": "什器備品",
+      "largeClass": "事務機器",
+      "mediumClass": "複合機",
+      "item": "業務用複合機",
+      "manufacturer": "EPSON",
+      "model": "EPSON PX-M886F"
     },
     {
-      "id": 7,
-      "name": "テルモ",
-      "code": "MF007",
-      "country": "日本"
+      "id": 31,
+      "category": "什器備品",
+      "largeClass": "事務機器",
+      "mediumClass": "複合機",
+      "item": "業務用複合機",
+      "manufacturer": "RICOH",
+      "model": "RICOH IM C6000"
     },
     {
-      "id": 8,
-      "name": "日本光電",
-      "code": "MF008",
-      "country": "日本"
+      "id": 32,
+      "category": "什器備品",
+      "largeClass": "家具",
+      "mediumClass": "デスク",
+      "item": "オフィスデスク",
+      "manufacturer": "イトーキ",
+      "model": "CZR-147"
     },
     {
-      "id": 9,
-      "name": "フクダ電子",
-      "code": "MF009",
-      "country": "日本"
-    },
-    {
-      "id": 10,
-      "name": "キヤノンメディカル",
-      "code": "MF010",
-      "country": "日本"
-    },
-    {
-      "id": 11,
-      "name": "富士フイルム",
-      "code": "MF011",
-      "country": "日本"
-    },
-    {
-      "id": 12,
-      "name": "HP",
-      "code": "MF012",
-      "country": "アメリカ"
-    },
-    {
-      "id": 13,
-      "name": "Dell",
-      "code": "MF013",
-      "country": "アメリカ"
-    },
-    {
-      "id": 14,
-      "name": "Lenovo",
-      "code": "MF014",
-      "country": "中国"
-    },
-    {
-      "id": 15,
-      "name": "Apple",
-      "code": "MF015",
-      "country": "アメリカ"
-    },
-    {
-      "id": 16,
-      "name": "Canon",
-      "code": "MF016",
-      "country": "日本"
-    },
-    {
-      "id": 17,
-      "name": "EPSON",
-      "code": "MF017",
-      "country": "日本"
-    },
-    {
-      "id": 18,
-      "name": "RICOH",
-      "code": "MF018",
-      "country": "日本"
-    }
-  ],
-  "models": [
-    {
-      "id": 1,
-      "name": "Revolution CT",
-      "code": "MD001",
-      "manufacturerId": 1,
-      "itemId": 1
-    },
-    {
-      "id": 2,
-      "name": "Optima CT660",
-      "code": "MD002",
-      "manufacturerId": 1,
-      "itemId": 1
-    },
-    {
-      "id": 3,
-      "name": "MAGNETOM Vida",
-      "code": "MD003",
-      "manufacturerId": 2,
-      "itemId": 2
-    },
-    {
-      "id": 4,
-      "name": "Ingenia 3.0T",
-      "code": "MD004",
-      "manufacturerId": 3,
-      "itemId": 2
-    },
-    {
-      "id": 5,
-      "name": "Aquilion ONE",
-      "code": "MD005",
-      "manufacturerId": 4,
-      "itemId": 1
-    },
-    {
-      "id": 6,
-      "name": "CF-HQ290ZI",
-      "code": "MD006",
-      "manufacturerId": 6,
-      "itemId": 6
-    },
-    {
-      "id": 7,
-      "name": "EVIS X1",
-      "code": "MD007",
-      "manufacturerId": 6,
-      "itemId": 6
-    },
-    {
-      "id": 8,
-      "name": "BW-1200",
-      "code": "MD008",
-      "manufacturerId": 8,
-      "itemId": 17
-    },
-    {
-      "id": 9,
-      "name": "BNP-990",
-      "code": "MD009",
-      "manufacturerId": 8,
-      "itemId": 16
-    },
-    {
-      "id": 10,
-      "name": "TE-2700",
-      "code": "MD010",
-      "manufacturerId": 7,
-      "itemId": 18
-    },
-    {
-      "id": 11,
-      "name": "VS-1500",
-      "code": "MD011",
-      "manufacturerId": 7,
-      "itemId": 9
-    },
-    {
-      "id": 12,
-      "name": "ProBook 450",
-      "code": "MD012",
-      "manufacturerId": 12,
-      "itemId": 20
-    },
-    {
-      "id": 13,
-      "name": "Latitude 5420",
-      "code": "MD013",
-      "manufacturerId": 13,
-      "itemId": 20
-    },
-    {
-      "id": 14,
-      "name": "ThinkPad X1",
-      "code": "MD014",
-      "manufacturerId": 14,
-      "itemId": 20
-    },
-    {
-      "id": 15,
-      "name": "MacBook Pro",
-      "code": "MD015",
-      "manufacturerId": 15,
-      "itemId": 20
-    },
-    {
-      "id": 16,
-      "name": "imageRUNNER ADVANCE",
-      "code": "MD016",
-      "manufacturerId": 16,
-      "itemId": 23
-    },
-    {
-      "id": 17,
-      "name": "EPSON PX-M886F",
-      "code": "MD017",
-      "manufacturerId": 17,
-      "itemId": 23
-    },
-    {
-      "id": 18,
-      "name": "RICOH IM C6000",
-      "code": "MD018",
-      "manufacturerId": 18,
-      "itemId": 23
-    },
-    {
-      "id": 19,
-      "name": "ARIETTA 850",
-      "code": "MD019",
-      "manufacturerId": 5,
-      "itemId": 3
-    },
-    {
-      "id": 20,
-      "name": "EPIQ Elite",
-      "code": "MD020",
-      "manufacturerId": 3,
-      "itemId": 3
+      "id": 33,
+      "category": "什器備品",
+      "largeClass": "家具",
+      "mediumClass": "チェア",
+      "item": "オフィスチェア",
+      "manufacturer": "オカムラ",
+      "model": "シルフィー"
     }
   ]
 }

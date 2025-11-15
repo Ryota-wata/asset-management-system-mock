@@ -1,0 +1,65 @@
+<!-- SHIP施設マスタ編集モーダル -->
+<div id="facilityEditModal" class="asset-master-modal">
+    <div class="asset-master-modal-content" style="max-width: 600px;">
+        <!-- モーダルヘッダー -->
+        <div class="asset-master-modal-header">
+            <h2 class="asset-master-modal-title">SHIP施設マスタ編集</h2>
+            <button class="asset-master-modal-close" onclick="closeFacilityEditModal()">×</button>
+        </div>
+
+        <!-- フォームコンテンツ -->
+        <div class="facility-form-container">
+            <form id="facilityEditForm" onsubmit="handleFacilityEditSubmit(event)">
+                <!-- 隠しフィールド -->
+                <input type="hidden" id="editFacilityId">
+
+                <!-- 基本情報セクション -->
+                <div class="facility-form-section">
+                    <h3 class="facility-form-section-title">基本情報</h3>
+
+                    <div class="facility-form-row">
+                        <div class="facility-form-group">
+                            <label class="facility-form-label required">施設コード</label>
+                            <input type="text" class="facility-form-input" id="editFacilityCode" required>
+                        </div>
+                    </div>
+
+                    <div class="facility-form-row">
+                        <div class="facility-form-group">
+                            <label class="facility-form-label required">施設名</label>
+                            <input type="text" class="facility-form-input" id="editFacilityName" required>
+                        </div>
+                    </div>
+
+                    <div class="facility-form-row">
+                        <div class="facility-form-group half">
+                            <label class="facility-form-label">棟</label>
+                            <input type="text" class="facility-form-input" id="editFacilityBuilding">
+                        </div>
+                        <div class="facility-form-group half">
+                            <label class="facility-form-label">階</label>
+                            <input type="text" class="facility-form-input" id="editFacilityFloor">
+                        </div>
+                    </div>
+
+                    <div class="facility-form-row">
+                        <div class="facility-form-group half">
+                            <label class="facility-form-label">部門</label>
+                            <input type="text" class="facility-form-input" id="editFacilityDepartment">
+                        </div>
+                        <div class="facility-form-group half">
+                            <label class="facility-form-label">部署</label>
+                            <input type="text" class="facility-form-input" id="editFacilitySection">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- フォームアクション -->
+                <div class="facility-form-actions">
+                    <button type="button" class="facility-form-btn cancel" onclick="closeFacilityEditModal()">キャンセル</button>
+                    <button type="submit" class="facility-form-btn submit">更新</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

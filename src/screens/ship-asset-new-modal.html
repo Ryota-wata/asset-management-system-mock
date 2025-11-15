@@ -1,0 +1,73 @@
+<!-- SHIP資産マスタ新規作成モーダル -->
+<div id="assetNewModal" class="asset-master-modal">
+    <div class="asset-master-modal-content" style="max-width: 600px;">
+        <!-- モーダルヘッダー -->
+        <div class="asset-master-modal-header">
+            <h2 class="asset-master-modal-title">SHIP資産マスタ新規作成</h2>
+            <button class="asset-master-modal-close" onclick="closeAssetNewModal()">×</button>
+        </div>
+
+        <!-- フォームコンテンツ -->
+        <div class="facility-form-container">
+            <form id="assetNewForm" onsubmit="handleAssetNewSubmit(event)">
+                <!-- 分類情報セクション -->
+                <div class="facility-form-section">
+                    <h3 class="facility-form-section-title">分類情報</h3>
+
+                    <div class="facility-form-row">
+                        <div class="facility-form-group">
+                            <label class="facility-form-label required">Category</label>
+                            <select class="facility-form-input" id="assetCategory" required>
+                                <option value="">選択してください</option>
+                                <option value="医療機器">医療機器</option>
+                                <option value="什器備品">什器備品</option>
+                            </select>
+                            <small class="facility-form-hint">医療機器または什器備品を選択</small>
+                        </div>
+                    </div>
+
+                    <div class="facility-form-row">
+                        <div class="facility-form-group">
+                            <label class="facility-form-label required">大分類</label>
+                            <input type="text" class="facility-form-input" id="assetLargeClass" placeholder="放射線関連機器" required>
+                            <small class="facility-form-hint">例: 放射線関連機器</small>
+                        </div>
+                    </div>
+
+                    <div class="facility-form-row">
+                        <div class="facility-form-group">
+                            <label class="facility-form-label required">中分類</label>
+                            <input type="text" class="facility-form-input" id="assetMediumClass" placeholder="CT関連" required>
+                            <small class="facility-form-hint">例: CT関連</small>
+                        </div>
+                    </div>
+
+                    <div class="facility-form-row">
+                        <div class="facility-form-group">
+                            <label class="facility-form-label required">品目</label>
+                            <input type="text" class="facility-form-input" id="assetItem" placeholder="CTスキャナ" required>
+                            <small class="facility-form-hint">例: CTスキャナ</small>
+                        </div>
+                    </div>
+
+                    <div class="facility-form-row">
+                        <div class="facility-form-group half">
+                            <label class="facility-form-label required">メーカー</label>
+                            <input type="text" class="facility-form-input" id="assetManufacturer" placeholder="GEヘルスケア" required>
+                        </div>
+                        <div class="facility-form-group half">
+                            <label class="facility-form-label required">型式</label>
+                            <input type="text" class="facility-form-input" id="assetModel" placeholder="Revolution CT" required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- フォームアクション -->
+                <div class="facility-form-actions">
+                    <button type="button" class="facility-form-btn cancel" onclick="closeAssetNewModal()">キャンセル</button>
+                    <button type="submit" class="facility-form-btn submit">登録</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

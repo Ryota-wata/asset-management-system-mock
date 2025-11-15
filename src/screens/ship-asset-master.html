@@ -1,0 +1,83 @@
+<!-- SHIP資産マスタ一覧画面 -->
+<div id="shipAssetMasterPage" class="search-result-page">
+    <div class="result-container">
+        <!-- ヘッダー -->
+        <header class="result-header">
+            <div class="result-header-left">
+                <div class="logo">
+                    <div class="logo-icon">SHIP</div>
+                    <div class="result-header-title">SHIP資産マスタ</div>
+                </div>
+                <span class="result-count" id="assetCount">0件</span>
+            </div>
+            <div class="result-header-actions">
+                <button class="header-btn success" onclick="showAssetNewModal()">新規作成</button>
+                <button class="header-btn back" onclick="handleAssetBack()">戻る</button>
+            </div>
+        </header>
+
+        <!-- フィルターヘッダー -->
+        <div class="filter-header" id="assetFilterHeader">
+            <div class="filter-row-single">
+                <div class="filter-group">
+                    <label>Category</label>
+                    <input type="text" id="filterCategory" class="filter-input" placeholder="医療機器" oninput="filterAssetTable()">
+                </div>
+                <div class="filter-group">
+                    <label>大分類</label>
+                    <input type="text" id="filterLargeClass" class="filter-input" placeholder="大分類で検索" oninput="filterAssetTable()">
+                </div>
+                <div class="filter-group">
+                    <label>中分類</label>
+                    <input type="text" id="filterMediumClass" class="filter-input" placeholder="中分類で検索" oninput="filterAssetTable()">
+                </div>
+                <div class="filter-group">
+                    <label>品目</label>
+                    <input type="text" id="filterItem" class="filter-input" placeholder="品目で検索" oninput="filterAssetTable()">
+                </div>
+                <div class="filter-group">
+                    <button class="filter-reset-btn" onclick="resetAssetFilter()">リセット</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- アクションバー -->
+        <div class="action-bar">
+            <span class="selection-info" id="assetSelectionInfo">0件選択中</span>
+            <button class="action-btn delete-action" id="assetDeleteBtn" onclick="handleAssetDelete()" disabled>
+                選択した資産を削除
+            </button>
+        </div>
+
+        <!-- メインコンテンツエリア -->
+        <div class="main-content-area">
+            <div class="content-wrapper">
+                <!-- テーブル表示 -->
+                <div class="list-view" id="assetListView">
+                    <table class="resizable-table data-table">
+                        <thead>
+                            <tr>
+                                <!-- ヘッダーはJavaScriptから動的に生成 -->
+                            </tr>
+                        </thead>
+                        <tbody id="assetTableBody">
+                            <!-- データはJavaScriptから動的に生成 -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ページネーション -->
+        <div class="pagination-area">
+            <div class="pagination-info">
+                全 <span id="totalAssets">33</span> 件中 <span id="displayStart">1</span> - <span id="displayEnd">33</span> 件を表示
+            </div>
+            <div class="pagination-controls">
+                <button class="pagination-btn" onclick="goToAssetPreviousPage()" disabled>前へ</button>
+                <span class="pagination-current">1 / 1</span>
+                <button class="pagination-btn" onclick="goToAssetNextPage()" disabled>次へ</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,580 @@
+/**
+ * SHIP施設マスタ一覧画面のJavaScript
+ */
+
+// グローバル変数
+let shipFacilityConfig = null;
+let shipFacilityData = [];
+
+/**
+ * facility-master.jsonを読み込む
+ */
+async function loadFacilityMasterConfig() {
+    try {
+        console.log('Loading facility-master.json...');
+        // キャッシュバスターを追加してブラウザキャッシュを回避
+        const cacheBuster = new Date().getTime();
+        const response = await fetch(`src/data/facility-master.json?v=${cacheBuster}`);
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const config = await response.json();
+        console.log('Loaded config:', config);
+        console.log('All config keys:', Object.keys(config));
+
+        // facilities/dataの存在チェック（必須）
+        const hasData = !!(config.facilities || config.data);
+
+        if (!hasData) {
+            console.error('Missing required fields!');
+            console.error('Has facilities?', !!config.facilities);
+            console.error('Has data?', !!config.data);
+            throw new Error('Invalid JSON structure: missing facilities/data');
+        }
+
+        // columnsがない場合は動的に生成（フラット構造対応）
+        if (!config.columns) {
+            console.log('Columns not found, generating default columns for flat structure...');
+            config.columns = [
+                { id: "checkbox", label: "", field: "checkbox", type: "checkbox", width: "50px" },
+                { id: "no", label: "No.", field: "no", type: "number", width: "60px" },
+                { id: "code", label: "施設コード", field: "facilityCode", type: "text", width: "100px" },
+                { id: "name", label: "施設名", field: "facilityName", type: "text", width: "200px" },
+                { id: "building", label: "棟", field: "building", type: "text", width: "100px" },
+                { id: "floor", label: "階", field: "floor", type: "text", width: "80px" },
+                { id: "department", label: "部門", field: "department", type: "text", width: "120px" },
+                { id: "section", label: "部署", field: "section", type: "text", width: "120px" },
+                { id: "actions", label: "操作", field: "actions", type: "actions", width: "100px" }
+            ];
+        }
+
+        shipFacilityConfig = config;
+        // facilitiesまたはdata（後方互換性）を使用
+        shipFacilityData = config.facilities || config.data;
+        console.log('shipFacilityConfig set:', shipFacilityConfig);
+        console.log('shipFacilityData set:', shipFacilityData);
+        return config;
+    } catch (error) {
+        console.error('Failed to load facility-master.json:', error);
+        alert('施設マスタデータの読み込みに失敗しました: ' + error.message);
+        return null;
+    }
+}
+
+/**
+ * テーブルヘッダーを動的に生成
+ */
+function renderFacilityTableHeader() {
+    console.log('renderFacilityTableHeader called');
+    console.log('shipFacilityConfig:', shipFacilityConfig);
+
+    if (!shipFacilityConfig) {
+        console.error('shipFacilityConfig is null or undefined');
+        return;
+    }
+
+    if (!shipFacilityConfig.columns) {
+        console.error('shipFacilityConfig.columns is undefined');
+        return;
+    }
+
+    const thead = document.querySelector('#facilityTableBody').closest('table').querySelector('thead tr');
+    if (!thead) {
+        console.error('thead not found');
+        return;
+    }
+
+    thead.innerHTML = '';
+
+    shipFacilityConfig.columns.forEach(column => {
+        const th = document.createElement('th');
+
+        if (column.type === 'checkbox') {
+            th.innerHTML = '<input type="checkbox" id="selectAllFacilities" onchange="handleSelectAllFacilities()">';
+        } else {
+            th.textContent = column.label;
+        }
+
+        if (column.width) {
+            th.style.width = column.width;
+        }
+
+        thead.appendChild(th);
+    });
+
+    console.log('Table header rendered successfully');
+}
+
+/**
+ * テーブルボディを動的に生成
+ */
+function renderFacilityTableBody() {
+    if (!shipFacilityConfig || !shipFacilityData) return;
+
+    const tbody = document.getElementById('facilityTableBody');
+    if (!tbody) return;
+
+    tbody.innerHTML = '';
+
+    shipFacilityData.forEach((facility, index) => {
+        const tr = document.createElement('tr');
+        tr.dataset.facilityCode = facility.facilityCode || facility.code;
+
+        shipFacilityConfig.columns.forEach(column => {
+            const td = document.createElement('td');
+
+            switch (column.type) {
+                case 'checkbox':
+                    td.innerHTML = '<input type="checkbox" class="row-checkbox" onchange="handleFacilityRowSelect()">';
+                    break;
+
+                case 'number':
+                    if (column.id === 'no') {
+                        td.textContent = index + 1;
+                    }
+                    break;
+
+                case 'actions':
+                    td.innerHTML = `<button class="table-action-btn edit" onclick="showFacilityEditModal('${facility.facilityCode || facility.code}')">編集</button>`;
+                    break;
+
+                default:
+                    // フラット構造対応: facilityName, facilityCode等のフィールド名にも対応
+                    const fieldMapping = {
+                        'name': 'facilityName',
+                        'code': 'facilityCode'
+                    };
+                    const actualField = fieldMapping[column.field] || column.field;
+                    const value = facility[actualField] || facility[column.field];
+                    td.textContent = value || '-';
+                    break;
+            }
+
+            tr.appendChild(td);
+        });
+
+        tbody.appendChild(tr);
+    });
+
+    // 件数を更新
+    updateFacilityCount();
+}
+
+/**
+ * 件数表示を更新
+ */
+function updateFacilityCount() {
+    const visibleRows = document.querySelectorAll('#facilityTableBody tr:not([style*="display: none"])');
+    const countElement = document.getElementById('facilityCount');
+    if (countElement) {
+        countElement.textContent = `${visibleRows.length}件`;
+    }
+
+    const totalElement = document.getElementById('totalFacilities');
+    const endElement = document.getElementById('displayEnd');
+    if (totalElement) totalElement.textContent = visibleRows.length;
+    if (endElement) endElement.textContent = visibleRows.length;
+}
+
+/**
+ * フィルター表示/非表示切り替え
+ */
+function toggleFacilityFilter() {
+    const filterHeader = document.getElementById('facilityFilterHeader');
+    if (filterHeader) {
+        if (filterHeader.style.display === 'none') {
+            filterHeader.style.display = 'block';
+        } else {
+            filterHeader.style.display = 'none';
+        }
+    }
+}
+
+/**
+ * フィルターリセット
+ */
+function resetFacilityFilter() {
+    document.getElementById('filterFacilityId').value = '';
+    document.getElementById('filterFacilityName').value = '';
+    filterFacilityTable();
+}
+
+/**
+ * テーブルフィルタリング
+ */
+function filterFacilityTable() {
+    const facilityId = document.getElementById('filterFacilityId').value.toLowerCase();
+    const facilityName = document.getElementById('filterFacilityName').value.toLowerCase();
+
+    const rows = document.querySelectorAll('#facilityTableBody tr');
+    let visibleCount = 0;
+
+    rows.forEach(row => {
+        const cells = row.querySelectorAll('td');
+        // フラット構造のテーブル: [checkbox(0), No(1), 施設コード(2), 施設名(3), 棟(4), 階(5), 部門(6), 部署(7), 操作(8)]
+        const rowFacilityId = cells[2]?.textContent.toLowerCase() || '';
+        const rowFacilityName = cells[3]?.textContent.toLowerCase() || '';
+
+        let matchFacilityId = !facilityId || rowFacilityId.includes(facilityId);
+        let matchFacilityName = !facilityName || rowFacilityName.includes(facilityName);
+
+        if (matchFacilityId && matchFacilityName) {
+            row.style.display = '';
+            visibleCount++;
+        } else {
+            row.style.display = 'none';
+        }
+    });
+
+    // 件数表示を更新
+    updateFacilityCount();
+}
+
+/**
+ * 全選択チェックボックス処理
+ */
+function handleSelectAllFacilities() {
+    const selectAll = document.getElementById('selectAllFacilities');
+    const checkboxes = document.querySelectorAll('#facilityTableBody .row-checkbox');
+
+    checkboxes.forEach(checkbox => {
+        const row = checkbox.closest('tr');
+        if (row.style.display !== 'none') {
+            checkbox.checked = selectAll.checked;
+        }
+    });
+
+    updateFacilitySelectionInfo();
+}
+
+/**
+ * 行選択チェックボックス処理
+ */
+function handleFacilityRowSelect() {
+    const checkboxes = document.querySelectorAll('#facilityTableBody .row-checkbox');
+    const selectAll = document.getElementById('selectAllFacilities');
+
+    const visibleCheckboxes = Array.from(checkboxes).filter(cb => {
+        const row = cb.closest('tr');
+        return row.style.display !== 'none';
+    });
+
+    const allChecked = visibleCheckboxes.length > 0 &&
+                       visibleCheckboxes.every(cb => cb.checked);
+
+    selectAll.checked = allChecked;
+    updateFacilitySelectionInfo();
+}
+
+/**
+ * 選択情報を更新
+ */
+function updateFacilitySelectionInfo() {
+    const checkboxes = document.querySelectorAll('#facilityTableBody .row-checkbox:checked');
+    const count = checkboxes.length;
+
+    const selectionInfo = document.getElementById('facilitySelectionInfo');
+    const deleteBtn = document.getElementById('facilityDeleteBtn');
+
+    if (selectionInfo) {
+        selectionInfo.textContent = `${count}件選択中`;
+    }
+
+    if (deleteBtn) {
+        deleteBtn.disabled = count === 0;
+    }
+}
+
+/**
+ * Excel出力
+ */
+function handleFacilityExport() {
+    alert('Excel出力機能は実装中です');
+}
+
+/**
+ * 施設削除
+ */
+function handleFacilityDelete() {
+    const checkboxes = document.querySelectorAll('#facilityTableBody .row-checkbox:checked');
+    const count = checkboxes.length;
+
+    if (count === 0) return;
+
+    if (confirm(`選択した${count}件の施設を削除しますか？`)) {
+        checkboxes.forEach(checkbox => {
+            const row = checkbox.closest('tr');
+            row.remove();
+        });
+
+        filterFacilityTable();
+        updateFacilitySelectionInfo();
+        alert(`${count}件の施設を削除しました`);
+    }
+}
+
+/**
+ * 戻るボタン
+ */
+function handleFacilityBack() {
+    // マスタ管理モーダルに戻る、または前の画面に戻る
+    const shipFacilityPage = document.getElementById('shipFacilityMasterPage');
+    if (shipFacilityPage) {
+        shipFacilityPage.classList.remove('active');
+    }
+
+    // メイン画面を表示
+    const mainContainer = document.getElementById('mainContainer');
+    if (mainContainer) {
+        mainContainer.classList.add('active');
+    }
+}
+
+/**
+ * 新規作成モーダルを表示
+ */
+function showFacilityNewModal() {
+    const modal = document.getElementById('facilityNewModal');
+    if (modal) {
+        // フォームをリセット
+        const form = document.getElementById('facilityNewForm');
+        if (form) {
+            form.reset();
+        }
+
+        modal.classList.add('show');
+    }
+}
+
+/**
+ * 新規作成モーダルを閉じる
+ */
+function closeFacilityNewModal() {
+    const modal = document.getElementById('facilityNewModal');
+    if (modal) {
+        modal.classList.remove('show');
+    }
+}
+
+/**
+ * 新規施設登録フォーム送信処理
+ * @param {Event} event - フォーム送信イベント
+ */
+function handleFacilityNewSubmit(event) {
+    event.preventDefault();
+
+    // フォームデータを取得
+    const formData = {
+        facilityCode: document.getElementById('facilityCode').value,
+        facilityName: document.getElementById('facilityName').value,
+        building: document.getElementById('facilityBuilding')?.value || '本館',
+        floor: document.getElementById('facilityFloor')?.value || '1F',
+        department: document.getElementById('facilityDepartment')?.value || '-',
+        section: document.getElementById('facilitySection')?.value || '-'
+    };
+
+    console.log('新規施設データ:', formData);
+
+    // IDを生成（既存データの最大ID + 1）
+    const maxId = shipFacilityData.length > 0
+        ? Math.max(...shipFacilityData.map(f => f.id))
+        : 0;
+
+    // shipFacilityDataに追加（フラット構造）
+    const newFacility = {
+        id: maxId + 1,
+        facilityCode: formData.facilityCode,
+        facilityName: formData.facilityName,
+        building: formData.building,
+        floor: formData.floor,
+        department: formData.department,
+        section: formData.section
+    };
+
+    shipFacilityData.push(newFacility);
+
+    // テーブルを再描画
+    renderFacilityTableBody();
+
+    // モーダルを閉じる
+    closeFacilityNewModal();
+
+    // 成功メッセージ
+    alert(`施設「${formData.facilityName}」を登録しました`);
+}
+
+/**
+ * 施設編集モーダルを表示
+ * @param {string} facilityCode - 施設コード
+ */
+function showFacilityEditModal(facilityCode) {
+    const modal = document.getElementById('facilityEditModal');
+    if (!modal) {
+        alert(`施設編集機能は実装中です\n\n施設コード: ${facilityCode} の編集画面を表示します`);
+        return;
+    }
+
+    // 施設データを取得
+    const facility = shipFacilityData.find(f => f.facilityCode === facilityCode || f.code === facilityCode);
+    if (!facility) {
+        alert('施設が見つかりません');
+        return;
+    }
+
+    // フォームに値をセット
+    document.getElementById('editFacilityId').value = facility.id;
+    document.getElementById('editFacilityCode').value = facility.facilityCode || facility.code;
+    document.getElementById('editFacilityName').value = facility.facilityName || facility.name;
+    document.getElementById('editFacilityBuilding').value = facility.building || '';
+    document.getElementById('editFacilityFloor').value = facility.floor || '';
+    document.getElementById('editFacilityDepartment').value = facility.department || '';
+    document.getElementById('editFacilitySection').value = facility.section || '';
+
+    modal.classList.add('show');
+}
+
+/**
+ * 編集モーダルを閉じる
+ */
+function closeFacilityEditModal() {
+    const modal = document.getElementById('facilityEditModal');
+    if (modal) {
+        modal.classList.remove('show');
+    }
+}
+
+/**
+ * 施設編集フォーム送信処理
+ * @param {Event} event - フォーム送信イベント
+ */
+function handleFacilityEditSubmit(event) {
+    event.preventDefault();
+
+    const facilityId = parseInt(document.getElementById('editFacilityId').value);
+    const formData = {
+        facilityCode: document.getElementById('editFacilityCode').value,
+        facilityName: document.getElementById('editFacilityName').value,
+        building: document.getElementById('editFacilityBuilding').value,
+        floor: document.getElementById('editFacilityFloor').value,
+        department: document.getElementById('editFacilityDepartment').value,
+        section: document.getElementById('editFacilitySection').value
+    };
+
+    // データを更新
+    const index = shipFacilityData.findIndex(f => f.id === facilityId);
+    if (index !== -1) {
+        shipFacilityData[index] = {
+            ...shipFacilityData[index],
+            ...formData
+        };
+    }
+
+    // テーブルを再描画
+    renderFacilityTableBody();
+
+    // モーダルを閉じる
+    closeFacilityEditModal();
+
+    // 成功メッセージ
+    alert(`施設「${formData.facilityName}」を更新しました`);
+}
+
+/**
+ * 施設詳細モーダルを表示
+ * @param {string} facilityId - 施設ID
+ */
+function showFacilityDetailModal(facilityId) {
+    alert(`施設詳細機能は実装中です\n\n施設ID: ${facilityId} の詳細情報を表示します`);
+}
+
+/**
+ * ページネーション - 前へ
+ */
+function goToPreviousPage() {
+    alert('前のページへ移動（実装中）');
+}
+
+/**
+ * ページネーション - 次へ
+ */
+function goToNextPage() {
+    alert('次のページへ移動（実装中）');
+}
+
+/**
+ * SHIP施設マスタ画面を表示
+ */
+async function showShipFacilityMaster() {
+    console.log('showShipFacilityMaster called');
+
+    // すべての画面を非表示
+    const allPages = document.querySelectorAll('.active');
+    allPages.forEach(page => page.classList.remove('active'));
+
+    // SHIP施設マスタ画面を表示
+    const shipFacilityPage = document.getElementById('shipFacilityMasterPage');
+    if (shipFacilityPage) {
+        shipFacilityPage.classList.add('active');
+
+        // JSONを読み込んでテーブルを生成
+        const config = await loadFacilityMasterConfig();
+
+        if (!config) {
+            console.error('Failed to load facility master config');
+            alert('施設マスタの読み込みに失敗しました。');
+            return;
+        }
+
+        console.log('Config loaded successfully, rendering table...');
+        renderFacilityTableHeader();
+        renderFacilityTableBody();
+        console.log('Table rendered');
+    } else {
+        console.error('shipFacilityMasterPage element not found');
+    }
+}
+
+// 初期化
+document.addEventListener('DOMContentLoaded', function() {
+    // 新規作成モーダル外クリックで閉じる
+    const newModal = document.getElementById('facilityNewModal');
+    if (newModal) {
+        newModal.addEventListener('click', function(e) {
+            if (e.target === newModal) {
+                closeFacilityNewModal();
+            }
+        });
+    }
+
+    // 編集モーダル外クリックで閉じる
+    const editModal = document.getElementById('facilityEditModal');
+    if (editModal) {
+        editModal.addEventListener('click', function(e) {
+            if (e.target === editModal) {
+                closeFacilityEditModal();
+            }
+        });
+    }
+});
+
+// グローバルに公開
+window.toggleFacilityFilter = toggleFacilityFilter;
+window.resetFacilityFilter = resetFacilityFilter;
+window.filterFacilityTable = filterFacilityTable;
+window.handleSelectAllFacilities = handleSelectAllFacilities;
+window.handleFacilityRowSelect = handleFacilityRowSelect;
+window.handleFacilityExport = handleFacilityExport;
+window.handleFacilityDelete = handleFacilityDelete;
+window.handleFacilityBack = handleFacilityBack;
+window.showFacilityNewModal = showFacilityNewModal;
+window.closeFacilityNewModal = closeFacilityNewModal;
+window.handleFacilityNewSubmit = handleFacilityNewSubmit;
+window.showFacilityEditModal = showFacilityEditModal;
+window.closeFacilityEditModal = closeFacilityEditModal;
+window.handleFacilityEditSubmit = handleFacilityEditSubmit;
+window.showFacilityDetailModal = showFacilityDetailModal;
+window.goToPreviousPage = goToPreviousPage;
+window.goToNextPage = goToNextPage;
+window.showShipFacilityMaster = showShipFacilityMaster;
