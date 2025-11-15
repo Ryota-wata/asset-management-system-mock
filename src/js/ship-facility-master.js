@@ -3,8 +3,8 @@
  */
 
 // グローバル変数
-let facilityMasterConfig = null;
-let facilityMasterData = [];
+let shipFacilityConfig = null;
+let shipFacilityData = [];
 
 /**
  * facility-master.jsonを読み込む
@@ -13,8 +13,8 @@ async function loadFacilityMasterConfig() {
     try {
         const response = await fetch('data/facility-master.json');
         const config = await response.json();
-        facilityMasterConfig = config;
-        facilityMasterData = config.data;
+        shipFacilityConfig = config;
+        shipFacilityData = config.data;
         return config;
     } catch (error) {
         console.error('Failed to load facility-master.json:', error);
@@ -26,14 +26,14 @@ async function loadFacilityMasterConfig() {
  * テーブルヘッダーを動的に生成
  */
 function renderFacilityTableHeader() {
-    if (!facilityMasterConfig) return;
+    if (!shipFacilityConfig) return;
 
     const thead = document.querySelector('#facilityTableBody').closest('table').querySelector('thead tr');
     if (!thead) return;
 
     thead.innerHTML = '';
 
-    facilityMasterConfig.columns.forEach(column => {
+    shipFacilityConfig.columns.forEach(column => {
         const th = document.createElement('th');
 
         if (column.type === 'checkbox') {
@@ -54,18 +54,18 @@ function renderFacilityTableHeader() {
  * テーブルボディを動的に生成
  */
 function renderFacilityTableBody() {
-    if (!facilityMasterConfig || !facilityMasterData) return;
+    if (!shipFacilityConfig || !shipFacilityData) return;
 
     const tbody = document.getElementById('facilityTableBody');
     if (!tbody) return;
 
     tbody.innerHTML = '';
 
-    facilityMasterData.forEach((facility, index) => {
+    shipFacilityData.forEach((facility, index) => {
         const tr = document.createElement('tr');
         tr.dataset.facilityId = facility.facilityId;
 
-        facilityMasterConfig.columns.forEach(column => {
+        shipFacilityConfig.columns.forEach(column => {
             const td = document.createElement('td');
 
             switch (column.type) {
@@ -342,7 +342,7 @@ function handleFacilityNewSubmit(event) {
 
     console.log('新規施設データ:', formData);
 
-    // facilityMasterDataに追加
+    // shipFacilityDataに追加
     const newFacility = {
         facilityId: formData.facilityId,
         facilityName: formData.facilityName,
@@ -358,7 +358,7 @@ function handleFacilityNewSubmit(event) {
         notes: formData.notes
     };
 
-    facilityMasterData.push(newFacility);
+    shipFacilityData.push(newFacility);
 
     // テーブルを再描画
     renderFacilityTableBody();
