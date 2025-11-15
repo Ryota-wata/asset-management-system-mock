@@ -1,0 +1,235 @@
+<!-- SHIP施設マスタ一覧画面 -->
+<div id="shipFacilityMasterPage" class="search-result-page">
+    <div class="result-container">
+        <!-- ヘッダー -->
+        <header class="result-header">
+            <div class="result-header-left">
+                <div class="logo">
+                    <div class="logo-icon">SHIP</div>
+                    <div class="result-header-title">SHIP施設マスタ</div>
+                </div>
+                <span class="result-count" id="facilityCount">0件</span>
+            </div>
+            <div class="result-header-actions">
+                <button class="header-icon-btn" onclick="toggleFacilityFilter()" title="フィルター表示/非表示">
+                    🔍
+                </button>
+                <button class="header-icon-btn" onclick="handleFacilityExport()" title="Excel出力">
+                    📊
+                </button>
+                <button class="header-btn success" onclick="showFacilityNewModal()">新規作成</button>
+                <button class="header-btn back" onclick="handleFacilityBack()">戻る</button>
+            </div>
+        </header>
+
+        <!-- フィルターヘッダー -->
+        <div class="filter-header" id="facilityFilterHeader">
+            <div class="filter-row-single">
+                <div class="filter-group">
+                    <label>施設ID</label>
+                    <input type="text" id="filterFacilityId" class="filter-input" placeholder="F-001" oninput="filterFacilityTable()">
+                </div>
+                <div class="filter-group">
+                    <label>施設名</label>
+                    <input type="text" id="filterFacilityName" class="filter-input" placeholder="施設名で検索" oninput="filterFacilityTable()">
+                </div>
+                <div class="filter-group">
+                    <label>都道府県</label>
+                    <select id="filterPrefecture" class="filter-select" onchange="filterFacilityTable()">
+                        <option value="">すべて</option>
+                        <option value="北海道">北海道</option>
+                        <option value="東京都">東京都</option>
+                        <option value="神奈川県">神奈川県</option>
+                        <option value="愛知県">愛知県</option>
+                        <option value="大阪府">大阪府</option>
+                        <option value="京都府">京都府</option>
+                        <option value="福岡県">福岡県</option>
+                        <option value="その他">その他</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>病床規模</label>
+                    <select id="filterBedSize" class="filter-select" onchange="filterFacilityTable()">
+                        <option value="">すべて</option>
+                        <option value="100未満">100床未満</option>
+                        <option value="100-200">100-200床</option>
+                        <option value="200-300">200-300床</option>
+                        <option value="300-500">300-500床</option>
+                        <option value="500以上">500床以上</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <button class="filter-reset-btn" onclick="resetFacilityFilter()">リセット</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- アクションバー -->
+        <div class="action-bar">
+            <span class="selection-info" id="facilitySelectionInfo">0件選択中</span>
+            <button class="action-btn delete-action" id="facilityDeleteBtn" onclick="handleFacilityDelete()" disabled>
+                選択した施設を削除
+            </button>
+        </div>
+
+        <!-- メインコンテンツエリア -->
+        <div class="main-content-area">
+            <div class="content-wrapper">
+                <!-- テーブル表示 -->
+                <div class="list-view" id="facilityListView">
+                    <table class="resizable-table data-table">
+                        <thead>
+                            <tr>
+                                <th><input type="checkbox" id="selectAllFacilities" onchange="handleSelectAllFacilities()"></th>
+                                <th>No.</th>
+                                <th>施設ID</th>
+                                <th>施設名</th>
+                                <th>施設名（カナ）</th>
+                                <th>都道府県</th>
+                                <th>市区町村</th>
+                                <th>病床規模</th>
+                                <th>電話番号</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="facilityTableBody">
+                            <!-- サンプルデータ -->
+                            <tr data-facility-id="F-001">
+                                <td><input type="checkbox" class="row-checkbox" onchange="handleFacilityRowSelect()"></td>
+                                <td>1</td>
+                                <td>F-001</td>
+                                <td>東京総合医療センター</td>
+                                <td>トウキョウソウゴウイリョウセンター</td>
+                                <td>東京都</td>
+                                <td>千代田区</td>
+                                <td>500床</td>
+                                <td>03-1234-5678</td>
+                                <td>
+                                    <button class="table-action-btn edit" onclick="showFacilityEditModal('F-001')">編集</button>
+                                    <button class="table-action-btn detail" onclick="showFacilityDetailModal('F-001')">詳細</button>
+                                </td>
+                            </tr>
+                            <tr data-facility-id="F-002">
+                                <td><input type="checkbox" class="row-checkbox" onchange="handleFacilityRowSelect()"></td>
+                                <td>2</td>
+                                <td>F-002</td>
+                                <td>大阪中央病院</td>
+                                <td>オオサカチュウオウビョウイン</td>
+                                <td>大阪府</td>
+                                <td>大阪市北区</td>
+                                <td>400床</td>
+                                <td>06-9876-5432</td>
+                                <td>
+                                    <button class="table-action-btn edit" onclick="showFacilityEditModal('F-002')">編集</button>
+                                    <button class="table-action-btn detail" onclick="showFacilityDetailModal('F-002')">詳細</button>
+                                </td>
+                            </tr>
+                            <tr data-facility-id="F-003">
+                                <td><input type="checkbox" class="row-checkbox" onchange="handleFacilityRowSelect()"></td>
+                                <td>3</td>
+                                <td>F-003</td>
+                                <td>横浜市立医療センター</td>
+                                <td>ヨコハマシリツイリョウセンター</td>
+                                <td>神奈川県</td>
+                                <td>横浜市</td>
+                                <td>350床</td>
+                                <td>045-1111-2222</td>
+                                <td>
+                                    <button class="table-action-btn edit" onclick="showFacilityEditModal('F-003')">編集</button>
+                                    <button class="table-action-btn detail" onclick="showFacilityDetailModal('F-003')">詳細</button>
+                                </td>
+                            </tr>
+                            <tr data-facility-id="F-004">
+                                <td><input type="checkbox" class="row-checkbox" onchange="handleFacilityRowSelect()"></td>
+                                <td>4</td>
+                                <td>F-004</td>
+                                <td>名古屋第一病院</td>
+                                <td>ナゴヤダイイチビョウイン</td>
+                                <td>愛知県</td>
+                                <td>名古屋市</td>
+                                <td>250床</td>
+                                <td>052-3333-4444</td>
+                                <td>
+                                    <button class="table-action-btn edit" onclick="showFacilityEditModal('F-004')">編集</button>
+                                    <button class="table-action-btn detail" onclick="showFacilityDetailModal('F-004')">詳細</button>
+                                </td>
+                            </tr>
+                            <tr data-facility-id="F-005">
+                                <td><input type="checkbox" class="row-checkbox" onchange="handleFacilityRowSelect()"></td>
+                                <td>5</td>
+                                <td>F-005</td>
+                                <td>京都大学医学部附属病院</td>
+                                <td>キョウトダイガクイガクブフゾクビョウイン</td>
+                                <td>京都府</td>
+                                <td>京都市左京区</td>
+                                <td>600床</td>
+                                <td>075-5555-6666</td>
+                                <td>
+                                    <button class="table-action-btn edit" onclick="showFacilityEditModal('F-005')">編集</button>
+                                    <button class="table-action-btn detail" onclick="showFacilityDetailModal('F-005')">詳細</button>
+                                </td>
+                            </tr>
+                            <tr data-facility-id="F-006">
+                                <td><input type="checkbox" class="row-checkbox" onchange="handleFacilityRowSelect()"></td>
+                                <td>6</td>
+                                <td>F-006</td>
+                                <td>福岡県立総合病院</td>
+                                <td>フクオカケンリツソウゴウビョウイン</td>
+                                <td>福岡県</td>
+                                <td>福岡市</td>
+                                <td>450床</td>
+                                <td>092-7777-8888</td>
+                                <td>
+                                    <button class="table-action-btn edit" onclick="showFacilityEditModal('F-006')">編集</button>
+                                    <button class="table-action-btn detail" onclick="showFacilityDetailModal('F-006')">詳細</button>
+                                </td>
+                            </tr>
+                            <tr data-facility-id="F-007">
+                                <td><input type="checkbox" class="row-checkbox" onchange="handleFacilityRowSelect()"></td>
+                                <td>7</td>
+                                <td>F-007</td>
+                                <td>札幌北海道医療センター</td>
+                                <td>サッポロホッカイドウイリョウセンター</td>
+                                <td>北海道</td>
+                                <td>札幌市</td>
+                                <td>300床</td>
+                                <td>011-9999-0000</td>
+                                <td>
+                                    <button class="table-action-btn edit" onclick="showFacilityEditModal('F-007')">編集</button>
+                                    <button class="table-action-btn detail" onclick="showFacilityDetailModal('F-007')">詳細</button>
+                                </td>
+                            </tr>
+                            <tr data-facility-id="F-008">
+                                <td><input type="checkbox" class="row-checkbox" onchange="handleFacilityRowSelect()"></td>
+                                <td>8</td>
+                                <td>F-008</td>
+                                <td>広島中央クリニック</td>
+                                <td>ヒロシマチュウオウクリニック</td>
+                                <td>広島県</td>
+                                <td>広島市</td>
+                                <td>150床</td>
+                                <td>082-1234-5678</td>
+                                <td>
+                                    <button class="table-action-btn edit" onclick="showFacilityEditModal('F-008')">編集</button>
+                                    <button class="table-action-btn detail" onclick="showFacilityDetailModal('F-008')">詳細</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ページネーション -->
+        <div class="pagination-area">
+            <div class="pagination-info">
+                全 <span id="totalFacilities">8</span> 件中 <span id="displayStart">1</span> - <span id="displayEnd">8</span> 件を表示
+            </div>
+            <div class="pagination-controls">
+                <button class="pagination-btn" onclick="goToPreviousPage()" disabled>前へ</button>
+                <span class="pagination-current">1 / 1</span>
+                <button class="pagination-btn" onclick="goToNextPage()" disabled>次へ</button>
+            </div>
+        </div>
+    </div>
+</div>

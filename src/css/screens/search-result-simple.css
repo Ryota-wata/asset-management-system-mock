@@ -1244,3 +1244,125 @@
             background: #7f8c8d;
         }
 
+/* SHIP施設マスタ一覧画面用の追加スタイル */
+
+/* テーブル内アクションボタン */
+.search-result-page .table-action-btn {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    margin-right: 5px;
+    transition: all 0.3s;
+}
+
+.search-result-page .table-action-btn.edit {
+    background: #3498db;
+    color: white;
+}
+
+.search-result-page .table-action-btn.edit:hover {
+    background: #2980b9;
+}
+
+.search-result-page .table-action-btn.detail {
+    background: #95a5a6;
+    color: white;
+}
+
+.search-result-page .table-action-btn.detail:hover {
+    background: #7f8c8d;
+}
+
+/* フィルターリセットボタン */
+.search-result-page .filter-reset-btn {
+    padding: 8px 16px;
+    background: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s;
+}
+
+.search-result-page .filter-reset-btn:hover {
+    background: #c0392b;
+}
+
+/* 削除アクションボタン */
+.search-result-page .delete-action {
+    background: #e74c3c;
+    color: white;
+}
+
+.search-result-page .delete-action:hover {
+    background: #c0392b;
+}
+
+/* ページネーションエリア */
+.search-result-page .pagination-area {
+    padding: 15px 20px;
+    border-top: 1px solid #ddd;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f8f9fa;
+    flex-shrink: 0;
+}
+
+.search-result-page .pagination-info {
+    font-size: 14px;
+    color: #666;
+}
+
+.search-result-page .pagination-controls {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.search-result-page .pagination-btn {
+    padding: 8px 16px;
+    background: #3498db;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s;
+}
+
+.search-result-page .pagination-btn:hover {
+    background: #2980b9;
+}
+
+.search-result-page .pagination-btn:disabled {
+    background: #95a5a6;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.search-result-page .pagination-current {
+    font-size: 14px;
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+/* フィルター入力フィールド */
+.search-result-page .filter-input {
+    width: 100%;
+    padding: 6px 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 13px;
+}
+
+.search-result-page .filter-input:focus {
+    outline: none;
+    border-color: #27ae60;
+    box-shadow: 0 0 0 2px rgba(39, 174, 96, 0.1);
+}

@@ -123,6 +123,9 @@
 
         <!-- 現有資産調査統合画面 -->
         <div id="assetSurveyIntegratedPage"></div>
+
+        <!-- SHIP施設マスタ一覧画面 -->
+        <div id="shipFacilityMasterPage"></div>
     </div>
 
     <!-- JavaScript読み込み（依存関係順） -->
@@ -137,6 +140,7 @@
     <script src="src/js/modals.js"></script>
     <script src="src/js/qr-management.js"></script>
     <script src="src/js/hospital-select.js"></script>
+    <script src="src/js/ship-facility-master.js"></script>
     <script src="src/js/asset-survey.js"></script>
     <script src="src/js/asset-survey-integrated.js"></script>
     <script src="src/js/asset-matching.js"></script>
@@ -184,7 +188,8 @@
                 { id: 'dataMatchingPage', file: 'data-matching.html' },
                 { id: 'assetMasterModal', file: 'asset-master-modal.html' },
                 { id: 'searchResultPage', file: 'search-result-simple.html' },
-                { id: 'assetSurveyIntegratedPage', file: 'asset-survey-integrated.html' }
+                { id: 'assetSurveyIntegratedPage', file: 'asset-survey-integrated.html' },
+                { id: 'shipFacilityMasterPage', file: 'ship-facility-master.html' }
             ];
 
             // すべての画面を並行して読み込み

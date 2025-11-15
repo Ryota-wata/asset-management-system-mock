@@ -181,6 +181,16 @@ function closeMasterModal() {
 function selectMasterMenu(menuName) {
     closeMasterModal();
 
+    // 「SHIP施設マスタ」の場合はSHIP施設マスタ画面へ遷移
+    if (menuName === 'SHIP施設マスタ') {
+        if (typeof showShipFacilityMaster === 'function') {
+            showShipFacilityMaster();
+        } else {
+            alert('SHIP施設マスタ画面が読み込まれていません');
+        }
+        return;
+    }
+
     // 「個別施設マスタ」の場合は病院選択モーダルを表示
     if (menuName === '個別施設マスタ') {
         if (typeof showHospitalSelectModal === 'function') {
