@@ -79,9 +79,9 @@ function renderRfqTable() {
         if (rfq.status === '依頼書作成待') {
             actionButtons += `<button class="rfq-action-btn pdf" onclick="generateRfqPdfDirect('${rfq.rfqNo}')">依頼書発行</button>`;
         } else if (rfq.status === '見積依頼済') {
-            actionButtons += `<button class="rfq-action-btn register" onclick="registerQuotationDirect('${rfq.rfqNo}')">見積登録</button>`;
+            actionButtons += `<button class="rfq-action-btn register" onclick="goToQuotationRegistration('${rfq.rfqNo}')">見積明細登録</button>`;
         } else if (rfq.status === '見積登録済') {
-            actionButtons += `<button class="rfq-action-btn" onclick="requestApproval('${rfq.rfqNo}')">承認依頼</button>`;
+            actionButtons += `<button class="rfq-action-btn databox" onclick="goToQuotationDataBox('${rfq.rfqNo}')">見積DataBOX</button>`;
         }
 
         return `
@@ -305,16 +305,38 @@ function registerQuotation() {
     registerQuotationDirect(currentRfqDetail.rfqNo);
 }
 
-// 見積書登録（直接）
+// 見積明細登録画面への遷移
+function goToQuotationRegistration(rfqNo) {
+    document.getElementById('rfqListPage').classList.remove('active');
+    document.getElementById('quotationRegistrationPage').classList.add('active');
+
+    // 見積明細登録画面を初期化
+    if (typeof window.initQuotationRegistrationPage === 'function') {
+        window.initQuotationRegistrationPage();
+
+        // 見積依頼Noを事前選択
+        const select = document.getElementById('selectedRfqNo');
+        if (select) {
+            select.value = rfqNo;
+            window.onRfqNoChange();
+        }
+    }
+}
+
+// 見積明細DataBOX画面への遷移
+function goToQuotationDataBox(rfqNo) {
+    document.getElementById('rfqListPage').classList.remove('active');
+    document.getElementById('quotationDataBoxPage').classList.add('active');
+
+    // 見積明細DataBOX画面を初期化
+    if (typeof window.initQuotationDataBoxPage === 'function') {
+        window.initQuotationDataBoxPage(rfqNo);
+    }
+}
+
+// 見積書登録（直接）- 後方互換性のため残す
 function registerQuotationDirect(rfqNo) {
-    const rfq = rfqListData.find(r => r.rfqNo === rfqNo);
-    if (!rfq) return;
-
-    alert(`見積書登録画面に遷移します\n\n見積依頼No: ${rfq.rfqNo}\n購入先: ${rfq.vendor}\n\n※この画面は今後実装予定です（AI-OCR機能を含む）`);
-
-    // TODO: 見積明細登録画面への遷移
-    // closeRfqDetailModal();
-    // showQuotationRegistrationPage(rfqNo);
+    goToQuotationRegistration(rfqNo);
 }
 
 // 承認依頼
@@ -361,6 +383,8 @@ window.generateRfqPdf = generateRfqPdf;
 window.generateRfqPdfDirect = generateRfqPdfDirect;
 window.registerQuotation = registerQuotation;
 window.registerQuotationDirect = registerQuotationDirect;
+window.goToQuotationRegistration = goToQuotationRegistration;
+window.goToQuotationDataBox = goToQuotationDataBox;
 window.requestApproval = requestApproval;
 window.goToApplicationListFromRfq = goToApplicationListFromRfq;
 window.handleBackFromRfqList = handleBackFromRfqList;

@@ -1,0 +1,363 @@
+/**
+ * 見積明細DataBOX画面のスタイル
+ */
+
+.quotation-databox-page {
+    display: none;
+    width: 100%;
+    min-height: 100vh;
+    background: #f5f7fa;
+}
+
+.quotation-databox-page.active {
+    display: block;
+}
+
+/* タブナビゲーション */
+.databox-tabs {
+    display: flex;
+    background: white;
+    border-bottom: 2px solid #ddd;
+    padding: 0 24px;
+}
+
+.databox-tab {
+    padding: 16px 24px;
+    background: transparent;
+    border: none;
+    border-bottom: 3px solid transparent;
+    font-size: 15px;
+    font-weight: 600;
+    color: #7f8c8d;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.databox-tab:hover {
+    color: #3498db;
+    background: #f8f9fa;
+}
+
+.databox-tab.active {
+    color: #3498db;
+    border-bottom-color: #3498db;
+    background: #f8f9fa;
+}
+
+/* セクション */
+.databox-section {
+    background: white;
+    border-radius: 8px;
+    padding: 24px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.databox-section-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #ecf0f1;
+}
+
+/* 情報グリッド */
+.databox-info-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.info-label {
+    font-size: 12px;
+    color: #7f8c8d;
+    font-weight: 600;
+}
+
+.info-value {
+    font-size: 15px;
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+/* タブコンテンツ */
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* 見積明細テーブル（DataBOX用） */
+.quotation-details-table-wrapper {
+    overflow-x: auto;
+}
+
+.quotation-details-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border: 1px solid #ddd;
+}
+
+.quotation-details-table thead {
+    background: #34495e;
+    color: white;
+}
+
+.quotation-details-table th {
+    padding: 12px 8px;
+    text-align: left;
+    font-size: 13px;
+    font-weight: 600;
+    border: 1px solid #34495e;
+}
+
+.quotation-details-table td {
+    padding: 12px 8px;
+    border: 1px solid #ddd;
+    font-size: 13px;
+}
+
+.quotation-details-table .app-no {
+    font-weight: 700;
+    color: #3498db;
+}
+
+.quotation-details-table .item-name {
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.quotation-details-table .qr-code {
+    font-family: 'Courier New', monospace;
+    font-weight: 600;
+    color: #27ae60;
+}
+
+.quotation-details-table .qr-code.not-assigned {
+    color: #95a5a6;
+    font-style: italic;
+}
+
+/* アクションボタン */
+.action-btn {
+    padding: 10px 20px;
+    border: 1px solid #3498db;
+    border-radius: 4px;
+    background: white;
+    color: #3498db;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.action-btn:hover {
+    background: #3498db;
+    color: white;
+}
+
+.action-btn.secondary {
+    border-color: #95a5a6;
+    color: #95a5a6;
+}
+
+.action-btn.secondary:hover {
+    background: #95a5a6;
+    color: white;
+}
+
+.order-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-start;
+}
+
+/* 発注確定セクション */
+.order-confirmation-section {
+    border: 2px solid #27ae60;
+    background: #f0fdf4;
+}
+
+.order-confirmation-content {
+    padding: 20px;
+}
+
+.confirmation-desc {
+    font-size: 14px;
+    color: #2c3e50;
+    margin-bottom: 12px;
+}
+
+.confirmation-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 20px 0;
+}
+
+.confirmation-list li {
+    font-size: 14px;
+    color: #2c3e50;
+    padding: 8px 0;
+    border-bottom: 1px solid #e8f5e9;
+}
+
+.confirmation-list li:last-child {
+    border-bottom: none;
+}
+
+.order-confirm-btn {
+    width: 100%;
+    padding: 16px 24px;
+    background: #27ae60;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.order-confirm-btn:hover {
+    background: #229954;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
+}
+
+/* 発注確定モーダル */
+.confirmation-status {
+    text-align: center;
+    padding: 20px;
+    background: #f0fdf4;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.status-icon {
+    font-size: 64px;
+    margin-bottom: 12px;
+}
+
+.confirmation-status h3 {
+    margin: 0;
+    font-size: 18px;
+    color: #27ae60;
+}
+
+#processingResults {
+    padding: 16px;
+    background: #f8f9fa;
+    border-radius: 4px;
+    font-size: 14px;
+    line-height: 1.8;
+}
+
+#processingResults ul {
+    margin: 8px 0;
+    padding-left: 20px;
+}
+
+#processingResults li {
+    margin: 4px 0;
+}
+
+/* ドキュメントリスト */
+.document-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.document-item {
+    display: grid;
+    grid-template-columns: 40px 1fr auto;
+    gap: 16px;
+    align-items: center;
+    padding: 16px;
+    background: #f8f9fa;
+    border-radius: 6px;
+    border: 1px solid #ecf0f1;
+}
+
+.document-icon {
+    font-size: 32px;
+}
+
+.document-info {
+    flex: 1;
+}
+
+.document-name {
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 4px;
+}
+
+.document-filename {
+    font-size: 12px;
+    color: #7f8c8d;
+    font-family: 'Courier New', monospace;
+}
+
+.document-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.doc-btn {
+    padding: 8px 16px;
+    border: 1px solid #3498db;
+    border-radius: 4px;
+    background: white;
+    color: #3498db;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.doc-btn:hover {
+    background: #3498db;
+    color: white;
+}
+
+.doc-btn.primary {
+    background: #3498db;
+    color: white;
+}
+
+.doc-btn.primary:hover {
+    background: #2980b9;
+}
+
+/* フィルター */
+.filter-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.filter-row label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: #2c3e50;
+    cursor: pointer;
+}
+
+.filter-row input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}

@@ -28,6 +28,8 @@
     <link rel="stylesheet" href="src/css/screens/search-result-simple.css">
     <link rel="stylesheet" href="src/css/screens/application-list.css">
     <link rel="stylesheet" href="src/css/screens/rfq-list.css">
+    <link rel="stylesheet" href="src/css/screens/quotation-registration.css">
+    <link rel="stylesheet" href="src/css/screens/quotation-databox.css">
     <link rel="stylesheet" href="src/css/screens/asset-survey-integrated.css">
     <link rel="stylesheet" href="src/css/screens/ship-facility-form.css">
 
@@ -146,6 +148,12 @@
 
         <!-- SHIP資産マスタ編集モーダル -->
         <div id="assetEditModal"></div>
+
+        <!-- 見積明細登録画面 -->
+        <div id="quotationRegistrationPage"></div>
+
+        <!-- 見積明細DataBOX画面 -->
+        <div id="quotationDataBoxPage"></div>
     </div>
 
     <!-- JavaScript読み込み（依存関係順） -->
@@ -181,6 +189,8 @@
     <script src="src/js/search-result-simple.js"></script>
     <script src="src/js/application-list.js"></script>
     <script src="src/js/rfq-list.js"></script>
+    <script src="src/js/quotation-registration.js"></script>
+    <script src="src/js/quotation-databox.js"></script>
     <script src="src/js/filters.js"></script>
     <script src="src/js/table-resize.js"></script>
     <script src="src/js/init.js"></script>
@@ -231,7 +241,9 @@
                 { id: 'facilityEditModal', file: 'ship-facility-edit-modal.html' },
                 { id: 'shipAssetMasterPage', file: 'ship-asset-master.html' },
                 { id: 'assetNewModal', file: 'ship-asset-new-modal.html' },
-                { id: 'assetEditModal', file: 'ship-asset-edit-modal.html' }
+                { id: 'assetEditModal', file: 'ship-asset-edit-modal.html' },
+                { id: 'quotationRegistrationPage', file: 'quotation-registration.html' },
+                { id: 'quotationDataBoxPage', file: 'quotation-databox.html' }
             ];
 
             // すべての画面を並行して読み込み
