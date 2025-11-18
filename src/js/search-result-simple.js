@@ -1672,3 +1672,4 @@ window.editSelectedAssetItem = editSelectedAssetItem;
 window.addSelectedAssetFromDropdowns = addSelectedAssetFromDropdowns;
 window.resetMasterFilter = resetMasterFilter;
 window.removeAssetFromSelection = removeAssetFromSelection;
+window.toggleNavMenu = toggleNavMenu;
