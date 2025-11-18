@@ -15,10 +15,26 @@
                 <button class="header-btn primary" onclick="showUploadQuotationModal()">
                     <span class="btn-icon">📄</span>見積書アップロード
                 </button>
-                <button class="header-btn success" onclick="goToOcrResultPageTest()" style="background: #e74c3c; border-color: #e74c3c;">
-                    <span class="btn-icon">🧪</span>テスト: OCR結果画面へ
-                </button>
-                <button class="header-btn" onclick="goToRfqListFromDataBox()">見積依頼一覧へ</button>
+                <div class="nav-menu">
+                    <button class="nav-menu-btn" onclick="toggleNavMenu()">
+                        <span>📑 メニュー</span>
+                        <span class="nav-menu-arrow">▼</span>
+                    </button>
+                    <div class="nav-menu-dropdown" id="navMenuDropdown">
+                        <div class="nav-menu-item" onclick="goToApplicationList()">
+                            <span class="nav-menu-item-icon">📝</span>
+                            <span>申請一覧</span>
+                        </div>
+                        <div class="nav-menu-item" onclick="goToRfqList()">
+                            <span class="nav-menu-item-icon">📋</span>
+                            <span>見積依頼一覧</span>
+                        </div>
+                        <div class="nav-menu-item" onclick="goToQuotationDataBox()">
+                            <span class="nav-menu-item-icon">📦</span>
+                            <span>見積DataBox</span>
+                        </div>
+                    </div>
+                </div>
                 <button class="header-btn back" onclick="handleBackFromDataBox()">戻る</button>
             </div>
         </header>

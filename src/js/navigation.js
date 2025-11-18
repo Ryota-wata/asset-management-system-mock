@@ -328,6 +328,75 @@ function goToQuotationDataBoxFromSearch() {
     }
 }
 
+/**
+ * 汎用: 申請一覧画面へ遷移（どの画面からでも）
+ */
+function goToApplicationList() {
+    // 現在アクティブな画面を取得
+    const activePages = ['searchResultPage', 'rfqListPage', 'quotationDataBoxPage', 'mainContainer'];
+    const currentPage = activePages.find(pageId => {
+        const page = document.getElementById(pageId);
+        return page && page.classList.contains('active');
+    });
+
+    if (currentPage) {
+        transitionPage(currentPage, 'applicationListPage');
+    } else {
+        // フォールバック: mainContainerから遷移
+        transitionPage('mainContainer', 'applicationListPage');
+    }
+
+    if (typeof window.initApplicationListPage === 'function') {
+        window.initApplicationListPage();
+    }
+}
+
+/**
+ * 汎用: 見積依頼一覧画面へ遷移（どの画面からでも）
+ */
+function goToRfqList() {
+    // 現在アクティブな画面を取得
+    const activePages = ['searchResultPage', 'applicationListPage', 'quotationDataBoxPage', 'mainContainer'];
+    const currentPage = activePages.find(pageId => {
+        const page = document.getElementById(pageId);
+        return page && page.classList.contains('active');
+    });
+
+    if (currentPage) {
+        transitionPage(currentPage, 'rfqListPage');
+    } else {
+        // フォールバック: mainContainerから遷移
+        transitionPage('mainContainer', 'rfqListPage');
+    }
+
+    if (typeof window.initRfqListPage === 'function') {
+        window.initRfqListPage();
+    }
+}
+
+/**
+ * 汎用: 見積DataBox画面へ遷移（どの画面からでも）
+ */
+function goToQuotationDataBox() {
+    // 現在アクティブな画面を取得
+    const activePages = ['searchResultPage', 'applicationListPage', 'rfqListPage', 'mainContainer'];
+    const currentPage = activePages.find(pageId => {
+        const page = document.getElementById(pageId);
+        return page && page.classList.contains('active');
+    });
+
+    if (currentPage) {
+        transitionPage(currentPage, 'quotationDataBoxPage');
+    } else {
+        // フォールバック: mainContainerから遷移
+        transitionPage('mainContainer', 'quotationDataBoxPage');
+    }
+
+    if (typeof window.initQuotationDataBoxPage === 'function') {
+        window.initQuotationDataBoxPage();
+    }
+}
+
 // グローバルスコープに関数を公開
 window.transitionPage = transitionPage;
 window.handleQRManagement = handleQRManagement;
@@ -352,6 +421,7 @@ window.handleViewSearchResult = handleViewSearchResult;
 window.handleBackFromSearchResult = handleBackFromSearchResult;
 window.goToApplicationList = goToApplicationList;
 window.goToRfqList = goToRfqList;
+window.goToQuotationDataBox = goToQuotationDataBox;
 window.goToQuotationDataBoxDirect = goToQuotationDataBoxDirect;
 window.goToOcrResultPageTest = goToOcrResultPageTest;
 window.goToMatchingCheckTest = goToMatchingCheckTest;
