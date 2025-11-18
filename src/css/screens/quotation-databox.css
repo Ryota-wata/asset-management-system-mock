@@ -1,5 +1,5 @@
 /**
- * 見積明細DataBOX画面のスタイル
+ * 見積DataBox画面（PDF保管庫）のスタイル
  */
 
 .quotation-databox-page {
@@ -62,29 +62,69 @@
     border-bottom: 2px solid #ecf0f1;
 }
 
-/* 情報グリッド */
-.databox-info-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
+/* フィルターセクション */
+.filter-section {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
 }
 
-.info-item {
+.filter-row {
+    display: flex;
+    gap: 16px;
+    align-items: flex-end;
+    flex-wrap: wrap;
+}
+
+.filter-item {
+    flex: 1;
+    min-width: 200px;
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 8px;
 }
 
-.info-label {
-    font-size: 12px;
+.filter-item label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #495057;
+}
+
+.filter-item input {
+    padding: 10px 12px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.filter-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.filter-btn {
+    padding: 10px 20px;
+    border: 1px solid #3498db;
+    border-radius: 4px;
+    background: #3498db;
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.filter-btn:hover {
+    background: #2980b9;
+}
+
+.filter-btn.secondary {
+    background: white;
     color: #7f8c8d;
-    font-weight: 600;
+    border-color: #ddd;
 }
 
-.info-value {
-    font-size: 15px;
-    color: #2c3e50;
-    font-weight: 600;
+.filter-btn.secondary:hover {
+    background: #f8f9fa;
 }
 
 /* タブコンテンツ */
@@ -96,268 +136,237 @@
     display: block;
 }
 
-/* 見積明細テーブル（DataBOX用） */
-.quotation-details-table-wrapper {
-    overflow-x: auto;
-}
-
-.quotation-details-table {
-    width: 100%;
-    border-collapse: collapse;
-    background: white;
-    border: 1px solid #ddd;
-}
-
-.quotation-details-table thead {
-    background: #34495e;
-    color: white;
-}
-
-.quotation-details-table th {
-    padding: 12px 8px;
-    text-align: left;
-    font-size: 13px;
-    font-weight: 600;
-    border: 1px solid #34495e;
-}
-
-.quotation-details-table td {
-    padding: 12px 8px;
-    border: 1px solid #ddd;
-    font-size: 13px;
-}
-
-.quotation-details-table .app-no {
-    font-weight: 700;
-    color: #3498db;
-}
-
-.quotation-details-table .item-name {
-    font-weight: 600;
-    color: #2c3e50;
-}
-
-.quotation-details-table .qr-code {
-    font-family: 'Courier New', monospace;
-    font-weight: 600;
-    color: #27ae60;
-}
-
-.quotation-details-table .qr-code.not-assigned {
-    color: #95a5a6;
-    font-style: italic;
-}
-
-/* アクションボタン */
-.action-btn {
-    padding: 10px 20px;
-    border: 1px solid #3498db;
-    border-radius: 4px;
-    background: white;
-    color: #3498db;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.action-btn:hover {
-    background: #3498db;
-    color: white;
-}
-
-.action-btn.secondary {
-    border-color: #95a5a6;
-    color: #95a5a6;
-}
-
-.action-btn.secondary:hover {
-    background: #95a5a6;
-    color: white;
-}
-
-.order-actions {
-    display: flex;
-    gap: 12px;
-    justify-content: flex-start;
-}
-
-/* 発注確定セクション */
-.order-confirmation-section {
-    border: 2px solid #27ae60;
-    background: #f0fdf4;
-}
-
-.order-confirmation-content {
-    padding: 20px;
-}
-
-.confirmation-desc {
-    font-size: 14px;
-    color: #2c3e50;
-    margin-bottom: 12px;
-}
-
-.confirmation-list {
-    list-style: none;
-    padding: 0;
-    margin: 0 0 20px 0;
-}
-
-.confirmation-list li {
-    font-size: 14px;
-    color: #2c3e50;
-    padding: 8px 0;
-    border-bottom: 1px solid #e8f5e9;
-}
-
-.confirmation-list li:last-child {
-    border-bottom: none;
-}
-
-.order-confirm-btn {
-    width: 100%;
-    padding: 16px 24px;
-    background: #27ae60;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    font-size: 16px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.order-confirm-btn:hover {
-    background: #229954;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
-}
-
-/* 発注確定モーダル */
-.confirmation-status {
-    text-align: center;
-    padding: 20px;
-    background: #f0fdf4;
-    border-radius: 8px;
-    margin-bottom: 20px;
-}
-
-.status-icon {
-    font-size: 64px;
-    margin-bottom: 12px;
-}
-
-.confirmation-status h3 {
-    margin: 0;
-    font-size: 18px;
-    color: #27ae60;
-}
-
-#processingResults {
-    padding: 16px;
-    background: #f8f9fa;
-    border-radius: 4px;
-    font-size: 14px;
-    line-height: 1.8;
-}
-
-#processingResults ul {
-    margin: 8px 0;
-    padding-left: 20px;
-}
-
-#processingResults li {
-    margin: 4px 0;
-}
-
-/* ドキュメントリスト */
-.document-list {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.document-item {
+/* 見積書グリッド（カードレイアウト） */
+.quotation-grid {
     display: grid;
-    grid-template-columns: 40px 1fr auto;
-    gap: 16px;
-    align-items: center;
-    padding: 16px;
-    background: #f8f9fa;
-    border-radius: 6px;
-    border: 1px solid #ecf0f1;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 20px;
+    margin-top: 16px;
 }
 
-.document-icon {
-    font-size: 32px;
+.quotation-card {
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
 }
 
-.document-info {
-    flex: 1;
+.quotation-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    transform: translateY(-2px);
+    border-color: #3498db;
 }
 
-.document-name {
+.quotation-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 16px;
+}
+
+.quotation-phase-badge {
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.quotation-phase-badge.estimate {
+    background: #e3f2fd;
+    color: #1976d2;
+}
+
+.quotation-phase-badge.final {
+    background: #e8f5e9;
+    color: #388e3c;
+}
+
+.quotation-ocr-status {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 11px;
     font-weight: 600;
+}
+
+.quotation-ocr-status.pending {
+    background: #fff3e0;
+    color: #f57c00;
+}
+
+.quotation-ocr-status.completed {
+    background: #e8f5e9;
+    color: #388e3c;
+}
+
+.quotation-card-body {
+    margin-bottom: 16px;
+}
+
+.quotation-rfq-no {
+    font-size: 18px;
+    font-weight: 700;
     color: #2c3e50;
+    margin-bottom: 8px;
+}
+
+.quotation-vendor {
+    font-size: 14px;
+    color: #7f8c8d;
     margin-bottom: 4px;
 }
 
-.document-filename {
-    font-size: 12px;
-    color: #7f8c8d;
-    font-family: 'Courier New', monospace;
+.quotation-date {
+    font-size: 13px;
+    color: #95a5a6;
 }
 
-.document-actions {
+.quotation-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 12px;
+    border-top: 1px solid #ecf0f1;
+}
+
+.quotation-pdf-icon {
+    font-size: 24px;
+}
+
+.quotation-actions {
     display: flex;
     gap: 8px;
 }
 
-.doc-btn {
-    padding: 8px 16px;
+.quotation-action-btn {
+    padding: 6px 12px;
     border: 1px solid #3498db;
     border-radius: 4px;
     background: white;
     color: #3498db;
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s;
 }
 
-.doc-btn:hover {
+.quotation-action-btn:hover {
     background: #3498db;
     color: white;
 }
 
-.doc-btn.primary {
-    background: #3498db;
+.quotation-action-btn.danger {
+    border-color: #e74c3c;
+    color: #e74c3c;
+}
+
+.quotation-action-btn.danger:hover {
+    background: #e74c3c;
     color: white;
 }
 
-.doc-btn.primary:hover {
-    background: #2980b9;
+/* 空状態 */
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: #95a5a6;
 }
 
-/* フィルター */
-.filter-row {
-    display: flex;
-    align-items: center;
-    gap: 8px;
+.empty-icon {
+    font-size: 64px;
+    margin-bottom: 16px;
 }
 
-.filter-row label {
-    display: flex;
-    align-items: center;
-    gap: 8px;
+.empty-text {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.empty-subtext {
     font-size: 14px;
-    color: #2c3e50;
-    cursor: pointer;
 }
 
-.filter-row input[type="checkbox"] {
-    width: 18px;
-    height: 18px;
-    cursor: pointer;
+/* アップロードフォーム */
+.form-section {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-group label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.form-group .required {
+    color: #e74c3c;
+}
+
+.form-group input[type="text"],
+.form-group input[type="date"],
+.form-group input[type="file"],
+.form-group select {
+    padding: 10px 12px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.form-group input[type="file"] {
+    padding: 8px;
+}
+
+.form-help {
+    font-size: 12px;
+    color: #7f8c8d;
+    margin-top: 4px;
+}
+
+/* 詳細モーダル */
+.quotation-detail-section {
+    margin-bottom: 20px;
+}
+
+.quotation-detail-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid #ecf0f1;
+}
+
+.quotation-detail-row:last-child {
+    border-bottom: none;
+}
+
+.quotation-detail-row .label {
+    font-weight: 600;
+    color: #7f8c8d;
+}
+
+.quotation-detail-row .value {
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.pdf-preview {
+    width: 100%;
+    height: 400px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: #f8f9fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #7f8c8d;
 }

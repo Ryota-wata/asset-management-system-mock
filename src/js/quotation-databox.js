@@ -1,282 +1,293 @@
 /**
- * 見積明細DataBOX画面のJavaScript
+ * 見積DataBox画面（PDF保管庫）のJavaScript
  */
 
 // グローバル変数
-let currentRfqNo = null;
-let currentRfqData = null;
-let estimateQuotation = null;
-let finalQuotation = null;
-let orderDetailsData = [];
+let quotationDocuments = []; // アップロードされた見積書
+let filteredQuotationDocuments = [];
+let currentActiveTab = 'estimate';
+let currentQuotationDetail = null;
 
 // 初期化
-function initQuotationDataBoxPage(rfqNo) {
-    console.log('=== Initializing Quotation DataBOX Page ===', rfqNo);
+function initQuotationDataBoxPage() {
+    console.log('=== Initializing Quotation DataBox Page ===');
 
-    currentRfqNo = rfqNo;
-
-    // 見積依頼データを取得
-    loadRfqData();
-
-    // 基本情報を表示
-    displayBasicInfo();
-
-    // 見積データをロード
-    loadQuotationData();
-
-    // デフォルトで概算見積タブを表示
-    switchDataBoxTab('estimate');
-}
-
-// 見積依頼データを取得
-function loadRfqData() {
-    if (!currentRfqNo || typeof window.rfqRecords === 'undefined') {
-        return;
+    // サンプルデータがあればロード
+    if (typeof window.quotationDocuments !== 'undefined') {
+        quotationDocuments = window.quotationDocuments;
     }
 
-    currentRfqData = window.rfqRecords.find(r => r.rfqNo === currentRfqNo);
-    console.log('Current RFQ Data:', currentRfqData);
+    filteredQuotationDocuments = [...quotationDocuments];
+
+    // 見積依頼Noのオプションをロード
+    loadRfqNoOptions();
+
+    // テーブルをレンダリング
+    renderQuotationGrid();
+    updateQuotationCount();
 }
 
-// 基本情報を表示
-function displayBasicInfo() {
-    document.getElementById('databoxRfqNo').textContent = currentRfqNo || '-';
-    document.getElementById('infoRfqNo').textContent = currentRfqNo || '-';
+// 見積依頼Noのオプションをロード
+function loadRfqNoOptions() {
+    const select = document.getElementById('uploadRfqNo');
+    if (!select) return;
 
-    if (!currentRfqData) return;
+    select.innerHTML = '<option value="">選択してください</option>';
 
-    document.getElementById('infoVendor').textContent = currentRfqData.vendor || '-';
-    document.getElementById('infoApplicationCount').textContent = `${currentRfqData.applicationIds?.length || 0}件`;
+    if (typeof window.rfqRecords === 'undefined') return;
 
-    // 概算見積・最終見積の金額表示
-    if (estimateQuotation) {
-        document.getElementById('infoEstimateAmount').textContent =
-            `¥${estimateQuotation.totalAmount.toLocaleString()} (登録済)`;
-    }
-
-    if (finalQuotation) {
-        document.getElementById('infoFinalAmount').textContent =
-            `¥${finalQuotation.totalAmount.toLocaleString()} (登録済)`;
-    }
-
-    // 発注状態
-    const orderStatus = currentRfqData.orderConfirmed ? '発注済' : '未発注';
-    document.getElementById('infoOrderStatus').textContent = orderStatus;
+    window.rfqRecords.forEach(rfq => {
+        const option = document.createElement('option');
+        option.value = rfq.rfqNo;
+        option.textContent = `${rfq.rfqNo} - ${rfq.vendor}`;
+        select.appendChild(option);
+    });
 }
 
-// 見積データをロード
-function loadQuotationData() {
-    if (!currentRfqNo || typeof window.quotationData === 'undefined') {
-        return;
-    }
+// 見積書グリッドをレンダリング
+function renderQuotationGrid() {
+    const estimateGrid = document.getElementById('estimateQuotationGrid');
+    const finalGrid = document.getElementById('finalQuotationGrid');
+    const allGrid = document.getElementById('allQuotationGrid');
 
-    const quotations = window.quotationData[currentRfqNo] || [];
-
-    // 概算見積と最終見積を分ける
-    estimateQuotation = quotations.find(q => q.phase === '概算');
-    finalQuotation = quotations.find(q => q.phase === '最終');
-
-    console.log('Estimate:', estimateQuotation);
-    console.log('Final:', finalQuotation);
-
-    // 各タブの内容を更新
-    displayEstimateQuotation();
-    displayFinalQuotation();
-    displayOrderDetails();
-}
-
-// 概算見積を表示
-function displayEstimateQuotation() {
-    const content = document.getElementById('estimateQuotationContent');
-
-    if (!estimateQuotation) {
-        content.innerHTML = '<p style="text-align: center; padding: 40px; color: #95a5a6;">概算見積が未登録です</p>';
-        return;
-    }
-
-    content.innerHTML = `
-        <div class="quotation-summary">
-            <div class="summary-row">
-                <span class="label">見積業者:</span>
-                <span class="value">${estimateQuotation.vendor}</span>
+    // 概算見積
+    const estimateQuotations = filteredQuotationDocuments.filter(q => q.phase === '概算');
+    if (estimateQuotations.length === 0) {
+        estimateGrid.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-icon">📋</div>
+                <div class="empty-text">概算見積がアップロードされていません</div>
+                <div class="empty-subtext">「見積書アップロード」ボタンから追加してください</div>
             </div>
-            <div class="summary-row">
-                <span class="label">見積日:</span>
-                <span class="value">${estimateQuotation.quotationDate}</span>
-            </div>
-            <div class="summary-row">
-                <span class="label">合計金額:</span>
-                <span class="value amount">¥${estimateQuotation.totalAmount.toLocaleString()}</span>
-            </div>
-        </div>
-        <div class="quotation-details-table-wrapper" style="margin-top: 16px;">
-            <table class="quotation-details-table">
-                <thead>
-                    <tr>
-                        <th>品目</th>
-                        <th>メーカー</th>
-                        <th>型式</th>
-                        <th>数量</th>
-                        <th>単価</th>
-                        <th>金額</th>
-                        <th>明細区分</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${estimateQuotation.details.map(d => `
-                        <tr>
-                            <td class="item-name">${d.itemName}</td>
-                            <td>${d.maker}</td>
-                            <td>${d.model}</td>
-                            <td>${d.quantity}</td>
-                            <td>¥${d.unitPrice.toLocaleString()}</td>
-                            <td>¥${d.amount.toLocaleString()}</td>
-                            <td>${d.category}</td>
-                        </tr>
-                    `).join('')}
-                </tbody>
-            </table>
-        </div>
-    `;
-}
-
-// 最終見積を表示
-function displayFinalQuotation() {
-    const content = document.getElementById('finalQuotationContent');
-
-    if (!finalQuotation) {
-        content.innerHTML = '<p style="text-align: center; padding: 40px; color: #95a5a6;">最終見積が未登録です</p>';
-        return;
-    }
-
-    content.innerHTML = `
-        <div class="quotation-summary">
-            <div class="summary-row">
-                <span class="label">見積業者:</span>
-                <span class="value">${finalQuotation.vendor}</span>
-            </div>
-            <div class="summary-row">
-                <span class="label">見積日:</span>
-                <span class="value">${finalQuotation.quotationDate}</span>
-            </div>
-            <div class="summary-row">
-                <span class="label">合計金額:</span>
-                <span class="value amount">¥${finalQuotation.totalAmount.toLocaleString()}</span>
-            </div>
-        </div>
-        <div class="quotation-details-table-wrapper" style="margin-top: 16px;">
-            <table class="quotation-details-table">
-                <thead>
-                    <tr>
-                        <th>品目</th>
-                        <th>メーカー</th>
-                        <th>型式</th>
-                        <th>数量</th>
-                        <th>単価</th>
-                        <th>金額</th>
-                        <th>明細区分</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${finalQuotation.details.map(d => `
-                        <tr>
-                            <td class="item-name">${d.itemName}</td>
-                            <td>${d.maker}</td>
-                            <td>${d.model}</td>
-                            <td>${d.quantity}</td>
-                            <td>¥${d.unitPrice.toLocaleString()}</td>
-                            <td>¥${d.amount.toLocaleString()}</td>
-                            <td>${d.category}</td>
-                        </tr>
-                    `).join('')}
-                </tbody>
-            </table>
-        </div>
-    `;
-}
-
-// 発注管理タブ - 明細表示（申請情報と統合）
-function displayOrderDetails() {
-    if (!finalQuotation || !currentRfqData) {
-        document.getElementById('orderDetailsBody').innerHTML = `
-            <tr>
-                <td colspan="8" style="text-align: center; padding: 40px; color: #95a5a6;">
-                    最終見積を登録してください
-                </td>
-            </tr>
         `;
-        return;
+    } else {
+        estimateGrid.innerHTML = estimateQuotations.map(q => createQuotationCard(q)).join('');
     }
 
-    // 申請データと見積明細を統合
-    const applications = window.applicationListData.filter(app =>
-        currentRfqData.applicationIds.includes(app.id)
-    );
+    // 最終見積
+    const finalQuotations = filteredQuotationDocuments.filter(q => q.phase === '最終');
+    if (finalQuotations.length === 0) {
+        finalGrid.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-icon">📋</div>
+                <div class="empty-text">最終見積がアップロードされていません</div>
+                <div class="empty-subtext">「見積書アップロード」ボタンから追加してください</div>
+            </div>
+        `;
+    } else {
+        finalGrid.innerHTML = finalQuotations.map(q => createQuotationCard(q)).join('');
+    }
 
-    orderDetailsData = applications.map((app, index) => {
-        const detail = finalQuotation.details[index] || {};
+    // すべて
+    if (filteredQuotationDocuments.length === 0) {
+        allGrid.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-icon">📋</div>
+                <div class="empty-text">見積書がアップロードされていません</div>
+                <div class="empty-subtext">「見積書アップロード」ボタンから追加してください</div>
+            </div>
+        `;
+    } else {
+        allGrid.innerHTML = filteredQuotationDocuments.map(q => createQuotationCard(q)).join('');
+    }
+}
 
-        return {
-            applicationNo: app.applicationNo,
-            itemName: app.asset.name,
-            maker: detail.maker || '-',
-            model: detail.model || app.asset.model || '-',
-            quantity: app.quantity,
-            facility: `${app.facility.building} ${app.facility.floor || ''} ${app.facility.department || ''}`.trim(),
-            amount: detail.amount || 0,
-            qrCode: null,
-            isIndividual: detail.category === '本体', // 本体のみ個体管理
-            application: app,
-            detail: detail
-        };
+// 見積書カードを作成
+function createQuotationCard(quotation) {
+    const phaseClass = quotation.phase === '概算' ? 'estimate' : 'final';
+    const ocrStatusClass = quotation.ocrStatus === '完了' ? 'completed' : 'pending';
+    const ocrStatusText = quotation.ocrStatus === '完了' ? 'OCR完了' : 'OCR未実行';
+
+    return `
+        <div class="quotation-card" onclick="showQuotationDetail('${quotation.id}')">
+            <div class="quotation-card-header">
+                <span class="quotation-phase-badge ${phaseClass}">${quotation.phase}</span>
+                <span class="quotation-ocr-status ${ocrStatusClass}">${ocrStatusText}</span>
+            </div>
+            <div class="quotation-card-body">
+                <div class="quotation-rfq-no">${quotation.rfqNo}</div>
+                <div class="quotation-vendor">${quotation.vendor}</div>
+                <div class="quotation-date">見積日: ${quotation.quotationDate}</div>
+                <div class="quotation-date">アップロード: ${quotation.uploadDate}</div>
+            </div>
+            <div class="quotation-card-footer">
+                <div class="quotation-pdf-icon">📄</div>
+                <div class="quotation-actions">
+                    <button class="quotation-action-btn" onclick="event.stopPropagation(); showQuotationDetail('${quotation.id}')">詳細</button>
+                    <button class="quotation-action-btn danger" onclick="event.stopPropagation(); deleteQuotation('${quotation.id}')">削除</button>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+// 見積書詳細を表示
+function showQuotationDetail(quotationId) {
+    const quotation = quotationDocuments.find(q => q.id === quotationId);
+    if (!quotation) return;
+
+    currentQuotationDetail = quotation;
+
+    const content = document.getElementById('quotationDetailContent');
+    const ocrStatusBadge = quotation.ocrStatus === '完了'
+        ? '<span class="quotation-ocr-status completed">OCR完了</span>'
+        : '<span class="quotation-ocr-status pending">OCR未実行</span>';
+
+    content.innerHTML = `
+        <div class="quotation-detail-section">
+            <div class="quotation-detail-row">
+                <span class="label">見積依頼No</span>
+                <span class="value">${quotation.rfqNo}</span>
+            </div>
+            <div class="quotation-detail-row">
+                <span class="label">見積区分</span>
+                <span class="value"><span class="quotation-phase-badge ${quotation.phase === '概算' ? 'estimate' : 'final'}">${quotation.phase}</span></span>
+            </div>
+            <div class="quotation-detail-row">
+                <span class="label">業者名</span>
+                <span class="value">${quotation.vendor}</span>
+            </div>
+            <div class="quotation-detail-row">
+                <span class="label">見積日</span>
+                <span class="value">${quotation.quotationDate}</span>
+            </div>
+            <div class="quotation-detail-row">
+                <span class="label">アップロード日</span>
+                <span class="value">${quotation.uploadDate}</span>
+            </div>
+            <div class="quotation-detail-row">
+                <span class="label">OCR状態</span>
+                <span class="value">${ocrStatusBadge}</span>
+            </div>
+        </div>
+
+        <div class="quotation-detail-section">
+            <div style="font-weight: 600; margin-bottom: 12px;">PDFプレビュー</div>
+            <div class="pdf-preview">
+                <div>
+                    📄<br>
+                    ${quotation.filename}<br>
+                    <small>※実際のシステムではPDFプレビューが表示されます</small>
+                </div>
+            </div>
+        </div>
+    `;
+
+    // OCR実行ボタンの表示制御
+    const ocrBtn = document.getElementById('executeOcrBtn');
+    if (quotation.ocrStatus === '完了') {
+        ocrBtn.textContent = 'OCR結果を表示';
+    } else {
+        ocrBtn.textContent = 'AI-OCR実行';
+    }
+
+    document.getElementById('quotationDetailModal').classList.add('active');
+}
+
+// 見積書詳細モーダルを閉じる
+function closeQuotationDetailModal() {
+    document.getElementById('quotationDetailModal').classList.remove('active');
+    currentQuotationDetail = null;
+}
+
+// モーダル外クリック
+function handleDetailModalOutsideClick(event) {
+    if (event.target.id === 'quotationDetailModal') {
+        closeQuotationDetailModal();
+    }
+}
+
+// AI-OCR実行
+function executeOcr() {
+    if (!currentQuotationDetail) return;
+
+    if (currentQuotationDetail.ocrStatus === '完了') {
+        // OCR結果画面へ遷移
+        closeQuotationDetailModal();
+        goToOcrResultPage(currentQuotationDetail.id);
+    } else {
+        // OCR実行
+        if (confirm(`${currentQuotationDetail.rfqNo} の見積書をAI-OCRで処理しますか？`)) {
+            // OCR処理シミュレーション
+            currentQuotationDetail.ocrStatus = '完了';
+            currentQuotationDetail.ocrDate = new Date().toISOString().split('T')[0];
+
+            alert('AI-OCR処理が完了しました\n\n抽出された明細を確認してください');
+
+            closeQuotationDetailModal();
+            renderQuotationGrid();
+
+            // OCR結果画面へ遷移
+            goToOcrResultPage(currentQuotationDetail.id);
+        }
+    }
+}
+
+// OCR結果画面への遷移
+function goToOcrResultPage(quotationId) {
+    document.getElementById('quotationDataBoxPage').classList.remove('active');
+    document.getElementById('quotationOcrResultPage').classList.add('active');
+
+    if (typeof window.initQuotationOcrResultPage === 'function') {
+        window.initQuotationOcrResultPage(quotationId);
+    }
+}
+
+// 見積書削除
+function deleteQuotation(quotationId) {
+    const quotation = quotationDocuments.find(q => q.id === quotationId);
+    if (!quotation) return;
+
+    if (confirm(`見積書を削除しますか？\n\n見積依頼No: ${quotation.rfqNo}\n業者: ${quotation.vendor}`)) {
+        quotationDocuments = quotationDocuments.filter(q => q.id !== quotationId);
+        window.quotationDocuments = quotationDocuments;
+        filteredQuotationDocuments = [...quotationDocuments];
+
+        renderQuotationGrid();
+        updateQuotationCount();
+
+        alert('見積書を削除しました');
+    }
+}
+
+// 件数を更新
+function updateQuotationCount() {
+    const countElement = document.getElementById('quotationCount');
+    if (countElement) {
+        countElement.textContent = `${filteredQuotationDocuments.length}件`;
+    }
+}
+
+// フィルタリング
+function filterQuotations() {
+    const rfqNo = document.getElementById('filterRfqNo')?.value.trim().toLowerCase();
+    const vendor = document.getElementById('filterVendor')?.value.trim().toLowerCase();
+    const uploadDate = document.getElementById('filterUploadDate')?.value;
+
+    filteredQuotationDocuments = quotationDocuments.filter(q => {
+        if (rfqNo && !q.rfqNo.toLowerCase().includes(rfqNo)) return false;
+        if (vendor && !q.vendor.toLowerCase().includes(vendor)) return false;
+        if (uploadDate && q.uploadDate !== uploadDate) return false;
+        return true;
     });
 
-    renderOrderDetailsTable();
-    updateQrCountInfo();
+    renderQuotationGrid();
+    updateQuotationCount();
 }
 
-// 発注明細テーブルをレンダリング
-function renderOrderDetailsTable() {
-    const tbody = document.getElementById('orderDetailsBody');
-    const filterIndividual = document.getElementById('filterIndividualOnly')?.checked || false;
+// フィルタークリア
+function clearQuotationFilters() {
+    document.getElementById('filterRfqNo').value = '';
+    document.getElementById('filterVendor').value = '';
+    document.getElementById('filterUploadDate').value = '';
 
-    let displayData = orderDetailsData;
-    if (filterIndividual) {
-        displayData = orderDetailsData.filter(d => d.isIndividual);
-    }
-
-    tbody.innerHTML = displayData.map(data => `
-        <tr>
-            <td class="app-no">${data.applicationNo}</td>
-            <td class="item-name">${data.itemName}</td>
-            <td>${data.maker}</td>
-            <td>${data.model}</td>
-            <td>${data.quantity}</td>
-            <td>${data.facility}</td>
-            <td style="text-align: right; font-weight: 600;">¥${data.amount.toLocaleString()}</td>
-            <td>
-                ${data.qrCode
-                    ? `<span class="qr-code">${data.qrCode}</span>`
-                    : '<span class="qr-code not-assigned">未採番</span>'
-                }
-            </td>
-        </tr>
-    `).join('');
-}
-
-// QRコード件数情報を更新
-function updateQrCountInfo() {
-    const individualCount = orderDetailsData.filter(d => d.isIndividual).length;
-    document.getElementById('qrCountInfo').textContent = `✓ QRコード自動採番（${individualCount}件）`;
-}
-
-// フィルター
-function filterOrderDetails() {
-    renderOrderDetailsTable();
+    filterQuotations();
 }
 
 // タブ切り替え
 function switchDataBoxTab(tabName) {
+    currentActiveTab = tabName;
+
     // タブボタンのアクティブ状態を切り替え
     document.querySelectorAll('.databox-tab').forEach(tab => {
         tab.classList.remove('active');
@@ -292,155 +303,67 @@ function switchDataBoxTab(tabName) {
         document.getElementById('estimateTabContent').classList.add('active');
     } else if (tabName === 'final') {
         document.getElementById('finalTabContent').classList.add('active');
-    } else if (tabName === 'order') {
-        document.getElementById('orderTabContent').classList.add('active');
-    } else if (tabName === 'documents') {
-        document.getElementById('documentsTabContent').classList.add('active');
+    } else if (tabName === 'all') {
+        document.getElementById('allTabContent').classList.add('active');
     }
 }
 
-// 発注確定処理
-function confirmOrder() {
-    if (!finalQuotation) {
-        alert('最終見積を登録してください');
-        return;
-    }
-
-    const individualItems = orderDetailsData.filter(d => d.isIndividual);
-
-    if (individualItems.length === 0) {
-        alert('個体管理品目がありません');
-        return;
-    }
-
-    const confirmMsg = `発注確定処理を実行します。\n\n` +
-        `個体管理品目: ${individualItems.length}件\n` +
-        `QRコード自動採番します。\n\n` +
-        `よろしいですか？`;
-
-    if (!confirm(confirmMsg)) {
-        return;
-    }
-
-    // QRコード採番
-    const assets = individualItems.map((item, index) => {
-        const qrCode = `QR-${new Date().getFullYear()}-${String(index + 1).padStart(4, '0')}`;
-        item.qrCode = qrCode;
-
-        return {
-            qrCode: qrCode,
-            qrIssuedDate: new Date().toISOString().split('T')[0],
-
-            // 申請情報
-            applicationNo: item.applicationNo,
-            applicationDate: item.application.applicationDate,
-            applicationType: item.application.applicationType,
-            itemName: item.itemName,
-            quantity: item.quantity,
-            facility: item.application.facility,
-            executionYear: item.application.executionYear,
-            purpose: item.application.freeInput,
-
-            // 見積明細情報
-            rfqNo: currentRfqNo,
-            vendor: finalQuotation.vendor,
-            maker: item.maker,
-            model: item.model,
-            quotationPrice: item.amount,
-            quotationDate: finalQuotation.quotationDate,
-            itemCategory: item.detail.category,
-
-            // 発注情報
-            orderDate: new Date().toISOString().split('T')[0],
-
-            // 検収情報（後から追加）
-            inspectionDate: null,
-            serialNumber: null,
-            photos: [],
-
-            // 固定資産情報（後から追加）
-            fixedAssetNo: null,
-
-            // 状態管理
-            status: '仮登録' // 仮登録 / 検収済 / 資産登録完了
-        };
-    });
-
-    // 個体管理リスト原本に仮登録
-    if (!window.assetMasterList) {
-        window.assetMasterList = [];
-    }
-    window.assetMasterList.push(...assets);
-
-    // 見積依頼レコードを更新
-    if (currentRfqData) {
-        currentRfqData.orderConfirmed = true;
-        currentRfqData.orderDate = new Date().toISOString().split('T')[0];
-    }
-
-    console.log('Assets registered:', assets);
-
-    // 発注確定モーダルを表示
-    showOrderConfirmModal(assets);
-
-    // テーブルを更新
-    renderOrderDetailsTable();
-    displayBasicInfo();
+// アップロードモーダルを表示
+function showUploadQuotationModal() {
+    loadRfqNoOptions();
+    document.getElementById('uploadQuotationModal').classList.add('active');
 }
 
-// 発注確定モーダルを表示
-function showOrderConfirmModal(assets) {
-    const resultsHtml = `
-        <div style="line-height: 1.8;">
-            ✓ QRコード採番: ${assets.length}件<br>
-            <ul style="margin: 8px 0; padding-left: 20px;">
-                ${assets.map(a => `<li>${a.qrCode} (${a.itemName})</li>`).join('')}
-            </ul>
-            ✓ 個体管理リスト原本へ仮登録完了<br>
-            ✓ 申請情報 + 見積情報を統合<br>
-            ✓ 帳票生成完了
-        </div>
-    `;
-
-    document.getElementById('processingResults').innerHTML = resultsHtml;
-
-    // ドキュメント名を設定
-    document.getElementById('orderDocName').textContent = `${currentRfqNo}_発注書.pdf`;
-    document.getElementById('qrLabelDocName').textContent = `${currentRfqNo}_QRラベル.pdf`;
-    document.getElementById('inspectionDocName').textContent = `${currentRfqNo}_検収書.pdf`;
-    document.getElementById('assetRequestDocName').textContent = `${currentRfqNo}_固定資産登録依頼書.pdf`;
-
-    document.getElementById('orderConfirmModal').classList.add('active');
-}
-
-// モーダルを閉じる
-function closeOrderConfirmModal() {
-    document.getElementById('orderConfirmModal').classList.remove('active');
+// アップロードモーダルを閉じる
+function closeUploadQuotationModal() {
+    document.getElementById('uploadQuotationModal').classList.remove('active');
+    document.getElementById('uploadQuotationForm').reset();
 }
 
 // モーダル外クリック
-function handleOrderConfirmModalOutsideClick(event) {
-    if (event.target.id === 'orderConfirmModal') {
-        closeOrderConfirmModal();
+function handleUploadModalOutsideClick(event) {
+    if (event.target.id === 'uploadQuotationModal') {
+        closeUploadQuotationModal();
     }
 }
 
-// ドキュメント操作（プレビュー・ダウンロード）
-function previewDocument(type) {
-    alert(`${type} のプレビュー機能は今後実装予定です`);
-}
+// 見積書アップロード処理
+function handleUploadQuotation(event) {
+    event.preventDefault();
 
-function downloadDocument(type) {
-    alert(`${type} のPDF出力機能は今後実装予定です`);
-}
+    const rfqNo = document.getElementById('uploadRfqNo').value;
+    const phase = document.getElementById('uploadPhase').value;
+    const vendor = document.getElementById('uploadVendor').value;
+    const quotationDate = document.getElementById('uploadQuotationDate').value;
+    const file = document.getElementById('uploadFile').files[0];
 
-function downloadAllDocuments() {
-    alert('すべての帳票をダウンロード機能は今後実装予定です');
-}
+    if (!file) {
+        alert('PDFファイルを選択してください');
+        return;
+    }
 
-// 設置情報編集
-function editFacilityInfo() {
-    alert('設置情報編集機能は今後実装予定です');
+    // 見積書データを作成
+    const newQuotation = {
+        id: `Q-${Date.now()}`,
+        rfqNo: rfqNo,
+        phase: phase,
+        vendor: vendor,
+        quotationDate: quotationDate,
+        uploadDate: new Date().toISOString().split('T')[0],
+        filename: file.name,
+        ocrStatus: '未実行',
+        ocrDate: null
+    };
+
+    quotationDocuments.push(newQuotation);
+    window.quotationDocuments = quotationDocuments;
+    filteredQuotationDocuments = [...quotationDocuments];
+
+    renderQuotationGrid();
+    updateQuotationCount();
+    closeUploadQuotationModal();
+
+    alert(`見積書をアップロードしました\n\n見積依頼No: ${rfqNo}\n業者: ${vendor}`);
 }
 
 // 画面遷移
@@ -460,15 +383,19 @@ function handleBackFromDataBox() {
 }
 
 // グローバルに公開
+window.quotationDocuments = quotationDocuments;
 window.initQuotationDataBoxPage = initQuotationDataBoxPage;
 window.switchDataBoxTab = switchDataBoxTab;
-window.filterOrderDetails = filterOrderDetails;
-window.confirmOrder = confirmOrder;
-window.closeOrderConfirmModal = closeOrderConfirmModal;
-window.handleOrderConfirmModalOutsideClick = handleOrderConfirmModalOutsideClick;
-window.previewDocument = previewDocument;
-window.downloadDocument = downloadDocument;
-window.downloadAllDocuments = downloadAllDocuments;
-window.editFacilityInfo = editFacilityInfo;
+window.showUploadQuotationModal = showUploadQuotationModal;
+window.closeUploadQuotationModal = closeUploadQuotationModal;
+window.handleUploadModalOutsideClick = handleUploadModalOutsideClick;
+window.handleUploadQuotation = handleUploadQuotation;
+window.showQuotationDetail = showQuotationDetail;
+window.closeQuotationDetailModal = closeQuotationDetailModal;
+window.handleDetailModalOutsideClick = handleDetailModalOutsideClick;
+window.executeOcr = executeOcr;
+window.deleteQuotation = deleteQuotation;
+window.filterQuotations = filterQuotations;
+window.clearQuotationFilters = clearQuotationFilters;
 window.goToRfqListFromDataBox = goToRfqListFromDataBox;
 window.handleBackFromDataBox = handleBackFromDataBox;

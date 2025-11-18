@@ -1,0 +1,358 @@
+/**
+ * 発注書・検収書テンプレート出力画面のスタイル
+ */
+
+.order-template-page {
+    display: none;
+    width: 100%;
+    min-height: 100vh;
+    background: #f5f7fa;
+}
+
+.order-template-page.active {
+    display: block;
+}
+
+/* セクション */
+.template-section {
+    background: white;
+    border-radius: 8px;
+    padding: 24px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.template-section-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #ecf0f1;
+}
+
+/* サマリーセクション */
+.summary-section {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+}
+
+.summary-section .template-section-title {
+    color: white;
+    border-bottom-color: rgba(255,255,255,0.3);
+}
+
+.summary-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+.summary-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 8px;
+    backdrop-filter: blur(10px);
+}
+
+.summary-icon {
+    font-size: 40px;
+}
+
+.summary-content {
+    flex: 1;
+}
+
+.summary-label {
+    font-size: 12px;
+    opacity: 0.9;
+    margin-bottom: 4px;
+}
+
+.summary-value {
+    font-size: 18px;
+    font-weight: 700;
+}
+
+/* テーブル */
+.template-table-wrapper {
+    overflow-x: auto;
+}
+
+.template-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+.template-table thead {
+    background: #34495e;
+    color: white;
+}
+
+.template-table th {
+    padding: 12px 8px;
+    text-align: left;
+    font-weight: 600;
+    border: 1px solid #2c3e50;
+}
+
+.template-table td {
+    padding: 12px 8px;
+    border: 1px solid #ddd;
+    vertical-align: middle;
+}
+
+.template-table tbody tr:hover {
+    background: #f8f9fa;
+}
+
+/* ドキュメントセクション */
+.document-section {
+    background: #f8f9fa;
+    border: 2px solid #e9ecef;
+}
+
+.document-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.document-card {
+    background: white;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 24px;
+    transition: all 0.2s;
+}
+
+.document-card:hover {
+    border-color: #3498db;
+    box-shadow: 0 4px 12px rgba(52, 152, 219, 0.2);
+}
+
+.document-icon {
+    font-size: 48px;
+    text-align: center;
+    margin-bottom: 16px;
+}
+
+.document-info {
+    margin-bottom: 20px;
+}
+
+.document-name {
+    font-size: 18px;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 8px;
+}
+
+.document-description {
+    font-size: 14px;
+    color: #7f8c8d;
+    line-height: 1.6;
+    margin-bottom: 12px;
+}
+
+.document-details {
+    background: #f8f9fa;
+    padding: 12px;
+    border-radius: 4px;
+}
+
+.detail-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    font-size: 12px;
+}
+
+.detail-label {
+    font-weight: 600;
+    color: #7f8c8d;
+}
+
+.detail-value {
+    color: #2c3e50;
+    font-weight: 600;
+    text-align: right;
+}
+
+/* ドキュメントアクション */
+.document-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.doc-action-btn {
+    flex: 1;
+    padding: 12px 20px;
+    border: 2px solid #3498db;
+    border-radius: 6px;
+    background: white;
+    color: #3498db;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.doc-action-btn:hover {
+    background: #3498db;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
+}
+
+.doc-action-btn.generate {
+    background: #3498db;
+    color: white;
+}
+
+.doc-action-btn.generate:hover {
+    background: #2980b9;
+}
+
+/* 次のステップセクション */
+.next-step-section {
+    background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+    color: white;
+    border: none;
+}
+
+.next-step-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+}
+
+.next-step-icon {
+    font-size: 64px;
+    margin-bottom: 16px;
+}
+
+.next-step-text h3 {
+    margin: 0 0 8px 0;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.next-step-text p {
+    margin: 0 0 24px 0;
+    font-size: 14px;
+    line-height: 1.6;
+    opacity: 0.95;
+}
+
+.next-step-btn {
+    padding: 16px 40px;
+    background: white;
+    color: #11998e;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.next-step-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+}
+
+/* 成功モーダル */
+.template-success-content {
+    text-align: center;
+}
+
+.success-icon {
+    font-size: 64px;
+    margin-bottom: 16px;
+}
+
+.success-message h3 {
+    margin: 0 0 8px 0;
+    font-size: 18px;
+    color: #2c3e50;
+}
+
+.success-message p {
+    margin: 0 0 20px 0;
+    font-size: 14px;
+    color: #7f8c8d;
+}
+
+.generated-files-list {
+    text-align: left;
+    background: #f8f9fa;
+    padding: 16px;
+    border-radius: 6px;
+}
+
+.file-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    margin-bottom: 8px;
+}
+
+.file-item:last-child {
+    margin-bottom: 0;
+}
+
+.file-icon {
+    font-size: 24px;
+}
+
+.file-name {
+    flex: 1;
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.file-download-btn {
+    padding: 6px 12px;
+    border: 1px solid #3498db;
+    border-radius: 4px;
+    background: #3498db;
+    color: white;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.file-download-btn:hover {
+    background: #2980b9;
+}
+
+/* レスポンシブ */
+@media (max-width: 1200px) {
+    .summary-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .document-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .summary-grid {
+        grid-template-columns: 1fr;
+    }
+}

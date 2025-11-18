@@ -1,0 +1,185 @@
+<!-- 発注書・検収書テンプレート出力画面 -->
+<div id="orderTemplatePage" class="order-template-page">
+
+    <div class="result-container">
+        <!-- ヘッダー -->
+        <header class="result-header">
+            <div class="result-header-left">
+                <div class="logo">
+                    <div class="logo-icon">📋</div>
+                    <div class="result-header-title">発注書・検収書テンプレート出力</div>
+                </div>
+                <span class="result-count" id="templateItemCount">-</span>
+            </div>
+            <div class="result-header-actions">
+                <button class="header-btn primary" onclick="generateAllTemplates()">
+                    <span class="btn-icon">📄</span>すべての帳票を生成
+                </button>
+                <button class="header-btn back" onclick="handleBackFromTemplate()">戻る</button>
+            </div>
+        </header>
+
+        <!-- メインコンテンツエリア -->
+        <div class="main-content-area">
+            <div class="content-wrapper">
+
+                <!-- サマリーセクション -->
+                <div class="template-section summary-section">
+                    <div class="template-section-title">📊 発注サマリー</div>
+                    <div class="summary-grid">
+                        <div class="summary-card">
+                            <div class="summary-icon">📄</div>
+                            <div class="summary-content">
+                                <div class="summary-label">見積依頼No</div>
+                                <div class="summary-value" id="summaryRfqNo">-</div>
+                            </div>
+                        </div>
+                        <div class="summary-card">
+                            <div class="summary-icon">🏢</div>
+                            <div class="summary-content">
+                                <div class="summary-label">業者</div>
+                                <div class="summary-value" id="summaryVendor">-</div>
+                            </div>
+                        </div>
+                        <div class="summary-card">
+                            <div class="summary-icon">📦</div>
+                            <div class="summary-content">
+                                <div class="summary-label">個体管理品目数</div>
+                                <div class="summary-value" id="summaryItemCount">-</div>
+                            </div>
+                        </div>
+                        <div class="summary-card">
+                            <div class="summary-icon">💰</div>
+                            <div class="summary-content">
+                                <div class="summary-label">合計金額</div>
+                                <div class="summary-value" id="summaryTotalAmount">-</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 発注明細テーブル -->
+                <div class="template-section">
+                    <div class="template-section-title">📦 発注明細一覧（申請情報統合済み）</div>
+
+                    <div class="template-table-wrapper">
+                        <table class="template-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 60px;">No</th>
+                                    <th style="width: 200px;">品目<br><small>(見積)</small></th>
+                                    <th style="width: 150px;">メーカー/型式<br><small>(見積)</small></th>
+                                    <th style="width: 80px;">数量<br><small>(申請)</small></th>
+                                    <th style="width: 150px;">設置先<br><small>(申請)</small></th>
+                                    <th style="width: 100px;">実施年度<br><small>(申請)</small></th>
+                                    <th style="width: 120px;">金額<br><small>(見積)</small></th>
+                                    <th style="width: 150px;">申請No<br><small>(申請)</small></th>
+                                </tr>
+                            </thead>
+                            <tbody id="templateDetailsBody">
+                                <!-- JavaScriptで動的生成 -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 帳票出力セクション -->
+                <div class="template-section document-section">
+                    <div class="template-section-title">📄 出力帳票</div>
+
+                    <div class="document-grid">
+                        <!-- 発注書 -->
+                        <div class="document-card">
+                            <div class="document-icon">📑</div>
+                            <div class="document-info">
+                                <div class="document-name">発注書</div>
+                                <div class="document-description">
+                                    見積明細と申請情報を統合した発注書を生成します
+                                </div>
+                                <div class="document-details">
+                                    <div class="detail-item">
+                                        <span class="detail-label">ファイル名:</span>
+                                        <span class="detail-value" id="orderDocFilename">-</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label">含まれる情報:</span>
+                                        <span class="detail-value">見積明細、設置先、実施年度、申請No</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="document-actions">
+                                <button class="doc-action-btn preview" onclick="previewTemplate('order')">プレビュー</button>
+                                <button class="doc-action-btn generate" onclick="generateTemplate('order')">生成</button>
+                            </div>
+                        </div>
+
+                        <!-- 検収書 -->
+                        <div class="document-card">
+                            <div class="document-icon">✅</div>
+                            <div class="document-info">
+                                <div class="document-name">検収書テンプレート</div>
+                                <div class="document-description">
+                                    納品時に使用する検収書のテンプレートを生成します
+                                </div>
+                                <div class="document-details">
+                                    <div class="detail-item">
+                                        <span class="detail-label">ファイル名:</span>
+                                        <span class="detail-value" id="inspectionDocFilename">-</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label">含まれる情報:</span>
+                                        <span class="detail-value">発注明細、検収欄（空欄）、写真添付欄</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="document-actions">
+                                <button class="doc-action-btn preview" onclick="previewTemplate('inspection')">プレビュー</button>
+                                <button class="doc-action-btn generate" onclick="generateTemplate('inspection')">生成</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 次のステップ -->
+                <div class="template-section next-step-section">
+                    <div class="next-step-content">
+                        <div class="next-step-icon">🚀</div>
+                        <div class="next-step-text">
+                            <h3>次のステップ: 個体管理リスト原本への登録</h3>
+                            <p>発注書・検収書を生成した後、個体管理リスト原本にレコードを追加します。<br>
+                            申請情報をベースに、QRコードNoを紐付けて登録されます。</p>
+                        </div>
+                        <button class="next-step-btn" onclick="registerToAssetMaster()">
+                            個体管理リスト原本へ登録
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- 帳票生成完了モーダル -->
+    <div class="modal" id="templateGeneratedModal" onclick="handleTemplateModalOutsideClick(event)">
+        <div class="modal-content" style="max-width: 600px;">
+            <h2 class="modal-title">帳票生成完了</h2>
+
+            <div class="template-success-content">
+                <div class="success-icon">✅</div>
+                <div class="success-message">
+                    <h3>すべての帳票を生成しました</h3>
+                    <p>以下のファイルがダウンロード可能です</p>
+                </div>
+
+                <div class="generated-files-list" id="generatedFilesList">
+                    <!-- JavaScriptで動的生成 -->
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button class="modal-button" onclick="closeTemplateGeneratedModal()" style="flex: 1;">閉じる</button>
+            </div>
+        </div>
+    </div>
+
+</div>

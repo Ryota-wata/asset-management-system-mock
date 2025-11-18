@@ -1,0 +1,123 @@
+<!-- AI-OCR明細抽出結果画面 -->
+<div id="quotationOcrResultPage" class="quotation-ocr-result-page">
+
+    <div class="result-container">
+        <!-- ヘッダー -->
+        <header class="result-header">
+            <div class="result-header-left">
+                <div class="logo">
+                    <div class="logo-icon">AI</div>
+                    <div class="result-header-title">AI-OCR明細抽出結果</div>
+                </div>
+                <span class="result-count" id="ocrExtractedCount">-</span>
+            </div>
+            <div class="result-header-actions">
+                <button class="header-btn primary" onclick="goToMatchingCheck()">
+                    <span class="btn-icon">🔗</span>申請との紐付けへ
+                </button>
+                <button class="header-btn back" onclick="handleBackFromOcrResult()">戻る</button>
+            </div>
+        </header>
+
+        <!-- メインコンテンツエリア -->
+        <div class="main-content-area">
+            <div class="content-wrapper">
+
+                <!-- 基本情報セクション -->
+                <div class="ocr-section info-section">
+                    <div class="ocr-section-title">📋 見積書情報</div>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <span class="label">見積依頼No</span>
+                            <span class="value" id="ocrRfqNo">-</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="label">業者名</span>
+                            <span class="value" id="ocrVendor">-</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="label">見積日</span>
+                            <span class="value" id="ocrQuotationDate">-</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="label">OCR実行日</span>
+                            <span class="value" id="ocrExecutionDate">-</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="label">抽出明細数</span>
+                            <span class="value" id="ocrDetailCount">-</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="label">個体管理品目数</span>
+                            <span class="value" id="ocrIndividualCount">-</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AI-OCR抽出明細テーブル -->
+                <div class="ocr-section">
+                    <div class="ocr-section-title">🤖 AI-OCR抽出明細（資産マスタ突き合わせ済み）</div>
+
+                    <div class="ocr-help-box">
+                        <div class="help-icon">💡</div>
+                        <div class="help-text">
+                            <strong>資産マスタとの自動マッチング:</strong>
+                            OCRで抽出された品目名を資産マスタと照合し、個体管理品目を自動特定しています。
+                            マッチング精度が低い場合は、次の画面で手動で修正できます。
+                        </div>
+                    </div>
+
+                    <div class="ocr-table-wrapper">
+                        <table class="ocr-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 50px;">No</th>
+                                    <th style="width: 200px;">品目名<br><small>(OCR抽出)</small></th>
+                                    <th style="width: 150px;">メーカー<br><small>(OCR抽出)</small></th>
+                                    <th style="width: 150px;">型式<br><small>(OCR抽出)</small></th>
+                                    <th style="width: 80px;">数量</th>
+                                    <th style="width: 120px;">単価</th>
+                                    <th style="width: 120px;">金額</th>
+                                    <th style="width: 200px;">資産マスタマッチング</th>
+                                    <th style="width: 150px;">個体管理</th>
+                                    <th style="width: 120px;">信頼度</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ocrDetailsBody">
+                                <!-- JavaScriptで動的生成 -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="ocr-summary">
+                        <div class="summary-item">
+                            <span class="summary-label">合計金額:</span>
+                            <span class="summary-value" id="ocrTotalAmount">-</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">個体管理品目数:</span>
+                            <span class="summary-value individual" id="ocrIndividualItemCount">-</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- アクションセクション -->
+                <div class="ocr-section action-section">
+                    <div class="action-section-content">
+                        <div class="action-icon">🔗</div>
+                        <div class="action-text">
+                            <h3>次のステップ: 申請との紐付け</h3>
+                            <p>抽出された個体管理品目を、申請一覧の品目と紐付けます。<br>
+                            AIが自動的に候補を提示しますので、内容を確認・修正してください。</p>
+                        </div>
+                        <button class="action-primary-btn" onclick="goToMatchingCheck()">
+                            申請との紐付けチェックへ進む
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
