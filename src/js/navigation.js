@@ -429,3 +429,77 @@ window.goToOrderTemplateTest = goToOrderTemplateTest;
 window.goToApplicationListFromSearch = goToApplicationListFromSearch;
 window.goToRfqListFromSearch = goToRfqListFromSearch;
 window.goToQuotationDataBoxFromSearch = goToQuotationDataBoxFromSearch;
+
+/**
+ * 汎用ナビゲーションメニューの制御
+ * アクティブな画面を自動判定してメニューを開閉する
+ */
+function toggleNavMenu() {
+    // アクティブな画面を特定
+    const activePageClasses = [
+        'search-result-page',
+        'application-list-page',
+        'rfq-list-page',
+        'quotation-databox-page'
+    ];
+
+    let activePageClass = null;
+    for (const pageClass of activePageClasses) {
+        const page = document.querySelector(`.${pageClass}.active`);
+        if (page) {
+            activePageClass = pageClass;
+            break;
+        }
+    }
+
+    if (!activePageClass) {
+        console.warn('No active page found for toggleNavMenu');
+        return;
+    }
+
+    // アクティブな画面のメニューボタンとドロップダウンを取得
+    const btn = document.querySelector(`.${activePageClass} .nav-menu-btn`);
+    const menu = document.querySelector(`.${activePageClass} .nav-menu-dropdown`);
+
+    if (!btn || !menu) {
+        console.warn(`Menu elements not found for ${activePageClass}`);
+        return;
+    }
+
+    // メニューの開閉
+    const isActive = menu.classList.contains('active');
+
+    if (!isActive) {
+        btn.classList.add('active');
+        menu.classList.add('active');
+    } else {
+        btn.classList.remove('active');
+        menu.classList.remove('active');
+    }
+}
+
+/**
+ * ドロップダウンメニューの外側クリックで閉じる
+ * 全画面共通のイベントリスナー
+ */
+let navMenuClickListenerAdded = false;
+
+if (!navMenuClickListenerAdded) {
+    document.addEventListener('click', function(event) {
+        // メニュー内のクリックは無視
+        if (event.target.closest('.nav-menu')) {
+            return;
+        }
+
+        // 全画面のメニューを閉じる
+        const allMenuBtns = document.querySelectorAll('.nav-menu-btn');
+        const allMenuDropdowns = document.querySelectorAll('.nav-menu-dropdown');
+
+        allMenuBtns.forEach(btn => btn.classList.remove('active'));
+        allMenuDropdowns.forEach(menu => menu.classList.remove('active'));
+    });
+
+    navMenuClickListenerAdded = true;
+}
+
+window.toggleNavMenu = toggleNavMenu;

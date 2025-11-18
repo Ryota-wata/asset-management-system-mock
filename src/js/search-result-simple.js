@@ -555,24 +555,7 @@ let searchResultFilter_assetMaster = null;
             if (navMenuBtn) navMenuBtn.classList.remove('active');
             if (navMenuDropdown) navMenuDropdown.classList.remove('active');
         }
-        
-        // ナビゲーションメニューの制御
-        function toggleNavMenu() {
-            const btn = document.querySelector('.nav-menu-btn');
-            const menu = document.getElementById('navMenuDropdown');
-            
-            const isActive = menu.classList.contains('active');
-            
-            // 他のドロップダウンを閉じる
-            closeAllDropdowns();
-            
-            // クリックしたメニューを開閉
-            if (!isActive) {
-                btn.classList.add('active');
-                menu.classList.add('active');
-            }
-        }
-        
+
         // ドロップダウンメニューの外側クリックで閉じる
         document.addEventListener('click', function(event) {
             if (!event.target.closest('.dropdown-container') && !event.target.closest('.nav-menu')) {
@@ -1672,4 +1655,3 @@ window.editSelectedAssetItem = editSelectedAssetItem;
 window.addSelectedAssetFromDropdowns = addSelectedAssetFromDropdowns;
 window.resetMasterFilter = resetMasterFilter;
 window.removeAssetFromSelection = removeAssetFromSelection;
-window.toggleNavMenu = toggleNavMenu;
