@@ -399,3 +399,33 @@ window.filterQuotations = filterQuotations;
 window.clearQuotationFilters = clearQuotationFilters;
 window.goToRfqListFromDataBox = goToRfqListFromDataBox;
 window.handleBackFromDataBox = handleBackFromDataBox;
+
+// ナビゲーションメニューの制御
+function toggleNavMenu() {
+    const btn = document.querySelector('.quotation-databox-page .nav-menu-btn');
+    const menu = document.querySelector('.quotation-databox-page .nav-menu-dropdown');
+
+    if (!btn || !menu) return;
+
+    const isActive = menu.classList.contains('active');
+
+    if (!isActive) {
+        btn.classList.add('active');
+        menu.classList.add('active');
+    } else {
+        btn.classList.remove('active');
+        menu.classList.remove('active');
+    }
+}
+
+// ドロップダウンメニューの外側クリックで閉じる
+document.addEventListener('click', function(event) {
+    if (!event.target.closest('.nav-menu')) {
+        const btn = document.querySelector('.quotation-databox-page .nav-menu-btn');
+        const menu = document.querySelector('.quotation-databox-page .nav-menu-dropdown');
+        if (btn) btn.classList.remove('active');
+        if (menu) menu.classList.remove('active');
+    }
+});
+
+window.toggleNavMenu = toggleNavMenu;
