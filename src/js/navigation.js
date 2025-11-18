@@ -295,6 +295,39 @@ function goToOrderTemplateTest() {
     }
 }
 
+/**
+ * 資産検索結果画面から申請一覧画面へ遷移
+ */
+function goToApplicationListFromSearch() {
+    transitionPage('searchResultPage', 'applicationListPage');
+
+    if (typeof window.initApplicationListPage === 'function') {
+        window.initApplicationListPage();
+    }
+}
+
+/**
+ * 資産検索結果画面から見積依頼一覧画面へ遷移
+ */
+function goToRfqListFromSearch() {
+    transitionPage('searchResultPage', 'rfqListPage');
+
+    if (typeof window.initRfqListPage === 'function') {
+        window.initRfqListPage();
+    }
+}
+
+/**
+ * 資産検索結果画面から見積DataBox画面へ遷移
+ */
+function goToQuotationDataBoxFromSearch() {
+    transitionPage('searchResultPage', 'quotationDataBoxPage');
+
+    if (typeof window.initQuotationDataBoxPage === 'function') {
+        window.initQuotationDataBoxPage();
+    }
+}
+
 // グローバルスコープに関数を公開
 window.transitionPage = transitionPage;
 window.handleQRManagement = handleQRManagement;
@@ -323,3 +356,6 @@ window.goToQuotationDataBoxDirect = goToQuotationDataBoxDirect;
 window.goToOcrResultPageTest = goToOcrResultPageTest;
 window.goToMatchingCheckTest = goToMatchingCheckTest;
 window.goToOrderTemplateTest = goToOrderTemplateTest;
+window.goToApplicationListFromSearch = goToApplicationListFromSearch;
+window.goToRfqListFromSearch = goToRfqListFromSearch;
+window.goToQuotationDataBoxFromSearch = goToQuotationDataBoxFromSearch;
