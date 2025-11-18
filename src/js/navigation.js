@@ -222,6 +222,79 @@ function handleBackFromSearchResult() {
     transitionPage('searchResultPage', 'mainContainer');
 }
 
+/**
+ * メイン画面から申請一覧画面へ遷移
+ */
+function goToApplicationList() {
+    transitionPage('mainContainer', 'applicationListPage');
+
+    if (typeof window.initApplicationListPage === 'function') {
+        window.initApplicationListPage();
+    }
+}
+
+/**
+ * メイン画面から見積依頼一覧画面へ遷移
+ */
+function goToRfqList() {
+    transitionPage('mainContainer', 'rfqListPage');
+
+    if (typeof window.initRfqListPage === 'function') {
+        window.initRfqListPage();
+    }
+}
+
+/**
+ * メイン画面から見積DataBox画面へ直接遷移
+ */
+function goToQuotationDataBoxDirect() {
+    transitionPage('mainContainer', 'quotationDataBoxPage');
+
+    if (typeof window.initQuotationDataBoxPage === 'function') {
+        window.initQuotationDataBoxPage();
+    }
+}
+
+/**
+ * テスト用: 見積DataBoxからOCR結果画面へ（サンプルデータで）
+ */
+function goToOcrResultPageTest() {
+    // サンプルの見積書IDで遷移
+    const sampleQuotationId = window.quotationDocuments?.[0]?.id || 'Q-1737000000001';
+
+    transitionPage('quotationDataBoxPage', 'quotationOcrResultPage');
+
+    if (typeof window.initQuotationOcrResultPage === 'function') {
+        window.initQuotationOcrResultPage(sampleQuotationId);
+    }
+}
+
+/**
+ * テスト用: OCR結果画面から紐付けチェック画面へ
+ */
+function goToMatchingCheckTest() {
+    const sampleQuotationId = window.quotationDocuments?.[0]?.id || 'Q-1737000000001';
+
+    transitionPage('quotationOcrResultPage', 'quotationMatchingPage');
+
+    if (typeof window.initQuotationMatchingPage === 'function') {
+        window.initQuotationMatchingPage(sampleQuotationId);
+    }
+}
+
+/**
+ * テスト用: 紐付けチェック画面から発注書出力画面へ
+ */
+function goToOrderTemplateTest() {
+    const sampleQuotationId = window.quotationDocuments?.[0]?.id || 'Q-1737000000001';
+
+    transitionPage('quotationMatchingPage', 'orderTemplatePage');
+
+    if (typeof window.initOrderTemplatePage === 'function') {
+        window.initOrderTemplatePage(sampleQuotationId);
+    }
+}
+
 // グローバルスコープに関数を公開
 window.transitionPage = transitionPage;
 window.handleQRManagement = handleQRManagement;
@@ -244,3 +317,9 @@ window.handleImportToMatching = handleImportToMatching;
 window.handleBackFromMatching = handleBackFromMatching;
 window.handleViewSearchResult = handleViewSearchResult;
 window.handleBackFromSearchResult = handleBackFromSearchResult;
+window.goToApplicationList = goToApplicationList;
+window.goToRfqList = goToRfqList;
+window.goToQuotationDataBoxDirect = goToQuotationDataBoxDirect;
+window.goToOcrResultPageTest = goToOcrResultPageTest;
+window.goToMatchingCheckTest = goToMatchingCheckTest;
+window.goToOrderTemplateTest = goToOrderTemplateTest;
