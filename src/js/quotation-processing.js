@@ -126,19 +126,20 @@ function renderOcrResults() {
 
 // 資産マスタとの突き合わせ実行
 function performMatching() {
-    // シミュレーション：OCR結果を資産マスタと突き合わせ
+    // 各OCR明細に対して、資産マスタから類似度の高い候補を3つ返す
     matchingResults = ocrResults.map(item => {
-        // 簡易的なマッチング（実際は類似度計算など）
-        const matched = findMatchingAssetMaster(item.itemName);
+        const candidates = findTop3CandidatesFromAssetMaster(item.itemName);
 
         return {
             id: item.id,
             ocrItemName: item.itemName,
             quantity: item.quantity,
             unitPrice: item.unitPrice,
-            matchStatus: matched ? 'matched' : 'unmatched',
-            assetMaster: matched,
-            confidence: matched ? 0.85 + Math.random() * 0.15 : 0
+            amount: item.amount,
+            candidates: candidates, // 候補3つ
+            selectedCandidate: null, // ユーザーが選択した候補
+            linkedApplication: null, // 紐付けた申請
+            isConfirmed: false // 確定済みフラグ
         };
     });
 
@@ -146,67 +147,348 @@ function performMatching() {
     updateMatchingSummary();
 }
 
-// 資産マスタを検索（簡易版）
-function findMatchingAssetMaster(itemName) {
-    // window.assetMasterから類似品目を検索
-    if (!window.assetMaster || window.assetMaster.length === 0) {
-        return null;
+// 資産マスタから類似度の高い候補を3つ返す
+function findTop3CandidatesFromAssetMaster(itemName) {
+    if (!window.assetMasterData) {
+        console.error('assetMasterData not found');
+        return [];
     }
 
-    // 簡易的なキーワードマッチング
-    const keywords = ['超音波', 'プローブ', 'ワークステーション', '保守'];
-    for (const keyword of keywords) {
-        if (itemName.includes(keyword)) {
-            const found = window.assetMaster.find(master =>
-                master.itemName && master.itemName.includes(keyword)
-            );
-            if (found) return found;
-        }
-    }
+    // 全ての個体管理品目を取得
+    const allItems = [];
+    Object.keys(window.assetMasterData.items || {}).forEach(mediumId => {
+        window.assetMasterData.items[mediumId].forEach(item => {
+            // 大分類と中分類を逆引き
+            const mediumClass = findMediumClassById(mediumId);
+            const largeClass = mediumClass ? findLargeClassById(mediumClass.largeId) : null;
 
-    // 見つからない場合は最初のアイテムを返す（デモ用）
-    return window.assetMaster[0];
+            allItems.push({
+                itemId: item.id,
+                itemName: item.name,
+                mediumId: mediumId,
+                mediumName: mediumClass ? mediumClass.name : '-',
+                largeId: mediumClass ? mediumClass.largeId : null,
+                largeName: largeClass ? largeClass.name : '-'
+            });
+        });
+    });
+
+    // 類似度計算（簡易版：部分一致でスコアリング）
+    const scoredItems = allItems.map(item => {
+        const similarity = calculateSimilarity(itemName, item.itemName);
+        return {
+            ...item,
+            similarity: similarity
+        };
+    });
+
+    // 類似度の高い順にソートして上位3つを返す
+    scoredItems.sort((a, b) => b.similarity - a.similarity);
+    return scoredItems.slice(0, 3);
 }
 
-// マッチング結果を表示
+// 中分類IDから中分類情報を取得
+function findMediumClassById(mediumId) {
+    if (!window.assetMasterData || !window.assetMasterData.mediumClasses) return null;
+
+    for (const largeId in window.assetMasterData.mediumClasses) {
+        const medium = window.assetMasterData.mediumClasses[largeId].find(m => m.id === mediumId);
+        if (medium) {
+            return { ...medium, largeId: largeId };
+        }
+    }
+    return null;
+}
+
+// 大分類IDから大分類情報を取得
+function findLargeClassById(largeId) {
+    if (!window.assetMasterData || !window.assetMasterData.largeClasses) return null;
+    return window.assetMasterData.largeClasses.find(l => l.id === largeId);
+}
+
+// 類似度計算（簡易版）
+function calculateSimilarity(str1, str2) {
+    if (!str1 || !str2) return 0;
+
+    // 小文字化
+    const s1 = str1.toLowerCase();
+    const s2 = str2.toLowerCase();
+
+    // 完全一致
+    if (s1 === s2) return 1.0;
+
+    // 部分一致
+    if (s1.includes(s2) || s2.includes(s1)) return 0.8;
+
+    // 共通文字数による類似度
+    const common = countCommonChars(s1, s2);
+    const maxLen = Math.max(s1.length, s2.length);
+    return common / maxLen;
+}
+
+// 共通文字数をカウント
+function countCommonChars(str1, str2) {
+    let count = 0;
+    const shorter = str1.length < str2.length ? str1 : str2;
+    const longer = str1.length >= str2.length ? str1 : str2;
+
+    for (let char of shorter) {
+        if (longer.includes(char)) count++;
+    }
+
+    return count;
+}
+
+// マッチング結果を表示（アコーディオン形式）
 function renderMatchingResults() {
-    const tbody = document.getElementById('matchingTableBody');
-    tbody.innerHTML = matchingResults.map(item => {
-        const statusBadge = item.matchStatus === 'matched'
-            ? '<span class="match-badge matched">✓ マッチ</span>'
-            : '<span class="match-badge unmatched">? 要確認</span>';
+    const container = document.getElementById('matchingItemsContainer');
 
-        const assetInfo = item.assetMaster
-            ? `${item.assetMaster.itemCode} - ${item.assetMaster.itemName}`
-            : '<span class="text-muted">-</span>';
+    if (!container) {
+        console.error('matchingItemsContainer not found');
+        return;
+    }
 
-        const actionBtn = item.matchStatus === 'unmatched'
-            ? `<button class="table-btn primary" onclick="selectAssetMaster(${item.id})">選択</button>`
-            : `<button class="table-btn secondary" onclick="selectAssetMaster(${item.id})">変更</button>`;
+    container.innerHTML = matchingResults.map(item => {
+        const statusBadge = item.isConfirmed
+            ? '<span class="confirm-badge confirmed">✓ 確定済み</span>'
+            : '<span class="confirm-badge unconfirmed">未確定</span>';
+
+        // 候補リスト
+        const candidatesHTML = item.candidates.map((candidate, index) => {
+            const isSelected = item.selectedCandidate && item.selectedCandidate.itemId === candidate.itemId;
+            const similarityPercent = Math.round(candidate.similarity * 100);
+
+            return `
+                <div class="candidate-item ${isSelected ? 'selected' : ''}" onclick="selectCandidate(${item.id}, ${index})">
+                    <div class="candidate-header">
+                        <div class="candidate-rank">候補${index + 1}</div>
+                        <div class="candidate-similarity">${similarityPercent}%</div>
+                        ${isSelected ? '<div class="candidate-check">✓ 選択中</div>' : ''}
+                    </div>
+                    <div class="candidate-path">
+                        <span class="path-large">${candidate.largeName}</span>
+                        <span class="path-separator">›</span>
+                        <span class="path-medium">${candidate.mediumName}</span>
+                        <span class="path-separator">›</span>
+                        <span class="path-item">${candidate.itemName}</span>
+                    </div>
+                </div>
+            `;
+        }).join('');
+
+        // 申請選択UI（候補が選択されている場合のみ表示）
+        const applicationLinkingHTML = item.selectedCandidate ? `
+            <div class="application-linking-section">
+                <div class="linking-title">📋 申請との紐付け</div>
+                <div class="linking-controls">
+                    <select class="application-select" id="appSelect_${item.id}" onchange="linkApplication(${item.id}, this.value)">
+                        <option value="">申請を選択してください</option>
+                        ${getApplicationOptions(item.linkedApplication)}
+                    </select>
+                    ${item.selectedCandidate && item.linkedApplication ?
+                        `<button class="confirm-btn" onclick="confirmItem(${item.id})">確定</button>` :
+                        '<span class="linking-hint">※ 申請を選択してから確定してください</span>'}
+                </div>
+            </div>
+        ` : '<div class="linking-hint-box">※ まず資産マスタ候補を選択してください</div>';
 
         return `
-            <tr>
-                <td>${item.id}</td>
-                <td>${item.ocrItemName}</td>
-                <td class="text-right">${item.quantity}</td>
-                <td class="text-right">¥${item.unitPrice.toLocaleString()}</td>
-                <td>${statusBadge}</td>
-                <td>${assetInfo}</td>
-                <td>${actionBtn}</td>
-            </tr>
+            <div class="matching-item ${item.isConfirmed ? 'confirmed' : ''}">
+                <div class="matching-item-header" onclick="toggleMatchingItem(${item.id})">
+                    <div class="matching-item-info">
+                        <span class="item-number">#${item.id}</span>
+                        <span class="item-name">${item.ocrItemName}</span>
+                        <span class="item-details">数量: ${item.quantity} / 単価: ¥${item.unitPrice.toLocaleString()}</span>
+                    </div>
+                    <div class="matching-item-status">
+                        ${statusBadge}
+                        <span class="expand-icon">▼</span>
+                    </div>
+                </div>
+                <div class="matching-item-body" id="matchingBody_${item.id}">
+                    <div class="candidates-section">
+                        <div class="candidates-title">🔍 AI推奨候補</div>
+                        <div class="candidates-list">
+                            ${candidatesHTML}
+                        </div>
+                        <div class="manual-search-hint">
+                            <button class="manual-search-btn" onclick="openManualAssetSearch(${item.id})">
+                                <span class="btn-icon">🔎</span> 手動で資産マスタを検索
+                            </button>
+                        </div>
+                    </div>
+                    ${applicationLinkingHTML}
+                </div>
+            </div>
         `;
     }).join('');
+}
+
+// アコーディオンの開閉
+function toggleMatchingItem(itemId) {
+    const body = document.getElementById(`matchingBody_${itemId}`);
+    const item = body.closest('.matching-item');
+
+    if (body.style.display === 'none' || body.style.display === '') {
+        body.style.display = 'block';
+        item.classList.add('expanded');
+    } else {
+        body.style.display = 'none';
+        item.classList.remove('expanded');
+    }
+}
+
+// 候補を選択
+function selectCandidate(itemId, candidateIndex) {
+    const matchingItem = matchingResults.find(r => r.id === itemId);
+    if (!matchingItem) return;
+
+    // 選択された候補を設定
+    matchingItem.selectedCandidate = matchingItem.candidates[candidateIndex];
+
+    // 再描画
+    renderMatchingResults();
+    updateMatchingSummary();
+}
+
+// 申請選択オプションを取得
+function getApplicationOptions(linkedApplication) {
+    if (!window.applicationListData || window.applicationListData.length === 0) {
+        return '<option value="">申請データがありません</option>';
+    }
+
+    // 見積依頼No.で絞り込み
+    const applications = window.applicationListData.filter(app => app.rfqNo === currentQuotation.rfqNo);
+
+    if (applications.length === 0) {
+        return '<option value="">該当する申請がありません</option>';
+    }
+
+    return applications.map(app => {
+        const selected = linkedApplication && linkedApplication.applicationNo === app.applicationNo ? 'selected' : '';
+        const assetInfo = app.asset ? `${app.asset.name} ${app.asset.model || ''}` : '-';
+        return `<option value="${app.applicationNo}" ${selected}>${app.applicationNo} - ${assetInfo} (数量: ${app.quantity})</option>`;
+    }).join('');
+}
+
+// 申請を紐付け
+function linkApplication(itemId, applicationNo) {
+    const matchingItem = matchingResults.find(r => r.id === itemId);
+    if (!matchingItem) return;
+
+    if (applicationNo === '') {
+        matchingItem.linkedApplication = null;
+    } else {
+        const application = window.applicationListData.find(app => app.applicationNo === applicationNo);
+        matchingItem.linkedApplication = application || null;
+    }
+
+    // 再描画
+    renderMatchingResults();
+    updateMatchingSummary();
+}
+
+// 確定
+function confirmItem(itemId) {
+    const matchingItem = matchingResults.find(r => r.id === itemId);
+    if (!matchingItem) return;
+
+    if (!matchingItem.selectedCandidate) {
+        alert('資産マスタ候補を選択してください');
+        return;
+    }
+
+    if (!matchingItem.linkedApplication) {
+        alert('申請を選択してください');
+        return;
+    }
+
+    // 確定フラグをセット
+    matchingItem.isConfirmed = true;
+
+    // 再描画
+    renderMatchingResults();
+    updateMatchingSummary();
+
+    alert(`#${itemId} の紐付けを確定しました`);
+}
+
+// 手動で資産マスタを検索
+function openManualAssetSearch(itemId) {
+    currentSelectingItemId = itemId;
+
+    // 資産マスタ選択モーダルを開く（既存のモーダルを流用）
+    renderAssetMasterModalForManualSearch();
+    document.getElementById('assetMasterSelectModal').classList.add('active');
+}
+
+// 手動検索用の資産マスタモーダル表示
+function renderAssetMasterModalForManualSearch() {
+    const tbody = document.getElementById('assetMasterModalBody');
+
+    if (!window.assetMasterData || !window.assetMasterData.items) {
+        tbody.innerHTML = '<tr><td colspan="4" class="text-center">資産マスタが登録されていません</td></tr>';
+        return;
+    }
+
+    // 全ての個体管理品目を一覧表示
+    const allItems = [];
+    Object.keys(window.assetMasterData.items).forEach(mediumId => {
+        window.assetMasterData.items[mediumId].forEach(item => {
+            const mediumClass = findMediumClassById(mediumId);
+            const largeClass = mediumClass ? findLargeClassById(mediumClass.largeId) : null;
+
+            allItems.push({
+                itemId: item.id,
+                itemName: item.name,
+                itemCode: item.code || item.id,
+                largeName: largeClass ? largeClass.name : '-',
+                mediumName: mediumClass ? mediumClass.name : '-'
+            });
+        });
+    });
+
+    tbody.innerHTML = allItems.map(item => `
+        <tr>
+            <td><button class="table-btn primary" onclick="confirmManualAssetSelection('${item.itemId}', '${item.itemName.replace(/'/g, "\\'")}', '${item.largeName}', '${item.mediumName}')">選択</button></td>
+            <td>${item.itemCode}</td>
+            <td>${item.itemName}</td>
+            <td>${item.largeName} › ${item.mediumName}</td>
+        </tr>
+    `).join('');
+}
+
+// 手動選択した資産マスタを確定
+function confirmManualAssetSelection(itemId, itemName, largeName, mediumName) {
+    const matchingItem = matchingResults.find(r => r.id === currentSelectingItemId);
+    if (!matchingItem) return;
+
+    // 手動選択した候補を設定
+    matchingItem.selectedCandidate = {
+        itemId: itemId,
+        itemName: itemName,
+        largeName: largeName,
+        mediumName: mediumName,
+        similarity: 1.0 // 手動選択なので100%
+    };
+
+    // 再描画
+    renderMatchingResults();
+    updateMatchingSummary();
+
+    closeAssetMasterSelectModal();
+    alert('資産マスタを選択しました');
 }
 
 // マッチングサマリーを更新
 function updateMatchingSummary() {
     const total = matchingResults.length;
-    const matched = matchingResults.filter(r => r.matchStatus === 'matched').length;
-    const unmatched = total - matched;
+    const confirmed = matchingResults.filter(r => r.isConfirmed).length;
+    const unconfirmed = total - confirmed;
 
     document.getElementById('totalItemsCount').textContent = total;
-    document.getElementById('matchedItemsCount').textContent = matched;
-    document.getElementById('unmatchedItemsCount').textContent = unmatched;
+    document.getElementById('confirmedItemsCount').textContent = confirmed;
+    document.getElementById('unconfirmedItemsCount').textContent = unconfirmed;
 }
 
 // 申請紐付け実行
@@ -475,6 +757,12 @@ function handleBackFromProcessing() {
 window.initQuotationProcessingPage = initQuotationProcessingPage;
 window.goToStep = goToStep;
 window.startOcrExtraction = startOcrExtraction;
+window.toggleMatchingItem = toggleMatchingItem;
+window.selectCandidate = selectCandidate;
+window.linkApplication = linkApplication;
+window.confirmItem = confirmItem;
+window.openManualAssetSearch = openManualAssetSearch;
+window.confirmManualAssetSelection = confirmManualAssetSelection;
 window.selectAssetMaster = selectAssetMaster;
 window.closeAssetMasterSelectModal = closeAssetMasterSelectModal;
 window.handleAssetMasterModalOutsideClick = handleAssetMasterModalOutsideClick;
