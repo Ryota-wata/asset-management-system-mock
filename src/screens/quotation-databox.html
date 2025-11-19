@@ -55,41 +55,67 @@
 
     <!-- 見積書アップロードモーダル -->
     <div class="modal" id="uploadQuotationModal" onclick="handleUploadModalOutsideClick(event)">
-        <div class="modal-content" style="max-width: 600px;">
+        <div class="modal-content upload-modal-content">
             <h2 class="modal-title">見積書アップロード</h2>
 
             <form id="uploadQuotationForm" onsubmit="handleUploadQuotation(event)">
                 <div class="form-section">
                     <div class="form-group">
-                        <label for="uploadRfqNo">見積依頼No <span class="required">*</span></label>
-                        <select id="uploadRfqNo" required>
-                            <option value="">選択してください</option>
-                            <!-- JavaScriptで動的生成 -->
-                        </select>
+                        <label>見積依頼 <span class="required">*</span></label>
+                        <div class="rfq-selection-container">
+                            <div class="rfq-selected-info" id="rfqSelectedInfo">
+                                <div class="rfq-info-placeholder">見積依頼を選択してください</div>
+                            </div>
+                            <button type="button" class="select-rfq-btn" onclick="showRfqSelectModal()">
+                                📋 見積依頼を選択
+                            </button>
+                        </div>
+                        <input type="hidden" id="uploadRfqNo" required>
+                        <input type="hidden" id="uploadVendor" required>
                     </div>
 
                     <div class="form-group">
-                        <label for="uploadVendor">業者名 <span class="required">*</span></label>
-                        <input type="text" id="uploadVendor" required placeholder="業者名を入力">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="uploadQuotationDate">見積日 <span class="required">*</span></label>
-                        <input type="date" id="uploadQuotationDate" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="uploadFile">見積書PDF <span class="required">*</span></label>
-                        <input type="file" id="uploadFile" accept=".pdf" required>
-                        <small>※ PDF形式のファイルをアップロードしてください</small>
+                        <label for="uploadFile">見積書PDF（任意）</label>
+                        <input type="file" id="uploadFile" accept=".pdf">
+                        <small class="form-help">※ ファイルを選択しない場合はダミーの見積書が登録されます</small>
                     </div>
                 </div>
 
-                <div style="display: flex; gap: 10px; margin-top: 20px;">
-                    <button type="button" class="modal-button secondary" onclick="closeUploadQuotationModal()" style="flex: 1;">キャンセル</button>
-                    <button type="submit" class="modal-button" style="flex: 1;">アップロード</button>
+                <div class="modal-footer-buttons">
+                    <button type="button" class="modal-button secondary" onclick="closeUploadQuotationModal()">キャンセル</button>
+                    <button type="submit" class="modal-button">登録</button>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <!-- 見積依頼選択モーダル -->
+    <div class="modal" id="rfqSelectModal" onclick="handleRfqSelectModalOutsideClick(event)">
+        <div class="modal-content" style="max-width: 900px;">
+            <h2 class="modal-title">見積依頼を選択</h2>
+            <p class="modal-description">アップロードする見積書の見積依頼を選択してください</p>
+
+            <div class="modal-table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 80px;">選択</th>
+                            <th style="width: 150px;">見積依頼No</th>
+                            <th style="width: 200px;">業者名</th>
+                            <th style="width: 120px;">作成日</th>
+                            <th style="width: 100px;">申請件数</th>
+                            <th style="width: 120px;">ステータス</th>
+                        </tr>
+                    </thead>
+                    <tbody id="rfqSelectTableBody">
+                        <!-- JavaScriptで動的生成 -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button class="modal-button secondary" onclick="closeRfqSelectModal()" style="flex: 1;">キャンセル</button>
+            </div>
         </div>
     </div>
 

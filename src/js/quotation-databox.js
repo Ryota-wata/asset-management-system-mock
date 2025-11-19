@@ -17,9 +17,6 @@ function initQuotationDataBoxPage() {
     // 見積書を見積依頼No.ごとにグループ化して表示
     renderQuotationsByRfq();
     updateQuotationCount();
-
-    // アップロードモーダルの見積依頼No.選択肢を生成
-    populateRfqSelect();
 }
 
 // 見積書を一つのテーブルで表示
@@ -206,26 +203,89 @@ function handleUploadModalOutsideClick(event) {
     }
 }
 
-// 見積依頼No.選択肢を生成
-function populateRfqSelect() {
-    const select = document.getElementById('uploadRfqNo');
-    if (!select) return;
+// 見積依頼選択モーダルを開く
+function showRfqSelectModal() {
+    renderRfqSelectTable();
+    document.getElementById('rfqSelectModal').classList.add('active');
+}
 
-    // window.rfqRecordsから見積依頼No.を取得
-    const rfqNos = window.rfqRecords ? window.rfqRecords.map(r => r.rfqNo) : [];
+// 見積依頼選択モーダルを閉じる
+function closeRfqSelectModal() {
+    document.getElementById('rfqSelectModal').classList.remove('active');
+}
 
-    // 既存の選択肢をクリア（初期のoptionは残す）
-    while (select.options.length > 1) {
-        select.remove(1);
+// 見積依頼選択モーダル外側クリック
+function handleRfqSelectModalOutsideClick(event) {
+    if (event.target.id === 'rfqSelectModal') {
+        closeRfqSelectModal();
+    }
+}
+
+// 見積依頼選択テーブルを描画
+function renderRfqSelectTable() {
+    const tbody = document.getElementById('rfqSelectTableBody');
+    if (!tbody) return;
+
+    if (!window.rfqRecords || window.rfqRecords.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" class="text-center">見積依頼がありません</td></tr>';
+        return;
     }
 
-    // 選択肢を追加
-    rfqNos.forEach(rfqNo => {
-        const option = document.createElement('option');
-        option.value = rfqNo;
-        option.textContent = rfqNo;
-        select.appendChild(option);
-    });
+    tbody.innerHTML = window.rfqRecords.map(rfq => {
+        const applicationCount = rfq.applicationIds ? rfq.applicationIds.length : 0;
+        const statusBadge = getStatusBadge(rfq.status || '依頼書作成待');
+
+        return `
+            <tr>
+                <td>
+                    <button class="table-btn primary" onclick="selectRfq('${rfq.rfqNo}', '${rfq.vendor}')">選択</button>
+                </td>
+                <td><strong>${rfq.rfqNo}</strong></td>
+                <td>${rfq.vendor || '業者名未設定'}</td>
+                <td>${rfq.createdDate || '-'}</td>
+                <td class="text-center">${applicationCount}件</td>
+                <td>${statusBadge}</td>
+            </tr>
+        `;
+    }).join('');
+}
+
+// 見積依頼を選択
+function selectRfq(rfqNo, vendor) {
+    // hiddenフィールドに値を設定
+    document.getElementById('uploadRfqNo').value = rfqNo;
+    document.getElementById('uploadVendor').value = vendor;
+
+    // 表示エリアを更新
+    const infoContainer = document.getElementById('rfqSelectedInfo');
+    infoContainer.innerHTML = `
+        <div class="rfq-info-selected">
+            <div class="rfq-info-row">
+                <span class="rfq-info-label">見積依頼No:</span>
+                <span class="rfq-info-value">${rfqNo}</span>
+            </div>
+            <div class="rfq-info-row">
+                <span class="rfq-info-label">業者名:</span>
+                <span class="rfq-info-value">${vendor}</span>
+            </div>
+        </div>
+    `;
+
+    // モーダルを閉じる
+    closeRfqSelectModal();
+}
+
+// ステータスバッジ取得（見積依頼用）
+function getStatusBadge(status) {
+    const statusMap = {
+        '依頼書作成待': { class: 'status-pending', text: '依頼書作成待' },
+        '見積依頼済': { class: 'status-requested', text: '見積依頼済' },
+        '見積回答待': { class: 'status-waiting', text: '見積回答待' },
+        '見積回答済': { class: 'status-replied', text: '見積回答済' }
+    };
+
+    const badge = statusMap[status] || { class: 'status-pending', text: status };
+    return `<span class="status-badge ${badge.class}">${badge.text}</span>`;
 }
 
 // 見積書アップロード処理
@@ -234,22 +294,24 @@ function handleUploadQuotation(event) {
 
     const rfqNo = document.getElementById('uploadRfqNo').value;
     const vendor = document.getElementById('uploadVendor').value;
-    const quotationDate = document.getElementById('uploadQuotationDate').value;
     const file = document.getElementById('uploadFile').files[0];
 
-    if (!file) {
-        alert('ファイルを選択してください');
+    if (!rfqNo || !vendor) {
+        alert('見積依頼を選択してください');
         return;
     }
+
+    // 現在日付を取得
+    const today = new Date().toISOString().split('T')[0];
 
     // 新しい見積書を追加
     const newQuotation = {
         id: `Q-${Date.now()}`,
         rfqNo: rfqNo,
         vendor: vendor,
-        quotationDate: quotationDate,
-        uploadDate: new Date().toISOString().split('T')[0],
-        filename: file.name,
+        quotationDate: today,
+        uploadDate: today,
+        filename: file ? file.name : `見積書_${rfqNo}_${today}.pdf`,
         processingStatus: '未処理'
     };
 
@@ -263,7 +325,7 @@ function handleUploadQuotation(event) {
     // モーダルを閉じる
     closeUploadQuotationModal();
 
-    alert('見積書をアップロードしました');
+    alert('見積書を登録しました');
 }
 
 // 戻るボタン
@@ -311,6 +373,10 @@ window.showUploadQuotationModal = showUploadQuotationModal;
 window.closeUploadQuotationModal = closeUploadQuotationModal;
 window.handleUploadModalOutsideClick = handleUploadModalOutsideClick;
 window.handleUploadQuotation = handleUploadQuotation;
+window.showRfqSelectModal = showRfqSelectModal;
+window.closeRfqSelectModal = closeRfqSelectModal;
+window.handleRfqSelectModalOutsideClick = handleRfqSelectModalOutsideClick;
+window.selectRfq = selectRfq;
 window.startProcessing = startProcessing;
 window.continueProcessing = continueProcessing;
 window.viewProcessingResult = viewProcessingResult;

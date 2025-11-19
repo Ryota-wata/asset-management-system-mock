@@ -455,3 +455,130 @@ select:focus {
 .resizable-table.resizing {
     user-select: none;
 }
+
+/* ========================================
+   共通テーブルボタンスタイル
+======================================== */
+.table-btn {
+    padding: 6px 12px;
+    border: 1px solid #3498db;
+    border-radius: 4px;
+    background: #3498db;
+    color: white;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.table-btn:hover {
+    background: #2980b9;
+    border-color: #2980b9;
+}
+
+.table-btn:disabled {
+    background: #bdc3c7;
+    border-color: #bdc3c7;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.table-btn.primary {
+    background: #3498db;
+    border-color: #3498db;
+}
+
+.table-btn.primary:hover {
+    background: #2980b9;
+    border-color: #2980b9;
+}
+
+.table-btn.secondary {
+    background: white;
+    color: #7f8c8d;
+    border-color: #ddd;
+}
+
+.table-btn.secondary:hover {
+    background: #f8f9fa;
+}
+
+.table-btn.success {
+    background: #27ae60;
+    border-color: #27ae60;
+}
+
+.table-btn.success:hover {
+    background: #229954;
+    border-color: #229954;
+}
+
+.table-btn.small {
+    padding: 4px 8px;
+    font-size: 12px;
+}
+
+/* ========================================
+   共通ステータスバッジスタイル
+======================================== */
+.status-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.status-badge.confirmed {
+    background: #d4edda;
+    color: #155724;
+}
+
+.status-badge.unconfirmed {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.status-badge.pending {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.status-badge.approved {
+    background: #d4edda;
+    color: #155724;
+}
+
+.status-badge.rejected {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+/* ========================================
+   共通ユーティリティクラス
+======================================== */
+.text-center {
+    text-align: center;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.text-left {
+    text-align: left;
+}
+
+.text-muted {
+    color: #7f8c8d;
+}
+
+.clickable-row {
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.clickable-row:hover {
+    background-color: #f8f9fa;
+}

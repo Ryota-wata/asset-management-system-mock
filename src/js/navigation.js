@@ -9,11 +9,23 @@
  * @param {string} toPageId - 遷移先の画面ID
  */
 function transitionPage(fromPageId, toPageId) {
-    const fromPage = document.getElementById(fromPageId);
-    const toPage = document.getElementById(toPageId);
-
-    if (fromPage) fromPage.classList.remove('active');
-    if (toPage) toPage.classList.add('active');
+    // PageNavigationHelperが利用可能な場合は、確実に全画面をクリアしてから遷移
+    if (window.PageNavigationHelper) {
+        console.log(`[transitionPage] Using PageNavigationHelper: ${fromPageId} -> ${toPageId}`);
+        // 全画面のactiveをクリア
+        window.PageNavigationHelper.clearAllPages();
+        // 遷移先のみをactiveに
+        const toPage = document.getElementById(toPageId);
+        if (toPage) {
+            toPage.classList.add('active');
+        }
+    } else {
+        // フォールバック: 従来の動作
+        const fromPage = document.getElementById(fromPageId);
+        const toPage = document.getElementById(toPageId);
+        if (fromPage) fromPage.classList.remove('active');
+        if (toPage) toPage.classList.add('active');
+    }
 }
 
 /**
@@ -332,12 +344,16 @@ function goToQuotationDataBoxFromSearch() {
  * 汎用: 申請一覧画面へ遷移（どの画面からでも）
  */
 function goToApplicationList() {
+    console.log('[goToApplicationList] Called from navigation.js');
+
     // 現在アクティブな画面を取得
-    const activePages = ['searchResultPage', 'rfqListPage', 'quotationDataBoxPage', 'mainContainer'];
+    const activePages = ['searchResultPage', 'rfqListPage', 'quotationDataBoxPage', 'mainContainer', 'individualManagementListPage'];
     const currentPage = activePages.find(pageId => {
         const page = document.getElementById(pageId);
         return page && page.classList.contains('active');
     });
+
+    console.log('[goToApplicationList] Current active page:', currentPage || 'none found');
 
     if (currentPage) {
         transitionPage(currentPage, 'applicationListPage');
@@ -355,12 +371,16 @@ function goToApplicationList() {
  * 汎用: 見積依頼一覧画面へ遷移（どの画面からでも）
  */
 function goToRfqList() {
+    console.log('[goToRfqList] Called from navigation.js');
+
     // 現在アクティブな画面を取得
-    const activePages = ['searchResultPage', 'applicationListPage', 'quotationDataBoxPage', 'mainContainer'];
+    const activePages = ['searchResultPage', 'applicationListPage', 'quotationDataBoxPage', 'mainContainer', 'individualManagementListPage'];
     const currentPage = activePages.find(pageId => {
         const page = document.getElementById(pageId);
         return page && page.classList.contains('active');
     });
+
+    console.log('[goToRfqList] Current active page:', currentPage || 'none found');
 
     if (currentPage) {
         transitionPage(currentPage, 'rfqListPage');
@@ -378,12 +398,16 @@ function goToRfqList() {
  * 汎用: 見積DataBox画面へ遷移（どの画面からでも）
  */
 function goToQuotationDataBox() {
+    console.log('[goToQuotationDataBox] Called from navigation.js');
+
     // 現在アクティブな画面を取得
-    const activePages = ['searchResultPage', 'applicationListPage', 'rfqListPage', 'mainContainer'];
+    const activePages = ['searchResultPage', 'applicationListPage', 'rfqListPage', 'mainContainer', 'individualManagementListPage'];
     const currentPage = activePages.find(pageId => {
         const page = document.getElementById(pageId);
         return page && page.classList.contains('active');
     });
+
+    console.log('[goToQuotationDataBox] Current active page:', currentPage || 'none found');
 
     if (currentPage) {
         transitionPage(currentPage, 'quotationDataBoxPage');

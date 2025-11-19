@@ -1,0 +1,103 @@
+<!-- 個体管理リスト原本画面 -->
+<div id="individualManagementListPage" class="individual-management-list-page">
+
+    <div class="result-container">
+        <!-- ヘッダー -->
+        <header class="result-header">
+            <div class="result-header-left">
+                <div class="logo">
+                    <div class="logo-icon">SHIP</div>
+                    <div class="result-header-title">個体管理リスト原本</div>
+                </div>
+                <span class="result-count" id="individualCount">-</span>
+            </div>
+            <div class="result-header-actions">
+                <button class="header-btn primary" onclick="exportIndividualList()">
+                    <span class="btn-icon">📥</span>Excel出力
+                </button>
+                <div class="nav-menu">
+                    <button class="nav-menu-btn" onclick="toggleNavMenu()">
+                        <span>📑 メニュー</span>
+                        <span class="nav-menu-arrow">▼</span>
+                    </button>
+                    <div class="nav-menu-dropdown" id="navMenuDropdown">
+                        <div class="nav-menu-item" onclick="goToApplicationList()">
+                            <span class="nav-menu-item-icon">📝</span>
+                            <span>申請一覧</span>
+                        </div>
+                        <div class="nav-menu-item" onclick="goToQuotationDataBox()">
+                            <span class="nav-menu-item-icon">📦</span>
+                            <span>見積書管理</span>
+                        </div>
+                        <div class="nav-menu-item" onclick="goToIndividualManagementList()">
+                            <span class="nav-menu-item-icon">📋</span>
+                            <span>個体管理リスト</span>
+                        </div>
+                    </div>
+                </div>
+                <button class="header-btn back" onclick="handleBackFromIndividualList()">戻る</button>
+            </div>
+        </header>
+
+        <!-- メインコンテンツエリア -->
+        <div class="main-content-area">
+            <div class="content-wrapper">
+
+                <!-- フィルターセクション -->
+                <div class="filter-section">
+                    <div class="filter-row">
+                        <div class="filter-item">
+                            <label>QRコード</label>
+                            <input type="text" id="filterQrCode" placeholder="QRコードで検索">
+                        </div>
+                        <div class="filter-item">
+                            <label>資産名称</label>
+                            <input type="text" id="filterAssetName" placeholder="資産名称で検索">
+                        </div>
+                        <div class="filter-item">
+                            <label>設置場所</label>
+                            <input type="text" id="filterLocation" placeholder="設置場所で検索">
+                        </div>
+                        <div class="filter-item">
+                            <label>ステータス</label>
+                            <select id="filterStatus">
+                                <option value="">全て</option>
+                                <option value="使用中">使用中</option>
+                                <option value="廃棄済">廃棄済</option>
+                            </select>
+                        </div>
+                        <div class="filter-actions">
+                            <button class="filter-btn" onclick="applyIndividualFilter()">検索</button>
+                            <button class="filter-btn secondary" onclick="clearIndividualFilter()">クリア</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 個体管理リストテーブル -->
+                <div class="individual-table-container">
+                    <table class="data-table individual-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 150px;">QRコード</th>
+                                <th style="width: 200px;">資産名称</th>
+                                <th style="width: 150px;">型式</th>
+                                <th style="width: 200px;">設置場所</th>
+                                <th style="width: 120px;">登録日</th>
+                                <th style="width: 150px;">申請番号</th>
+                                <th style="width: 100px;">ステータス</th>
+                                <th style="width: 150px;">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="individualTableBody">
+                            <!-- JavaScriptで動的生成 -->
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- モーダルはindex.htmlに移動しました -->
+
+</div>

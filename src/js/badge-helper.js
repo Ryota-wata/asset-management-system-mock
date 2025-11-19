@@ -15,6 +15,7 @@ window.BadgeHelper = {
             '下書き': '<span class="status-badge draft">🟦 下書き</span>',
             '承認待ち': '<span class="status-badge pending">🟨 承認待ち</span>',
             '承認済み': '<span class="status-badge approved">🟩 承認済み</span>',
+            '承認済': '<span class="status-badge approved">🟩 承認済</span>',
             '差し戻し': '<span class="status-badge returned">🟥 差し戻し</span>',
             '却下': '<span class="status-badge rejected">⬛ 却下</span>'
         };

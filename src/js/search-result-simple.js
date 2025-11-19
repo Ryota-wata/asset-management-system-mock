@@ -673,47 +673,8 @@ let searchResultFilter_assetMaster = null;
         }
         
         // 画面遷移関数
-        function goToApplicationList() {
-            closeAllDropdowns();
-
-            // 資産検索結果画面を非表示
-            const searchResultPage = document.getElementById('searchResultPage');
-            if (searchResultPage) {
-                searchResultPage.classList.remove('active');
-            }
-
-            // 申請一覧画面を表示
-            const applicationListPage = document.getElementById('applicationListPage');
-            if (applicationListPage) {
-                applicationListPage.classList.add('active');
-
-                // 申請一覧画面を初期化
-                if (typeof window.initApplicationListPage === 'function') {
-                    window.initApplicationListPage();
-                }
-            }
-        }
-
-        function goToRfqList() {
-            closeAllDropdowns();
-
-            // 資産検索結果画面を非表示
-            const searchResultPage = document.getElementById('searchResultPage');
-            if (searchResultPage) {
-                searchResultPage.classList.remove('active');
-            }
-
-            // 見積依頼一覧画面を表示
-            const rfqListPage = document.getElementById('rfqListPage');
-            if (rfqListPage) {
-                rfqListPage.classList.add('active');
-
-                // 見積依頼一覧画面を初期化
-                if (typeof window.initRfqListPage === 'function') {
-                    window.initRfqListPage();
-                }
-            }
-        }
+        // NOTE: goToApplicationList, goToRfqList, goToQuotationDataBox は
+        // navigation.js のグローバル版を使用（PageNavigationHelper対応済み）
 
         function goToExecutionPendingList() {
             closeAllDropdowns();

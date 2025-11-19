@@ -1161,3 +1161,50 @@
         width: 100%;
     }
 }
+
+/* 紐付け済み申請の表示 */
+.linked-application-display {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px;
+    background: #f8f9fa;
+    border-radius: 4px;
+    border: 1px solid #e0e0e0;
+}
+
+.linked-app-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.linked-app-no {
+    font-size: 13px;
+    font-weight: 600;
+    color: #3498db;
+    margin-bottom: 2px;
+}
+
+.linked-app-detail {
+    font-size: 12px;
+    color: #7f8c8d;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.table-btn.small {
+    padding: 4px 8px;
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+/* モーダル内のクリック可能な行 */
+.clickable-row {
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.clickable-row:hover {
+    background-color: #f8f9fa;
+}

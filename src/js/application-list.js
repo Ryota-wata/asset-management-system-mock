@@ -35,7 +35,24 @@ const sampleApplications = [
             section: '手術'
         },
         freeInput: '老朽化に伴う更新',
-        executionYear: '2025年度'
+        executionYear: '2025年度',
+        quotationInfo: [
+            {
+                quotationId: 'Q-1737000000001',
+                quotationDate: '2025-01-25',
+                vendor: 'メディカルサプライ株式会社',
+                ocrItemName: '超音波診断装置 ProSound Alpha 7',
+                assetMaster: {
+                    itemId: 'AST-001',
+                    itemName: '超音波診断装置',
+                    largeName: '画像診断機器',
+                    mediumName: '超音波診断装置'
+                },
+                quantity: 1,
+                unitPrice: 15000000,
+                amount: 15000000
+            }
+        ]
     },
     {
         id: 2,
@@ -61,7 +78,39 @@ const sampleApplications = [
             section: '循環器内科'
         },
         freeInput: '診療業務拡大のため',
-        executionYear: '2025年度'
+        executionYear: '2025年度',
+        quotationInfo: [
+            {
+                quotationId: 'Q-1737000000001',
+                quotationDate: '2025-01-25',
+                vendor: 'メディカルサプライ株式会社',
+                ocrItemName: 'リニアプローブ UST-5713T',
+                assetMaster: {
+                    itemId: 'AST-002',
+                    itemName: 'リニアプローブ',
+                    largeName: '画像診断機器',
+                    mediumName: '超音波プローブ'
+                },
+                quantity: 2,
+                unitPrice: 800000,
+                amount: 1600000
+            },
+            {
+                quotationId: 'Q-1737000000001',
+                quotationDate: '2025-01-25',
+                vendor: 'メディカルサプライ株式会社',
+                ocrItemName: 'コンベックスプローブ UST-675P',
+                assetMaster: {
+                    itemId: 'AST-003',
+                    itemName: 'コンベックスプローブ',
+                    largeName: '画像診断機器',
+                    mediumName: '超音波プローブ'
+                },
+                quantity: 1,
+                unitPrice: 900000,
+                amount: 900000
+            }
+        ]
     },
     {
         id: 3,
@@ -75,7 +124,7 @@ const sampleApplications = [
         vendor: '日立メディコ 大阪支店',
         quantity: '1式',
         rfqNo: 'RFQ-2025-0002',
-        status: '承認済み',
+        status: '承認済',
         approvalProgress: {
             current: 3,
             total: 3
@@ -92,6 +141,32 @@ const sampleApplications = [
     {
         id: 4,
         applicationNo: 'REQ-2025-0004',
+        applicationDate: '2025-11-18',
+        applicationType: '廃棄申請',
+        asset: {
+            name: '人工呼吸器',
+            model: 'VT-1000'
+        },
+        vendor: '-',
+        quantity: '2台',
+        rfqNo: '-',
+        status: '承認済',
+        approvalProgress: {
+            current: 3,
+            total: 3
+        },
+        facility: {
+            building: '本館',
+            floor: '4F',
+            department: 'ICU',
+            section: '集中治療室'
+        },
+        freeInput: '老朽化による廃棄',
+        executionYear: '2025年度'
+    },
+    {
+        id: 5,
+        applicationNo: 'REQ-2025-0005',
         applicationDate: '2025-11-13',
         applicationType: '増設購入申請',
         asset: {
@@ -108,16 +183,16 @@ const sampleApplications = [
         },
         facility: {
             building: '本館',
-            floor: '4F',
-            department: 'ICU',
-            section: '集中治療室'
+            floor: '3F',
+            department: '呼吸器内科',
+            section: '呼吸器内科病棟'
         },
         freeInput: '患者数増加のため',
         executionYear: '2025年度'
     },
     {
-        id: 5,
-        applicationNo: 'REQ-2025-0005',
+        id: 6,
+        applicationNo: 'REQ-2025-0006',
         applicationDate: '2025-11-12',
         applicationType: '移動申請',
         asset: {
@@ -212,6 +287,15 @@ function renderApplicationTable() {
 
         if (app.status === '下書き') {
             actionButtons += `<button class="app-action-btn delete" onclick="deleteApplication(${app.id})">削除</button>`;
+        }
+
+        // 承認済みの場合は個体登録ボタンを表示
+        if (app.status === '承認済') {
+            if (app.individualRegistered) {
+                actionButtons += `<span class="individual-registered-badge">✓ 個体登録済</span>`;
+            } else {
+                actionButtons += `<button class="app-action-btn register" onclick="handleIndividualRegistration(${app.id})">個体登録</button>`;
+            }
         }
 
         return `
@@ -725,13 +809,11 @@ function createRfqAndAssign() {
 }
 
 // 見積依頼一覧への遷移
+// NOTE: navigation.js のグローバル goToRfqList() を使用
+// （PageNavigationHelper対応済みで、全画面のクリアが保証される）
 function goToRfqListFromApplication() {
-    document.getElementById('applicationListPage').classList.remove('active');
-    document.getElementById('rfqListPage').classList.add('active');
-
-    // 見積依頼一覧を初期化
-    if (typeof window.initRfqListPage === 'function') {
-        window.initRfqListPage();
+    if (typeof window.goToRfqList === 'function') {
+        window.goToRfqList();
     }
 }
 
@@ -740,6 +822,56 @@ function handleBackFromApplicationList() {
     if (confirm('資産検索画面に戻りますか？')) {
         document.getElementById('applicationListPage').classList.remove('active');
         document.getElementById('searchResultPage').classList.add('active');
+    }
+}
+
+// 個体登録処理
+function handleIndividualRegistration(applicationId) {
+    const application = applicationListData.find(app => app.id === applicationId);
+
+    if (!application) {
+        alert('申請データが見つかりません');
+        return;
+    }
+
+    if (application.status !== '承認済') {
+        alert('承認済みの申請のみ個体登録できます');
+        return;
+    }
+
+    const applicationType = application.applicationType;
+    const registrationTypes = ['新規購入申請', '増設申請', '更新購入申請', '廃棄申請'];
+
+    if (!registrationTypes.includes(applicationType)) {
+        alert(`申請タイプ「${applicationType}」は個体登録の対象外です`);
+        return;
+    }
+
+    // 確認メッセージ
+    let confirmMessage = `以下の申請を個体登録しますか？\n\n`;
+    confirmMessage += `申請番号: ${application.applicationNo}\n`;
+    confirmMessage += `申請種別: ${applicationType}\n`;
+    confirmMessage += `資産名称: ${application.asset.name}\n`;
+    confirmMessage += `数量: ${application.quantity}\n\n`;
+
+    if (applicationType === '新規購入申請' || applicationType === '増設申請') {
+        confirmMessage += `QRコードを採番して個体管理リストに登録します。`;
+    } else if (applicationType === '更新購入申請') {
+        confirmMessage += `旧個体を廃棄し、新個体のQRコードを採番して登録します。`;
+    } else if (applicationType === '廃棄申請') {
+        confirmMessage += `該当個体を廃棄済みとして登録します。`;
+    }
+
+    if (!confirm(confirmMessage)) {
+        return;
+    }
+
+    // 個体登録処理を実行
+    if (typeof window.registerIndividualFromApplication === 'function') {
+        window.registerIndividualFromApplication(applicationId);
+        renderApplicationTable();
+    } else {
+        alert('個体登録機能が読み込まれていません');
     }
 }
 
@@ -767,3 +899,4 @@ window.handleRfqGroupingModalOutsideClick = handleRfqGroupingModalOutsideClick;
 window.createRfqAndAssign = createRfqAndAssign;
 window.goToRfqListFromApplication = goToRfqListFromApplication;
 window.handleBackFromApplicationList = handleBackFromApplicationList;
+window.handleIndividualRegistration = handleIndividualRegistration;

@@ -27,8 +27,10 @@
     <link rel="stylesheet" href="src/css/screens/data-matching.css">
     <link rel="stylesheet" href="src/css/screens/search-result-simple.css">
     <link rel="stylesheet" href="src/css/screens/application-list.css">
+    <link rel="stylesheet" href="src/css/screens/rfq-list.css">
     <link rel="stylesheet" href="src/css/screens/quotation-databox.css">
     <link rel="stylesheet" href="src/css/screens/quotation-processing.css">
+    <link rel="stylesheet" href="src/css/screens/individual-management-list.css">
     <link rel="stylesheet" href="src/css/screens/asset-survey-integrated.css">
     <link rel="stylesheet" href="src/css/screens/ship-facility-form.css">
 
@@ -153,6 +155,70 @@
 
         <!-- 見積処理画面 -->
         <div id="quotationProcessingPage"></div>
+
+        <!-- 個体管理リスト原本画面 -->
+        <div id="individualManagementListPage"></div>
+
+        <!-- グローバルモーダル：個体登録 -->
+        <div class="modal" id="individualRegistrationModal" onclick="handleRegistrationModalOutsideClick(event)">
+            <div class="modal-content registration-modal-content">
+                <h2 class="modal-title">個体登録</h2>
+
+                <div id="registrationInfo" class="registration-info">
+                    <!-- JavaScriptで動的生成 -->
+                </div>
+
+                <form id="individualRegistrationForm" onsubmit="handleIndividualRegistrationSubmit(event)">
+                    <div class="form-section">
+                        <div class="form-group">
+                            <label>ドキュメントアップロード（任意）</label>
+                            <p class="form-help" style="margin-bottom: 12px;">契約書、納品書、検収書などの関連ドキュメントをアップロードできます</p>
+
+                            <div id="documentUploadList" class="document-upload-list">
+                                <!-- 最初のアップロード欄 -->
+                                <div class="document-upload-item">
+                                    <select class="document-type-select">
+                                        <option value="">種別を選択</option>
+                                        <option value="契約書">契約書</option>
+                                        <option value="納品書">納品書</option>
+                                        <option value="検収書">検収書</option>
+                                        <option value="保証書">保証書</option>
+                                        <option value="取扱説明書">取扱説明書</option>
+                                        <option value="その他">その他</option>
+                                    </select>
+                                    <input type="file" class="document-file-input" accept=".pdf,.jpg,.jpeg,.png">
+                                    <button type="button" class="document-remove-btn" onclick="removeDocumentUpload(this)" style="display: none;">削除</button>
+                                </div>
+                            </div>
+
+                            <button type="button" class="add-document-btn" onclick="addDocumentUpload()">
+                                <span>➕</span> ドキュメントを追加
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer-buttons">
+                        <button type="button" class="modal-button secondary" onclick="closeIndividualRegistrationModal()">キャンセル</button>
+                        <button type="submit" class="modal-button">登録</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- グローバルモーダル：個体詳細 -->
+        <div class="modal" id="individualDetailModal" onclick="handleIndividualDetailModalOutsideClick(event)">
+            <div class="modal-content" style="max-width: 800px;">
+                <h2 class="modal-title">個体詳細情報</h2>
+
+                <div id="individualDetailContent">
+                    <!-- JavaScriptで動的生成 -->
+                </div>
+
+                <div style="display: flex; gap: 10px; margin-top: 20px;">
+                    <button class="modal-button secondary" onclick="closeIndividualDetailModal()" style="flex: 1;">閉じる</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- JavaScript読み込み（依存関係順） -->
@@ -162,6 +228,8 @@
     <script src="src/js/table-helper.js"></script>
     <script src="src/js/modal-helper.js"></script>
     <!-- 共通ヘルパー関数 -->
+    <script src="src/js/common-utils.js"></script>
+    <script src="src/js/page-navigation-helper.js"></script>
     <script src="src/js/badge-helper.js"></script>
     <script src="src/js/id-generator-helper.js"></script>
     <script src="src/js/choices-helper.js"></script>
@@ -188,8 +256,10 @@
     <script src="src/js/data-matching.js"></script>
     <script src="src/js/search-result-simple.js"></script>
     <script src="src/js/application-list.js"></script>
+    <script src="src/js/rfq-list.js"></script>
     <script src="src/js/quotation-databox.js"></script>
     <script src="src/js/quotation-processing.js"></script>
+    <script src="src/js/individual-management-list.js"></script>
     <script src="src/js/filters.js"></script>
     <script src="src/js/table-resize.js"></script>
     <script src="src/js/init.js"></script>
@@ -233,6 +303,7 @@
                 // { id: 'assetMasterModal', file: 'asset-master-modal.html' }, // 削除: search-result-simple.html内に統合済み
                 { id: 'searchResultPage', file: 'search-result-simple.html' },
                 { id: 'applicationListPage', file: 'application-list.html' },
+                { id: 'rfqListPage', file: 'rfq-list.html' },
                 { id: 'assetSurveyIntegratedPage', file: 'asset-survey-integrated.html' },
                 { id: 'shipFacilityMasterPage', file: 'ship-facility-master.html' },
                 { id: 'facilityNewModal', file: 'ship-facility-new-modal.html' },
@@ -241,7 +312,8 @@
                 { id: 'assetNewModal', file: 'ship-asset-new-modal.html' },
                 { id: 'assetEditModal', file: 'ship-asset-edit-modal.html' },
                 { id: 'quotationDataBoxPage', file: 'quotation-databox.html' },
-                { id: 'quotationProcessingPage', file: 'quotation-processing.html' }
+                { id: 'quotationProcessingPage', file: 'quotation-processing.html' },
+                { id: 'individualManagementListPage', file: 'individual-management-list.html' }
             ];
 
             // すべての画面を並行して読み込み

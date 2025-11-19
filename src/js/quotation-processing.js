@@ -300,13 +300,18 @@ function createMatchingTableRow(item) {
         `;
     }).join('');
 
-    // 申請選択ドロップダウン
-    const applicationSelectHTML = item.selectedCandidate ? `
-        <select class="application-select-inline" onchange="linkApplication(${item.id}, this.value)">
-            <option value="">申請を選択</option>
-            ${getApplicationOptions(item.linkedApplication)}
-        </select>
-    ` : '<span class="text-muted">候補を選択してください</span>';
+    // 申請選択ボタン
+    const applicationSelectHTML = item.selectedCandidate ? (
+        item.linkedApplication ?
+        `<div class="linked-application-display">
+            <div class="linked-app-info">
+                <div class="linked-app-no">${item.linkedApplication.applicationNo}</div>
+                <div class="linked-app-detail">${item.linkedApplication.asset ? item.linkedApplication.asset.name : '-'}</div>
+            </div>
+            <button class="table-btn secondary small" onclick="openApplicationSelectModal(${item.id})">変更</button>
+        </div>` :
+        `<button class="table-btn primary" onclick="openApplicationSelectModal(${item.id})">申請を選択</button>`
+    ) : '<span class="text-muted">候補を選択してください</span>';
 
     // ステータスバッジ
     const statusBadge = item.isConfirmed
@@ -376,41 +381,69 @@ function selectCandidate(itemId, candidateIndex) {
     updateMatchingSummary();
 }
 
-// 申請選択オプションを取得
-function getApplicationOptions(linkedApplication) {
+// 申請選択モーダルを開く
+function openApplicationSelectModal(itemId) {
+    currentSelectingItemId = itemId;
+
+    // 申請リストを表示
+    renderApplicationSelectModalTable();
+
+    document.getElementById('modalRfqNo').textContent = currentQuotation.rfqNo;
+    document.getElementById('applicationSelectModal').classList.add('active');
+}
+
+// 申請選択モーダルのテーブルを描画
+function renderApplicationSelectModalTable() {
+    const tbody = document.getElementById('applicationModalBody');
+
     if (!window.applicationListData || window.applicationListData.length === 0) {
-        return '<option value="">申請データがありません</option>';
+        tbody.innerHTML = '<tr><td colspan="6" class="text-center">申請データがありません</td></tr>';
+        return;
     }
 
-    // 見積依頼No.で絞り込み
-    const applications = window.applicationListData.filter(app => app.rfqNo === currentQuotation.rfqNo);
+    // 見積依頼No.で絞り込み（承認済みのみ）
+    const applications = window.applicationListData.filter(app =>
+        app.rfqNo === currentQuotation.rfqNo && app.status === '承認済'
+    );
 
     if (applications.length === 0) {
-        return '<option value="">該当する申請がありません</option>';
+        tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">該当する申請がありません（承認済みの申請のみ表示されます）</td></tr>';
+        return;
     }
 
-    return applications.map(app => {
-        const selected = linkedApplication && linkedApplication.applicationNo === app.applicationNo ? 'selected' : '';
+    tbody.innerHTML = applications.map(app => {
         const assetInfo = app.asset ? `${app.asset.name} ${app.asset.model || ''}` : '-';
-        return `<option value="${app.applicationNo}" ${selected}>${app.applicationNo} - ${assetInfo} (数量: ${app.quantity})</option>`;
+        return `
+            <tr class="clickable-row" onclick="selectApplicationFromModal('${app.applicationNo}')">
+                <td>
+                    <button class="table-btn primary small" onclick="event.stopPropagation(); selectApplicationFromModal('${app.applicationNo}')">選択</button>
+                </td>
+                <td>${app.applicationNo}</td>
+                <td>${app.applicationDate}</td>
+                <td>${app.applicationType}</td>
+                <td>${assetInfo}</td>
+                <td class="text-right">${app.quantity}</td>
+            </tr>
+        `;
     }).join('');
 }
 
-// 申請を紐付け
-function linkApplication(itemId, applicationNo) {
-    const matchingItem = matchingResults.find(r => r.id === itemId);
+// モーダルから申請を選択
+function selectApplicationFromModal(applicationNo) {
+    const matchingItem = matchingResults.find(r => r.id === currentSelectingItemId);
     if (!matchingItem) return;
 
-    if (applicationNo === '') {
-        matchingItem.linkedApplication = null;
-    } else {
-        const application = window.applicationListData.find(app => app.applicationNo === applicationNo);
-        matchingItem.linkedApplication = application || null;
-    }
+    const application = window.applicationListData.find(app => app.applicationNo === applicationNo);
+    if (!application) return;
+
+    // 申請を紐付け
+    matchingItem.linkedApplication = application;
 
     // 再描画
     renderMatchingResults();
     updateMatchingSummary();
+
+    closeApplicationSelectModal();
 }
 
 // 確定
@@ -689,17 +722,6 @@ function confirmAssetMasterSelection(itemCode) {
     alert('資産マスタを紐付けました');
 }
 
-// 申請選択モーダルを開く
-function selectApplication(itemId) {
-    currentSelectingItemId = itemId;
-
-    // 申請リストを表示
-    renderApplicationModal();
-
-    document.getElementById('modalRfqNo').textContent = currentQuotation.rfqNo;
-    document.getElementById('applicationSelectModal').classList.add('active');
-}
-
 function closeApplicationSelectModal() {
     document.getElementById('applicationSelectModal').classList.remove('active');
     currentSelectingItemId = null;
@@ -709,53 +731,6 @@ function handleApplicationModalOutsideClick(event) {
     if (event.target.id === 'applicationSelectModal') {
         closeApplicationSelectModal();
     }
-}
-
-function renderApplicationModal() {
-    const tbody = document.getElementById('applicationModalBody');
-
-    if (!window.applicationRecords || window.applicationRecords.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="6" class="text-center">申請が登録されていません</td></tr>';
-        return;
-    }
-
-    // 見積依頼No.で絞り込み
-    const applications = window.applicationRecords.filter(app => app.rfqNo === currentQuotation.rfqNo);
-
-    if (applications.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="6" class="text-center">該当する申請がありません</td></tr>';
-        return;
-    }
-
-    tbody.innerHTML = applications.map(app => `
-        <tr>
-            <td><button class="table-btn primary" onclick="confirmApplicationSelection('${app.applicationNo}')">選択</button></td>
-            <td>${app.applicationNo}</td>
-            <td>${app.applicationDate}</td>
-            <td>${app.applicationType}</td>
-            <td>${app.assetName}</td>
-            <td class="text-right">${app.quantity}</td>
-        </tr>
-    `).join('');
-}
-
-function confirmApplicationSelection(applicationNo) {
-    const application = window.applicationRecords.find(app => app.applicationNo === applicationNo);
-
-    if (!application) return;
-
-    // 紐付け結果を更新
-    const linkingItem = linkingResults.find(r => r.id === currentSelectingItemId);
-    if (linkingItem) {
-        linkingItem.application = application;
-        linkingItem.linkStatus = 'linked';
-
-        renderLinkingResults();
-        updateLinkingSummary();
-    }
-
-    closeApplicationSelectModal();
-    alert('申請に紐付けました');
 }
 
 // PDF プレビュー
@@ -842,7 +817,8 @@ window.goToStep = goToStep;
 window.startOcrExtraction = startOcrExtraction;
 window.toggleMatchingItem = toggleMatchingItem;
 window.selectCandidate = selectCandidate;
-window.linkApplication = linkApplication;
+window.openApplicationSelectModal = openApplicationSelectModal;
+window.selectApplicationFromModal = selectApplicationFromModal;
 window.confirmItem = confirmItem;
 window.unconfirmItem = unconfirmItem;
 window.openManualAssetSearch = openManualAssetSearch;
@@ -852,10 +828,8 @@ window.closeAssetMasterSelectModal = closeAssetMasterSelectModal;
 window.handleAssetMasterModalOutsideClick = handleAssetMasterModalOutsideClick;
 window.filterAssetMaster = filterAssetMaster;
 window.confirmAssetMasterSelection = confirmAssetMasterSelection;
-window.selectApplication = selectApplication;
 window.closeApplicationSelectModal = closeApplicationSelectModal;
 window.handleApplicationModalOutsideClick = handleApplicationModalOutsideClick;
-window.confirmApplicationSelection = confirmApplicationSelection;
 window.openPdfPreview = openPdfPreview;
 window.completeProcessing = completeProcessing;
 window.handleBackFromProcessing = handleBackFromProcessing;
