@@ -83,29 +83,31 @@
         <!-- メインコンテンツエリア -->
         <div class="main-content-area">
             <div class="content-wrapper">
-                <!-- テーブル表示 -->
+                <!-- テーブル表示（横スクロール対応） -->
                 <div class="list-view">
-                    <table class="resizable-table data-table">
-                        <thead>
-                            <tr>
-                                <th style="width: 50px;"><input type="checkbox" id="selectAllApplications" onchange="toggleSelectAll()"></th>
-                                <th style="width: 120px;">申請番号</th>
-                                <th style="width: 100px;">申請日</th>
-                                <th style="width: 120px;">申請種別</th>
-                                <th style="width: 200px;">資産情報</th>
-                                <th style="width: 80px;">数量</th>
-                                <th style="width: 200px;">見積情報</th>
-                                <th style="width: 120px;">見積依頼No</th>
-                                <th style="width: 150px;">購入先店舗</th>
-                                <th style="width: 100px;">状態</th>
-                                <th style="width: 100px;">承認進捗</th>
-                                <th style="width: 150px;">アクション</th>
-                            </tr>
-                        </thead>
-                        <tbody id="applicationTableBody">
-                            <!-- データ行はJavaScriptで生成 -->
-                        </tbody>
-                    </table>
+                    <div class="table-scroll-wrapper">
+                        <table class="resizable-table data-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 50px;"><input type="checkbox" id="selectAllApplications" onchange="toggleSelectAll()"></th>
+                                    <th style="width: 120px;">申請番号</th>
+                                    <th style="width: 100px;">申請日</th>
+                                    <th style="width: 120px;">申請種別</th>
+                                    <th style="width: 200px;">資産情報</th>
+                                    <th style="width: 80px;">数量</th>
+                                    <th style="width: 120px;">見積依頼No</th>
+                                    <th style="width: 150px;">購入先店舗</th>
+                                    <th style="width: 200px;">見積情報</th>
+                                    <th style="width: 100px;">状態</th>
+                                    <th style="width: 100px;">承認進捗</th>
+                                    <th style="width: 150px;">アクション</th>
+                                </tr>
+                            </thead>
+                            <tbody id="applicationTableBody">
+                                <!-- データ行はJavaScriptで生成 -->
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>

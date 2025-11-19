@@ -311,9 +311,9 @@ function renderApplicationTable() {
                     </div>
                 </td>
                 <td>${app.quantity}</td>
-                <td>${quotationInfoDisplay}</td>
                 <td>${rfqDisplay}</td>
                 <td>${vendorDisplay}</td>
+                <td>${quotationInfoDisplay}</td>
                 <td>${statusBadge}</td>
                 <td>
                     <div class="approval-progress">
