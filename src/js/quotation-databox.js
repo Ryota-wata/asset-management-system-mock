@@ -82,7 +82,6 @@ function createRfqSection(rfqNo, quotations) {
 
 // 見積書カードを生成
 function createQuotationCard(quotation) {
-    const phaseClass = quotation.phase === '概算' ? 'estimate' : 'final';
     const statusClass = getStatusClass(quotation.processingStatus || '未処理');
     const statusText = quotation.processingStatus || '未処理';
     const statusIcon = getStatusIcon(quotation.processingStatus || '未処理');
@@ -90,7 +89,6 @@ function createQuotationCard(quotation) {
     return `
         <div class="quotation-card">
             <div class="quotation-card-header">
-                <span class="quotation-phase-badge ${phaseClass}">${quotation.phase}</span>
                 <span class="quotation-status-badge ${statusClass}">
                     ${statusIcon} ${statusText}
                 </span>
@@ -257,7 +255,6 @@ function handleUploadQuotation(event) {
     event.preventDefault();
 
     const rfqNo = document.getElementById('uploadRfqNo').value;
-    const phase = document.getElementById('uploadPhase').value;
     const vendor = document.getElementById('uploadVendor').value;
     const quotationDate = document.getElementById('uploadQuotationDate').value;
     const file = document.getElementById('uploadFile').files[0];
@@ -271,7 +268,6 @@ function handleUploadQuotation(event) {
     const newQuotation = {
         id: `Q-${Date.now()}`,
         rfqNo: rfqNo,
-        phase: phase,
         vendor: vendor,
         quotationDate: quotationDate,
         uploadDate: new Date().toISOString().split('T')[0],
@@ -303,7 +299,6 @@ function showOutputModal(quotation) {
     // モーダルの情報を設定
     document.getElementById('outputModalRfqNo').textContent = quotation.rfqNo;
     document.getElementById('outputModalVendor').textContent = quotation.vendor || '業者名未設定';
-    document.getElementById('outputModalPhase').textContent = quotation.phase;
 
     // モーダルを表示
     document.getElementById('outputModal').classList.add('active');

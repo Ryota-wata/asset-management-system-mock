@@ -32,20 +32,19 @@ function initQuotationProcessingPage(quotationId) {
     currentStep = 1;
     goToStep(1);
 
-    // 初回表示時にサンプルデータを生成
+    // 初回表示時にすべてのステップのサンプルデータを生成
     simulateOcrExtraction();
+    performMatching();
+    performLinking();
 
     // 処理状態に応じてステップを復元
     if (currentQuotation.processingStatus === 'OCR完了') {
-        // マッチング結果を生成して次のステップへ
-        performMatching();
+        // マッチング結果を表示するためStep 2へ
         setTimeout(() => {
             goToStep(2);
         }, 100);
     } else if (currentQuotation.processingStatus === '紐付け完了') {
-        // すべての結果を復元して最終ステップへ
-        performMatching();
-        performLinking();
+        // 紐付け結果を表示するためStep 3へ
         setTimeout(() => {
             goToStep(3);
         }, 100);
@@ -74,13 +73,6 @@ function goToStep(step) {
     // 新しいステップを表示
     document.getElementById(`step${step}Content`).classList.add('active');
     currentStep = step;
-
-    // ステップごとの処理
-    if (step === 2 && matchingResults.length === 0) {
-        performMatching();
-    } else if (step === 3 && linkingResults.length === 0) {
-        performLinking();
-    }
 
     // スクロールをトップに
     window.scrollTo({ top: 0, behavior: 'smooth' });

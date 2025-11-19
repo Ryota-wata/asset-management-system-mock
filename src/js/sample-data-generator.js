@@ -136,35 +136,29 @@ function generateSampleData() {
             {
                 id: 'Q-1737000000001',
                 rfqNo: 'RFQ-2025-0001',
-                phase: '概算',
                 vendor: 'メディカルサプライ株式会社',
                 quotationDate: '2025-01-25',
                 uploadDate: '2025-01-26',
-                filename: '概算見積書_RFQ-2025-0001.pdf',
-                ocrStatus: '完了',
-                ocrDate: '2025-01-26'
+                filename: '見積書_RFQ-2025-0001_20250125.pdf',
+                processingStatus: '紐付け完了'
             },
             {
                 id: 'Q-1737000000002',
                 rfqNo: 'RFQ-2025-0001',
-                phase: '最終',
                 vendor: 'メディカルサプライ株式会社',
                 quotationDate: '2025-02-01',
                 uploadDate: '2025-02-02',
-                filename: '最終見積書_RFQ-2025-0001.pdf',
-                ocrStatus: '完了',
-                ocrDate: '2025-02-02'
+                filename: '見積書_RFQ-2025-0001_20250201.pdf',
+                processingStatus: 'OCR完了'
             },
             {
                 id: 'Q-1737000000003',
                 rfqNo: 'RFQ-2025-0002',
-                phase: '概算',
                 vendor: '医療機器商事株式会社',
                 quotationDate: '2025-01-28',
                 uploadDate: '2025-01-29',
-                filename: '概算見積書_RFQ-2025-0002.pdf',
-                ocrStatus: '未実行',
-                ocrDate: null
+                filename: '見積書_RFQ-2025-0002_20250128.pdf',
+                processingStatus: '未処理'
             }
         ];
     }
