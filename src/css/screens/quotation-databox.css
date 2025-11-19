@@ -450,3 +450,227 @@
 .quotation-databox-page .nav-menu-item-icon {
     font-size: 16px;
 }
+
+/* RFQグループセクション */
+.rfq-section {
+    background: white;
+    border-radius: 8px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    overflow: hidden;
+}
+
+.rfq-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-bottom: 3px solid #5568d3;
+}
+
+.rfq-section-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: white;
+    font-weight: 700;
+}
+
+.rfq-icon {
+    font-size: 24px;
+}
+
+.rfq-no {
+    font-size: 18px;
+    letter-spacing: 0.5px;
+}
+
+.rfq-vendor {
+    font-size: 15px;
+    opacity: 0.9;
+    padding-left: 12px;
+    border-left: 2px solid rgba(255,255,255,0.3);
+}
+
+.rfq-section-count {
+    background: rgba(255,255,255,0.2);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    color: white;
+}
+
+/* 見積書カードコンテナ */
+.quotation-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 16px;
+    padding: 20px;
+    background: #f8f9fa;
+}
+
+/* 見積書カード（RFQグループ内） */
+.rfq-section .quotation-card {
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    padding: 16px;
+    cursor: default;
+    transition: all 0.2s;
+}
+
+.rfq-section .quotation-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transform: translateY(-2px);
+}
+
+.rfq-section .quotation-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+    gap: 8px;
+}
+
+/* 見積書情報行 */
+.quotation-info-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 13px;
+}
+
+.quotation-info-row:last-child {
+    border-bottom: none;
+}
+
+.quotation-label {
+    color: #7f8c8d;
+    font-weight: 600;
+    min-width: 100px;
+}
+
+.quotation-value {
+    color: #2c3e50;
+    font-weight: 500;
+    text-align: right;
+}
+
+.quotation-filename {
+    font-family: 'Monaco', 'Courier New', monospace;
+    font-size: 12px;
+    color: #3498db;
+    word-break: break-all;
+}
+
+/* 処理状態バッジ */
+.quotation-status-badge {
+    padding: 5px 12px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    white-space: nowrap;
+}
+
+.quotation-status-badge.status-pending {
+    background: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeaa7;
+}
+
+.quotation-status-badge.status-ocr-done {
+    background: #d1ecf1;
+    color: #0c5460;
+    border: 1px solid #bee5eb;
+}
+
+.quotation-status-badge.status-matched {
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.quotation-status-badge.status-completed {
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+/* カードフッター（アクションボタンエリア） */
+.rfq-section .quotation-card-footer {
+    display: flex;
+    gap: 8px;
+    padding-top: 14px;
+    border-top: 2px solid #f0f0f0;
+    margin-top: 12px;
+}
+
+/* アクションボタン */
+.quotation-action-btn {
+    flex: 1;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: white;
+    color: #7f8c8d;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.quotation-action-btn:hover {
+    background: #f8f9fa;
+    border-color: #bdc3c7;
+}
+
+.quotation-action-btn.primary {
+    background: #3498db;
+    color: white;
+    border-color: #3498db;
+}
+
+.quotation-action-btn.primary:hover {
+    background: #2980b9;
+    border-color: #2980b9;
+}
+
+.quotation-action-btn.secondary {
+    background: white;
+    color: #e74c3c;
+    border-color: #e74c3c;
+}
+
+.quotation-action-btn.secondary:hover {
+    background: #e74c3c;
+    color: white;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+    .quotation-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .rfq-section-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .rfq-section-title {
+        flex-wrap: wrap;
+    }
+
+    .quotation-action-btn {
+        font-size: 11px;
+        padding: 6px 8px;
+    }
+}

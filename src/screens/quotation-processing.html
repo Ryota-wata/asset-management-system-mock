@@ -1,0 +1,357 @@
+<!-- 見積処理画面 -->
+<div id="quotationProcessingPage" class="quotation-processing-page">
+
+    <div class="result-container">
+        <!-- ヘッダー -->
+        <header class="result-header">
+            <div class="result-header-left">
+                <div class="logo">
+                    <div class="logo-icon">SHIP</div>
+                    <div class="result-header-title">見積処理</div>
+                </div>
+                <div class="quotation-processing-info">
+                    <span class="processing-rfq-no" id="processingRfqNo">-</span>
+                    <span class="processing-vendor" id="processingVendor">-</span>
+                </div>
+            </div>
+            <div class="result-header-actions">
+                <button class="header-btn back" onclick="handleBackFromProcessing()">見積書管理に戻る</button>
+            </div>
+        </header>
+
+        <!-- ステップインジケーター -->
+        <div class="step-indicator">
+            <div class="step-item active" data-step="1">
+                <div class="step-number">1</div>
+                <div class="step-label">AI-OCR抽出</div>
+                <div class="step-icon">🤖</div>
+            </div>
+            <div class="step-connector"></div>
+            <div class="step-item" data-step="2">
+                <div class="step-number">2</div>
+                <div class="step-label">資産マスタ突き合わせ</div>
+                <div class="step-icon">🔍</div>
+            </div>
+            <div class="step-connector"></div>
+            <div class="step-item" data-step="3">
+                <div class="step-number">3</div>
+                <div class="step-label">申請紐付け</div>
+                <div class="step-icon">🔗</div>
+            </div>
+            <div class="step-connector"></div>
+            <div class="step-item" data-step="4">
+                <div class="step-number">4</div>
+                <div class="step-label">発注書・検収書出力</div>
+                <div class="step-icon">📄</div>
+            </div>
+        </div>
+
+        <!-- メインコンテンツエリア -->
+        <div class="main-content-area">
+            <div class="content-wrapper">
+
+                <!-- Step 1: AI-OCR抽出 -->
+                <div class="step-content active" id="step1Content">
+                    <div class="step-content-header">
+                        <h2 class="step-content-title">Step 1: AI-OCR抽出</h2>
+                        <p class="step-content-description">見積書PDFから明細情報を自動抽出します</p>
+                    </div>
+
+                    <div class="processing-section">
+                        <div class="pdf-viewer-section">
+                            <div class="section-title">📄 見積書PDF</div>
+                            <div class="pdf-viewer" id="pdfViewer">
+                                <div class="pdf-placeholder">
+                                    <div class="pdf-icon">📑</div>
+                                    <div class="pdf-filename" id="pdfFilename">見積書.pdf</div>
+                                    <button class="pdf-view-btn" onclick="openPdfPreview()">PDFを開く</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="ocr-result-section">
+                            <div class="section-title">🤖 OCR抽出結果</div>
+                            <div class="ocr-status" id="ocrStatus">
+                                <button class="ocr-start-btn" onclick="startOcrExtraction()">
+                                    <span class="btn-icon">▶</span> OCR抽出を開始
+                                </button>
+                            </div>
+                            <div class="ocr-result-table" id="ocrResultTable" style="display: none;">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 50px;">No</th>
+                                            <th style="width: 300px;">品目名</th>
+                                            <th style="width: 80px;">数量</th>
+                                            <th style="width: 120px;">単価</th>
+                                            <th style="width: 120px;">金額</th>
+                                            <th style="width: 150px;">備考</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="ocrResultBody">
+                                        <!-- OCR結果をJavaScriptで生成 -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step-actions">
+                        <button class="step-btn secondary" onclick="handleBackFromProcessing()">キャンセル</button>
+                        <button class="step-btn primary" id="step1NextBtn" onclick="goToStep(2)" disabled>次へ: 資産マスタ突き合わせ</button>
+                    </div>
+                </div>
+
+                <!-- Step 2: 資産マスタ突き合わせ -->
+                <div class="step-content" id="step2Content">
+                    <div class="step-content-header">
+                        <h2 class="step-content-title">Step 2: 資産マスタ突き合わせ</h2>
+                        <p class="step-content-description">抽出した明細を資産マスタの個体管理品目と突き合わせます</p>
+                    </div>
+
+                    <div class="matching-section">
+                        <div class="matching-summary" id="matchingSummary">
+                            <div class="summary-card">
+                                <div class="summary-label">抽出明細数</div>
+                                <div class="summary-value" id="totalItemsCount">0</div>
+                            </div>
+                            <div class="summary-card success">
+                                <div class="summary-label">自動マッチ成功</div>
+                                <div class="summary-value" id="matchedItemsCount">0</div>
+                            </div>
+                            <div class="summary-card warning">
+                                <div class="summary-label">要確認</div>
+                                <div class="summary-value" id="unmatchedItemsCount">0</div>
+                            </div>
+                        </div>
+
+                        <div class="matching-table-container">
+                            <table class="data-table resizable-table">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 50px;">No</th>
+                                        <th style="width: 250px;">見積明細（OCR抽出）</th>
+                                        <th style="width: 80px;">数量</th>
+                                        <th style="width: 100px;">単価</th>
+                                        <th style="width: 80px;">マッチ状態</th>
+                                        <th style="width: 300px;">資産マスタ品目</th>
+                                        <th style="width: 100px;">操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="matchingTableBody">
+                                    <!-- マッチング結果をJavaScriptで生成 -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="step-actions">
+                        <button class="step-btn secondary" onclick="goToStep(1)">戻る</button>
+                        <button class="step-btn primary" id="step2NextBtn" onclick="goToStep(3)">次へ: 申請紐付け</button>
+                    </div>
+                </div>
+
+                <!-- Step 3: 申請紐付け -->
+                <div class="step-content" id="step3Content">
+                    <div class="step-content-header">
+                        <h2 class="step-content-title">Step 3: 申請紐付け</h2>
+                        <p class="step-content-description">マッチした明細を該当する申請に紐付けます</p>
+                    </div>
+
+                    <div class="linking-section">
+                        <div class="linking-summary" id="linkingSummary">
+                            <div class="summary-card">
+                                <div class="summary-label">明細数</div>
+                                <div class="summary-value" id="totalLinkedItemsCount">0</div>
+                            </div>
+                            <div class="summary-card success">
+                                <div class="summary-label">紐付け済み</div>
+                                <div class="summary-value" id="linkedItemsCount">0</div>
+                            </div>
+                            <div class="summary-card warning">
+                                <div class="summary-label">未紐付け</div>
+                                <div class="summary-value" id="unlinkedItemsCount">0</div>
+                            </div>
+                        </div>
+
+                        <div class="linking-table-container">
+                            <table class="data-table resizable-table">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 50px;">No</th>
+                                        <th style="width: 200px;">資産マスタ品目</th>
+                                        <th style="width: 80px;">数量</th>
+                                        <th style="width: 100px;">単価</th>
+                                        <th style="width: 100px;">紐付け状態</th>
+                                        <th style="width: 250px;">紐付け先申請</th>
+                                        <th style="width: 100px;">操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="linkingTableBody">
+                                    <!-- 紐付け結果をJavaScriptで生成 -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="step-actions">
+                        <button class="step-btn secondary" onclick="goToStep(2)">戻る</button>
+                        <button class="step-btn primary" id="step3NextBtn" onclick="goToStep(4)">次へ: 発注書・検収書出力</button>
+                    </div>
+                </div>
+
+                <!-- Step 4: 発注書・検収書出力 -->
+                <div class="step-content" id="step4Content">
+                    <div class="step-content-header">
+                        <h2 class="step-content-title">Step 4: 発注書・検収書出力</h2>
+                        <p class="step-content-description">発注書と検収書のテンプレートを出力します</p>
+                    </div>
+
+                    <div class="output-section">
+                        <div class="output-summary">
+                            <div class="summary-card-large">
+                                <div class="summary-icon">✅</div>
+                                <div class="summary-text">
+                                    <div class="summary-title">処理完了</div>
+                                    <div class="summary-description">すべての明細が申請に紐付けられました</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="output-options">
+                            <div class="output-option-card">
+                                <div class="output-option-header">
+                                    <div class="output-option-icon">📝</div>
+                                    <div class="output-option-title">発注書テンプレート</div>
+                                </div>
+                                <div class="output-option-body">
+                                    <p>紐付けられた申請情報から発注書を生成します</p>
+                                    <div class="output-option-details">
+                                        <div class="detail-row">
+                                            <span class="detail-label">見積依頼No:</span>
+                                            <span class="detail-value" id="outputRfqNo">-</span>
+                                        </div>
+                                        <div class="detail-row">
+                                            <span class="detail-label">購入先店舗:</span>
+                                            <span class="detail-value" id="outputVendor">-</span>
+                                        </div>
+                                        <div class="detail-row">
+                                            <span class="detail-label">明細数:</span>
+                                            <span class="detail-value" id="outputItemCount">-</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="output-option-footer">
+                                    <button class="output-btn" onclick="generatePurchaseOrder()">
+                                        <span class="btn-icon">📥</span> Excel出力
+                                    </button>
+                                    <button class="output-btn secondary" onclick="previewPurchaseOrder()">
+                                        <span class="btn-icon">👁</span> プレビュー
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="output-option-card">
+                                <div class="output-option-header">
+                                    <div class="output-option-icon">📋</div>
+                                    <div class="output-option-title">検収書テンプレート</div>
+                                </div>
+                                <div class="output-option-body">
+                                    <p>紐付けられた申請情報から検収書を生成します</p>
+                                    <div class="output-option-details">
+                                        <div class="detail-row">
+                                            <span class="detail-label">見積依頼No:</span>
+                                            <span class="detail-value" id="outputRfqNo2">-</span>
+                                        </div>
+                                        <div class="detail-row">
+                                            <span class="detail-label">購入先店舗:</span>
+                                            <span class="detail-value" id="outputVendor2">-</span>
+                                        </div>
+                                        <div class="detail-row">
+                                            <span class="detail-label">明細数:</span>
+                                            <span class="detail-value" id="outputItemCount2">-</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="output-option-footer">
+                                    <button class="output-btn" onclick="generateInspectionReport()">
+                                        <span class="btn-icon">📥</span> Excel出力
+                                    </button>
+                                    <button class="output-btn secondary" onclick="previewInspectionReport()">
+                                        <span class="btn-icon">👁</span> プレビュー
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step-actions">
+                        <button class="step-btn secondary" onclick="goToStep(3)">戻る</button>
+                        <button class="step-btn success" onclick="completeProcessing()">処理を完了</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- 資産マスタ選択モーダル -->
+    <div class="modal" id="assetMasterSelectModal" onclick="handleAssetMasterModalOutsideClick(event)">
+        <div class="modal-content" style="max-width: 800px;">
+            <h2 class="modal-title">資産マスタ品目を選択</h2>
+            <div class="modal-search">
+                <input type="text" id="assetMasterSearch" placeholder="品目名で検索..." onkeyup="filterAssetMaster()">
+            </div>
+            <div class="modal-table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 50px;">選択</th>
+                            <th style="width: 150px;">品目コード</th>
+                            <th style="width: 300px;">品目名</th>
+                            <th style="width: 150px;">カテゴリ</th>
+                        </tr>
+                    </thead>
+                    <tbody id="assetMasterModalBody">
+                        <!-- 資産マスタリストをJavaScriptで生成 -->
+                    </tbody>
+                </table>
+            </div>
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button class="modal-button secondary" onclick="closeAssetMasterSelectModal()" style="flex: 1;">キャンセル</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 申請選択モーダル -->
+    <div class="modal" id="applicationSelectModal" onclick="handleApplicationModalOutsideClick(event)">
+        <div class="modal-content" style="max-width: 900px;">
+            <h2 class="modal-title">紐付け先申請を選択</h2>
+            <div class="modal-info">
+                <div class="modal-info-label">見積依頼No:</div>
+                <div class="modal-info-value" id="modalRfqNo">-</div>
+            </div>
+            <div class="modal-table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 50px;">選択</th>
+                            <th style="width: 120px;">申請番号</th>
+                            <th style="width: 100px;">申請日</th>
+                            <th style="width: 120px;">申請種別</th>
+                            <th style="width: 250px;">資産情報</th>
+                            <th style="width: 80px;">数量</th>
+                        </tr>
+                    </thead>
+                    <tbody id="applicationModalBody">
+                        <!-- 申請リストをJavaScriptで生成 -->
+                    </tbody>
+                </table>
+            </div>
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button class="modal-button secondary" onclick="closeApplicationSelectModal()" style="flex: 1;">キャンセル</button>
+            </div>
+        </div>
+    </div>
+
+</div>

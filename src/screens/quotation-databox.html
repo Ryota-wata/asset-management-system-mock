@@ -1,4 +1,4 @@
-<!-- 見積DataBox画面（PDF保管庫） -->
+<!-- 見積書管理画面 -->
 <div id="quotationDataBoxPage" class="quotation-databox-page">
 
     <div class="result-container">
@@ -35,79 +35,17 @@
             </div>
         </header>
 
-        <!-- タブナビゲーション -->
-        <div class="databox-tabs">
-            <button class="databox-tab active" onclick="switchDataBoxTab('estimate')">概算見積</button>
-            <button class="databox-tab" onclick="switchDataBoxTab('final')">最終見積</button>
-            <button class="databox-tab" onclick="switchDataBoxTab('all')">すべて</button>
-        </div>
-
         <!-- メインコンテンツエリア -->
         <div class="main-content-area">
             <div class="content-wrapper">
 
-                <!-- 検索・フィルターセクション -->
-                <div class="databox-section filter-section">
-                    <div class="filter-row">
-                        <div class="filter-item">
-                            <label>見積依頼No</label>
-                            <input type="text" id="filterRfqNo" placeholder="RFQ-2025-0001">
-                        </div>
-                        <div class="filter-item">
-                            <label>業者名</label>
-                            <input type="text" id="filterVendor" placeholder="業者名で検索">
-                        </div>
-                        <div class="filter-item">
-                            <label>アップロード日</label>
-                            <input type="date" id="filterUploadDate">
-                        </div>
-                        <div class="filter-actions">
-                            <button class="filter-btn" onclick="filterQuotations()">絞り込み</button>
-                            <button class="filter-btn secondary" onclick="clearQuotationFilters()">クリア</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 概算見積タブコンテンツ -->
-                <div id="estimateTabContent" class="tab-content active">
-                    <div class="databox-section">
-                        <div class="databox-section-title">📊 概算見積一覧</div>
-
-                        <div class="quotation-grid" id="estimateQuotationGrid">
-                            <!-- JavaScriptで動的生成 -->
-                            <div class="empty-state">
-                                <div class="empty-icon">📋</div>
-                                <div class="empty-text">概算見積がアップロードされていません</div>
-                                <div class="empty-subtext">「見積書アップロード」ボタンから追加してください</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 最終見積タブコンテンツ -->
-                <div id="finalTabContent" class="tab-content">
-                    <div class="databox-section">
-                        <div class="databox-section-title">📊 最終見積一覧</div>
-
-                        <div class="quotation-grid" id="finalQuotationGrid">
-                            <!-- JavaScriptで動的生成 -->
-                            <div class="empty-state">
-                                <div class="empty-icon">📋</div>
-                                <div class="empty-text">最終見積がアップロードされていません</div>
-                                <div class="empty-subtext">「見積書アップロード」ボタンから追加してください</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- すべてタブコンテンツ -->
-                <div id="allTabContent" class="tab-content">
-                    <div class="databox-section">
-                        <div class="databox-section-title">📊 すべての見積</div>
-
-                        <div class="quotation-grid" id="allQuotationGrid">
-                            <!-- JavaScriptで動的生成 -->
-                        </div>
+                <!-- 見積依頼No.ごとのセクション -->
+                <div id="quotationsByRfqContainer">
+                    <!-- JavaScriptで動的生成 -->
+                    <div class="empty-state">
+                        <div class="empty-icon">📋</div>
+                        <div class="empty-text">見積書がアップロードされていません</div>
+                        <div class="empty-subtext">「見積書アップロード」ボタンから追加してください</div>
                     </div>
                 </div>
 
@@ -141,7 +79,7 @@
 
                     <div class="form-group">
                         <label for="uploadVendor">業者名 <span class="required">*</span></label>
-                        <input type="text" id="uploadVendor" placeholder="株式会社〇〇" required>
+                        <input type="text" id="uploadVendor" required placeholder="業者名を入力">
                     </div>
 
                     <div class="form-group">
@@ -152,7 +90,7 @@
                     <div class="form-group">
                         <label for="uploadFile">見積書PDF <span class="required">*</span></label>
                         <input type="file" id="uploadFile" accept=".pdf" required>
-                        <div class="form-help">PDFファイルのみアップロード可能です</div>
+                        <small>※ PDF形式のファイルをアップロードしてください</small>
                     </div>
                 </div>
 
@@ -161,22 +99,6 @@
                     <button type="submit" class="modal-button" style="flex: 1;">アップロード</button>
                 </div>
             </form>
-        </div>
-    </div>
-
-    <!-- 見積書詳細モーダル -->
-    <div class="modal" id="quotationDetailModal" onclick="handleDetailModalOutsideClick(event)">
-        <div class="modal-content" style="max-width: 800px;">
-            <h2 class="modal-title">見積書詳細</h2>
-
-            <div id="quotationDetailContent">
-                <!-- JavaScriptで動的生成 -->
-            </div>
-
-            <div style="display: flex; gap: 10px; margin-top: 20px;">
-                <button class="modal-button secondary" onclick="closeQuotationDetailModal()" style="flex: 1;">閉じる</button>
-                <button class="modal-button primary" id="executeOcrBtn" onclick="executeOcr()" style="flex: 1;">AI-OCR実行</button>
-            </div>
         </div>
     </div>
 

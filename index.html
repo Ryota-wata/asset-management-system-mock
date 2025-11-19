@@ -28,6 +28,7 @@
     <link rel="stylesheet" href="src/css/screens/search-result-simple.css">
     <link rel="stylesheet" href="src/css/screens/application-list.css">
     <link rel="stylesheet" href="src/css/screens/quotation-databox.css">
+    <link rel="stylesheet" href="src/css/screens/quotation-processing.css">
     <link rel="stylesheet" href="src/css/screens/asset-survey-integrated.css">
     <link rel="stylesheet" href="src/css/screens/ship-facility-form.css">
 
@@ -150,14 +151,8 @@
         <!-- 見積明細DataBOX画面 -->
         <div id="quotationDataBoxPage"></div>
 
-        <!-- AI-OCR明細抽出結果画面 -->
-        <div id="quotationOcrResultPage"></div>
-
-        <!-- 明細と申請の紐付けチェック画面 -->
-        <div id="quotationMatchingPage"></div>
-
-        <!-- 発注書・検収書テンプレート出力画面 -->
-        <div id="orderTemplatePage"></div>
+        <!-- 見積処理画面 -->
+        <div id="quotationProcessingPage"></div>
     </div>
 
     <!-- JavaScript読み込み（依存関係順） -->
@@ -194,6 +189,7 @@
     <script src="src/js/search-result-simple.js"></script>
     <script src="src/js/application-list.js"></script>
     <script src="src/js/quotation-databox.js"></script>
+    <script src="src/js/quotation-processing.js"></script>
     <script src="src/js/filters.js"></script>
     <script src="src/js/table-resize.js"></script>
     <script src="src/js/init.js"></script>
@@ -244,7 +240,8 @@
                 { id: 'shipAssetMasterPage', file: 'ship-asset-master.html' },
                 { id: 'assetNewModal', file: 'ship-asset-new-modal.html' },
                 { id: 'assetEditModal', file: 'ship-asset-edit-modal.html' },
-                { id: 'quotationDataBoxPage', file: 'quotation-databox.html' }
+                { id: 'quotationDataBoxPage', file: 'quotation-databox.html' },
+                { id: 'quotationProcessingPage', file: 'quotation-processing.html' }
             ];
 
             // すべての画面を並行して読み込み

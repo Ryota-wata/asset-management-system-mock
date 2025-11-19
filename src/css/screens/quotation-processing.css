@@ -1,0 +1,711 @@
+/**
+ * 見積処理画面のスタイル
+ */
+
+.quotation-processing-page {
+    display: none;
+    width: 100%;
+    min-height: 100vh;
+    background: #f5f7fa;
+}
+
+.quotation-processing-page.active {
+    display: block;
+}
+
+/* ヘッダー情報 */
+.quotation-processing-info {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-left: 20px;
+}
+
+.processing-rfq-no {
+    font-size: 16px;
+    font-weight: 700;
+    color: #3498db;
+    background: rgba(52, 152, 219, 0.1);
+    padding: 6px 12px;
+    border-radius: 4px;
+}
+
+.processing-vendor {
+    font-size: 14px;
+    color: #7f8c8d;
+}
+
+/* ステップインジケーター */
+.step-indicator {
+    background: white;
+    padding: 30px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.step-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    position: relative;
+}
+
+.step-number {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: #e0e0e0;
+    color: #7f8c8d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    font-weight: 700;
+    transition: all 0.3s;
+}
+
+.step-item.active .step-number {
+    background: #3498db;
+    color: white;
+    box-shadow: 0 0 0 4px rgba(52, 152, 219, 0.2);
+}
+
+.step-item.completed .step-number {
+    background: #27ae60;
+    color: white;
+}
+
+.step-item.completed .step-number::after {
+    content: '✓';
+    position: absolute;
+    font-size: 24px;
+}
+
+.step-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #7f8c8d;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.step-item.active .step-label {
+    color: #3498db;
+}
+
+.step-item.completed .step-label {
+    color: #27ae60;
+}
+
+.step-icon {
+    font-size: 20px;
+    opacity: 0.6;
+}
+
+.step-item.active .step-icon,
+.step-item.completed .step-icon {
+    opacity: 1;
+}
+
+.step-connector {
+    width: 120px;
+    height: 3px;
+    background: #e0e0e0;
+    margin: 0 -10px;
+    align-self: flex-start;
+    margin-top: 23px;
+    transition: all 0.3s;
+}
+
+.step-item.completed + .step-connector {
+    background: #27ae60;
+}
+
+/* ステップコンテンツ */
+.step-content {
+    display: none;
+}
+
+.step-content.active {
+    display: block;
+}
+
+.step-content-header {
+    background: white;
+    padding: 30px 40px;
+    margin-bottom: 24px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.step-content-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 8px;
+}
+
+.step-content-description {
+    font-size: 15px;
+    color: #7f8c8d;
+    margin: 0;
+}
+
+/* セクション */
+.processing-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 24px;
+}
+
+.section-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #ecf0f1;
+}
+
+/* PDF表示エリア */
+.pdf-viewer-section {
+    background: white;
+    padding: 24px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.pdf-viewer {
+    border: 2px dashed #ddd;
+    border-radius: 8px;
+    background: #f8f9fa;
+    min-height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pdf-placeholder {
+    text-align: center;
+    padding: 40px;
+}
+
+.pdf-icon {
+    font-size: 64px;
+    margin-bottom: 16px;
+}
+
+.pdf-filename {
+    font-size: 16px;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 20px;
+}
+
+.pdf-view-btn {
+    padding: 10px 24px;
+    background: #3498db;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.pdf-view-btn:hover {
+    background: #2980b9;
+}
+
+/* OCR結果エリア */
+.ocr-result-section {
+    background: white;
+    padding: 24px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.ocr-status {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 400px;
+}
+
+.ocr-start-btn {
+    padding: 16px 32px;
+    background: #27ae60;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.ocr-start-btn:hover {
+    background: #229954;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
+}
+
+.ocr-start-btn:disabled {
+    background: #95a5a6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.spinner {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.ocr-result-table {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+/* マッチングセクション */
+.matching-section,
+.linking-section {
+    background: white;
+    padding: 24px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    margin-bottom: 24px;
+}
+
+.matching-summary,
+.linking-summary {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.summary-card {
+    background: #f8f9fa;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+}
+
+.summary-card.success {
+    border-color: #27ae60;
+    background: rgba(39, 174, 96, 0.05);
+}
+
+.summary-card.warning {
+    border-color: #f39c12;
+    background: rgba(243, 156, 18, 0.05);
+}
+
+.summary-label {
+    font-size: 13px;
+    color: #7f8c8d;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.summary-value {
+    font-size: 32px;
+    font-weight: 700;
+    color: #2c3e50;
+}
+
+.summary-card.success .summary-value {
+    color: #27ae60;
+}
+
+.summary-card.warning .summary-value {
+    color: #f39c12;
+}
+
+/* マッチングテーブル */
+.matching-table-container,
+.linking-table-container {
+    max-height: 500px;
+    overflow-y: auto;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+}
+
+.match-badge,
+.link-badge {
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 700;
+    display: inline-block;
+}
+
+.match-badge.matched,
+.link-badge.linked {
+    background: #d4edda;
+    color: #155724;
+}
+
+.match-badge.unmatched,
+.link-badge.unlinked {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.table-btn {
+    padding: 6px 14px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: white;
+    color: #7f8c8d;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.table-btn:hover {
+    background: #f8f9fa;
+}
+
+.table-btn.primary {
+    background: #3498db;
+    color: white;
+    border-color: #3498db;
+}
+
+.table-btn.primary:hover {
+    background: #2980b9;
+}
+
+.table-btn.secondary {
+    background: #95a5a6;
+    color: white;
+    border-color: #95a5a6;
+}
+
+.table-btn.secondary:hover {
+    background: #7f8c8d;
+}
+
+/* 出力セクション */
+.output-section {
+    background: white;
+    padding: 24px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    margin-bottom: 24px;
+}
+
+.output-summary {
+    margin-bottom: 32px;
+}
+
+.summary-card-large {
+    background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+    border-radius: 12px;
+    padding: 32px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    color: white;
+}
+
+.summary-icon {
+    font-size: 64px;
+}
+
+.summary-text {
+    flex: 1;
+}
+
+.summary-title {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.summary-description {
+    font-size: 15px;
+    opacity: 0.9;
+}
+
+.output-options {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+}
+
+.output-option-card {
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: all 0.2s;
+}
+
+.output-option-card:hover {
+    border-color: #3498db;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.output-option-header {
+    background: #f8f9fa;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+.output-option-icon {
+    font-size: 32px;
+}
+
+.output-option-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #2c3e50;
+}
+
+.output-option-body {
+    padding: 20px;
+}
+
+.output-option-body p {
+    font-size: 14px;
+    color: #7f8c8d;
+    margin-bottom: 16px;
+}
+
+.output-option-details {
+    background: #f8f9fa;
+    padding: 16px;
+    border-radius: 4px;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #e0e0e0;
+    font-size: 13px;
+}
+
+.detail-row:last-child {
+    border-bottom: none;
+}
+
+.detail-label {
+    color: #7f8c8d;
+    font-weight: 600;
+}
+
+.detail-value {
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+.output-option-footer {
+    padding: 20px;
+    display: flex;
+    gap: 12px;
+    background: #f8f9fa;
+    border-top: 2px solid #e0e0e0;
+}
+
+.output-btn {
+    flex: 1;
+    padding: 12px 20px;
+    background: #3498db;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.output-btn:hover {
+    background: #2980b9;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+}
+
+.output-btn.secondary {
+    background: white;
+    color: #3498db;
+    border: 1px solid #3498db;
+}
+
+.output-btn.secondary:hover {
+    background: #ecf0f1;
+}
+
+/* ステップアクション */
+.step-actions {
+    background: white;
+    padding: 24px 40px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.step-btn {
+    padding: 14px 32px;
+    border: none;
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.step-btn.secondary {
+    background: #95a5a6;
+    color: white;
+}
+
+.step-btn.secondary:hover {
+    background: #7f8c8d;
+}
+
+.step-btn.primary {
+    background: #3498db;
+    color: white;
+}
+
+.step-btn.primary:hover {
+    background: #2980b9;
+}
+
+.step-btn.primary:disabled {
+    background: #bdc3c7;
+    cursor: not-allowed;
+}
+
+.step-btn.success {
+    background: #27ae60;
+    color: white;
+}
+
+.step-btn.success:hover {
+    background: #229954;
+}
+
+/* モーダル追加スタイル */
+.modal-search {
+    margin-bottom: 20px;
+}
+
+.modal-search input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.modal-table-container {
+    max-height: 400px;
+    overflow-y: auto;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+
+.modal-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    background: #e3f2fd;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+
+.modal-info-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1976d2;
+}
+
+.modal-info-value {
+    font-size: 15px;
+    font-weight: 700;
+    color: #1565c0;
+}
+
+/* ヘルパークラス */
+.text-right {
+    text-align: right;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-muted {
+    color: #95a5a6;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 1200px) {
+    .processing-section {
+        grid-template-columns: 1fr;
+    }
+
+    .output-options {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .step-indicator {
+        padding: 20px;
+        overflow-x: auto;
+    }
+
+    .step-connector {
+        width: 60px;
+    }
+
+    .step-label {
+        font-size: 11px;
+    }
+
+    .matching-summary,
+    .linking-summary {
+        grid-template-columns: 1fr;
+    }
+
+    .step-actions {
+        flex-direction: column;
+    }
+
+    .step-btn {
+        width: 100%;
+    }
+}
