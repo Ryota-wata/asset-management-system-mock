@@ -190,5 +190,127 @@ window.CommonUtils = {
                 loader.style.display = 'none';
             }
         }
+    },
+
+    /**
+     * 複数のDOM要素にテキスト値を一括設定
+     * @param {Object} data - データオブジェクト
+     * @param {Object} fieldMappings - {elementId: fieldPath} のマッピング
+     * @param {string} defaultValue - デフォルト値（未指定時）
+     */
+    setElementsText(data, fieldMappings, defaultValue = '-') {
+        Object.entries(fieldMappings).forEach(([elementId, fieldPath]) => {
+            const element = document.getElementById(elementId);
+            if (!element) return;
+
+            // ネストされたフィールドパスのサポート (例: 'address.city')
+            const value = fieldPath.includes('.')
+                ? fieldPath.split('.').reduce((obj, key) => obj?.[key], data)
+                : data[fieldPath];
+
+            element.textContent = value !== null && value !== undefined && value !== '' ? value : defaultValue;
+        });
+    },
+
+    /**
+     * フォーム入力値の一括取得
+     * @param {Object} fieldMappings - {dataKey: elementId} のマッピング
+     * @param {string} defaultValue - デフォルト値（未指定時）
+     * @returns {Object} 取得した値のオブジェクト
+     */
+    getFormFieldValues(fieldMappings, defaultValue = '-') {
+        const values = {};
+
+        Object.entries(fieldMappings).forEach(([dataKey, elementId]) => {
+            const element = document.getElementById(elementId);
+            if (!element) {
+                values[dataKey] = defaultValue;
+                return;
+            }
+
+            // input要素を含む要素から値を取得
+            const input = element.querySelector('input, select, textarea') || element;
+
+            if (input.tagName === 'INPUT' || input.tagName === 'SELECT' || input.tagName === 'TEXTAREA') {
+                values[dataKey] = input.value || defaultValue;
+            } else {
+                values[dataKey] = element.textContent || defaultValue;
+            }
+        });
+
+        return values;
+    },
+
+    /**
+     * フォーム入力値の一括設定
+     * @param {Object} values - 設定する値のオブジェクト
+     * @param {Object} fieldMappings - {dataKey: elementId} のマッピング
+     */
+    setFormFieldValues(values, fieldMappings) {
+        Object.entries(fieldMappings).forEach(([dataKey, elementId]) => {
+            const element = document.getElementById(elementId);
+            if (!element) return;
+
+            const value = values[dataKey];
+            if (value === null || value === undefined) return;
+
+            // input要素を含む要素に値を設定
+            const input = element.querySelector('input, select, textarea') || element;
+
+            if (input.tagName === 'INPUT' || input.tagName === 'SELECT' || input.tagName === 'TEXTAREA') {
+                input.value = value === '-' ? '' : value;
+            } else {
+                element.textContent = value;
+            }
+        });
+    },
+
+    /**
+     * 要素を編集可能な入力フィールドに変換
+     * @param {Object} fieldConfigs - {elementId: {type, placeholder, ...}} の設定
+     */
+    convertToEditableFields(fieldConfigs) {
+        Object.entries(fieldConfigs).forEach(([elementId, config]) => {
+            const element = document.getElementById(elementId);
+            if (!element) return;
+
+            const currentValue = element.textContent;
+            const displayValue = currentValue === '-' ? '' : currentValue;
+
+            const {
+                type = 'text',
+                placeholder = '',
+                readonly = false,
+                options = null  // select要素用
+            } = config;
+
+            if (options && Array.isArray(options)) {
+                // select要素を生成
+                const optionsHtml = options.map(opt =>
+                    `<option value="${opt.value}" ${opt.value === displayValue ? 'selected' : ''}>${opt.label}</option>`
+                ).join('');
+                element.innerHTML = `<select ${readonly ? 'disabled' : ''}>${optionsHtml}</select>`;
+            } else {
+                // input要素を生成
+                element.innerHTML = `<input type="${type}" value="${displayValue}" placeholder="${placeholder}" ${readonly ? 'readonly' : ''}>`;
+            }
+        });
+    },
+
+    /**
+     * 編集可能フィールドを通常のテキスト表示に戻す
+     * @param {Array} elementIds - 要素IDの配列
+     */
+    convertToTextDisplay(elementIds) {
+        elementIds.forEach(elementId => {
+            const element = document.getElementById(elementId);
+            if (!element) return;
+
+            const input = element.querySelector('input, select, textarea');
+            if (input) {
+                const value = input.value || '-';
+                element.textContent = value;
+            }
+        });
     }
 };

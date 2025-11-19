@@ -35,14 +35,140 @@
     border-radius: 8px;
     padding: 15px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+/* 写真ビューアー */
+.photo-viewer {
+    position: relative;
+    width: 100%;
+    height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f5f5f5;
+    border-radius: 4px;
+    overflow: hidden;
 }
 
 .asset-photo {
-    width: 100%;
-    height: auto;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+/* 写真ナビゲーションボタン */
+.photo-nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 24px;
+    cursor: pointer;
+    transition: all 0.3s;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.photo-nav-btn:hover {
+    background: rgba(0, 0, 0, 0.7);
+}
+
+.photo-nav-btn.prev {
+    left: 10px;
+}
+
+.photo-nav-btn.next {
+    right: 10px;
+}
+
+.photo-nav-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+/* 写真カウンター */
+.photo-counter {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+}
+
+/* サムネイル一覧 */
+.photo-thumbnails {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+    overflow-x: auto;
+    padding: 5px 0;
+}
+
+.photo-thumbnail {
+    width: 60px;
+    height: 60px;
     border-radius: 4px;
+    border: 2px solid #ddd;
+    cursor: pointer;
     object-fit: cover;
-    max-height: 300px;
+    transition: all 0.3s;
+    flex-shrink: 0;
+}
+
+.photo-thumbnail:hover {
+    border-color: #27ae60;
+}
+
+.photo-thumbnail.active {
+    border-color: #27ae60;
+    box-shadow: 0 0 0 2px rgba(39, 174, 96, 0.2);
+}
+
+/* 写真編集オーバーレイ */
+.photo-edit-overlay {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.photo-edit-btn,
+.photo-delete-btn {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.photo-edit-btn {
+    background: #3498db;
+    color: white;
+}
+
+.photo-edit-btn:hover {
+    background: #2980b9;
+}
+
+.photo-delete-btn {
+    background: #e74c3c;
+    color: white;
+}
+
+.photo-delete-btn:hover {
+    background: #c0392b;
 }
 
 /* 基本情報ボックス */
@@ -87,6 +213,39 @@
     word-break: break-word;
 }
 
+/* 編集モード時の入力フィールド */
+.info-value input,
+.info-value select,
+.info-value textarea {
+    width: 100%;
+    padding: 6px 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    font-family: inherit;
+    background: white;
+    box-sizing: border-box;
+}
+
+.info-value input:focus,
+.info-value select:focus,
+.info-value textarea:focus {
+    outline: none;
+    border-color: #27ae60;
+    box-shadow: 0 0 0 2px rgba(39, 174, 96, 0.1);
+}
+
+.info-value textarea {
+    min-height: 60px;
+    resize: vertical;
+}
+
+/* 読み取り専用フィールド */
+.info-value input[readonly] {
+    background: #f5f5f5;
+    cursor: not-allowed;
+}
+
 /* ========================================
    右側：ドキュメント閲覧
 ======================================== */
@@ -104,13 +263,40 @@
     height: 100%;
 }
 
+.document-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #27ae60;
+}
+
 .document-section-title {
     font-size: 16px;
     font-weight: bold;
     color: #2c3e50;
-    margin-bottom: 15px;
-    padding-bottom: 10px;
-    border-bottom: 2px solid #27ae60;
+    margin: 0;
+}
+
+.document-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.doc-add-btn {
+    padding: 6px 12px;
+    background: #27ae60;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.doc-add-btn:hover {
+    background: #229954;
 }
 
 /* ドキュメントリスト */
@@ -136,6 +322,23 @@
     border-radius: 4px;
     cursor: pointer;
     transition: all 0.2s;
+    position: relative;
+}
+
+.doc-delete-btn {
+    padding: 6px 10px;
+    background: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-left: auto;
+}
+
+.doc-delete-btn:hover {
+    background: #c0392b;
 }
 
 .document-item:hover {
@@ -176,15 +379,49 @@
     border: 2px solid #e0e0e0;
     border-radius: 4px;
     display: flex;
-    align-items: center;
-    justify-content: center;
+    flex-direction: column;
     min-height: 400px;
+}
+
+.document-viewer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    background: white;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.viewer-document-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: #2c3e50;
+}
+
+.print-pdf-btn {
+    padding: 6px 12px;
+    background: #3498db;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.print-pdf-btn:hover {
+    background: #2980b9;
 }
 
 .document-viewer-placeholder {
     text-align: center;
     color: #666;
     padding: 40px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 .viewer-icon {

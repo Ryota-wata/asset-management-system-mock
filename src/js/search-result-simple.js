@@ -12,6 +12,7 @@ let searchResultFilter_assetMaster = null;
         // サンプルデータ
         const sampleData = [
             {
+                qrCode: 'QR-2025-0001',
                 no: 1,
                 facility: '〇〇〇〇〇〇病院',
                 building: '本館',
@@ -28,9 +29,15 @@ let searchResultFilter_assetMaster = null;
                 quantity: 1,
                 width: 520,
                 depth: 480,
-                height: 1400
+                height: 1400,
+                photos: [
+                    'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%2390caf9" width="400" height="300"/%3E%3Ctext x="50%25" y="50%25" text-anchor="middle" dy=".3em" fill="%23fff" font-size="24"%3E写真1%3C/text%3E%3C/svg%3E',
+                    'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%2366bb6a" width="400" height="300"/%3E%3Ctext x="50%25" y="50%25" text-anchor="middle" dy=".3em" fill="%23fff" font-size="24"%3E写真2%3C/text%3E%3C/svg%3E',
+                    'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%23ff7043" width="400" height="300"/%3E%3Ctext x="50%25" y="50%25" text-anchor="middle" dy=".3em" fill="%23fff" font-size="24"%3E写真3%3C/text%3E%3C/svg%3E'
+                ]
             },
             {
+                qrCode: 'QR-2025-0002',
                 no: 2,
                 facility: '〇〇〇〇〇〇病院',
                 building: '本館',
@@ -47,10 +54,15 @@ let searchResultFilter_assetMaster = null;
                 quantity: 1,
                 width: '',
                 depth: '',
-                height: ''
+                height: '',
+                photos: [
+                    'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%23ab47bc" width="400" height="300"/%3E%3Ctext x="50%25" y="50%25" text-anchor="middle" dy=".3em" fill="%23fff" font-size="24"%3E写真A%3C/text%3E%3C/svg%3E',
+                    'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%23ec407a" width="400" height="300"/%3E%3Ctext x="50%25" y="50%25" text-anchor="middle" dy=".3em" fill="%23fff" font-size="24"%3E写真B%3C/text%3E%3C/svg%3E'
+                ]
             },
             // さらにデータを追加
             ...Array.from({length: 18}, (_, i) => ({
+                qrCode: `QR-2025-${String(i + 3).padStart(4, '0')}`,
                 no: i + 3,
                 facility: '〇〇〇〇〇〇病院',
                 building: '本館',
@@ -622,8 +634,11 @@ let searchResultFilter_assetMaster = null;
 
         function selectCustomColumns() {
             console.log('任意項目選択');
-            closeExportModal();
-            toggleSidePanel();
+            // モーダルを閉じずにサイドパネルを開く
+            const panel = document.getElementById('sidePanel');
+            if (!panel.classList.contains('active')) {
+                panel.classList.add('active');
+            }
         }
 
         // 申請処理

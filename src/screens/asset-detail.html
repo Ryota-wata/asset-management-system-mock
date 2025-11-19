@@ -10,6 +10,9 @@
                 <span class="result-count" id="assetDetailCount">1件</span>
             </div>
             <div class="result-header-actions">
+                <button class="header-btn primary" id="editBtn" onclick="toggleEditMode()">編集</button>
+                <button class="header-btn success" id="saveBtn" onclick="saveAssetDetail()" style="display: none;">保存</button>
+                <button class="header-btn secondary" id="cancelBtn" onclick="cancelEdit()" style="display: none;">キャンセル</button>
                 <button class="header-btn back" onclick="handleBackFromAssetDetail()">戻る</button>
             </div>
         </header>
@@ -20,16 +23,38 @@
             <div class="detail-left">
                 <!-- 資産写真 -->
                 <div class="asset-photo-container">
-                    <img id="assetDetailPhoto" src="" alt="資産写真" class="asset-photo">
+                    <!-- メイン写真表示エリア -->
+                    <div class="photo-viewer">
+                        <button class="photo-nav-btn prev" onclick="navigatePhoto(-1)" id="prevPhotoBtn">‹</button>
+                        <img id="assetDetailPhoto" src="" alt="資産写真" class="asset-photo">
+                        <button class="photo-nav-btn next" onclick="navigatePhoto(1)" id="nextPhotoBtn">›</button>
+                        <div class="photo-counter" id="photoCounter">1 / 1</div>
+                    </div>
+
+                    <!-- サムネイル一覧 -->
+                    <div class="photo-thumbnails" id="photoThumbnails">
+                        <!-- サムネイルはJavaScriptで生成 -->
+                    </div>
+
+                    <!-- 写真編集ボタン -->
+                    <div class="photo-edit-overlay" id="photoEditOverlay" style="display: none;">
+                        <input type="file" id="photoUpload" accept="image/*" multiple style="display: none;" onchange="handlePhotoUpload(event)">
+                        <button class="photo-edit-btn" onclick="document.getElementById('photoUpload').click()">
+                            📷 写真を追加（最大6枚）
+                        </button>
+                        <button class="photo-delete-btn" onclick="deleteCurrentPhoto()">
+                            🗑️ 現在の写真を削除
+                        </button>
+                    </div>
                 </div>
 
                 <!-- 基本情報 -->
                 <div class="basic-info-box">
                     <h3 class="info-section-title">基本情報</h3>
-                    <div class="info-grid">
+                    <div class="info-grid" id="infoGrid">
                         <div class="info-row">
-                            <span class="info-label">No.:</span>
-                            <span class="info-value" id="detailNo">-</span>
+                            <span class="info-label">QRコードNo.:</span>
+                            <span class="info-value" id="detailQrCode">-</span>
                         </div>
                         <div class="info-row">
                             <span class="info-label">施設名:</span>
@@ -102,16 +127,25 @@
             <!-- 右側：ドキュメント閲覧 -->
             <div class="detail-right">
                 <div class="document-section">
-                    <h3 class="document-section-title">登録ドキュメント</h3>
+                    <div class="document-header">
+                        <h3 class="document-section-title">登録ドキュメント</h3>
+                        <div class="document-actions" id="documentActions" style="display: none;">
+                            <input type="file" id="documentUpload" accept=".pdf,.doc,.docx,.xlsx,.xls" style="display: none;" onchange="handleDocumentUpload(event)">
+                            <button class="doc-add-btn" onclick="document.getElementById('documentUpload').click()">
+                                ➕ ドキュメント追加
+                            </button>
+                        </div>
+                    </div>
 
                     <!-- ドキュメント選択リスト -->
-                    <div class="document-list">
+                    <div class="document-list" id="documentList">
                         <div class="document-item active" onclick="selectDocument(1)">
                             <div class="document-icon">📄</div>
                             <div class="document-info">
                                 <div class="document-name">契約書.pdf</div>
                                 <div class="document-meta">2025-01-15 登録</div>
                             </div>
+                            <button class="doc-delete-btn" onclick="deleteDocument(event, 1)" style="display: none;">🗑️</button>
                         </div>
                         <div class="document-item" onclick="selectDocument(2)">
                             <div class="document-icon">📄</div>
@@ -119,6 +153,7 @@
                                 <div class="document-name">納品書.pdf</div>
                                 <div class="document-meta">2025-01-15 登録</div>
                             </div>
+                            <button class="doc-delete-btn" onclick="deleteDocument(event, 2)" style="display: none;">🗑️</button>
                         </div>
                         <div class="document-item" onclick="selectDocument(3)">
                             <div class="document-icon">📄</div>
@@ -126,11 +161,18 @@
                                 <div class="document-name">検収書.pdf</div>
                                 <div class="document-meta">2025-01-16 登録</div>
                             </div>
+                            <button class="doc-delete-btn" onclick="deleteDocument(event, 3)" style="display: none;">🗑️</button>
                         </div>
                     </div>
 
                     <!-- ドキュメントビューアー -->
                     <div class="document-viewer-area">
+                        <div class="document-viewer-header">
+                            <span class="viewer-document-name" id="viewerDocumentName">契約書.pdf</span>
+                            <button class="print-pdf-btn" onclick="printDocument()" title="PDF印刷">
+                                🖨️ 印刷
+                            </button>
+                        </div>
                         <div class="document-viewer-placeholder">
                             <div class="viewer-icon">📄</div>
                             <div class="viewer-message">契約書.pdf</div>
