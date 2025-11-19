@@ -22,7 +22,7 @@ function initQuotationDataBoxPage() {
     populateRfqSelect();
 }
 
-// 見積書を見積依頼No.ごとにグループ化して表示
+// 見積書を一つのテーブルで表示
 function renderQuotationsByRfq() {
     const container = document.getElementById('quotationsByRfqContainer');
 
@@ -42,53 +42,25 @@ function renderQuotationsByRfq() {
         return;
     }
 
-    // 見積依頼No.ごとにグループ化
-    const groupedByRfq = {};
-    quotationDocuments.forEach(q => {
-        if (!groupedByRfq[q.rfqNo]) {
-            groupedByRfq[q.rfqNo] = [];
-        }
-        groupedByRfq[q.rfqNo].push(q);
-    });
-
-    // グループごとにセクションを生成
-    let html = '';
-    Object.keys(groupedByRfq).sort().forEach(rfqNo => {
-        const quotations = groupedByRfq[rfqNo];
-        html += createRfqSection(rfqNo, quotations);
-    });
-
-    container.innerHTML = html;
-}
-
-// 見積依頼No.ごとのセクションを生成
-function createRfqSection(rfqNo, quotations) {
-    return `
-        <div class="rfq-section">
-            <div class="rfq-section-header">
-                <div class="rfq-section-title">
-                    <span class="rfq-icon">📋</span>
-                    <span class="rfq-no">${rfqNo}</span>
-                    <span class="rfq-vendor">${quotations[0].vendor || '業者名未設定'}</span>
-                </div>
-                <div class="rfq-section-count">${quotations.length}件の見積書</div>
-            </div>
-            <div class="quotation-table-container">
-                <table class="data-table quotation-table">
-                    <thead>
-                        <tr>
-                            <th style="width: 120px;">ステータス</th>
-                            <th style="width: 120px;">見積日</th>
-                            <th style="width: 120px;">アップロード</th>
-                            <th>ファイル名</th>
-                            <th style="width: 300px;">操作</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${quotations.map(q => createQuotationTableRow(q)).join('')}
-                    </tbody>
-                </table>
-            </div>
+    // 単一テーブルで全ての見積書を表示
+    container.innerHTML = `
+        <div class="quotation-table-wrapper">
+            <table class="data-table quotation-table">
+                <thead>
+                    <tr>
+                        <th style="width: 150px;">見積依頼No</th>
+                        <th style="width: 200px;">業者名</th>
+                        <th style="width: 120px;">ステータス</th>
+                        <th style="width: 120px;">見積日</th>
+                        <th style="width: 120px;">アップロード</th>
+                        <th>ファイル名</th>
+                        <th style="width: 300px;">操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${quotationDocuments.map(q => createQuotationTableRow(q)).join('')}
+                </tbody>
+            </table>
         </div>
     `;
 }
@@ -101,6 +73,8 @@ function createQuotationTableRow(quotation) {
 
     return `
         <tr>
+            <td><strong>${quotation.rfqNo}</strong></td>
+            <td>${quotation.vendor || '業者名未設定'}</td>
             <td>
                 <span class="quotation-status-badge ${statusClass}">
                     ${statusIcon} ${statusText}

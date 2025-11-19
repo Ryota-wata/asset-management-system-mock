@@ -104,6 +104,30 @@
     color: #7f8c8d;
 }
 
+/* 見積情報セル */
+.quotation-info-cell {
+    line-height: 1.6;
+}
+
+.quotation-info-cell .quotation-asset-name {
+    font-weight: 600;
+    color: #3498db;
+    margin-bottom: 2px;
+    font-size: 13px;
+}
+
+.quotation-info-cell .quotation-detail {
+    font-size: 12px;
+    color: #27ae60;
+    font-weight: 600;
+}
+
+.quotation-info-cell .quotation-count {
+    font-size: 11px;
+    color: #7f8c8d;
+    margin-top: 2px;
+}
+
 /* 承認進捗 */
 .approval-progress {
     font-size: 13px;

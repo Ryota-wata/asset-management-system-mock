@@ -765,7 +765,52 @@ function openPdfPreview() {
 
 // 処理完了
 function completeProcessing() {
-    if (confirm('見積明細の紐付けを完了しますか？\n\n処理状態が「紐付け完了」に更新されます。')) {
+    // 確定されていない項目があるかチェック
+    const unconfirmedCount = matchingResults.filter(r => !r.isConfirmed).length;
+    if (unconfirmedCount > 0) {
+        if (!confirm(`未確定の項目が${unconfirmedCount}件あります。\n\nこのまま処理を完了しますか？`)) {
+            return;
+        }
+    }
+
+    if (confirm('見積明細の紐付けを完了しますか？\n\n処理状態が「紐付け完了」に更新され、申請情報に見積情報が追加されます。')) {
+        // 確定済みの項目を申請一覧に反映
+        const confirmedItems = matchingResults.filter(r => r.isConfirmed);
+
+        confirmedItems.forEach(item => {
+            if (item.linkedApplication && item.selectedCandidate) {
+                // 申請データを検索
+                const application = window.applicationListData.find(
+                    app => app.applicationNo === item.linkedApplication.applicationNo
+                );
+
+                if (application) {
+                    // 申請データに見積情報を追加
+                    if (!application.quotationInfo) {
+                        application.quotationInfo = [];
+                    }
+
+                    application.quotationInfo.push({
+                        quotationId: currentQuotation.id,
+                        quotationDate: currentQuotation.quotationDate,
+                        vendor: currentQuotation.vendor,
+                        ocrItemName: item.ocrItemName,
+                        assetMaster: {
+                            itemId: item.selectedCandidate.itemId,
+                            itemName: item.selectedCandidate.itemName,
+                            largeName: item.selectedCandidate.largeName,
+                            mediumName: item.selectedCandidate.mediumName
+                        },
+                        quantity: item.quantity,
+                        unitPrice: item.unitPrice,
+                        amount: item.amount
+                    });
+
+                    console.log(`申請 ${application.applicationNo} に見積情報を追加:`, application.quotationInfo);
+                }
+            }
+        });
+
         // 見積書の処理状態を更新
         currentQuotation.processingStatus = '紐付け完了';
 
@@ -775,7 +820,7 @@ function completeProcessing() {
             window.quotationDocuments[index] = currentQuotation;
         }
 
-        alert('見積明細の紐付けが完了しました');
+        alert(`見積明細の紐付けが完了しました。\n\n${confirmedItems.length}件の明細を申請情報に追加しました。`);
         handleBackFromProcessing();
     }
 }

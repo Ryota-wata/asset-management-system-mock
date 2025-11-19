@@ -172,7 +172,7 @@ function renderApplicationTable() {
     if (filteredApplicationListData.length === 0) {
         tbody.innerHTML = `
             <tr>
-                <td colspan="11" class="empty-state">
+                <td colspan="12" class="empty-state">
                     <div class="empty-state-icon">📋</div>
                     <div class="empty-state-text">申請がありません</div>
                     <div class="empty-state-subtext">検索条件を変更してください</div>
@@ -188,6 +188,20 @@ function renderApplicationTable() {
         const rfqDisplay = app.rfqNo ? `<span class="rfq-no">${app.rfqNo}</span>` : '<span class="rfq-no empty">未設定</span>';
         const vendorDisplay = app.vendor === '-' ? '<span style="color: #95a5a6;">-</span>' : app.vendor;
         const isChecked = selectedApplicationIds.has(app.id) ? 'checked' : '';
+
+        // 見積情報の表示
+        let quotationInfoDisplay = '<span class="text-muted">未設定</span>';
+        if (app.quotationInfo && app.quotationInfo.length > 0) {
+            const info = app.quotationInfo[0]; // 最初の見積情報を表示
+            const count = app.quotationInfo.length;
+            quotationInfoDisplay = `
+                <div class="quotation-info-cell">
+                    <div class="quotation-asset-name">${info.assetMaster.itemName}</div>
+                    <div class="quotation-detail">単価: ¥${info.unitPrice.toLocaleString()}</div>
+                    ${count > 1 ? `<div class="quotation-count">他${count - 1}件</div>` : ''}
+                </div>
+            `;
+        }
 
         // アクションボタン
         let actionButtons = `<button class="app-action-btn detail" onclick="showApplicationDetail(${app.id})">詳細</button>`;
@@ -213,6 +227,7 @@ function renderApplicationTable() {
                     </div>
                 </td>
                 <td>${app.quantity}</td>
+                <td>${quotationInfoDisplay}</td>
                 <td>${rfqDisplay}</td>
                 <td>${vendorDisplay}</td>
                 <td>${statusBadge}</td>
