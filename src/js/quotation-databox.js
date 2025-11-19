@@ -3,16 +3,48 @@
  */
 
 // グローバル変数
-let quotationDocuments = [];
+let quotationDocuments = [
+    {
+        id: 'Q-1737000000001',
+        rfqNo: 'RFQ-2025-0001',
+        vendor: '〇〇〇〇商事',
+        quotationDate: '2025-01-18',
+        uploadDate: '2025-01-18',
+        filename: '見積書_RFQ-2025-0001_〇〇〇〇商事.pdf',
+        processingStatus: '未処理'
+    },
+    {
+        id: 'Q-1737000000002',
+        rfqNo: 'RFQ-2025-0002',
+        vendor: '△△△△メディカル',
+        quotationDate: '2025-01-17',
+        uploadDate: '2025-01-17',
+        filename: '見積書_RFQ-2025-0002_△△△△メディカル.pdf',
+        processingStatus: 'OCR完了'
+    },
+    {
+        id: 'Q-1737000000003',
+        rfqNo: 'RFQ-2025-0004',
+        vendor: '◇◇◇◇医療機器',
+        quotationDate: '2025-01-19',
+        uploadDate: '2025-01-19',
+        filename: '見積書_RFQ-2025-0004_◇◇◇◇医療機器.pdf',
+        processingStatus: '紐付け完了'
+    },
+    {
+        id: 'Q-1737000000004',
+        rfqNo: 'RFQ-2025-0001',
+        vendor: '〇〇〇〇商事',
+        quotationDate: '2025-01-20',
+        uploadDate: '2025-01-20',
+        filename: '見積書_改訂版_RFQ-2025-0001_〇〇〇〇商事.pdf',
+        processingStatus: '未処理'
+    }
+];
 
 // 初期化
 function initQuotationDataBoxPage() {
     console.log('=== Initializing Quotation DataBox Page ===');
-
-    // サンプルデータからquotationDocumentsを取得
-    if (window.quotationDocuments && window.quotationDocuments.length > 0) {
-        quotationDocuments = [...window.quotationDocuments];
-    }
 
     // 見積書を見積依頼No.ごとにグループ化して表示
     renderQuotationsByRfq();

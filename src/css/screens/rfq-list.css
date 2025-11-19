@@ -12,3 +12,78 @@
 .rfq-list-page.active {
     display: block;
 }
+
+/* ========================================
+   テーブル横スクロール対応
+======================================== */
+.table-scroll-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: visible;
+    -webkit-overflow-scrolling: touch;
+}
+
+.table-scroll-wrapper::-webkit-scrollbar {
+    height: 10px;
+}
+
+.table-scroll-wrapper::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 5px;
+}
+
+.table-scroll-wrapper::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 5px;
+}
+
+.table-scroll-wrapper::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+.table-scroll-wrapper .data-table {
+    min-width: 900px;
+    width: 100%;
+}
+
+/* ========================================
+   ステータスバッジ
+======================================== */
+.rfq-status-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.rfq-status-badge.status-waiting {
+    background: #f39c12;
+    color: white;
+}
+
+.rfq-status-badge.status-received {
+    background: #27ae60;
+    color: white;
+}
+
+/* ========================================
+   空の状態
+======================================== */
+.empty-state {
+    padding: 60px 20px;
+    text-align: center;
+}
+
+.empty-state-icon {
+    font-size: 64px;
+    margin-bottom: 20px;
+}
+
+.empty-state-text {
+    font-size: 18px;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 10px;
+}

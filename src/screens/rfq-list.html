@@ -17,9 +17,27 @@
 
         <!-- メインコンテンツエリア -->
         <div class="main-content-area">
-            <div class="content-wrapper" style="text-align: center; padding: 100px 20px;">
-                <h2 style="color: #7f8c8d; margin-bottom: 20px;">見積依頼一覧画面</h2>
-                <p style="color: #95a5a6;">この画面は現在準備中です</p>
+            <div class="content-wrapper">
+                <!-- テーブル表示 -->
+                <div class="list-view">
+                    <div class="table-scroll-wrapper">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 150px;">見積依頼No</th>
+                                    <th style="width: 200px;">購入先店舗</th>
+                                    <th style="width: 120px;">依頼日</th>
+                                    <th style="width: 120px;">ステータス</th>
+                                    <th style="width: 100px;">申請件数</th>
+                                    <th style="width: 200px;">アクション</th>
+                                </tr>
+                            </thead>
+                            <tbody id="rfqListTableBody">
+                                <!-- データ行はJavaScriptで生成 -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
