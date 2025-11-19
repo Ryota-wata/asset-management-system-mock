@@ -29,14 +29,8 @@
             <div class="step-connector"></div>
             <div class="step-item" data-step="2">
                 <div class="step-number">2</div>
-                <div class="step-label">資産マスタ突き合わせ</div>
+                <div class="step-label">資産マスタ突き合わせ & 申請紐付け</div>
                 <div class="step-icon">🔍</div>
-            </div>
-            <div class="step-connector"></div>
-            <div class="step-item" data-step="3">
-                <div class="step-number">3</div>
-                <div class="step-label">申請紐付け</div>
-                <div class="step-icon">🔗</div>
             </div>
         </div>
 
@@ -92,15 +86,15 @@
 
                     <div class="step-actions">
                         <button class="step-btn secondary" onclick="handleBackFromProcessing()">キャンセル</button>
-                        <button class="step-btn primary" id="step1NextBtn" onclick="goToStep(2)" disabled>次へ: 資産マスタ突き合わせ</button>
+                        <button class="step-btn primary" id="step1NextBtn" onclick="goToStep(2)" disabled>次へ: 資産マスタ突き合わせ & 申請紐付け</button>
                     </div>
                 </div>
 
-                <!-- Step 2: 資産マスタ突き合わせ -->
+                <!-- Step 2: 資産マスタ突き合わせ & 申請紐付け -->
                 <div class="step-content" id="step2Content">
                     <div class="step-content-header">
-                        <h2 class="step-content-title">Step 2: 資産マスタ突き合わせ</h2>
-                        <p class="step-content-description">抽出した明細を資産マスタの個体管理品目と突き合わせます</p>
+                        <h2 class="step-content-title">Step 2: 資産マスタ突き合わせ & 申請紐付け</h2>
+                        <p class="step-content-description">抽出した明細を資産マスタの個体管理品目と突き合わせ、申請に紐付けます</p>
                     </div>
 
                     <div class="matching-section">
@@ -110,86 +104,22 @@
                                 <div class="summary-value" id="totalItemsCount">0</div>
                             </div>
                             <div class="summary-card success">
-                                <div class="summary-label">自動マッチ成功</div>
-                                <div class="summary-value" id="matchedItemsCount">0</div>
+                                <div class="summary-label">確定済み</div>
+                                <div class="summary-value" id="confirmedItemsCount">0</div>
                             </div>
                             <div class="summary-card warning">
-                                <div class="summary-label">要確認</div>
-                                <div class="summary-value" id="unmatchedItemsCount">0</div>
+                                <div class="summary-label">未確定</div>
+                                <div class="summary-value" id="unconfirmedItemsCount">0</div>
                             </div>
                         </div>
 
-                        <div class="matching-table-container">
-                            <table class="data-table resizable-table">
-                                <thead>
-                                    <tr>
-                                        <th style="width: 50px;">No</th>
-                                        <th style="width: 250px;">見積明細（OCR抽出）</th>
-                                        <th style="width: 80px;">数量</th>
-                                        <th style="width: 100px;">単価</th>
-                                        <th style="width: 80px;">マッチ状態</th>
-                                        <th style="width: 300px;">資産マスタ品目</th>
-                                        <th style="width: 100px;">操作</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="matchingTableBody">
-                                    <!-- マッチング結果をJavaScriptで生成 -->
-                                </tbody>
-                            </table>
+                        <div class="matching-items-container" id="matchingItemsContainer">
+                            <!-- マッチング結果をJavaScriptで生成 -->
                         </div>
                     </div>
 
                     <div class="step-actions">
                         <button class="step-btn secondary" onclick="goToStep(1)">戻る</button>
-                        <button class="step-btn primary" id="step2NextBtn" onclick="goToStep(3)">次へ: 申請紐付け</button>
-                    </div>
-                </div>
-
-                <!-- Step 3: 申請紐付け -->
-                <div class="step-content" id="step3Content">
-                    <div class="step-content-header">
-                        <h2 class="step-content-title">Step 3: 申請紐付け</h2>
-                        <p class="step-content-description">マッチした明細を該当する申請に紐付けます</p>
-                    </div>
-
-                    <div class="linking-section">
-                        <div class="linking-summary" id="linkingSummary">
-                            <div class="summary-card">
-                                <div class="summary-label">明細数</div>
-                                <div class="summary-value" id="totalLinkedItemsCount">0</div>
-                            </div>
-                            <div class="summary-card success">
-                                <div class="summary-label">紐付け済み</div>
-                                <div class="summary-value" id="linkedItemsCount">0</div>
-                            </div>
-                            <div class="summary-card warning">
-                                <div class="summary-label">未紐付け</div>
-                                <div class="summary-value" id="unlinkedItemsCount">0</div>
-                            </div>
-                        </div>
-
-                        <div class="linking-table-container">
-                            <table class="data-table resizable-table">
-                                <thead>
-                                    <tr>
-                                        <th style="width: 50px;">No</th>
-                                        <th style="width: 200px;">資産マスタ品目</th>
-                                        <th style="width: 80px;">数量</th>
-                                        <th style="width: 100px;">単価</th>
-                                        <th style="width: 100px;">紐付け状態</th>
-                                        <th style="width: 250px;">紐付け先申請</th>
-                                        <th style="width: 100px;">操作</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="linkingTableBody">
-                                    <!-- 紐付け結果をJavaScriptで生成 -->
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <div class="step-actions">
-                        <button class="step-btn secondary" onclick="goToStep(2)">戻る</button>
                         <button class="step-btn success" onclick="completeProcessing()">紐付けを完了</button>
                     </div>
                 </div>
