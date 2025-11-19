@@ -658,8 +658,149 @@
     color: #1565c0;
 }
 
-/* マッチングアイテム（アコーディオン形式） */
+/* マッチングアイテム（テーブル形式） */
 .matching-items-container {
+    overflow-x: auto;
+}
+
+.matching-table {
+    min-width: 1200px;
+}
+
+.matching-table tbody tr.confirmed-row {
+    background: rgba(39, 174, 96, 0.05);
+}
+
+/* 候補選択用のスタイル */
+.candidates-container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 8px 0;
+}
+
+.candidate-option {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 8px;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+
+.candidate-option:has(input:checked) {
+    background: rgba(39, 174, 96, 0.1);
+    border-color: #27ae60;
+}
+
+.candidate-option input[type="radio"] {
+    margin-top: 4px;
+    cursor: pointer;
+}
+
+.candidate-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+.candidate-rank-tag {
+    background: #f8f9fa;
+    color: #7f8c8d;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.candidate-path-text {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-wrap: wrap;
+}
+
+.candidate-similarity-tag {
+    background: #3498db;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.manual-search-container {
+    text-align: center;
+    padding-top: 4px;
+}
+
+/* 申請選択インライン */
+.application-select-inline {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 13px;
+    background: white;
+    cursor: pointer;
+}
+
+.application-select-inline:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+/* ステータスバッジ */
+.status-badge {
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 700;
+    display: inline-block;
+    white-space: nowrap;
+}
+
+.status-badge.confirmed {
+    background: #d4edda;
+    color: #155724;
+}
+
+.status-badge.unconfirmed {
+    background: #fff3cd;
+    color: #856404;
+}
+
+/* 小さいボタン */
+.table-btn.small {
+    padding: 4px 10px;
+    font-size: 11px;
+}
+
+.table-btn.success {
+    background: #27ae60;
+    color: white;
+    border-color: #27ae60;
+}
+
+.table-btn.success:hover {
+    background: #229954;
+}
+
+.table-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* 旧アコーディオン形式のスタイル（下位互換のため残す） */
+.matching-items-container-old {
     display: flex;
     flex-direction: column;
     gap: 12px;

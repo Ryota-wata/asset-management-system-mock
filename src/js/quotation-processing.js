@@ -239,7 +239,7 @@ function countCommonChars(str1, str2) {
     return count;
 }
 
-// マッチング結果を表示（アコーディオン形式）
+// マッチング結果を表示（テーブル形式）
 function renderMatchingResults() {
     const container = document.getElementById('matchingItemsContainer');
 
@@ -248,80 +248,105 @@ function renderMatchingResults() {
         return;
     }
 
-    container.innerHTML = matchingResults.map(item => {
-        const statusBadge = item.isConfirmed
-            ? '<span class="confirm-badge confirmed">✓ 確定済み</span>'
-            : '<span class="confirm-badge unconfirmed">未確定</span>';
+    container.innerHTML = `
+        <table class="data-table matching-table">
+            <thead>
+                <tr>
+                    <th style="width: 50px;">No</th>
+                    <th style="width: 250px;">OCR抽出品目</th>
+                    <th style="width: 80px;">数量</th>
+                    <th style="width: 120px;">単価</th>
+                    <th>資産マスタ候補（3つ）</th>
+                    <th style="width: 250px;">申請紐付け</th>
+                    <th style="width: 100px;">ステータス</th>
+                    <th style="width: 100px;">操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${matchingResults.map(item => createMatchingTableRow(item)).join('')}
+            </tbody>
+        </table>
+    `;
+}
 
-        // 候補リスト
-        const candidatesHTML = item.candidates.map((candidate, index) => {
-            const isSelected = item.selectedCandidate && item.selectedCandidate.itemId === candidate.itemId;
-            const similarityPercent = Math.round(candidate.similarity * 100);
+// マッチングテーブル行を生成
+function createMatchingTableRow(item) {
+    // 候補のラジオボタン
+    const candidatesHTML = item.candidates.map((candidate, index) => {
+        const isSelected = item.selectedCandidate && item.selectedCandidate.itemId === candidate.itemId;
+        const similarityPercent = Math.round(candidate.similarity * 100);
+        const radioId = `candidate_${item.id}_${index}`;
 
-            return `
-                <div class="candidate-item ${isSelected ? 'selected' : ''}" onclick="selectCandidate(${item.id}, ${index})">
-                    <div class="candidate-header">
-                        <div class="candidate-rank">候補${index + 1}</div>
-                        <div class="candidate-similarity">${similarityPercent}%</div>
-                        ${isSelected ? '<div class="candidate-check">✓ 選択中</div>' : ''}
-                    </div>
-                    <div class="candidate-path">
+        return `
+            <div class="candidate-option">
+                <input type="radio"
+                       id="${radioId}"
+                       name="candidate_${item.id}"
+                       value="${index}"
+                       ${isSelected ? 'checked' : ''}
+                       onchange="selectCandidate(${item.id}, ${index})">
+                <label for="${radioId}" class="candidate-label">
+                    <span class="candidate-rank-tag">候補${index + 1}</span>
+                    <span class="candidate-path-text">
                         <span class="path-large">${candidate.largeName}</span>
                         <span class="path-separator">›</span>
                         <span class="path-medium">${candidate.mediumName}</span>
                         <span class="path-separator">›</span>
                         <span class="path-item">${candidate.itemName}</span>
-                    </div>
-                </div>
-            `;
-        }).join('');
-
-        // 申請選択UI（候補が選択されている場合のみ表示）
-        const applicationLinkingHTML = item.selectedCandidate ? `
-            <div class="application-linking-section">
-                <div class="linking-title">📋 申請との紐付け</div>
-                <div class="linking-controls">
-                    <select class="application-select" id="appSelect_${item.id}" onchange="linkApplication(${item.id}, this.value)">
-                        <option value="">申請を選択してください</option>
-                        ${getApplicationOptions(item.linkedApplication)}
-                    </select>
-                    ${item.selectedCandidate && item.linkedApplication ?
-                        `<button class="confirm-btn" onclick="confirmItem(${item.id})">確定</button>` :
-                        '<span class="linking-hint">※ 申請を選択してから確定してください</span>'}
-                </div>
-            </div>
-        ` : '<div class="linking-hint-box">※ まず資産マスタ候補を選択してください</div>';
-
-        return `
-            <div class="matching-item ${item.isConfirmed ? 'confirmed' : ''}">
-                <div class="matching-item-header" onclick="toggleMatchingItem(${item.id})">
-                    <div class="matching-item-info">
-                        <span class="item-number">#${item.id}</span>
-                        <span class="item-name">${item.ocrItemName}</span>
-                        <span class="item-details">数量: ${item.quantity} / 単価: ¥${item.unitPrice.toLocaleString()}</span>
-                    </div>
-                    <div class="matching-item-status">
-                        ${statusBadge}
-                        <span class="expand-icon">▼</span>
-                    </div>
-                </div>
-                <div class="matching-item-body" id="matchingBody_${item.id}">
-                    <div class="candidates-section">
-                        <div class="candidates-title">🔍 AI推奨候補</div>
-                        <div class="candidates-list">
-                            ${candidatesHTML}
-                        </div>
-                        <div class="manual-search-hint">
-                            <button class="manual-search-btn" onclick="openManualAssetSearch(${item.id})">
-                                <span class="btn-icon">🔎</span> 手動で資産マスタを検索
-                            </button>
-                        </div>
-                    </div>
-                    ${applicationLinkingHTML}
-                </div>
+                    </span>
+                    <span class="candidate-similarity-tag">${similarityPercent}%</span>
+                </label>
             </div>
         `;
     }).join('');
+
+    // 申請選択ドロップダウン
+    const applicationSelectHTML = item.selectedCandidate ? `
+        <select class="application-select-inline" onchange="linkApplication(${item.id}, this.value)">
+            <option value="">申請を選択</option>
+            ${getApplicationOptions(item.linkedApplication)}
+        </select>
+    ` : '<span class="text-muted">候補を選択してください</span>';
+
+    // ステータスバッジ
+    const statusBadge = item.isConfirmed
+        ? '<span class="status-badge confirmed">✓ 確定済み</span>'
+        : '<span class="status-badge unconfirmed">未確定</span>';
+
+    // 確定ボタン
+    const confirmButton = (item.selectedCandidate && item.linkedApplication && !item.isConfirmed)
+        ? `<button class="table-btn success" onclick="confirmItem(${item.id})">確定</button>`
+        : (item.isConfirmed
+            ? `<button class="table-btn secondary" onclick="unconfirmItem(${item.id})">解除</button>`
+            : `<button class="table-btn" disabled>確定</button>`);
+
+    return `
+        <tr class="${item.isConfirmed ? 'confirmed-row' : ''}">
+            <td class="text-center">${item.id}</td>
+            <td><strong>${item.ocrItemName}</strong></td>
+            <td class="text-right">${item.quantity}</td>
+            <td class="text-right">¥${item.unitPrice.toLocaleString()}</td>
+            <td>
+                <div class="candidates-container">
+                    ${candidatesHTML}
+                    <div class="manual-search-container">
+                        <button class="table-btn secondary small" onclick="openManualAssetSearch(${item.id})">
+                            🔎 手動検索
+                        </button>
+                    </div>
+                </div>
+            </td>
+            <td>
+                ${applicationSelectHTML}
+            </td>
+            <td class="text-center">
+                ${statusBadge}
+            </td>
+            <td class="text-center">
+                ${confirmButton}
+            </td>
+        </tr>
+    `;
 }
 
 // アコーディオンの開閉
@@ -409,8 +434,21 @@ function confirmItem(itemId) {
     // 再描画
     renderMatchingResults();
     updateMatchingSummary();
+}
 
-    alert(`#${itemId} の紐付けを確定しました`);
+// 確定解除
+function unconfirmItem(itemId) {
+    const matchingItem = matchingResults.find(r => r.id === itemId);
+    if (!matchingItem) return;
+
+    if (confirm('確定を解除しますか？')) {
+        // 確定フラグを解除
+        matchingItem.isConfirmed = false;
+
+        // 再描画
+        renderMatchingResults();
+        updateMatchingSummary();
+    }
 }
 
 // 手動で資産マスタを検索
@@ -761,6 +799,7 @@ window.toggleMatchingItem = toggleMatchingItem;
 window.selectCandidate = selectCandidate;
 window.linkApplication = linkApplication;
 window.confirmItem = confirmItem;
+window.unconfirmItem = unconfirmItem;
 window.openManualAssetSearch = openManualAssetSearch;
 window.confirmManualAssetSelection = confirmManualAssetSelection;
 window.selectAssetMaster = selectAssetMaster;

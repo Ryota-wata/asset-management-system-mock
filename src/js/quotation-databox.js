@@ -73,44 +73,48 @@ function createRfqSection(rfqNo, quotations) {
                 </div>
                 <div class="rfq-section-count">${quotations.length}件の見積書</div>
             </div>
-            <div class="quotation-cards">
-                ${quotations.map(q => createQuotationCard(q)).join('')}
+            <div class="quotation-table-container">
+                <table class="data-table quotation-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 120px;">ステータス</th>
+                            <th style="width: 120px;">見積日</th>
+                            <th style="width: 120px;">アップロード</th>
+                            <th>ファイル名</th>
+                            <th style="width: 300px;">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${quotations.map(q => createQuotationTableRow(q)).join('')}
+                    </tbody>
+                </table>
             </div>
         </div>
     `;
 }
 
-// 見積書カードを生成
-function createQuotationCard(quotation) {
+// 見積書テーブル行を生成
+function createQuotationTableRow(quotation) {
     const statusClass = getStatusClass(quotation.processingStatus || '未処理');
     const statusText = quotation.processingStatus || '未処理';
     const statusIcon = getStatusIcon(quotation.processingStatus || '未処理');
 
     return `
-        <div class="quotation-card">
-            <div class="quotation-card-header">
+        <tr>
+            <td>
                 <span class="quotation-status-badge ${statusClass}">
                     ${statusIcon} ${statusText}
                 </span>
-            </div>
-            <div class="quotation-card-body">
-                <div class="quotation-info-row">
-                    <span class="quotation-label">見積日:</span>
-                    <span class="quotation-value">${quotation.quotationDate}</span>
+            </td>
+            <td>${quotation.quotationDate}</td>
+            <td>${quotation.uploadDate}</td>
+            <td class="quotation-filename">${quotation.filename}</td>
+            <td>
+                <div class="quotation-actions">
+                    ${getActionButtons(quotation)}
                 </div>
-                <div class="quotation-info-row">
-                    <span class="quotation-label">アップロード:</span>
-                    <span class="quotation-value">${quotation.uploadDate}</span>
-                </div>
-                <div class="quotation-info-row">
-                    <span class="quotation-label">ファイル:</span>
-                    <span class="quotation-value quotation-filename">${quotation.filename}</span>
-                </div>
-            </div>
-            <div class="quotation-card-footer">
-                ${getActionButtons(quotation)}
-            </div>
-        </div>
+            </td>
+        </tr>
     `;
 }
 
@@ -140,15 +144,15 @@ function getActionButtons(quotation) {
     let buttons = '';
 
     if (status === '未処理') {
-        buttons += `<button class="quotation-action-btn primary" onclick="startProcessing('${quotation.id}')">処理開始</button>`;
+        buttons += `<button class="table-btn primary" onclick="startProcessing('${quotation.id}')">処理開始</button>`;
     } else if (status === 'OCR完了') {
-        buttons += `<button class="quotation-action-btn primary" onclick="continueProcessing('${quotation.id}')">処理を続ける</button>`;
+        buttons += `<button class="table-btn primary" onclick="continueProcessing('${quotation.id}')">処理を続ける</button>`;
     } else if (status === '紐付け完了') {
-        buttons += `<button class="quotation-action-btn primary" onclick="continueProcessing('${quotation.id}')">処理を続ける</button>`;
-        buttons += `<button class="quotation-action-btn" onclick="viewProcessingResult('${quotation.id}')">発注書・検収書出力</button>`;
+        buttons += `<button class="table-btn primary" onclick="continueProcessing('${quotation.id}')">詳細確認</button>`;
+        buttons += `<button class="table-btn success" onclick="viewProcessingResult('${quotation.id}')">出力</button>`;
     }
 
-    buttons += `<button class="quotation-action-btn secondary" onclick="deleteQuotation('${quotation.id}')">削除</button>`;
+    buttons += `<button class="table-btn secondary" onclick="deleteQuotation('${quotation.id}')">削除</button>`;
 
     return buttons;
 }
