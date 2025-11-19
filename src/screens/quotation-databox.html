@@ -102,4 +102,54 @@
         </div>
     </div>
 
+    <!-- 発注書・検収書出力モーダル -->
+    <div class="modal" id="outputModal" onclick="handleOutputModalOutsideClick(event)">
+        <div class="modal-content" style="max-width: 700px;">
+            <h2 class="modal-title">発注書・検収書の出力</h2>
+
+            <div class="output-modal-info">
+                <div class="output-info-row">
+                    <span class="output-info-label">見積依頼No:</span>
+                    <span class="output-info-value" id="outputModalRfqNo">-</span>
+                </div>
+                <div class="output-info-row">
+                    <span class="output-info-label">購入先店舗:</span>
+                    <span class="output-info-value" id="outputModalVendor">-</span>
+                </div>
+                <div class="output-info-row">
+                    <span class="output-info-label">見積区分:</span>
+                    <span class="output-info-value" id="outputModalPhase">-</span>
+                </div>
+            </div>
+
+            <div class="output-modal-actions">
+                <div class="output-action-card">
+                    <div class="output-action-icon">📝</div>
+                    <div class="output-action-content">
+                        <div class="output-action-title">発注書テンプレート</div>
+                        <div class="output-action-description">紐付けられた申請情報から発注書を生成します</div>
+                    </div>
+                    <button class="output-action-btn" onclick="generatePurchaseOrder()">
+                        <span class="btn-icon">📥</span> Excel出力
+                    </button>
+                </div>
+
+                <div class="output-action-card">
+                    <div class="output-action-icon">📋</div>
+                    <div class="output-action-content">
+                        <div class="output-action-title">検収書テンプレート</div>
+                        <div class="output-action-description">紐付けられた申請情報から検収書を生成します</div>
+                    </div>
+                    <button class="output-action-btn" onclick="generateInspectionReport()">
+                        <span class="btn-icon">📥</span> Excel出力
+                    </button>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button class="modal-button secondary" onclick="closeOutputModal()" style="flex: 1;">閉じる</button>
+            </div>
+        </div>
+    </div>
+
 </div>

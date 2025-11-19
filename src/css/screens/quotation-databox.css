@@ -653,6 +653,102 @@
     color: white;
 }
 
+/* 発注書・検収書出力モーダル */
+.output-modal-info {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 24px;
+}
+
+.output-info-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.output-info-row:last-child {
+    border-bottom: none;
+}
+
+.output-info-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #7f8c8d;
+}
+
+.output-info-value {
+    font-size: 14px;
+    font-weight: 700;
+    color: #2c3e50;
+}
+
+.output-modal-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.output-action-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px;
+    background: #f8f9fa;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    transition: all 0.2s;
+}
+
+.output-action-card:hover {
+    border-color: #3498db;
+    background: white;
+}
+
+.output-action-icon {
+    font-size: 36px;
+    flex-shrink: 0;
+}
+
+.output-action-content {
+    flex: 1;
+}
+
+.output-action-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 4px;
+}
+
+.output-action-description {
+    font-size: 13px;
+    color: #7f8c8d;
+}
+
+.output-action-btn {
+    padding: 10px 20px;
+    background: #3498db;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+}
+
+.output-action-btn:hover {
+    background: #2980b9;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+}
+
 /* レスポンシブ対応 */
 @media (max-width: 768px) {
     .quotation-cards {
@@ -672,5 +768,14 @@
     .quotation-action-btn {
         font-size: 11px;
         padding: 6px 8px;
+    }
+
+    .output-action-card {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .output-action-btn {
+        width: 100%;
     }
 }

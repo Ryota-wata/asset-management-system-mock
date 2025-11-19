@@ -38,12 +38,6 @@
                 <div class="step-label">申請紐付け</div>
                 <div class="step-icon">🔗</div>
             </div>
-            <div class="step-connector"></div>
-            <div class="step-item" data-step="4">
-                <div class="step-number">4</div>
-                <div class="step-label">発注書・検収書出力</div>
-                <div class="step-icon">📄</div>
-            </div>
         </div>
 
         <!-- メインコンテンツエリア -->
@@ -196,98 +190,7 @@
 
                     <div class="step-actions">
                         <button class="step-btn secondary" onclick="goToStep(2)">戻る</button>
-                        <button class="step-btn primary" id="step3NextBtn" onclick="goToStep(4)">次へ: 発注書・検収書出力</button>
-                    </div>
-                </div>
-
-                <!-- Step 4: 発注書・検収書出力 -->
-                <div class="step-content" id="step4Content">
-                    <div class="step-content-header">
-                        <h2 class="step-content-title">Step 4: 発注書・検収書出力</h2>
-                        <p class="step-content-description">発注書と検収書のテンプレートを出力します</p>
-                    </div>
-
-                    <div class="output-section">
-                        <div class="output-summary">
-                            <div class="summary-card-large">
-                                <div class="summary-icon">✅</div>
-                                <div class="summary-text">
-                                    <div class="summary-title">処理完了</div>
-                                    <div class="summary-description">すべての明細が申請に紐付けられました</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="output-options">
-                            <div class="output-option-card">
-                                <div class="output-option-header">
-                                    <div class="output-option-icon">📝</div>
-                                    <div class="output-option-title">発注書テンプレート</div>
-                                </div>
-                                <div class="output-option-body">
-                                    <p>紐付けられた申請情報から発注書を生成します</p>
-                                    <div class="output-option-details">
-                                        <div class="detail-row">
-                                            <span class="detail-label">見積依頼No:</span>
-                                            <span class="detail-value" id="outputRfqNo">-</span>
-                                        </div>
-                                        <div class="detail-row">
-                                            <span class="detail-label">購入先店舗:</span>
-                                            <span class="detail-value" id="outputVendor">-</span>
-                                        </div>
-                                        <div class="detail-row">
-                                            <span class="detail-label">明細数:</span>
-                                            <span class="detail-value" id="outputItemCount">-</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="output-option-footer">
-                                    <button class="output-btn" onclick="generatePurchaseOrder()">
-                                        <span class="btn-icon">📥</span> Excel出力
-                                    </button>
-                                    <button class="output-btn secondary" onclick="previewPurchaseOrder()">
-                                        <span class="btn-icon">👁</span> プレビュー
-                                    </button>
-                                </div>
-                            </div>
-
-                            <div class="output-option-card">
-                                <div class="output-option-header">
-                                    <div class="output-option-icon">📋</div>
-                                    <div class="output-option-title">検収書テンプレート</div>
-                                </div>
-                                <div class="output-option-body">
-                                    <p>紐付けられた申請情報から検収書を生成します</p>
-                                    <div class="output-option-details">
-                                        <div class="detail-row">
-                                            <span class="detail-label">見積依頼No:</span>
-                                            <span class="detail-value" id="outputRfqNo2">-</span>
-                                        </div>
-                                        <div class="detail-row">
-                                            <span class="detail-label">購入先店舗:</span>
-                                            <span class="detail-value" id="outputVendor2">-</span>
-                                        </div>
-                                        <div class="detail-row">
-                                            <span class="detail-label">明細数:</span>
-                                            <span class="detail-value" id="outputItemCount2">-</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="output-option-footer">
-                                    <button class="output-btn" onclick="generateInspectionReport()">
-                                        <span class="btn-icon">📥</span> Excel出力
-                                    </button>
-                                    <button class="output-btn secondary" onclick="previewInspectionReport()">
-                                        <span class="btn-icon">👁</span> プレビュー
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="step-actions">
-                        <button class="step-btn secondary" onclick="goToStep(3)">戻る</button>
-                        <button class="step-btn success" onclick="completeProcessing()">処理を完了</button>
+                        <button class="step-btn success" onclick="completeProcessing()">紐付けを完了</button>
                     </div>
                 </div>
 

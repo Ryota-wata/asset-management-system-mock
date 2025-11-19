@@ -121,8 +121,7 @@ function getStatusClass(status) {
     const statusMap = {
         '未処理': 'status-pending',
         'OCR完了': 'status-ocr-done',
-        '紐付け完了': 'status-matched',
-        '発注書出力済み': 'status-completed'
+        '紐付け完了': 'status-completed'
     };
     return statusMap[status] || 'status-pending';
 }
@@ -132,8 +131,7 @@ function getStatusIcon(status) {
     const iconMap = {
         '未処理': '⏳',
         'OCR完了': '🤖',
-        '紐付け完了': '🔗',
-        '発注書出力済み': '✅'
+        '紐付け完了': '✅'
     };
     return iconMap[status] || '⏳';
 }
@@ -145,10 +143,11 @@ function getActionButtons(quotation) {
 
     if (status === '未処理') {
         buttons += `<button class="quotation-action-btn primary" onclick="startProcessing('${quotation.id}')">処理開始</button>`;
-    } else if (status === 'OCR完了' || status === '紐付け完了') {
+    } else if (status === 'OCR完了') {
         buttons += `<button class="quotation-action-btn primary" onclick="continueProcessing('${quotation.id}')">処理を続ける</button>`;
-    } else if (status === '発注書出力済み') {
-        buttons += `<button class="quotation-action-btn" onclick="viewProcessingResult('${quotation.id}')">結果を見る</button>`;
+    } else if (status === '紐付け完了') {
+        buttons += `<button class="quotation-action-btn primary" onclick="continueProcessing('${quotation.id}')">処理を続ける</button>`;
+        buttons += `<button class="quotation-action-btn" onclick="viewProcessingResult('${quotation.id}')">発注書・検収書出力</button>`;
     }
 
     buttons += `<button class="quotation-action-btn secondary" onclick="deleteQuotation('${quotation.id}')">削除</button>`;
@@ -180,11 +179,13 @@ function continueProcessing(quotationId) {
     startProcessing(quotationId);
 }
 
-// 処理結果を表示
+// 処理結果を表示（発注書・検収書出力）
 function viewProcessingResult(quotationId) {
     console.log('View result:', quotationId);
-    alert('処理結果表示機能は次のコミットで実装します');
-    // TODO: 処理結果表示を実装
+    const quotation = quotationDocuments.find(q => q.id === quotationId);
+    if (!quotation) return;
+
+    showOutputModal(quotation);
 }
 
 // 見積書削除
@@ -297,6 +298,39 @@ function handleBackFromDataBox() {
     document.getElementById('searchResultPage').classList.add('active');
 }
 
+// 発注書・検収書出力モーダルを表示
+function showOutputModal(quotation) {
+    // モーダルの情報を設定
+    document.getElementById('outputModalRfqNo').textContent = quotation.rfqNo;
+    document.getElementById('outputModalVendor').textContent = quotation.vendor || '業者名未設定';
+    document.getElementById('outputModalPhase').textContent = quotation.phase;
+
+    // モーダルを表示
+    document.getElementById('outputModal').classList.add('active');
+}
+
+function closeOutputModal() {
+    document.getElementById('outputModal').classList.remove('active');
+}
+
+function handleOutputModalOutsideClick(event) {
+    if (event.target.id === 'outputModal') {
+        closeOutputModal();
+    }
+}
+
+// 発注書を生成
+function generatePurchaseOrder() {
+    alert('発注書をExcel形式で出力します（実装予定）');
+    // TODO: 発注書のExcel出力を実装
+}
+
+// 検収書を生成
+function generateInspectionReport() {
+    alert('検収書をExcel形式で出力します（実装予定）');
+    // TODO: 検収書のExcel出力を実装
+}
+
 // グローバルに公開
 window.quotationDocuments = quotationDocuments;
 window.initQuotationDataBoxPage = initQuotationDataBoxPage;
@@ -309,3 +343,8 @@ window.continueProcessing = continueProcessing;
 window.viewProcessingResult = viewProcessingResult;
 window.deleteQuotation = deleteQuotation;
 window.handleBackFromDataBox = handleBackFromDataBox;
+window.showOutputModal = showOutputModal;
+window.closeOutputModal = closeOutputModal;
+window.handleOutputModalOutsideClick = handleOutputModalOutsideClick;
+window.generatePurchaseOrder = generatePurchaseOrder;
+window.generateInspectionReport = generateInspectionReport;

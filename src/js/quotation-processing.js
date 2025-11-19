@@ -32,25 +32,23 @@ function initQuotationProcessingPage(quotationId) {
     currentStep = 1;
     goToStep(1);
 
+    // 初回表示時にサンプルデータを生成
+    simulateOcrExtraction();
+
     // 処理状態に応じてステップを復元
     if (currentQuotation.processingStatus === 'OCR完了') {
-        // OCR結果を復元して次のステップへ
-        simulateOcrExtraction();
+        // マッチング結果を生成して次のステップへ
+        performMatching();
         setTimeout(() => {
             goToStep(2);
-        }, 500);
+        }, 100);
     } else if (currentQuotation.processingStatus === '紐付け完了') {
-        // マッチング結果を復元して最終ステップへ
-        simulateOcrExtraction();
+        // すべての結果を復元して最終ステップへ
+        performMatching();
+        performLinking();
         setTimeout(() => {
-            performMatching();
-            setTimeout(() => {
-                performLinking();
-                setTimeout(() => {
-                    goToStep(4);
-                }, 500);
-            }, 500);
-        }, 500);
+            goToStep(3);
+        }, 100);
     }
 }
 
@@ -82,8 +80,6 @@ function goToStep(step) {
         performMatching();
     } else if (step === 3 && linkingResults.length === 0) {
         performLinking();
-    } else if (step === 4) {
-        updateOutputSummary();
     }
 
     // スクロールをトップに
@@ -309,16 +305,6 @@ function updateLinkingSummary() {
     document.getElementById('unlinkedItemsCount').textContent = unlinked;
 }
 
-// 出力サマリーを更新
-function updateOutputSummary() {
-    document.getElementById('outputRfqNo').textContent = currentQuotation.rfqNo;
-    document.getElementById('outputVendor').textContent = currentQuotation.vendor;
-    document.getElementById('outputItemCount').textContent = linkingResults.length;
-
-    document.getElementById('outputRfqNo2').textContent = currentQuotation.rfqNo;
-    document.getElementById('outputVendor2').textContent = currentQuotation.vendor;
-    document.getElementById('outputItemCount2').textContent = linkingResults.length;
-}
 
 // 資産マスタ選択モーダルを開く
 let currentSelectingItemId = null;
@@ -465,29 +451,11 @@ function openPdfPreview() {
     alert('PDFプレビュー機能は実装予定です');
 }
 
-// 発注書生成
-function generatePurchaseOrder() {
-    alert('発注書をExcel形式で出力します（実装予定）');
-}
-
-function previewPurchaseOrder() {
-    alert('発注書のプレビューを表示します（実装予定）');
-}
-
-// 検収書生成
-function generateInspectionReport() {
-    alert('検収書をExcel形式で出力します（実装予定）');
-}
-
-function previewInspectionReport() {
-    alert('検収書のプレビューを表示します（実装予定）');
-}
-
 // 処理完了
 function completeProcessing() {
-    if (confirm('見積処理を完了しますか？\n\n処理状態が「発注書出力済み」に更新されます。')) {
+    if (confirm('見積明細の紐付けを完了しますか？\n\n処理状態が「紐付け完了」に更新されます。')) {
         // 見積書の処理状態を更新
-        currentQuotation.processingStatus = '発注書出力済み';
+        currentQuotation.processingStatus = '紐付け完了';
 
         // グローバルデータを更新
         const index = window.quotationDocuments.findIndex(q => q.id === currentQuotation.id);
@@ -495,7 +463,7 @@ function completeProcessing() {
             window.quotationDocuments[index] = currentQuotation;
         }
 
-        alert('見積処理が完了しました');
+        alert('見積明細の紐付けが完了しました');
         handleBackFromProcessing();
     }
 }
@@ -525,9 +493,5 @@ window.closeApplicationSelectModal = closeApplicationSelectModal;
 window.handleApplicationModalOutsideClick = handleApplicationModalOutsideClick;
 window.confirmApplicationSelection = confirmApplicationSelection;
 window.openPdfPreview = openPdfPreview;
-window.generatePurchaseOrder = generatePurchaseOrder;
-window.previewPurchaseOrder = previewPurchaseOrder;
-window.generateInspectionReport = generateInspectionReport;
-window.previewInspectionReport = previewInspectionReport;
 window.completeProcessing = completeProcessing;
 window.handleBackFromProcessing = handleBackFromProcessing;
