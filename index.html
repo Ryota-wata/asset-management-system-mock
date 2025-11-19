@@ -26,6 +26,7 @@
     <link rel="stylesheet" href="src/css/screens/asset-matching.css">
     <link rel="stylesheet" href="src/css/screens/data-matching.css">
     <link rel="stylesheet" href="src/css/screens/search-result-simple.css">
+    <link rel="stylesheet" href="src/css/screens/asset-detail.css">
     <link rel="stylesheet" href="src/css/screens/application-list.css">
     <link rel="stylesheet" href="src/css/screens/rfq-list.css">
     <link rel="stylesheet" href="src/css/screens/quotation-databox.css">
@@ -122,6 +123,9 @@
 
         <!-- 資産検索結果画面 -->
         <div id="searchResultPage"></div>
+
+        <!-- 資産詳細画面 -->
+        <div id="assetDetailPage"></div>
 
         <!-- 申請一覧画面 -->
         <div id="applicationListPage"></div>
@@ -255,6 +259,7 @@
     <script src="src/js/asset-matching.js"></script>
     <script src="src/js/data-matching.js"></script>
     <script src="src/js/search-result-simple.js"></script>
+    <script src="src/js/asset-detail.js"></script>
     <script src="src/js/application-list.js"></script>
     <script src="src/js/rfq-list.js"></script>
     <script src="src/js/quotation-databox.js"></script>
@@ -302,6 +307,7 @@
                 { id: 'dataMatchingPage', file: 'data-matching.html' },
                 // { id: 'assetMasterModal', file: 'asset-master-modal.html' }, // 削除: search-result-simple.html内に統合済み
                 { id: 'searchResultPage', file: 'search-result-simple.html' },
+                { id: 'assetDetailPage', file: 'asset-detail.html' },
                 { id: 'applicationListPage', file: 'application-list.html' },
                 { id: 'rfqListPage', file: 'rfq-list.html' },
                 { id: 'assetSurveyIntegratedPage', file: 'asset-survey-integrated.html' },

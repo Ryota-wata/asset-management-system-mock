@@ -421,6 +421,33 @@ function goToQuotationDataBox() {
     }
 }
 
+/**
+ * 個体管理リスト原本画面に遷移
+ */
+function goToIndividualManagementList() {
+    console.log('[goToIndividualManagementList] Called from navigation.js');
+
+    // 現在アクティブな画面を取得
+    const activePages = ['searchResultPage', 'assetDetailPage', 'applicationListPage', 'rfqListPage', 'mainContainer'];
+    const currentPage = activePages.find(pageId => {
+        const page = document.getElementById(pageId);
+        return page && page.classList.contains('active');
+    });
+
+    console.log('[goToIndividualManagementList] Current active page:', currentPage || 'none found');
+
+    if (currentPage) {
+        transitionPage(currentPage, 'individualManagementListPage');
+    } else {
+        // フォールバック: mainContainerから遷移
+        transitionPage('mainContainer', 'individualManagementListPage');
+    }
+
+    if (typeof window.initIndividualManagementListPage === 'function') {
+        window.initIndividualManagementListPage();
+    }
+}
+
 // グローバルスコープに関数を公開
 window.transitionPage = transitionPage;
 window.handleQRManagement = handleQRManagement;
@@ -453,6 +480,7 @@ window.goToOrderTemplateTest = goToOrderTemplateTest;
 window.goToApplicationListFromSearch = goToApplicationListFromSearch;
 window.goToRfqListFromSearch = goToRfqListFromSearch;
 window.goToQuotationDataBoxFromSearch = goToQuotationDataBoxFromSearch;
+window.goToIndividualManagementList = goToIndividualManagementList;
 
 /**
  * 汎用ナビゲーションメニューの制御

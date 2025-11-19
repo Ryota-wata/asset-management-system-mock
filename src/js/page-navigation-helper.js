@@ -14,7 +14,7 @@ window.PageNavigationHelper = {
             'loginPage', 'mainContainer', 'qrPage', 'qrDetailPage', 'qrIssuePage',
             'qrPrintPage', 'offlinePrepPage', 'surveyPage', 'historyListPage',
             'assetImportPage', 'assetMatchingPage', 'dataMatchingPage',
-            'searchResultPage', 'applicationListPage', 'rfqListPage',
+            'searchResultPage', 'assetDetailPage', 'applicationListPage', 'rfqListPage',
             'quotationDataBoxPage', 'quotationProcessingPage',
             'individualManagementListPage', 'assetSurveyIntegratedPage',
             'shipFacilityMasterPage', 'shipAssetMasterPage', 'registrationEditPage'

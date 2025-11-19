@@ -1,0 +1,248 @@
+/* ========================================
+   資産詳細画面
+======================================== */
+
+.asset-detail-page {
+    display: none;
+}
+
+.asset-detail-page.active {
+    display: block;
+}
+
+/* 詳細コンテンツ */
+.detail-content {
+    display: grid;
+    grid-template-columns: 400px 1fr;
+    gap: 20px;
+    padding: 20px;
+    background: #f5f5f5;
+    min-height: calc(100vh - 140px);
+}
+
+/* ========================================
+   左側：写真と基本情報
+======================================== */
+.detail-left {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* 資産写真 */
+.asset-photo-container {
+    background: white;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.asset-photo {
+    width: 100%;
+    height: auto;
+    border-radius: 4px;
+    object-fit: cover;
+    max-height: 300px;
+}
+
+/* 基本情報ボックス */
+.basic-info-box {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.info-section-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #27ae60;
+}
+
+.info-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.info-row {
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    gap: 10px;
+    align-items: start;
+}
+
+.info-label {
+    font-size: 13px;
+    color: #555;
+    font-weight: 500;
+}
+
+.info-value {
+    font-size: 14px;
+    color: #333;
+    word-break: break-word;
+}
+
+/* ========================================
+   右側：ドキュメント閲覧
+======================================== */
+.detail-right {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.document-section {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.document-section-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #27ae60;
+}
+
+/* ドキュメントリスト */
+.document-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 20px;
+    max-height: 200px;
+    overflow-y: auto;
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 4px;
+}
+
+.document-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background: white;
+    border: 2px solid #e0e0e0;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.document-item:hover {
+    border-color: #27ae60;
+    background: #f0f8f4;
+}
+
+.document-item.active {
+    border-color: #27ae60;
+    background: #e8f5e9;
+}
+
+.document-icon {
+    font-size: 24px;
+    flex-shrink: 0;
+}
+
+.document-info {
+    flex: 1;
+}
+
+.document-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: #2c3e50;
+    margin-bottom: 4px;
+}
+
+.document-meta {
+    font-size: 12px;
+    color: #7f8c8d;
+}
+
+/* ドキュメントビューアーエリア */
+.document-viewer-area {
+    flex: 1;
+    background: #fafafa;
+    border: 2px solid #e0e0e0;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 400px;
+}
+
+.document-viewer-placeholder {
+    text-align: center;
+    color: #666;
+    padding: 40px;
+}
+
+.viewer-icon {
+    font-size: 64px;
+    margin-bottom: 15px;
+}
+
+.viewer-message {
+    font-size: 16px;
+    font-weight: 500;
+    color: #2c3e50;
+    margin-bottom: 10px;
+}
+
+/* ========================================
+   レスポンシブ対応
+======================================== */
+@media (max-width: 1024px) {
+    .detail-content {
+        grid-template-columns: 1fr;
+    }
+
+    .detail-left {
+        order: 2;
+    }
+
+    .detail-right {
+        order: 1;
+    }
+}
+
+@media (max-width: 640px) {
+    .detail-content {
+        padding: 10px;
+        gap: 10px;
+    }
+
+    .asset-photo-container,
+    .basic-info-box,
+    .detail-right {
+        padding: 15px;
+    }
+
+    .tab-button {
+        padding: 12px 10px;
+        font-size: 13px;
+    }
+
+    .info-row {
+        grid-template-columns: 80px 1fr;
+        gap: 8px;
+    }
+
+    .info-label {
+        font-size: 12px;
+    }
+
+    .info-value {
+        font-size: 13px;
+    }
+}

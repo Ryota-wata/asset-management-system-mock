@@ -1,0 +1,146 @@
+<div id="assetDetailPage" class="asset-detail-page">
+    <div class="result-container">
+        <!-- ヘッダー（資産検索結果画面と同じ） -->
+        <header class="result-header">
+            <div class="result-header-left">
+                <div class="logo">
+                    <div class="logo-icon">SHIP</div>
+                    <div class="result-header-title">資産リスト</div>
+                </div>
+                <span class="result-count" id="assetDetailCount">1件</span>
+            </div>
+            <div class="result-header-actions">
+                <button class="header-btn back" onclick="handleBackFromAssetDetail()">戻る</button>
+            </div>
+        </header>
+
+        <!-- 詳細コンテンツ -->
+        <div class="detail-content">
+            <!-- 左側：写真と基本情報 -->
+            <div class="detail-left">
+                <!-- 資産写真 -->
+                <div class="asset-photo-container">
+                    <img id="assetDetailPhoto" src="" alt="資産写真" class="asset-photo">
+                </div>
+
+                <!-- 基本情報 -->
+                <div class="basic-info-box">
+                    <h3 class="info-section-title">基本情報</h3>
+                    <div class="info-grid">
+                        <div class="info-row">
+                            <span class="info-label">No.:</span>
+                            <span class="info-value" id="detailNo">-</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">施設名:</span>
+                            <span class="info-value" id="detailFacility">-</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">棟:</span>
+                            <span class="info-value" id="detailBuilding">-</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">階:</span>
+                            <span class="info-value" id="detailFloor">-</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">部門:</span>
+                            <span class="info-value" id="detailDepartment">-</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">部署:</span>
+                            <span class="info-value" id="detailSection">-</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Category:</span>
+                            <span class="info-value" id="detailCategory">-</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">大分類:</span>
+                            <span class="info-value" id="detailLargeClass">-</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">中分類:</span>
+                            <span class="info-value" id="detailMediumClass">-</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">品目:</span>
+                            <span class="info-value" id="detailItem">-</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">品名:</span>
+                            <span class="info-value" id="detailName">-</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">メーカー:</span>
+                            <span class="info-value" id="detailMaker">-</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">型式:</span>
+                            <span class="info-value" id="detailModel">-</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">数量:</span>
+                            <span class="info-value" id="detailQuantity">-</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">幅(W):</span>
+                            <span class="info-value" id="detailWidth">-</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">奥行(D):</span>
+                            <span class="info-value" id="detailDepth">-</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">高さ(H):</span>
+                            <span class="info-value" id="detailHeight">-</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 右側：ドキュメント閲覧 -->
+            <div class="detail-right">
+                <div class="document-section">
+                    <h3 class="document-section-title">登録ドキュメント</h3>
+
+                    <!-- ドキュメント選択リスト -->
+                    <div class="document-list">
+                        <div class="document-item active" onclick="selectDocument(1)">
+                            <div class="document-icon">📄</div>
+                            <div class="document-info">
+                                <div class="document-name">契約書.pdf</div>
+                                <div class="document-meta">2025-01-15 登録</div>
+                            </div>
+                        </div>
+                        <div class="document-item" onclick="selectDocument(2)">
+                            <div class="document-icon">📄</div>
+                            <div class="document-info">
+                                <div class="document-name">納品書.pdf</div>
+                                <div class="document-meta">2025-01-15 登録</div>
+                            </div>
+                        </div>
+                        <div class="document-item" onclick="selectDocument(3)">
+                            <div class="document-icon">📄</div>
+                            <div class="document-info">
+                                <div class="document-name">検収書.pdf</div>
+                                <div class="document-meta">2025-01-16 登録</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ドキュメントビューアー -->
+                    <div class="document-viewer-area">
+                        <div class="document-viewer-placeholder">
+                            <div class="viewer-icon">📄</div>
+                            <div class="viewer-message">契約書.pdf</div>
+                            <p class="text-muted" style="margin-top: 10px; font-size: 13px;">
+                                ※ 実際のシステムでは、選択したドキュメントがここに表示されます
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -319,9 +319,10 @@ let searchResultFilter_assetMaster = null;
         function renderListView() {
             const tbody = document.getElementById('tableBody');
             tbody.innerHTML = '';
-            
+
             sampleData.forEach(item => {
                 const tr = document.createElement('tr');
+                tr.className = 'clickable-row';
                 tr.innerHTML = `
                     <td><input type="checkbox" class="row-checkbox" data-no="${item.no}" onchange="handleRowSelect()"></td>
                     <td>${item.no}</td>
@@ -342,6 +343,14 @@ let searchResultFilter_assetMaster = null;
                     <td>${item.depth || ''}</td>
                     <td>${item.height || ''}</td>
                 `;
+
+                // 行クリックで詳細画面に遷移（チェックボックスクリック時は除外）
+                tr.addEventListener('click', function(e) {
+                    if (e.target.type !== 'checkbox') {
+                        showAssetDetail(item);
+                    }
+                });
+
                 tbody.appendChild(tr);
             });
         }
@@ -350,19 +359,21 @@ let searchResultFilter_assetMaster = null;
         function renderCardView() {
             const cardView = document.getElementById('cardView');
             cardView.innerHTML = '';
-            
+
             sampleData.forEach((item, index) => {
                 const card = document.createElement('div');
                 card.className = 'asset-card';
                 card.setAttribute('data-no', item.no);
+
+                // カードクリックで詳細画面に遷移（チェックボックスクリック時は除外）
                 card.onclick = (e) => {
                     if (e.target.type !== 'checkbox') {
-                        toggleCardSelection(item.no);
+                        showAssetDetail(item);
                     }
                 };
-                
+
                 const imageUrl = cardImages[index % cardImages.length];
-                
+
                 card.innerHTML = `
                     <input type="checkbox" class="card-checkbox" data-no="${item.no}" onclick="event.stopPropagation(); toggleCardSelection(${item.no})">
                     <img src="${imageUrl}" class="card-image" alt="資産画像">
@@ -400,7 +411,7 @@ let searchResultFilter_assetMaster = null;
                     </div>
                     ` : ''}
                 `;
-                
+
                 cardView.appendChild(card);
             });
         }
@@ -1610,9 +1621,23 @@ async function initSearchResultPage() {
     console.log('=== Initialization complete ===');
 }
 
+/**
+ * 資産詳細画面を表示
+ * @param {Object} asset - 資産データ
+ */
+function showAssetDetail(asset) {
+    console.log('[SearchResult] Showing asset detail:', asset);
+
+    // 詳細画面に遷移
+    PageNavigationHelper.showPage('assetDetailPage', () => {
+        initAssetDetailPage(asset);
+    });
+}
+
 // グローバルに公開
 window.initSearchResultPage = initSearchResultPage;
 window.editSelectedAssetItem = editSelectedAssetItem;
 window.addSelectedAssetFromDropdowns = addSelectedAssetFromDropdowns;
 window.resetMasterFilter = resetMasterFilter;
 window.removeAssetFromSelection = removeAssetFromSelection;
+window.showAssetDetail = showAssetDetail;
