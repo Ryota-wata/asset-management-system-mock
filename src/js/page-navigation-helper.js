@@ -11,8 +11,8 @@ window.PageNavigationHelper = {
 
         // 全ての画面要素をIDで直接指定（クラス名の不一致を回避）
         const pageIds = [
-            'loginPage', 'mainContainer', 'qrPage', 'qrDetailPage', 'qrIssuePage',
-            'qrPrintPage', 'offlinePrepPage', 'surveyPage', 'historyListPage',
+            'loginPage', 'mainContainer', 'qrIssuePage', 'qrPrintPage',
+            'offlinePrepPage', 'surveyPage', 'historyListPage',
             'assetImportPage', 'assetMatchingPage', 'dataMatchingPage',
             'searchResultPage', 'assetDetailPage', 'applicationListPage', 'rfqListPage',
             'quotationDataBoxPage', 'quotationProcessingPage',

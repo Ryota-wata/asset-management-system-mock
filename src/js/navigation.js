@@ -29,17 +29,13 @@ function transitionPage(fromPageId, toPageId) {
 }
 
 /**
- * QRコード管理画面への遷移
+ * QRコード発行画面への遷移（個体管理リスト作成モーダルから）
  */
-function handleQRManagement() {
-    transitionPage('mainContainer', 'qrPage');
-}
-
-/**
- * QRコード管理画面から戻る
- */
-function handleBackFromQR() {
-    transitionPage('qrPage', 'mainContainer');
+function handleQRIssueFromModal() {
+    if (typeof closeListModal === 'function') {
+        closeListModal();
+    }
+    transitionPage('mainContainer', 'qrIssuePage');
 }
 
 /**
@@ -58,27 +54,20 @@ function handleBackFromEdit() {
 }
 
 /**
- * QRコード詳細画面から一覧に戻る
- */
-function handleBackFromQRDetail() {
-    transitionPage('qrDetailPage', 'qrPage');
-}
-
-/**
- * QRコード新規発行画面から一覧に戻る
+ * QRコード発行画面から戻る（個体管理リスト作成モーダルを再表示）
  */
 function handleBackFromQRIssue() {
-    transitionPage('qrIssuePage', 'qrPage');
+    transitionPage('qrIssuePage', 'mainContainer');
+    if (typeof showListModal === 'function') {
+        showListModal();
+    }
 }
 
 /**
- * QRコード印刷画面から戻る
- * 呼び出し元に応じて戻る先を変更
+ * QRコード印刷画面から発行画面に戻る
  */
 function handleBackFromQRPrint() {
-    const toPageId = window.qrPrintFromPage === 'detail' ? 'qrDetailPage' : 'qrPage';
-    transitionPage('qrPrintPage', toPageId);
-    window.qrPrintFromPage = '';
+    transitionPage('qrPrintPage', 'qrIssuePage');
 }
 
 /**
@@ -450,10 +439,8 @@ function goToIndividualManagementList() {
 
 // グローバルスコープに関数を公開
 window.transitionPage = transitionPage;
-window.handleQRManagement = handleQRManagement;
-window.handleBackFromQR = handleBackFromQR;
+window.handleQRIssueFromModal = handleQRIssueFromModal;
 window.handleBackFromEdit = handleBackFromEdit;
-window.handleBackFromQRDetail = handleBackFromQRDetail;
 window.handleBackFromQRIssue = handleBackFromQRIssue;
 window.handleBackFromQRPrint = handleBackFromQRPrint;
 window.handleBackFromSurvey = handleBackFromSurvey;

@@ -127,10 +127,14 @@ function selectMenu(menuName) {
         document.getElementById('offlinePrepPage').classList.add('active');
         return;
     } else if (menuName === 'QRコード管理') {
-        // QRコード管理画面へ遷移
-        closeListModal();
-        document.getElementById('mainContainer').classList.remove('active');
-        document.getElementById('qrPage').classList.add('active');
+        // QRコード発行画面へ遷移
+        if (typeof handleQRIssueFromModal === 'function') {
+            handleQRIssueFromModal();
+        } else {
+            closeListModal();
+            document.getElementById('mainContainer').classList.remove('active');
+            document.getElementById('qrIssuePage').classList.add('active');
+        }
         return;
     } else if (menuName === '現有品調査内容修正') {
         // 登録内容修正画面へ遷移

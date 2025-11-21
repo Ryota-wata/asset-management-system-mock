@@ -1058,6 +1058,81 @@
     display: block;
 }
 
+/* 番号フォーマット説明 */
+.qr-issue-number-format {
+    background: #fffde7;
+    border: 2px solid #fdd835;
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+}
+
+.qr-issue-format-label {
+    font-size: 15px;
+    color: #333;
+    line-height: 1.6;
+}
+
+.qr-issue-format-note {
+    font-size: 13px;
+    color: #666;
+    margin-top: 8px;
+    font-style: italic;
+}
+
+.qr-issue-form-note {
+    font-size: 13px;
+    color: #666;
+    margin-top: 6px;
+    font-style: italic;
+}
+
+/* 共通設定セクション */
+.qr-issue-common-section {
+    border-top: 2px solid #e0e0e0;
+    padding-top: 24px;
+    margin-top: 24px;
+}
+
+.qr-issue-section-label {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 16px;
+}
+
+/* アクションボタン群 */
+.qr-issue-action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.qr-issue-action-btn {
+    background: #fffde7;
+    border: 2px solid #fdd835;
+    border-radius: 8px;
+    padding: 14px 20px;
+    font-size: 15px;
+    font-weight: 500;
+    color: #333;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.2s;
+}
+
+.qr-issue-action-btn:hover {
+    background: #fff9c4;
+    border-color: #f9a825;
+}
+
+/* 戻るボタンの矢印 */
+.qr-issue-back-btn .back-arrow::before {
+    content: '←';
+    margin-right: 4px;
+}
+
 /* フォームグループ */
 .qr-issue-form-group {
     margin-bottom: 24px;
