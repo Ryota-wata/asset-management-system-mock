@@ -1,27 +1,26 @@
 <!-- 現有資産調査統合画面（QR読取・写真撮影・資産情報登録） -->
     <div id="assetSurveyIntegratedPage" class="asset-survey-integrated-page">
-        <!-- ヘッダー -->
-        <header class="header">
-            <div class="header-left">
-                <div class="logo">
-                    <div class="logo-icon">SHIP</div>
-                    <div class="header-title">HEALTHCARE 医療機器管理システム</div>
+        <!-- 固定ヘッダー：シールNo.と室名 -->
+        <div class="survey-integrated-sticky-header">
+            <div class="survey-integrated-sticky-content">
+                <div class="survey-integrated-sticky-group">
+                    <label class="survey-integrated-sticky-label" id="sealNoLabel">シールNo.</label>
+                    <input type="text" id="integratedSealNo" class="survey-integrated-sticky-input" placeholder="シール番号を入力">
+                </div>
+                <div class="survey-integrated-sticky-group">
+                    <label class="survey-integrated-sticky-label">室名</label>
+                    <input type="text" id="integratedRoomName" class="survey-integrated-sticky-input" placeholder="室名を入力または検索">
                 </div>
             </div>
-            <div class="header-center">
-                <h1 class="survey-integrated-page-title">現有資産調査</h1>
-            </div>
-        </header>
+        </div>
 
         <!-- メインコンテンツ -->
         <main class="survey-integrated-main-content">
             <div class="survey-integrated-container">
-                <!-- セクション1: QR読取・基本情報 -->
-                <section class="survey-integrated-section qr-section">
-                    <h2 class="survey-integrated-section-title">QR読取・基本情報</h2>
-
+                <!-- 統合フォームエリア -->
+                <section class="survey-integrated-section">
+                    <!-- 登録モード -->
                     <div class="survey-integrated-form-row">
-                        <!-- 一括登録チェックボックス -->
                         <div class="survey-integrated-form-group">
                             <label class="survey-integrated-form-label">登録モード</label>
                             <div class="survey-integrated-checkbox-container">
@@ -29,35 +28,6 @@
                                 <label for="bulkRegistrationMode" class="survey-integrated-checkbox-label">一括登録モード</label>
                             </div>
                             <span class="survey-integrated-input-hint">同じ機器を複数個登録する場合にチェック</span>
-                        </div>
-                    </div>
-
-                    <div class="survey-integrated-form-row">
-                        <!-- シールNo.（通常モード）/ 開始シールNo.（一括モード） -->
-                        <div class="survey-integrated-form-group">
-                            <label class="survey-integrated-form-label" id="sealNoLabel">シールNo.</label>
-                            <input type="text" id="integratedSealNo" class="survey-integrated-text-input" placeholder="シール番号を入力" onchange="updateBulkSealNoPreview()">
-                        </div>
-
-                        <!-- 登録個数（一括モード時のみ表示） -->
-                        <div class="survey-integrated-form-group" id="bulkQuantityGroup" style="display: none;">
-                            <label class="survey-integrated-form-label">登録個数</label>
-                            <input type="number" id="bulkQuantity" class="survey-integrated-text-input" placeholder="個数を入力" min="1" max="999" onchange="updateBulkSealNoPreview()">
-                            <span class="survey-integrated-input-hint">例: 椅子50脚の場合は「50」と入力</span>
-                        </div>
-
-                        <!-- 室名 -->
-                        <div class="survey-integrated-form-group">
-                            <label class="survey-integrated-form-label">室名</label>
-                            <input type="text" id="integratedRoomName" class="survey-integrated-text-input" placeholder="室名を入力または検索">
-                        </div>
-                    </div>
-
-                    <!-- 一括登録プレビュー -->
-                    <div class="survey-integrated-bulk-preview" id="bulkPreview" style="display: none;">
-                        <div class="survey-integrated-preview-label">連番プレビュー</div>
-                        <div class="survey-integrated-preview-content" id="bulkPreviewContent">
-                            <!-- JavaScriptで生成 -->
                         </div>
                     </div>
 
@@ -71,38 +41,38 @@
                             </div>
                         </div>
                     </div>
-                </section>
 
-                <!-- セクション2: 写真撮影・資産番号 -->
-                <section class="survey-integrated-section photo-section">
-                    <h2 class="survey-integrated-section-title">写真撮影・資産番号</h2>
+                    <!-- 青いバー -->
+                    <div class="survey-integrated-section-bar"></div>
 
+                    <!-- 資産番号・備品番号・シリアルNo. -->
                     <div class="survey-integrated-form-row">
-                        <!-- 資産番号 -->
                         <div class="survey-integrated-form-group">
                             <label class="survey-integrated-form-label">資産番号</label>
                             <input type="text" id="integratedAssetNo" class="survey-integrated-text-input" placeholder="資産番号を入力">
                         </div>
 
-                        <!-- 備品番号 -->
                         <div class="survey-integrated-form-group">
                             <label class="survey-integrated-form-label">備品番号</label>
                             <input type="text" id="integratedEquipmentNo" class="survey-integrated-text-input" placeholder="備品番号を入力">
                         </div>
+
+                        <div class="survey-integrated-form-group">
+                            <label class="survey-integrated-form-label">シリアルNo.</label>
+                            <input type="text" id="integratedSerialNo" class="survey-integrated-text-input" placeholder="シリアルNo.を入力">
+                        </div>
                     </div>
 
+                    <!-- 購入年月日・その他 -->
                     <div class="survey-integrated-form-row">
-                        <!-- 購入年月日 -->
                         <div class="survey-integrated-form-group">
                             <label class="survey-integrated-form-label">購入年月日</label>
                             <input type="date" id="integratedPurchaseDate" class="survey-integrated-date-input">
                         </div>
 
-                        <!-- リース・貸出品（横並び） -->
                         <div class="survey-integrated-form-group">
                             <label class="survey-integrated-form-label">その他</label>
                             <div class="survey-integrated-toggle-row">
-                                <!-- リース -->
                                 <div class="survey-integrated-toggle-item">
                                     <label class="survey-integrated-toggle-item-label">リース</label>
                                     <div class="survey-integrated-toggle-container">
@@ -113,7 +83,6 @@
                                     </div>
                                 </div>
 
-                                <!-- 貸出品 -->
                                 <div class="survey-integrated-toggle-item">
                                     <label class="survey-integrated-toggle-item-label">貸出品</label>
                                     <div class="survey-integrated-toggle-container">
@@ -137,11 +106,9 @@
                             </div>
                         </div>
                     </div>
-                </section>
 
-                <!-- セクション3: 資産情報登録 -->
-                <section class="survey-integrated-section asset-info-section">
-                    <h2 class="survey-integrated-section-title">資産情報登録</h2>
+                    <!-- 青いバー -->
+                    <div class="survey-integrated-section-bar"></div>
 
                     <!-- 分類情報 -->
                     <div class="survey-integrated-subsection">
@@ -149,19 +116,9 @@
 
                         <div class="survey-integrated-form-row">
                             <div class="survey-integrated-form-group">
-                                <label class="survey-integrated-form-label">Category</label>
-                                <select id="integratedCategorySelect" class="survey-integrated-select-input">
-                                    <option value="">読み込み中...</option>
-                                </select>
-                                <span class="survey-integrated-input-hint">医療機器または什器備品を選択</span>
-                            </div>
-                        </div>
-
-                        <div class="survey-integrated-form-row">
-                            <div class="survey-integrated-form-group">
                                 <label class="survey-integrated-form-label">大分類</label>
                                 <select id="integratedLargeClassSelect" class="survey-integrated-select-input">
-                                    <option value="">読み込み中...</option>
+                                    <option value="">選択してください</option>
                                 </select>
                                 <span class="survey-integrated-input-hint">フリー入力・一覧選択・あいまい検索可</span>
                             </div>
@@ -169,7 +126,7 @@
                             <div class="survey-integrated-form-group">
                                 <label class="survey-integrated-form-label">中分類</label>
                                 <select id="integratedMediumClassSelect" class="survey-integrated-select-input">
-                                    <option value="">読み込み中...</option>
+                                    <option value="">選択してください</option>
                                 </select>
                                 <span class="survey-integrated-input-hint">フリー入力・一覧選択・あいまい検索可</span>
                             </div>
@@ -177,7 +134,7 @@
                             <div class="survey-integrated-form-group">
                                 <label class="survey-integrated-form-label">品目</label>
                                 <select id="integratedItemSelect" class="survey-integrated-select-input">
-                                    <option value="">読み込み中...</option>
+                                    <option value="">選択してください</option>
                                 </select>
                                 <span class="survey-integrated-input-hint">フリー入力・一覧選択・あいまい検索可</span>
                             </div>
@@ -187,7 +144,7 @@
                             <div class="survey-integrated-form-group">
                                 <label class="survey-integrated-form-label">メーカー</label>
                                 <select id="integratedMakerSelect" class="survey-integrated-select-input">
-                                    <option value="">読み込み中...</option>
+                                    <option value="">選択してください</option>
                                 </select>
                                 <span class="survey-integrated-input-hint">フリー入力・一覧選択・あいまい検索可</span>
                             </div>
@@ -195,7 +152,7 @@
                             <div class="survey-integrated-form-group">
                                 <label class="survey-integrated-form-label">型式</label>
                                 <select id="integratedModelSelect" class="survey-integrated-select-input">
-                                    <option value="">読み込み中...</option>
+                                    <option value="">選択してください</option>
                                 </select>
                                 <span class="survey-integrated-input-hint">フリー入力・一覧選択・あいまい検索可</span>
                             </div>
@@ -230,6 +187,24 @@
                         <label class="survey-integrated-form-label">備考</label>
                         <textarea id="integratedRemarks" class="survey-integrated-textarea" placeholder="備考を入力してください"></textarea>
                     </div>
+
+                    <!-- 終了シールNo.エリア（一括登録モード時のみ表示） -->
+                    <div id="endSealNoSection" class="survey-integrated-end-seal-section" style="display: none;">
+                        <div class="survey-integrated-section-bar"></div>
+
+                        <div class="survey-integrated-end-seal-content">
+                            <div class="survey-integrated-form-group">
+                                <label class="survey-integrated-form-label">終了シールNo.</label>
+                                <input type="text" id="integratedEndSealNo" class="survey-integrated-text-input" placeholder="終了シール番号を入力" readonly>
+                                <span class="survey-integrated-input-hint">一括登録の終了シール番号</span>
+                            </div>
+
+                            <button type="button" class="survey-integrated-end-qr-button" onclick="handleEndQRScan()">
+                                <span class="survey-integrated-end-qr-icon">📷</span>
+                                <span>終了QR読取</span>
+                            </button>
+                        </div>
+                    </div>
                 </section>
             </div>
         </main>
@@ -241,6 +216,13 @@
                     <div class="survey-integrated-back-icon"></div>
                 </div>
                 <span class="survey-integrated-button-text">戻る</span>
+            </button>
+
+            <button class="survey-integrated-footer-button" aria-label="履歴表示" onclick="handleShowHistoryList()">
+                <div class="survey-integrated-icon-circle">
+                    <span style="font-size: 20px;">📋</span>
+                </div>
+                <span class="survey-integrated-button-text">履歴表示</span>
             </button>
 
             <button class="survey-integrated-footer-button camera" aria-label="QR読取" onclick="handleIntegratedQRScan()">
@@ -257,25 +239,11 @@
                 <span class="survey-integrated-button-text">写真撮影</span>
             </button>
 
-            <button class="survey-integrated-footer-button" aria-label="履歴表示" onclick="handleShowHistoryList()">
-                <div class="survey-integrated-icon-circle">
-                    <span style="font-size: 20px;">📋</span>
-                </div>
-                <span class="survey-integrated-button-text">履歴表示</span>
-            </button>
-
             <button class="survey-integrated-footer-button primary" aria-label="商品登録" onclick="handleIntegratedAssetRegistration()">
                 <div class="survey-integrated-icon-circle">
                     <span style="font-size: 20px;">✓</span>
                 </div>
                 <span class="survey-integrated-button-text">商品登録</span>
-            </button>
-
-            <button class="survey-integrated-footer-button" aria-label="部門入力へ" onclick="handleGoToSurvey()">
-                <div class="survey-integrated-icon-circle">
-                    <div class="survey-integrated-home-icon">🏠</div>
-                </div>
-                <span class="survey-integrated-button-text">部門入力へ</span>
             </button>
         </footer>
     </div>

@@ -1,4 +1,4 @@
-<!-- 履歴表示画面（レスポンシブ対応） -->
+<!-- 履歴表示画面（カード形式・レスポンシブ対応） -->
     <div id="historyListPage" class="history-list-page">
         <!-- ヘッダー -->
         <header class="header">
@@ -18,131 +18,265 @@
             <div class="history-container">
                 <div class="history-result-count">6件の登録履歴</div>
 
-                <!-- テーブル表示 -->
-                <div class="history-table-wrapper">
-                    <table class="resizable-table history-table">
-                        <thead>
-                            <tr>
-                                <th>大分類</th>
-                                <th>中分類</th>
-                                <th>品目</th>
-                                <th>メーカー</th>
-                                <th>型式</th>
-                                <th>サイズ (W×D×H mm)</th>
-                                <th>操作</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr class="history-row">
-                                <td data-label="大分類">医療機器</td>
-                                <td data-label="中分類">検査機器</td>
-                                <td data-label="品目">超音波診断装置</td>
-                                <td data-label="メーカー">ABC社</td>
-                                <td data-label="型式">US-1000</td>
-                                <td data-label="サイズ">450×380×120</td>
-                                <td>
-                                    <div class="history-action-buttons">
-                                        <button class="history-use-button" onclick="selectHistoryRow(this)">
-                                            この情報を使用
-                                        </button>
-                                        <button class="history-edit-button" onclick="editHistoryRow(this)">
-                                            編集
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr class="history-row">
-                                <td data-label="大分類">事務機器</td>
-                                <td data-label="中分類">PC機器</td>
-                                <td data-label="品目">ノートPC</td>
-                                <td data-label="メーカー">XYZ社</td>
-                                <td data-label="型式">NB-2000</td>
-                                <td data-label="サイズ">350×250×25</td>
-                                <td>
-                                    <div class="history-action-buttons">
-                                        <button class="history-use-button" onclick="selectHistoryRow(this)">
-                                            この情報を使用
-                                        </button>
-                                        <button class="history-edit-button" onclick="editHistoryRow(this)">
-                                            編集
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr class="history-row">
-                                <td data-label="大分類">医療機器</td>
-                                <td data-label="中分類">治療機器</td>
-                                <td data-label="品目">人工呼吸器</td>
-                                <td data-label="メーカー">DEF社</td>
-                                <td data-label="型式">RES-500</td>
-                                <td data-label="サイズ">300×350×280</td>
-                                <td>
-                                    <div class="history-action-buttons">
-                                        <button class="history-use-button" onclick="selectHistoryRow(this)">
-                                            この情報を使用
-                                        </button>
-                                        <button class="history-edit-button" onclick="editHistoryRow(this)">
-                                            編集
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr class="history-row">
-                                <td data-label="大分類">家具</td>
-                                <td data-label="中分類">デスク</td>
-                                <td data-label="品目">事務デスク</td>
-                                <td data-label="メーカー">家具工房</td>
-                                <td data-label="型式">D-1200</td>
-                                <td data-label="サイズ">1200×700×720</td>
-                                <td>
-                                    <div class="history-action-buttons">
-                                        <button class="history-use-button" onclick="selectHistoryRow(this)">
-                                            この情報を使用
-                                        </button>
-                                        <button class="history-edit-button" onclick="editHistoryRow(this)">
-                                            編集
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr class="history-row">
-                                <td data-label="大分類">医療機器</td>
-                                <td data-label="中分類">検査機器</td>
-                                <td data-label="品目">血液分析装置</td>
-                                <td data-label="メーカー">メディカル社</td>
-                                <td data-label="型式">BA-3000</td>
-                                <td data-label="サイズ">420×360×340</td>
-                                <td>
-                                    <div class="history-action-buttons">
-                                        <button class="history-use-button" onclick="selectHistoryRow(this)">
-                                            この情報を使用
-                                        </button>
-                                        <button class="history-edit-button" onclick="editHistoryRow(this)">
-                                            編集
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr class="history-row">
-                                <td data-label="大分類">事務機器</td>
-                                <td data-label="中分類">複合機</td>
-                                <td data-label="品目">業務用複合機</td>
-                                <td data-label="メーカー">オフィス機器</td>
-                                <td data-label="型式">MFP-7000</td>
-                                <td data-label="サイズ">550×580×680</td>
-                                <td>
-                                    <div class="history-action-buttons">
-                                        <button class="history-use-button" onclick="selectHistoryRow(this)">
-                                            この情報を使用
-                                        </button>
-                                        <button class="history-edit-button" onclick="editHistoryRow(this)">
-                                            編集
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <!-- カード表示 -->
+                <div class="history-cards-wrapper">
+                    <!-- カード1 -->
+                    <div class="history-card" data-card-id="1" onclick="selectHistoryCard(this)">
+                        <div class="history-card-content">
+                            <div class="history-card-row">
+                                <div class="history-card-field">
+                                    <label class="history-card-label">大分類</label>
+                                    <span class="history-card-value" data-field="largeClass">医療機器</span>
+                                    <input type="text" class="history-card-input" data-field="largeClass" style="display: none;">
+                                </div>
+                                <div class="history-card-field">
+                                    <label class="history-card-label">中分類</label>
+                                    <span class="history-card-value" data-field="mediumClass">検査機器</span>
+                                    <input type="text" class="history-card-input" data-field="mediumClass" style="display: none;">
+                                </div>
+                                <div class="history-card-field">
+                                    <label class="history-card-label">品目</label>
+                                    <span class="history-card-value" data-field="item">超音波診断装置</span>
+                                    <input type="text" class="history-card-input" data-field="item" style="display: none;">
+                                </div>
+                            </div>
+                            <div class="history-card-row">
+                                <div class="history-card-field">
+                                    <label class="history-card-label">メーカー</label>
+                                    <span class="history-card-value" data-field="maker">ABC社</span>
+                                    <input type="text" class="history-card-input" data-field="maker" style="display: none;">
+                                </div>
+                                <div class="history-card-field">
+                                    <label class="history-card-label">型式</label>
+                                    <span class="history-card-value" data-field="model">US-1000</span>
+                                    <input type="text" class="history-card-input" data-field="model" style="display: none;">
+                                </div>
+                                <div class="history-card-field">
+                                    <label class="history-card-label">サイズ (W×D×H mm)</label>
+                                    <span class="history-card-value" data-field="size">450×380×120</span>
+                                    <input type="text" class="history-card-input" data-field="size" style="display: none;">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="history-card-check">
+                            <div class="history-card-checkbox"></div>
+                        </div>
+                    </div>
+
+                    <!-- カード2 -->
+                    <div class="history-card" data-card-id="2" onclick="selectHistoryCard(this)">
+                        <div class="history-card-content">
+                            <div class="history-card-row">
+                                <div class="history-card-field">
+                                    <label class="history-card-label">大分類</label>
+                                    <span class="history-card-value" data-field="largeClass">事務機器</span>
+                                    <input type="text" class="history-card-input" data-field="largeClass" style="display: none;">
+                                </div>
+                                <div class="history-card-field">
+                                    <label class="history-card-label">中分類</label>
+                                    <span class="history-card-value" data-field="mediumClass">PC機器</span>
+                                    <input type="text" class="history-card-input" data-field="mediumClass" style="display: none;">
+                                </div>
+                                <div class="history-card-field">
+                                    <label class="history-card-label">品目</label>
+                                    <span class="history-card-value" data-field="item">ノートPC</span>
+                                    <input type="text" class="history-card-input" data-field="item" style="display: none;">
+                                </div>
+                            </div>
+                            <div class="history-card-row">
+                                <div class="history-card-field">
+                                    <label class="history-card-label">メーカー</label>
+                                    <span class="history-card-value" data-field="maker">XYZ社</span>
+                                    <input type="text" class="history-card-input" data-field="maker" style="display: none;">
+                                </div>
+                                <div class="history-card-field">
+                                    <label class="history-card-label">型式</label>
+                                    <span class="history-card-value" data-field="model">NB-2000</span>
+                                    <input type="text" class="history-card-input" data-field="model" style="display: none;">
+                                </div>
+                                <div class="history-card-field">
+                                    <label class="history-card-label">サイズ (W×D×H mm)</label>
+                                    <span class="history-card-value" data-field="size">350×250×25</span>
+                                    <input type="text" class="history-card-input" data-field="size" style="display: none;">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="history-card-check">
+                            <div class="history-card-checkbox"></div>
+                        </div>
+                    </div>
+
+                    <!-- カード3 -->
+                    <div class="history-card" data-card-id="3" onclick="selectHistoryCard(this)">
+                        <div class="history-card-content">
+                            <div class="history-card-row">
+                                <div class="history-card-field">
+                                    <label class="history-card-label">大分類</label>
+                                    <span class="history-card-value" data-field="largeClass">医療機器</span>
+                                    <input type="text" class="history-card-input" data-field="largeClass" style="display: none;">
+                                </div>
+                                <div class="history-card-field">
+                                    <label class="history-card-label">中分類</label>
+                                    <span class="history-card-value" data-field="mediumClass">治療機器</span>
+                                    <input type="text" class="history-card-input" data-field="mediumClass" style="display: none;">
+                                </div>
+                                <div class="history-card-field">
+                                    <label class="history-card-label">品目</label>
+                                    <span class="history-card-value" data-field="item">人工呼吸器</span>
+                                    <input type="text" class="history-card-input" data-field="item" style="display: none;">
+                                </div>
+                            </div>
+                            <div class="history-card-row">
+                                <div class="history-card-field">
+                                    <label class="history-card-label">メーカー</label>
+                                    <span class="history-card-value" data-field="maker">DEF社</span>
+                                    <input type="text" class="history-card-input" data-field="maker" style="display: none;">
+                                </div>
+                                <div class="history-card-field">
+                                    <label class="history-card-label">型式</label>
+                                    <span class="history-card-value" data-field="model">RES-500</span>
+                                    <input type="text" class="history-card-input" data-field="model" style="display: none;">
+                                </div>
+                                <div class="history-card-field">
+                                    <label class="history-card-label">サイズ (W×D×H mm)</label>
+                                    <span class="history-card-value" data-field="size">300×350×280</span>
+                                    <input type="text" class="history-card-input" data-field="size" style="display: none;">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="history-card-check">
+                            <div class="history-card-checkbox"></div>
+                        </div>
+                    </div>
+
+                    <!-- カード4 -->
+                    <div class="history-card" data-card-id="4" onclick="selectHistoryCard(this)">
+                        <div class="history-card-content">
+                            <div class="history-card-row">
+                                <div class="history-card-field">
+                                    <label class="history-card-label">大分類</label>
+                                    <span class="history-card-value" data-field="largeClass">家具</span>
+                                    <input type="text" class="history-card-input" data-field="largeClass" style="display: none;">
+                                </div>
+                                <div class="history-card-field">
+                                    <label class="history-card-label">中分類</label>
+                                    <span class="history-card-value" data-field="mediumClass">デスク</span>
+                                    <input type="text" class="history-card-input" data-field="mediumClass" style="display: none;">
+                                </div>
+                                <div class="history-card-field">
+                                    <label class="history-card-label">品目</label>
+                                    <span class="history-card-value" data-field="item">事務デスク</span>
+                                    <input type="text" class="history-card-input" data-field="item" style="display: none;">
+                                </div>
+                            </div>
+                            <div class="history-card-row">
+                                <div class="history-card-field">
+                                    <label class="history-card-label">メーカー</label>
+                                    <span class="history-card-value" data-field="maker">家具工房</span>
+                                    <input type="text" class="history-card-input" data-field="maker" style="display: none;">
+                                </div>
+                                <div class="history-card-field">
+                                    <label class="history-card-label">型式</label>
+                                    <span class="history-card-value" data-field="model">D-1200</span>
+                                    <input type="text" class="history-card-input" data-field="model" style="display: none;">
+                                </div>
+                                <div class="history-card-field">
+                                    <label class="history-card-label">サイズ (W×D×H mm)</label>
+                                    <span class="history-card-value" data-field="size">1200×700×720</span>
+                                    <input type="text" class="history-card-input" data-field="size" style="display: none;">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="history-card-check">
+                            <div class="history-card-checkbox"></div>
+                        </div>
+                    </div>
+
+                    <!-- カード5 -->
+                    <div class="history-card" data-card-id="5" onclick="selectHistoryCard(this)">
+                        <div class="history-card-content">
+                            <div class="history-card-row">
+                                <div class="history-card-field">
+                                    <label class="history-card-label">大分類</label>
+                                    <span class="history-card-value" data-field="largeClass">医療機器</span>
+                                    <input type="text" class="history-card-input" data-field="largeClass" style="display: none;">
+                                </div>
+                                <div class="history-card-field">
+                                    <label class="history-card-label">中分類</label>
+                                    <span class="history-card-value" data-field="mediumClass">検査機器</span>
+                                    <input type="text" class="history-card-input" data-field="mediumClass" style="display: none;">
+                                </div>
+                                <div class="history-card-field">
+                                    <label class="history-card-label">品目</label>
+                                    <span class="history-card-value" data-field="item">血液分析装置</span>
+                                    <input type="text" class="history-card-input" data-field="item" style="display: none;">
+                                </div>
+                            </div>
+                            <div class="history-card-row">
+                                <div class="history-card-field">
+                                    <label class="history-card-label">メーカー</label>
+                                    <span class="history-card-value" data-field="maker">メディカル社</span>
+                                    <input type="text" class="history-card-input" data-field="maker" style="display: none;">
+                                </div>
+                                <div class="history-card-field">
+                                    <label class="history-card-label">型式</label>
+                                    <span class="history-card-value" data-field="model">BA-3000</span>
+                                    <input type="text" class="history-card-input" data-field="model" style="display: none;">
+                                </div>
+                                <div class="history-card-field">
+                                    <label class="history-card-label">サイズ (W×D×H mm)</label>
+                                    <span class="history-card-value" data-field="size">420×360×340</span>
+                                    <input type="text" class="history-card-input" data-field="size" style="display: none;">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="history-card-check">
+                            <div class="history-card-checkbox"></div>
+                        </div>
+                    </div>
+
+                    <!-- カード6 -->
+                    <div class="history-card" data-card-id="6" onclick="selectHistoryCard(this)">
+                        <div class="history-card-content">
+                            <div class="history-card-row">
+                                <div class="history-card-field">
+                                    <label class="history-card-label">大分類</label>
+                                    <span class="history-card-value" data-field="largeClass">事務機器</span>
+                                    <input type="text" class="history-card-input" data-field="largeClass" style="display: none;">
+                                </div>
+                                <div class="history-card-field">
+                                    <label class="history-card-label">中分類</label>
+                                    <span class="history-card-value" data-field="mediumClass">複合機</span>
+                                    <input type="text" class="history-card-input" data-field="mediumClass" style="display: none;">
+                                </div>
+                                <div class="history-card-field">
+                                    <label class="history-card-label">品目</label>
+                                    <span class="history-card-value" data-field="item">業務用複合機</span>
+                                    <input type="text" class="history-card-input" data-field="item" style="display: none;">
+                                </div>
+                            </div>
+                            <div class="history-card-row">
+                                <div class="history-card-field">
+                                    <label class="history-card-label">メーカー</label>
+                                    <span class="history-card-value" data-field="maker">オフィス機器</span>
+                                    <input type="text" class="history-card-input" data-field="maker" style="display: none;">
+                                </div>
+                                <div class="history-card-field">
+                                    <label class="history-card-label">型式</label>
+                                    <span class="history-card-value" data-field="model">MFP-7000</span>
+                                    <input type="text" class="history-card-input" data-field="model" style="display: none;">
+                                </div>
+                                <div class="history-card-field">
+                                    <label class="history-card-label">サイズ (W×D×H mm)</label>
+                                    <span class="history-card-value" data-field="size">550×580×680</span>
+                                    <input type="text" class="history-card-input" data-field="size" style="display: none;">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="history-card-check">
+                            <div class="history-card-checkbox"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </main>
@@ -154,6 +288,20 @@
                     <div class="history-back-icon"></div>
                 </div>
                 <span class="history-button-text">戻る</span>
+            </button>
+
+            <button class="history-footer-button edit" aria-label="修正" onclick="handleHistoryEdit()" id="historyEditBtn">
+                <div class="history-icon-circle">
+                    <span style="font-size: 18px;">✏️</span>
+                </div>
+                <span class="history-button-text">修正</span>
+            </button>
+
+            <button class="history-footer-button reuse" aria-label="再利用" onclick="handleHistoryReuse()" id="historyReuseBtn">
+                <div class="history-icon-circle">
+                    <span style="font-size: 18px;">↩️</span>
+                </div>
+                <span class="history-button-text">再利用</span>
             </button>
         </footer>
     </div>

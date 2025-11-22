@@ -1,7 +1,7 @@
 /**
- * 履歴表示画面CSS
+ * 履歴表示画面CSS（カード形式）
  *
- * このファイルには、履歴表示画面（テーブル形式・レスポンシブ対応）のスタイルが含まれています。
+ * このファイルには、履歴表示画面（カード形式・レスポンシブ対応）のスタイルが含まれています。
  */
 
 /* ========================================
@@ -46,7 +46,7 @@
 }
 
 .history-container {
-    max-width: 1400px;
+    max-width: 1200px;
     margin: 0 auto;
 }
 
@@ -56,177 +56,120 @@
     margin-bottom: 16px;
 }
 
-/* テーブル */
-.history-table-wrapper {
+/* カード表示 */
+.history-cards-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* カード */
+.history-card {
     background: white;
     border-radius: 8px;
-    overflow: hidden;
+    padding: 16px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 2px solid transparent;
 }
 
-.history-table {
-    width: 100%;
-    border-collapse: collapse;
-    table-layout: fixed;
+.history-card:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
-.history-table thead {
-    background: #2c3e50;
+.history-card.selected {
+    border-color: #3498db;
+    background: #e8f4fc;
 }
 
-.history-table thead th {
-    padding: 14px 12px;
-    text-align: left;
-    font-size: 14px;
+.history-card.editing {
+    border-color: #f39c12;
+    background: #fffbf0;
+}
+
+/* カードコンテンツ */
+.history-card-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.history-card-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+}
+
+/* カードフィールド */
+.history-card-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.history-card-label {
+    font-size: 12px;
     font-weight: 600;
-    color: white;
-    border-bottom: 2px solid #34495e;
+    color: #7f8c8d;
 }
 
-/* カラム幅の設定 */
-.history-table thead th:nth-child(1) { width: 10%; } /* 大分類 */
-.history-table thead th:nth-child(2) { width: 10%; } /* 中分類 */
-.history-table thead th:nth-child(3) { width: 15%; } /* 品目 */
-.history-table thead th:nth-child(4) { width: 12%; } /* メーカー */
-.history-table thead th:nth-child(5) { width: 12%; } /* 型式 */
-.history-table thead th:nth-child(6) { width: 13%; } /* サイズ */
-.history-table thead th:nth-child(7) { width: 28%; } /* 操作 */
-
-.history-table tbody tr {
-    border-bottom: 1px solid #e0e0e0;
-    transition: background 0.2s;
-}
-
-.history-table tbody tr:hover {
-    background: #f8f9fa;
-}
-
-.history-table tbody tr.selected {
-    background: #e8f5e9;
-}
-
-.history-table tbody td {
-    padding: 14px 12px;
+.history-card-value {
     font-size: 14px;
     color: #2c3e50;
-    position: relative;
+    font-weight: 500;
 }
 
-/* アクションボタンコンテナ */
-.history-action-buttons {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-}
-
-/* 使用ボタン */
-.history-use-button {
-    padding: 8px 16px;
-    border-radius: 6px;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-    white-space: nowrap;
-    background: white;
-    border: 2px solid #27ae60;
-    color: #27ae60;
-}
-
-.history-use-button:hover {
-    background: #d5f4e6;
-}
-
-.history-use-button.selected {
-    background: #27ae60;
-    border: 2px solid #27ae60;
-    color: white;
-}
-
-/* 編集ボタン */
-.history-edit-button {
-    padding: 8px 16px;
-    border-radius: 6px;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-    white-space: nowrap;
-    background: white;
-    border: 2px solid #3498db;
-    color: #3498db;
-}
-
-.history-edit-button:hover {
-    background: #e3f2fd;
-}
-
-/* 保存ボタン */
-.history-save-button {
-    padding: 8px 16px;
-    border-radius: 6px;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-    white-space: nowrap;
-    background: #27ae60;
-    border: 2px solid #27ae60;
-    color: white;
-}
-
-.history-save-button:hover {
-    background: #229954;
-}
-
-/* キャンセルボタン */
-.history-cancel-button {
-    padding: 8px 16px;
-    border-radius: 6px;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-    white-space: nowrap;
-    background: white;
-    border: 2px solid #95a5a6;
-    color: #95a5a6;
-}
-
-.history-cancel-button:hover {
-    background: #ecf0f1;
-}
-
-/* 編集モード */
-.history-row.editing {
-    background: #fff9e6;
-}
-
-.history-row.editing td {
-    overflow: visible;
-}
-
-.history-edit-select,
-.history-edit-input {
-    width: 100%;
-    padding: 8px;
+.history-card-input {
+    padding: 8px 10px;
     border: 1px solid #ddd;
     border-radius: 4px;
-    font-size: 13px;
+    font-size: 14px;
+    color: #2c3e50;
 }
 
-.history-edit-input:focus {
+.history-card-input:focus {
     outline: none;
     border-color: #3498db;
 }
 
-/* 編集モード時のChoices.js */
-.history-row.editing .choices {
-    margin-bottom: 0;
+/* チェックボックス */
+.history-card-check {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    flex-shrink: 0;
 }
 
-.history-row.editing .choices__list--dropdown {
-    z-index: 1000;
+.history-card-checkbox {
+    width: 24px;
+    height: 24px;
+    border: 2px solid #bdc3c7;
+    border-radius: 50%;
+    transition: all 0.2s;
+    position: relative;
+}
+
+.history-card.selected .history-card-checkbox {
+    border-color: #3498db;
+    background: #3498db;
+}
+
+.history-card.selected .history-card-checkbox::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 8px;
+    height: 8px;
+    background: white;
+    border-radius: 50%;
 }
 
 /* フッター */
@@ -239,6 +182,7 @@
     border-top: 1px solid #ddd;
     display: flex;
     justify-content: center;
+    gap: 20px;
     padding: 10px;
     box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
     z-index: 100;
@@ -260,6 +204,38 @@
 
 .history-footer-button:hover {
     background: #ecf0f1;
+}
+
+.history-footer-button.edit {
+    color: #3498db;
+}
+
+.history-footer-button.edit:hover {
+    background: #e3f2fd;
+}
+
+.history-footer-button.edit .history-icon-circle {
+    background: #e3f2fd;
+}
+
+.history-footer-button.edit .history-button-text {
+    color: #3498db;
+}
+
+.history-footer-button.reuse {
+    color: #27ae60;
+}
+
+.history-footer-button.reuse:hover {
+    background: #d5f4e6;
+}
+
+.history-footer-button.reuse .history-icon-circle {
+    background: #d5f4e6;
+}
+
+.history-footer-button.reuse .history-button-text {
+    color: #27ae60;
 }
 
 .history-icon-circle {
@@ -289,32 +265,35 @@
     border-right: 10px solid #34495e;
 }
 
+/* 編集モードのフッターボタン */
+.history-footer-button.save {
+    color: #27ae60;
+}
+
+.history-footer-button.save .history-icon-circle {
+    background: #d5f4e6;
+}
+
+.history-footer-button.save .history-button-text {
+    color: #27ae60;
+}
+
+.history-footer-button.cancel {
+    color: #e74c3c;
+}
+
+.history-footer-button.cancel .history-icon-circle {
+    background: #fadbd8;
+}
+
+.history-footer-button.cancel .history-button-text {
+    color: #e74c3c;
+}
+
 /* レスポンシブ対応 - タブレット */
 @media (max-width: 1024px) {
-    .history-table {
-        font-size: 13px;
-    }
-
-    .history-table thead th {
-        padding: 12px 10px;
-        font-size: 13px;
-    }
-
-    .history-table tbody td {
-        padding: 12px 10px;
-        font-size: 13px;
-    }
-
-    .history-action-buttons {
-        gap: 6px;
-    }
-
-    .history-use-button,
-    .history-edit-button,
-    .history-save-button,
-    .history-cancel-button {
-        padding: 6px 12px;
-        font-size: 12px;
+    .history-card-row {
+        grid-template-columns: repeat(2, 1fr);
     }
 }
 
@@ -325,12 +304,8 @@
     }
 
     .history-main-content {
-        padding: 16px 0;
+        padding: 16px;
         padding-bottom: 100px;
-    }
-
-    .history-container {
-        padding: 0 16px;
     }
 
     .history-result-count {
@@ -338,42 +313,41 @@
         margin-bottom: 12px;
     }
 
-    /* 横スクロール対応 */
-    .history-table-wrapper {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        border-radius: 8px;
+    .history-card {
+        padding: 12px;
+        flex-direction: column;
+        align-items: stretch;
     }
 
-    .history-table {
-        min-width: 1000px;
-        font-size: 12px;
+    .history-card-row {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
     }
 
-    .history-table thead th {
-        padding: 10px 8px;
-        font-size: 12px;
-        white-space: nowrap;
+    .history-card-check {
+        width: 100%;
+        justify-content: flex-end;
+        padding-top: 8px;
+        border-top: 1px solid #ecf0f1;
+        margin-top: 8px;
     }
 
-    .history-table tbody td {
-        padding: 10px 8px;
-        font-size: 12px;
-    }
-
-    .history-action-buttons {
-        gap: 4px;
-        flex-wrap: wrap;
-    }
-
-    .history-use-button,
-    .history-edit-button {
-        padding: 6px 10px;
+    .history-card-label {
         font-size: 11px;
+    }
+
+    .history-card-value {
+        font-size: 13px;
     }
 
     .history-footer {
         padding: 8px;
+        gap: 12px;
+    }
+
+    .history-footer-button {
+        min-width: 60px;
+        padding: 6px;
     }
 
     .history-icon-circle {
@@ -392,21 +366,25 @@
     }
 }
 
-/* スクロールバーのスタイル（横スクロール用） */
-.history-table-wrapper::-webkit-scrollbar {
-    height: 8px;
-}
+@media (max-width: 480px) {
+    .history-card-row {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
 
-.history-table-wrapper::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 4px;
-}
+    .history-card-field {
+        flex-direction: row;
+        align-items: center;
+        gap: 8px;
+    }
 
-.history-table-wrapper::-webkit-scrollbar-thumb {
-    background: #c0c0c0;
-    border-radius: 4px;
-}
+    .history-card-label {
+        min-width: 100px;
+        flex-shrink: 0;
+    }
 
-.history-table-wrapper::-webkit-scrollbar-thumb:hover {
-    background: #a0a0a0;
+    .history-card-value,
+    .history-card-input {
+        flex: 1;
+    }
 }

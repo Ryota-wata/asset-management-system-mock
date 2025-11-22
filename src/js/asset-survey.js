@@ -337,6 +337,244 @@ function togglePhotoInputSwitch(element) {
     }
 }
 
+// ========================================
+// 履歴カード関連の関数（カード形式UI用）
+// ========================================
+
+// 現在選択中のカード要素
+let selectedHistoryCard = null;
+// 現在編集中のカード要素
+let editingHistoryCard = null;
+
+/**
+ * 履歴カードの選択処理
+ * @param {HTMLElement} card - クリックされたカード要素
+ */
+function selectHistoryCard(card) {
+    // 編集中は選択を変更しない
+    if (editingHistoryCard) return;
+
+    // 既存の選択を解除
+    document.querySelectorAll('.history-card.selected').forEach(c => {
+        c.classList.remove('selected');
+    });
+
+    // 新しいカードを選択
+    card.classList.add('selected');
+    selectedHistoryCard = card;
+}
+
+/**
+ * 履歴カードの修正ボタン処理
+ */
+function handleHistoryEdit() {
+    if (!selectedHistoryCard) {
+        alert('カードを選択してください');
+        return;
+    }
+
+    // 既に編集中なら保存処理
+    if (editingHistoryCard) {
+        saveHistoryCardEdit();
+        return;
+    }
+
+    // 編集モードを開始
+    startHistoryCardEdit(selectedHistoryCard);
+}
+
+/**
+ * 履歴カードの編集モード開始
+ * @param {HTMLElement} card - 編集対象のカード
+ */
+function startHistoryCardEdit(card) {
+    editingHistoryCard = card;
+    card.classList.add('editing');
+    card.classList.remove('selected');
+
+    // 元のデータを保存
+    const originalData = {};
+    card.querySelectorAll('.history-card-value').forEach(span => {
+        const field = span.dataset.field;
+        originalData[field] = span.textContent;
+    });
+    card.dataset.originalData = JSON.stringify(originalData);
+
+    // 値表示をinputに切り替え
+    card.querySelectorAll('.history-card-field').forEach(field => {
+        const span = field.querySelector('.history-card-value');
+        const input = field.querySelector('.history-card-input');
+        if (span && input) {
+            input.value = span.textContent;
+            span.style.display = 'none';
+            input.style.display = 'block';
+        }
+    });
+
+    // フッターボタンを編集モードに変更
+    updateHistoryFooterForEdit(true);
+}
+
+/**
+ * 履歴カードの編集を保存
+ */
+function saveHistoryCardEdit() {
+    if (!editingHistoryCard) return;
+
+    // inputの値をspanに反映
+    editingHistoryCard.querySelectorAll('.history-card-field').forEach(field => {
+        const span = field.querySelector('.history-card-value');
+        const input = field.querySelector('.history-card-input');
+        if (span && input) {
+            span.textContent = input.value;
+            span.style.display = 'block';
+            input.style.display = 'none';
+        }
+    });
+
+    // 編集モードを終了
+    editingHistoryCard.classList.remove('editing');
+    editingHistoryCard = null;
+    selectedHistoryCard = null;
+
+    // フッターボタンを通常モードに戻す
+    updateHistoryFooterForEdit(false);
+
+    alert('変更を保存しました');
+}
+
+/**
+ * 履歴カードの編集をキャンセル
+ */
+function cancelHistoryCardEdit() {
+    if (!editingHistoryCard) return;
+
+    // 元のデータを復元
+    const originalData = JSON.parse(editingHistoryCard.dataset.originalData || '{}');
+    editingHistoryCard.querySelectorAll('.history-card-field').forEach(field => {
+        const span = field.querySelector('.history-card-value');
+        const input = field.querySelector('.history-card-input');
+        if (span && input) {
+            const fieldName = span.dataset.field;
+            if (originalData[fieldName]) {
+                span.textContent = originalData[fieldName];
+            }
+            span.style.display = 'block';
+            input.style.display = 'none';
+        }
+    });
+
+    // 編集モードを終了
+    editingHistoryCard.classList.remove('editing');
+    editingHistoryCard = null;
+    selectedHistoryCard = null;
+
+    // フッターボタンを通常モードに戻す
+    updateHistoryFooterForEdit(false);
+}
+
+/**
+ * フッターボタンを編集モード用に更新
+ * @param {boolean} isEditMode - 編集モードかどうか
+ */
+function updateHistoryFooterForEdit(isEditMode) {
+    const editBtn = document.getElementById('historyEditBtn');
+    const reuseBtn = document.getElementById('historyReuseBtn');
+
+    if (isEditMode) {
+        // 修正ボタン → 保存ボタン
+        if (editBtn) {
+            editBtn.classList.remove('edit');
+            editBtn.classList.add('save');
+            editBtn.querySelector('.history-icon-circle').innerHTML = '<span style="font-size: 18px;">✓</span>';
+            editBtn.querySelector('.history-button-text').textContent = '保存';
+            editBtn.onclick = saveHistoryCardEdit;
+        }
+        // 再利用ボタン → キャンセルボタン
+        if (reuseBtn) {
+            reuseBtn.classList.remove('reuse');
+            reuseBtn.classList.add('cancel');
+            reuseBtn.querySelector('.history-icon-circle').innerHTML = '<span style="font-size: 18px;">✕</span>';
+            reuseBtn.querySelector('.history-button-text').textContent = 'キャンセル';
+            reuseBtn.onclick = cancelHistoryCardEdit;
+        }
+    } else {
+        // 保存ボタン → 修正ボタン
+        if (editBtn) {
+            editBtn.classList.remove('save');
+            editBtn.classList.add('edit');
+            editBtn.querySelector('.history-icon-circle').innerHTML = '<span style="font-size: 18px;">✏️</span>';
+            editBtn.querySelector('.history-button-text').textContent = '修正';
+            editBtn.onclick = handleHistoryEdit;
+        }
+        // キャンセルボタン → 再利用ボタン
+        if (reuseBtn) {
+            reuseBtn.classList.remove('cancel');
+            reuseBtn.classList.add('reuse');
+            reuseBtn.querySelector('.history-icon-circle').innerHTML = '<span style="font-size: 18px;">↩️</span>';
+            reuseBtn.querySelector('.history-button-text').textContent = '再利用';
+            reuseBtn.onclick = handleHistoryReuse;
+        }
+    }
+}
+
+/**
+ * 履歴カードの再利用ボタン処理
+ */
+function handleHistoryReuse() {
+    if (!selectedHistoryCard) {
+        alert('カードを選択してください');
+        return;
+    }
+
+    // カードからデータを取得
+    const data = {};
+    selectedHistoryCard.querySelectorAll('.history-card-value').forEach(span => {
+        const field = span.dataset.field;
+        data[field] = span.textContent;
+    });
+
+    // サイズを分解（例: "450×380×120" → W=450, D=380, H=120）
+    const sizeMatch = data.size ? data.size.match(/(\d+)×(\d+)×(\d+)/) : null;
+
+    // 統合画面のフォームに値を設定
+    const choicesMap = {
+        integratedLargeClassChoice: data.largeClass,
+        integratedMediumClassChoice: data.mediumClass,
+        integratedItemChoice: data.item,
+        integratedMakerChoice: data.maker,
+        integratedModelChoice: data.model
+    };
+
+    Object.entries(choicesMap).forEach(([choiceName, value]) => {
+        const choice = window[choiceName];
+        if (choice && value) {
+            choice.setChoiceByValue(value);
+        }
+    });
+
+    // サイズ情報を入力
+    if (sizeMatch) {
+        const inputs = {
+            integratedWidth: sizeMatch[1],
+            integratedDepth: sizeMatch[2],
+            integratedHeight: sizeMatch[3]
+        };
+
+        Object.entries(inputs).forEach(([id, value]) => {
+            const input = document.getElementById(id);
+            if (input) input.value = value;
+        });
+    }
+
+    // 選択解除
+    selectedHistoryCard.classList.remove('selected');
+    selectedHistoryCard = null;
+
+    // 統合画面に戻る
+    handleBackFromHistoryList();
+}
+
 // グローバルスコープに関数を公開
 window.loadSurveyMasterData = loadSurveyMasterData;
 window.selectHistoryRow = selectHistoryRow;
@@ -346,3 +584,10 @@ window.saveEditHistoryRow = saveEditHistoryRow;
 window.cancelEditHistoryRowBtn = cancelEditHistoryRowBtn;
 window.cancelEditHistoryRow = cancelEditHistoryRow;
 window.togglePhotoInputSwitch = togglePhotoInputSwitch;
+
+// カード形式の履歴機能
+window.selectHistoryCard = selectHistoryCard;
+window.handleHistoryEdit = handleHistoryEdit;
+window.handleHistoryReuse = handleHistoryReuse;
+window.saveHistoryCardEdit = saveHistoryCardEdit;
+window.cancelHistoryCardEdit = cancelHistoryCardEdit;

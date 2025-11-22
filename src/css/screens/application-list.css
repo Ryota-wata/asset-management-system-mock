@@ -491,36 +491,8 @@
 }
 
 /* ========================================
-   テーブル横スクロール対応
+   テーブル横スクロール対応（min-widthのみ上書き）
 ======================================== */
-.table-scroll-wrapper {
-    width: 100%;
-    overflow-x: auto;
-    overflow-y: visible;
-    -webkit-overflow-scrolling: touch;
-}
-
-/* スクロールバーのスタイル */
-.table-scroll-wrapper::-webkit-scrollbar {
-    height: 10px;
-}
-
-.table-scroll-wrapper::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 5px;
-}
-
-.table-scroll-wrapper::-webkit-scrollbar-thumb {
-    background: #888;
-    border-radius: 5px;
-}
-
-.table-scroll-wrapper::-webkit-scrollbar-thumb:hover {
-    background: #555;
-}
-
-/* テーブルの最小幅を設定（横スクロールが発生する条件） */
 .table-scroll-wrapper .data-table {
     min-width: 1500px;
-    width: 100%;
 }

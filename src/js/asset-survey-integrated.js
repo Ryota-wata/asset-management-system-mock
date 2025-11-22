@@ -64,48 +64,29 @@ function generateSerialNumbers(sealNo, quantity) {
  */
 function toggleBulkRegistration() {
     const checkbox = document.getElementById('bulkRegistrationMode');
-    const bulkQuantityGroup = document.getElementById('bulkQuantityGroup');
-    const bulkPreview = document.getElementById('bulkPreview');
+    const endSealNoSection = document.getElementById('endSealNoSection');
     const sealNoLabel = document.getElementById('sealNoLabel');
 
     if (checkbox.checked) {
         // 一括登録モードON
-        bulkQuantityGroup.style.display = 'flex';
-        sealNoLabel.textContent = '開始シールNo.';
-        updateBulkSealNoPreview();
+        if (endSealNoSection) endSealNoSection.style.display = 'block';
+        if (sealNoLabel) sealNoLabel.textContent = '開始シールNo.';
     } else {
         // 一括登録モードOFF
-        bulkQuantityGroup.style.display = 'none';
-        bulkPreview.style.display = 'none';
-        sealNoLabel.textContent = 'シールNo.';
-        document.getElementById('bulkQuantity').value = '';
+        if (endSealNoSection) endSealNoSection.style.display = 'none';
+        if (sealNoLabel) sealNoLabel.textContent = 'シールNo.';
+        // 終了シールNo.をクリア
+        const endSealNo = document.getElementById('integratedEndSealNo');
+        if (endSealNo) endSealNo.value = '';
     }
 }
 
 /**
- * 一括登録の連番プレビューを更新
+ * 一括登録の連番プレビューを更新（レガシー: 現在は使用していない）
  */
 function updateBulkSealNoPreview() {
-    const checkbox = document.getElementById('bulkRegistrationMode');
-    const sealNo = document.getElementById('integratedSealNo').value;
-    const quantity = parseInt(document.getElementById('bulkQuantity').value) || 0;
-    const preview = document.getElementById('bulkPreview');
-    const previewContent = document.getElementById('bulkPreviewContent');
-
-    if (!checkbox.checked || !sealNo || quantity <= 0) {
-        preview.style.display = 'none';
-        return;
-    }
-
-    const serialNos = generateSerialNumbers(sealNo, quantity);
-    if (!serialNos) {
-        preview.style.display = 'none';
-        return;
-    }
-
-    const previewHtml = `<div class="survey-integrated-preview-item">${serialNos[0]} ～ ${serialNos[serialNos.length - 1]}</div>`;
-    previewContent.innerHTML = previewHtml;
-    preview.style.display = 'block';
+    // 終了シールNo.方式に変更したため、この関数は現在使用していない
+    // 互換性のために空関数として残す
 }
 
 /**
@@ -134,6 +115,25 @@ function handleIntegratedPhotoCapture() {
 }
 
 /**
+ * 終了QR読取ボタンの処理
+ */
+function handleEndQRScan() {
+    alert('終了シールのQRコードを読み取ります');
+    // 実際の実装ではカメラを起動してQRコードを読み取る
+    // デモ用: シミュレーションで値を設定
+    const startSealNo = document.getElementById('integratedSealNo').value;
+    if (startSealNo) {
+        const parsed = parseSerialNumber(startSealNo);
+        if (parsed) {
+            // デモ: 開始番号から+4した終了番号を設定
+            const endNum = parsed.startNum + 4;
+            const paddedEndNum = String(endNum).padStart(parsed.numLength, '0');
+            document.getElementById('integratedEndSealNo').value = parsed.prefix + paddedEndNum;
+        }
+    }
+}
+
+/**
  * 商品登録ボタンの処理
  */
 function handleIntegratedAssetRegistration() {
@@ -141,7 +141,7 @@ function handleIntegratedAssetRegistration() {
     const sealNo = document.getElementById('integratedSealNo').value;
     const roomName = document.getElementById('integratedRoomName').value;
     const assetNo = document.getElementById('integratedAssetNo').value;
-    const quantity = parseInt(document.getElementById('bulkQuantity').value) || 1;
+    const endSealNo = document.getElementById('integratedEndSealNo').value;
 
     // バリデーション
     if (!sealNo) {
@@ -156,22 +156,36 @@ function handleIntegratedAssetRegistration() {
 
     // 一括登録モードの場合
     if (checkbox.checked) {
-        if (quantity <= 0) {
-            alert('登録個数を入力してください');
+        if (!endSealNo) {
+            alert('終了シールNo.を読み取ってください');
             return;
         }
 
-        const serialNos = generateSerialNumbers(sealNo, quantity);
-        if (!serialNos) {
+        const startParsed = parseSerialNumber(sealNo);
+        const endParsed = parseSerialNumber(endSealNo);
+
+        if (!startParsed || !endParsed) {
             alert('シールNo.の形式が正しくありません\n（例: K0001, ABC123）');
             return;
         }
 
+        if (startParsed.prefix !== endParsed.prefix) {
+            alert('開始と終了のシールNo.のプレフィックスが一致しません');
+            return;
+        }
+
+        if (endParsed.startNum < startParsed.startNum) {
+            alert('終了シールNo.は開始シールNo.より大きい番号を指定してください');
+            return;
+        }
+
+        const quantity = endParsed.startNum - startParsed.startNum + 1;
+
         // 登録確認
-        const confirmMessage = `一括登録を実行します\n\n登録個数: ${quantity}件\nシールNo.: ${serialNos[0]} ～ ${serialNos[serialNos.length - 1]}\n室名: ${roomName}\n\nよろしいですか？`;
+        const confirmMessage = `一括登録を実行します\n\n登録個数: ${quantity}件\nシールNo.: ${sealNo} ～ ${endSealNo}\n室名: ${roomName}\n\nよろしいですか？`;
 
         if (confirm(confirmMessage)) {
-            alert(`${quantity}件の資産を一括登録しました\n\nシールNo.: ${serialNos[0]} ～ ${serialNos[serialNos.length - 1]}\n室名: ${roomName}`);
+            alert(`${quantity}件の資産を一括登録しました\n\nシールNo.: ${sealNo} ～ ${endSealNo}\n室名: ${roomName}`);
             clearIntegratedForm();
         }
     } else {
@@ -191,11 +205,13 @@ function clearIntegratedForm() {
         'integratedRoomName',
         'integratedAssetNo',
         'integratedEquipmentNo',
+        'integratedSerialNo',
         'integratedPurchaseDate',
         'integratedWidth',
         'integratedDepth',
         'integratedHeight',
-        'integratedRemarks'
+        'integratedRemarks',
+        'integratedEndSealNo'
     ];
 
     inputIds.forEach(id => {
@@ -207,14 +223,8 @@ function clearIntegratedForm() {
     const bulkCheckbox = document.getElementById('bulkRegistrationMode');
     if (bulkCheckbox) bulkCheckbox.checked = false;
 
-    const bulkQuantity = document.getElementById('bulkQuantity');
-    if (bulkQuantity) bulkQuantity.value = '';
-
-    const bulkQuantityGroup = document.getElementById('bulkQuantityGroup');
-    if (bulkQuantityGroup) bulkQuantityGroup.style.display = 'none';
-
-    const bulkPreview = document.getElementById('bulkPreview');
-    if (bulkPreview) bulkPreview.style.display = 'none';
+    const endSealNoSection = document.getElementById('endSealNoSection');
+    if (endSealNoSection) endSealNoSection.style.display = 'none';
 
     const sealNoLabel = document.getElementById('sealNoLabel');
     if (sealNoLabel) sealNoLabel.textContent = 'シールNo.';
@@ -239,6 +249,7 @@ window.updateBulkSealNoPreview = updateBulkSealNoPreview;
 window.toggleIntegratedSwitch = toggleIntegratedSwitch;
 window.handleIntegratedQRScan = handleIntegratedQRScan;
 window.handleIntegratedPhotoCapture = handleIntegratedPhotoCapture;
+window.handleEndQRScan = handleEndQRScan;
 window.handleIntegratedAssetRegistration = handleIntegratedAssetRegistration;
 window.clearIntegratedForm = clearIntegratedForm;
 window.handleBackFromIntegratedSurvey = handleBackFromIntegratedSurvey;

@@ -353,27 +353,7 @@ function handleBackFromSearchResult() {
     transitionPage('searchResultPage', 'mainContainer');
 }
 
-/**
- * メイン画面から申請一覧画面へ遷移
- */
-function goToApplicationList() {
-    transitionPage('mainContainer', 'applicationListPage');
-
-    if (typeof window.initApplicationListPage === 'function') {
-        window.initApplicationListPage();
-    }
-}
-
-/**
- * メイン画面から見積依頼一覧画面へ遷移
- */
-function goToRfqList() {
-    transitionPage('mainContainer', 'rfqListPage');
-
-    if (typeof window.initRfqListPage === 'function') {
-        window.initRfqListPage();
-    }
-}
+// goToApplicationList と goToRfqList は下部の汎用版を使用
 
 /**
  * メイン画面から見積DataBox画面へ直接遷移

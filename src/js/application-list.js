@@ -380,8 +380,8 @@ function filterApplications() {
     updateApplicationCount();
 }
 
-// フィルタークリア
-function clearFilters() {
+// 申請一覧フィルタークリア
+function clearApplicationFilters() {
     document.getElementById('filterApplicationType').value = '';
     document.getElementById('filterStatus').value = '';
     document.getElementById('filterRfqNo').value = '';
@@ -880,7 +880,7 @@ window.applicationListData = applicationListData;
 window.rfqRecords = rfqRecords;
 window.initApplicationListPage = initApplicationListPage;
 window.filterApplications = filterApplications;
-window.clearFilters = clearFilters;
+window.clearApplicationFilters = clearApplicationFilters;
 window.showApplicationDetail = showApplicationDetail;
 window.closeApplicationDetailModal = closeApplicationDetailModal;
 window.handleDetailModalOutsideClick = handleDetailModalOutsideClick;

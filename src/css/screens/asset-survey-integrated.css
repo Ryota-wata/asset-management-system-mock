@@ -26,11 +26,50 @@
     align-items: center;
 }
 
-.survey-integrated-page-title {
-    margin: 0;
-    font-size: 20px;
+/* 固定ヘッダー（シールNo.と室名） */
+.survey-integrated-sticky-header {
+    position: sticky;
+    top: 0;
+    z-index: 9999;
+    background: #3498db;
+    padding: 12px 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.survey-integrated-sticky-content {
+    display: flex;
+    gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    align-items: center;
+}
+
+.survey-integrated-sticky-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+}
+
+.survey-integrated-sticky-label {
+    font-size: 14px;
     font-weight: 600;
     color: white;
+    white-space: nowrap;
+}
+
+.survey-integrated-sticky-input {
+    flex: 1;
+    padding: 10px 12px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    background: white;
+}
+
+.survey-integrated-sticky-input:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5);
 }
 
 /* メインコンテンツ */
@@ -62,6 +101,15 @@
     color: #2c3e50;
     border-bottom: 2px solid #3498db;
     padding-bottom: 10px;
+}
+
+/* セクション区切りの青いバー */
+.survey-integrated-section-bar {
+    height: 4px;
+    background: #3498db;
+    border-radius: 2px;
+    margin-top: 30px;
+    margin-bottom: 20px;
 }
 
 .survey-integrated-subsection {
@@ -425,6 +473,47 @@
     font-size: 20px;
 }
 
+/* 終了シールNo.エリア（一括登録モード用） */
+.survey-integrated-end-seal-section {
+    margin-top: 20px;
+}
+
+.survey-integrated-end-seal-content {
+    display: flex;
+    align-items: flex-end;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.survey-integrated-end-seal-content .survey-integrated-form-group {
+    flex: 1;
+    min-width: 250px;
+}
+
+.survey-integrated-end-qr-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s;
+    white-space: nowrap;
+}
+
+.survey-integrated-end-qr-button:hover {
+    background: #c0392b;
+}
+
+.survey-integrated-end-qr-icon {
+    font-size: 18px;
+}
+
 /* レスポンシブ対応 */
 @media (max-width: 768px) {
     .survey-integrated-form-row {
@@ -451,7 +540,60 @@
     }
 }
 
+@media (max-width: 768px) {
+    .survey-integrated-sticky-content {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .survey-integrated-sticky-group {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .survey-integrated-sticky-label {
+        min-width: 70px;
+        flex-shrink: 0;
+    }
+
+    .survey-integrated-sticky-input {
+        flex: 1;
+        width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .survey-integrated-end-seal-content {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .survey-integrated-end-seal-content .survey-integrated-form-group {
+        min-width: 100%;
+    }
+
+    .survey-integrated-end-qr-button {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
 @media (max-width: 480px) {
+    .survey-integrated-sticky-header {
+        padding: 10px 15px;
+    }
+
+    .survey-integrated-sticky-label {
+        font-size: 13px;
+    }
+
+    .survey-integrated-sticky-input {
+        padding: 8px 10px;
+        font-size: 13px;
+    }
+
     .survey-integrated-main-content {
         padding: 10px;
     }
