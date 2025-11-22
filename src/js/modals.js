@@ -126,7 +126,7 @@ function selectMenu(menuName) {
         document.getElementById('mainContainer').classList.remove('active');
         document.getElementById('offlinePrepPage').classList.add('active');
         return;
-    } else if (menuName === 'QRコード管理') {
+    } else if (menuName === 'QRコード発行') {
         // QRコード発行画面へ遷移
         if (typeof handleQRIssueFromModal === 'function') {
             handleQRIssueFromModal();

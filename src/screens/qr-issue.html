@@ -29,12 +29,49 @@
 
             <!-- 新規発行タブ -->
             <div id="qr-issue-new-tab" class="qr-issue-tab-content active">
-                <div class="qr-issue-number-format">
-                    <div class="qr-issue-format-label">
-                        頭のアルファベット○を選択-○○（年度は年度末尾2桁が自動採番）-○○○○（基本は自動配番）
+                <!-- 番号入力フォーム -->
+                <div class="qr-issue-section-label">QRコード番号<span class="qr-issue-required">*</span></div>
+                <div class="qr-issue-number-input-row">
+                    <div class="qr-issue-number-field">
+                        <label class="qr-issue-form-label">アルファベット</label>
+                        <select class="qr-issue-form-select qr-issue-alpha-select" id="qrPrefixAlpha" onchange="updateQRIssuePreview()">
+                            <option value="A">A</option>
+                            <option value="B">B</option>
+                            <option value="C">C</option>
+                            <option value="D">D</option>
+                            <option value="E">E</option>
+                            <option value="F">F</option>
+                            <option value="G">G</option>
+                            <option value="H">H</option>
+                            <option value="I">I</option>
+                            <option value="J">J</option>
+                            <option value="K">K</option>
+                            <option value="L">L</option>
+                            <option value="M">M</option>
+                            <option value="N">N</option>
+                            <option value="O">O</option>
+                            <option value="P">P</option>
+                            <option value="Q">Q</option>
+                            <option value="R" selected>R</option>
+                            <option value="S">S</option>
+                            <option value="T">T</option>
+                            <option value="U">U</option>
+                            <option value="V">V</option>
+                            <option value="W">W</option>
+                            <option value="X">X</option>
+                            <option value="Y">Y</option>
+                            <option value="Z">Z</option>
+                        </select>
                     </div>
-                    <div class="qr-issue-format-note">
-                        次回以降は自動で次の番号〜（重複）
+                    <span class="qr-issue-number-separator">-</span>
+                    <div class="qr-issue-number-field">
+                        <label class="qr-issue-form-label">2桁数字</label>
+                        <input type="text" class="qr-issue-form-input qr-issue-digit2-input" id="qrPrefix2Digit" value="07" maxlength="2" placeholder="07" onchange="updateQRIssuePreview()">
+                    </div>
+                    <span class="qr-issue-number-separator">-</span>
+                    <div class="qr-issue-number-field">
+                        <label class="qr-issue-form-label">5桁数字（開始番号）</label>
+                        <input type="text" class="qr-issue-form-input qr-issue-digit5-input" id="qrStartNumber" value="00001" maxlength="5" placeholder="00001" onchange="updateQRIssuePreview()">
                     </div>
                 </div>
             </div>
@@ -43,23 +80,89 @@
             <div id="qr-issue-reissue-tab" class="qr-issue-tab-content">
                 <div class="qr-issue-form-group">
                     <label class="qr-issue-form-label">再発行したい番号を入力</label>
-                    <input type="text" class="qr-issue-form-input" id="reissueNumber" placeholder="H001-0501">
-                    <div class="qr-issue-form-note">（社内で作成）</div>
+                    <input type="text" class="qr-issue-form-input" id="reissueNumber" placeholder="R07-00001">
+                    <div class="qr-issue-form-note">（社内で作成済みの番号を入力してください）</div>
                 </div>
             </div>
 
             <!-- 共通設定セクション -->
             <div class="qr-issue-common-section">
-                <div class="qr-issue-section-label">備考</div>
+                <!-- ラベルテンプレート選択 -->
+                <div class="qr-issue-template-section">
+                    <div class="qr-issue-section-label">ラベルテンプレートを選択<span class="qr-issue-required">*</span></div>
+                    <div class="qr-issue-template-grid">
+                        <!-- QRコードテンプレート -->
+                        <div class="qr-issue-template-group">
+                            <div class="qr-issue-template-group-title">QRコード</div>
+                            <div class="qr-issue-template-options">
+                                <label class="qr-issue-template-option">
+                                    <input type="radio" name="labelTemplate" value="qr-small" checked onchange="updateFooterCharLimit(); updateQRIssuePreview();">
+                                    <div class="qr-issue-template-card">
+                                        <div class="qr-issue-template-icon qr-icon-square">▣</div>
+                                        <div class="qr-issue-template-name">小サイズ</div>
+                                        <div class="qr-issue-template-size">18mm幅</div>
+                                    </div>
+                                </label>
+                                <label class="qr-issue-template-option">
+                                    <input type="radio" name="labelTemplate" value="qr-medium" onchange="updateFooterCharLimit(); updateQRIssuePreview();">
+                                    <div class="qr-issue-template-card">
+                                        <div class="qr-issue-template-icon qr-icon-square">▣</div>
+                                        <div class="qr-issue-template-name">中サイズ</div>
+                                        <div class="qr-issue-template-size">24mm幅</div>
+                                    </div>
+                                </label>
+                                <label class="qr-issue-template-option">
+                                    <input type="radio" name="labelTemplate" value="qr-large" onchange="updateFooterCharLimit(); updateQRIssuePreview();">
+                                    <div class="qr-issue-template-card">
+                                        <div class="qr-issue-template-icon qr-icon-square">▣</div>
+                                        <div class="qr-issue-template-name">大サイズ</div>
+                                        <div class="qr-issue-template-size">36mm幅</div>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                        <!-- バーコードテンプレート -->
+                        <div class="qr-issue-template-group">
+                            <div class="qr-issue-template-group-title">バーコード</div>
+                            <div class="qr-issue-template-options">
+                                <label class="qr-issue-template-option">
+                                    <input type="radio" name="labelTemplate" value="barcode-small" onchange="updateFooterCharLimit(); updateQRIssuePreview();">
+                                    <div class="qr-issue-template-card">
+                                        <div class="qr-issue-template-icon barcode-icon-rect">||||||||</div>
+                                        <div class="qr-issue-template-name">小サイズ</div>
+                                        <div class="qr-issue-template-size">18mm幅</div>
+                                    </div>
+                                </label>
+                                <label class="qr-issue-template-option">
+                                    <input type="radio" name="labelTemplate" value="barcode-medium" onchange="updateFooterCharLimit(); updateQRIssuePreview();">
+                                    <div class="qr-issue-template-card">
+                                        <div class="qr-issue-template-icon barcode-icon-rect">||||||||</div>
+                                        <div class="qr-issue-template-name">中サイズ</div>
+                                        <div class="qr-issue-template-size">24mm幅</div>
+                                    </div>
+                                </label>
+                                <label class="qr-issue-template-option">
+                                    <input type="radio" name="labelTemplate" value="barcode-large" onchange="updateFooterCharLimit(); updateQRIssuePreview();">
+                                    <div class="qr-issue-template-card">
+                                        <div class="qr-issue-template-icon barcode-icon-rect">||||||||</div>
+                                        <div class="qr-issue-template-name">大サイズ</div>
+                                        <div class="qr-issue-template-size">36mm幅</div>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-                <!-- テンプレート選択ボタン -->
-                <div class="qr-issue-action-buttons">
-                    <button class="qr-issue-action-btn" onclick="showLabelTemplateModal()">
-                        発行したいラベルテンプレートを選択
-                    </button>
-                    <button class="qr-issue-action-btn" onclick="showFooterSettingModal()">
-                        記入項目（フッターなど）を登録
-                    </button>
+                <!-- 記入項目（フッター） -->
+                <div class="qr-issue-footer-section">
+                    <div class="qr-issue-section-label">フッター記入項目</div>
+                    <div class="qr-issue-form-group">
+                        <input type="text" class="qr-issue-form-input" id="footerText" oninput="updateQRIssuePreview()">
+                        <div class="qr-issue-footer-char-info">
+                            <span id="footerCharCount">0</span> / <span id="footerCharMax">12</span> 文字
+                        </div>
+                    </div>
                 </div>
 
                 <!-- 発行枚数 -->
@@ -75,9 +178,9 @@
                 <div class="qr-issue-number-preview">
                     <div class="qr-issue-preview-label">発行予定番号範囲</div>
                     <div class="qr-issue-preview-range">
-                        <span class="qr-issue-preview-number" id="qrIssueRangeStart">H001-0501</span>
+                        <span class="qr-issue-preview-number" id="qrIssueRangeStart">R07-00001</span>
                         <span class="qr-issue-preview-separator">〜</span>
-                        <span class="qr-issue-preview-number" id="qrIssueRangeEnd">H001-0550</span>
+                        <span class="qr-issue-preview-number" id="qrIssueRangeEnd">R07-00050</span>
                         <span class="qr-issue-preview-count" id="qrIssueCount">(50枚)</span>
                     </div>
                 </div>

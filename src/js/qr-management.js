@@ -6,10 +6,23 @@
 // 発行設定の状態管理
 let qrIssueState = {
     mode: 'new', // 'new' or 'reissue'
-    prefix: 'H001',
+    prefixAlpha: 'R',
+    prefix2Digit: '07',
+    startNumber: 1,
     quantity: 50,
-    startNumber: 501,
+    template: 'qr-small',
+    footerText: '',
     remarks: ''
+};
+
+// テンプレート別の文字数制限
+const TEMPLATE_CHAR_LIMITS = {
+    'qr-small': 12,      // 18mm幅
+    'qr-medium': 18,     // 24mm幅
+    'qr-large': 28,      // 36mm幅
+    'barcode-small': 12, // 18mm幅
+    'barcode-medium': 18,// 24mm幅
+    'barcode-large': 28  // 36mm幅
 };
 
 /**
@@ -21,20 +34,78 @@ function initQRIssuePage() {
     // デフォルト値を設定
     qrIssueState = {
         mode: 'new',
-        prefix: 'H001',
+        prefixAlpha: 'R',
+        prefix2Digit: '07',
+        startNumber: 1,
         quantity: 50,
-        startNumber: 501,
+        template: 'qr-small',
+        footerText: '',
         remarks: ''
     };
 
-    // 発行枚数の入力フィールドを更新
+    // フォーム要素の初期値を設定
+    const prefixAlpha = document.getElementById('qrPrefixAlpha');
+    const prefix2Digit = document.getElementById('qrPrefix2Digit');
+    const startNumber = document.getElementById('qrStartNumber');
     const quantityInput = document.getElementById('qrIssueQuantity');
-    if (quantityInput) {
-        quantityInput.value = qrIssueState.quantity;
-    }
+    const footerText = document.getElementById('footerText');
+
+    if (prefixAlpha) prefixAlpha.value = qrIssueState.prefixAlpha;
+    if (prefix2Digit) prefix2Digit.value = qrIssueState.prefix2Digit;
+    if (startNumber) startNumber.value = String(qrIssueState.startNumber).padStart(5, '0');
+    if (quantityInput) quantityInput.value = qrIssueState.quantity;
+    if (footerText) footerText.value = '';
+
+    // テンプレート選択のイベントリスナーを設定
+    const templateRadios = document.querySelectorAll('input[name="labelTemplate"]');
+    templateRadios.forEach(radio => {
+        radio.addEventListener('change', onTemplateChange);
+    });
+
+    // 初期文字数制限を設定
+    updateFooterCharLimit();
 
     // プレビューを更新
     updateQRIssuePreview();
+}
+
+/**
+ * テンプレート選択変更時の処理
+ */
+function onTemplateChange(event) {
+    qrIssueState.template = event.target.value;
+    updateFooterCharLimit();
+    updateQRIssuePreview();
+}
+
+/**
+ * フッター文字数制限を更新
+ */
+function updateFooterCharLimit() {
+    const template = getSelectedTemplate();
+    const maxChars = TEMPLATE_CHAR_LIMITS[template] || 12;
+    const footerText = document.getElementById('footerText');
+    const charMaxDisplay = document.getElementById('footerCharMax');
+    const charCountDisplay = document.getElementById('footerCharCount');
+
+    // 最大文字数を更新
+    if (footerText) {
+        footerText.maxLength = maxChars;
+
+        // 現在のテキストが制限を超えている場合は切り詰め
+        if (footerText.value.length > maxChars) {
+            footerText.value = footerText.value.substring(0, maxChars);
+            qrIssueState.footerText = footerText.value;
+        }
+    }
+
+    // 表示を更新
+    if (charMaxDisplay) {
+        charMaxDisplay.textContent = maxChars;
+    }
+    if (charCountDisplay && footerText) {
+        charCountDisplay.textContent = footerText.value.length;
+    }
 }
 
 /**
@@ -62,30 +133,53 @@ function switchQRIssueTab(tabName) {
 }
 
 /**
- * 発行枚数変更時のプレビュー更新
+ * QRコード番号をフォーマット
+ * @param {string} alpha - アルファベット
+ * @param {string} digit2 - 2桁数字
+ * @param {number} number - 5桁数字
+ * @returns {string} フォーマットされた番号
+ */
+function formatQRNumber(alpha, digit2, number) {
+    const paddedDigit2 = String(digit2).padStart(2, '0');
+    const paddedNumber = String(number).padStart(5, '0');
+    return `${alpha}${paddedDigit2}-${paddedNumber}`;
+}
+
+/**
+ * 発行設定変更時のプレビュー更新
  */
 function updateQRIssuePreview() {
+    // フォームから値を取得
+    const prefixAlpha = document.getElementById('qrPrefixAlpha');
+    const prefix2Digit = document.getElementById('qrPrefix2Digit');
+    const startNumber = document.getElementById('qrStartNumber');
     const quantityInput = document.getElementById('qrIssueQuantity');
-    if (quantityInput) {
-        qrIssueState.quantity = parseInt(quantityInput.value) || 50;
+    const footerText = document.getElementById('footerText');
 
-        // 最大100枚に制限
-        if (qrIssueState.quantity > 100) {
-            qrIssueState.quantity = 100;
-            quantityInput.value = 100;
-        }
-        if (qrIssueState.quantity < 1) {
-            qrIssueState.quantity = 1;
-            quantityInput.value = 1;
+    if (prefixAlpha) qrIssueState.prefixAlpha = prefixAlpha.value;
+    if (prefix2Digit) qrIssueState.prefix2Digit = prefix2Digit.value.replace(/\D/g, '').slice(0, 2);
+    if (startNumber) {
+        const numValue = parseInt(startNumber.value.replace(/\D/g, '')) || 1;
+        qrIssueState.startNumber = Math.min(Math.max(numValue, 1), 99999);
+    }
+    if (quantityInput) {
+        qrIssueState.quantity = Math.min(Math.max(parseInt(quantityInput.value) || 1, 1), 100);
+    }
+    if (footerText) {
+        qrIssueState.footerText = footerText.value;
+        // 文字数カウントを更新
+        const charCountDisplay = document.getElementById('footerCharCount');
+        if (charCountDisplay) {
+            charCountDisplay.textContent = footerText.value.length;
         }
     }
 
-    // 番号範囲を更新
+    // 番号範囲を計算
     const startNum = qrIssueState.startNumber;
     const endNum = startNum + qrIssueState.quantity - 1;
 
-    const startDisplay = `${qrIssueState.prefix}-${String(startNum).padStart(4, '0')}`;
-    const endDisplay = `${qrIssueState.prefix}-${String(endNum).padStart(4, '0')}`;
+    const startDisplay = formatQRNumber(qrIssueState.prefixAlpha, qrIssueState.prefix2Digit, startNum);
+    const endDisplay = formatQRNumber(qrIssueState.prefixAlpha, qrIssueState.prefix2Digit, endNum);
 
     // 表示を更新
     const rangeStart = document.getElementById('qrIssueRangeStart');
@@ -98,16 +192,27 @@ function updateQRIssuePreview() {
 }
 
 /**
+ * 選択されたテンプレートを取得
+ */
+function getSelectedTemplate() {
+    const selected = document.querySelector('input[name="labelTemplate"]:checked');
+    return selected ? selected.value : 'qr-small';
+}
+
+/**
  * 印刷プレビューへ遷移
  */
 function goToQRPrintPreview() {
+    // テンプレートを取得
+    qrIssueState.template = getSelectedTemplate();
+
     // 発行予定番号リストを生成
     const qrNumbers = [];
     const startNum = qrIssueState.startNumber;
 
     for (let i = 0; i < qrIssueState.quantity; i++) {
         const num = startNum + i;
-        qrNumbers.push(`${qrIssueState.prefix}-${String(num).padStart(4, '0')}`);
+        qrNumbers.push(formatQRNumber(qrIssueState.prefixAlpha, qrIssueState.prefix2Digit, num));
     }
 
     // 印刷画面へ遷移
@@ -120,6 +225,9 @@ function goToQRPrintPreview() {
 
     // 印刷対象リストを更新
     updateQRPrintList(qrNumbers);
+
+    // 印刷プレビューを更新（記入項目を反映）
+    updateQRPrintPreview();
 }
 
 /**
@@ -177,11 +285,62 @@ function updateQRPrintList(qrNumbers) {
 }
 
 /**
+ * 印刷プレビューを更新（記入項目を反映）
+ */
+function updateQRPrintPreview() {
+    // QR番号
+    const previewNumber = document.getElementById('qrPrintPreviewNumber');
+    if (previewNumber) {
+        const firstNumber = formatQRNumber(qrIssueState.prefixAlpha, qrIssueState.prefix2Digit, qrIssueState.startNumber);
+        previewNumber.textContent = firstNumber;
+    }
+
+    // フッターテキストを表示（単一行）
+    const previewFooter = document.getElementById('qrPrintPreviewLine1');
+    if (previewFooter) {
+        previewFooter.textContent = qrIssueState.footerText || '';
+        previewFooter.style.display = qrIssueState.footerText ? 'block' : 'none';
+    }
+
+    // テンプレートタイプの表示
+    const templateInfo = document.getElementById('qrPrintTemplateInfo');
+    if (templateInfo) {
+        const templateNames = {
+            'qr-small': 'QRコード 小サイズ (18mm幅)',
+            'qr-medium': 'QRコード 中サイズ (24mm幅)',
+            'qr-large': 'QRコード 大サイズ (36mm幅)',
+            'barcode-small': 'バーコード 小サイズ (18mm幅)',
+            'barcode-medium': 'バーコード 中サイズ (24mm幅)',
+            'barcode-large': 'バーコード 大サイズ (36mm幅)'
+        };
+        templateInfo.textContent = templateNames[qrIssueState.template] || 'QRコード 小サイズ';
+    }
+
+    // アイコンの切り替え（QRコード：正方形 or バーコード：長方形）
+    const previewIcon = document.querySelector('.qr-print-qr-placeholder');
+    if (previewIcon) {
+        // クラスをリセット
+        previewIcon.classList.remove('qr-square', 'barcode-rect');
+
+        if (qrIssueState.template.startsWith('barcode')) {
+            // バーコード：長方形
+            previewIcon.classList.add('barcode-rect');
+            previewIcon.innerHTML = '';
+        } else {
+            // QRコード：正方形
+            previewIcon.classList.add('qr-square');
+            previewIcon.innerHTML = '▣';
+        }
+    }
+}
+
+/**
  * 印刷を開始
  */
 function startQRPrint() {
-    alert('印刷を開始します（実装予定）');
-    // TODO: 実際の印刷処理を実装
+    const template = qrIssueState.template;
+    const count = qrIssueState.quantity;
+    alert(`印刷を開始します\n\nテンプレート: ${template}\n枚数: ${count}枚\n\n（実際の印刷処理は今後実装予定）`);
 }
 
 /**
@@ -196,27 +355,17 @@ function cancelQRPrint() {
     }
 }
 
-/**
- * ラベルテンプレート選択モーダルを表示（将来実装）
- */
-function showLabelTemplateModal() {
-    alert('ラベルテンプレート選択機能は今後実装予定です');
-}
-
-/**
- * フッター項目設定モーダルを表示（将来実装）
- */
-function showFooterSettingModal() {
-    alert('フッター項目設定機能は今後実装予定です');
-}
-
 // グローバルスコープに関数を公開
 window.initQRIssuePage = initQRIssuePage;
 window.switchQRIssueTab = switchQRIssueTab;
 window.updateQRIssuePreview = updateQRIssuePreview;
 window.goToQRPrintPreview = goToQRPrintPreview;
 window.updateQRPrintList = updateQRPrintList;
+window.updateQRPrintPreview = updateQRPrintPreview;
 window.startQRPrint = startQRPrint;
 window.cancelQRPrint = cancelQRPrint;
-window.showLabelTemplateModal = showLabelTemplateModal;
-window.showFooterSettingModal = showFooterSettingModal;
+window.formatQRNumber = formatQRNumber;
+window.getSelectedTemplate = getSelectedTemplate;
+window.onTemplateChange = onTemplateChange;
+window.updateFooterCharLimit = updateFooterCharLimit;
+window.TEMPLATE_CHAR_LIMITS = TEMPLATE_CHAR_LIMITS;

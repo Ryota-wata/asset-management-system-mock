@@ -3,924 +3,9 @@
  *
  * このファイルには、QRコード管理関連の画面のスタイルが含まれています。
  *
- * - QRコード一覧画面
- * - QRコード詳細画面
  * - QRコード新規発行画面
  * - QRコード印刷画面
  */
-
-/* ========================================
-   QRコード管理画面（一覧）
-======================================== */
-.qr-page {
-    display: none;
-    background: #fff;
-    min-height: 100vh;
-}
-
-.qr-page.active {
-    display: flex;
-    flex-direction: column;
-}
-
-.qr-header {
-    background: #2d7f3e;
-    color: white;
-    padding: 16px 24px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
-
-.qr-header-left {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-}
-
-.qr-back-btn {
-    background: rgba(255,255,255,0.15);
-    border: none;
-    color: white;
-    padding: 10px 16px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    transition: background 0.2s;
-}
-
-.qr-back-btn:hover {
-    background: rgba(255,255,255,0.25);
-}
-
-.qr-header-title-group {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-}
-
-.qr-header h1 {
-    font-size: 22px;
-    font-weight: 600;
-}
-
-.qr-hospital-name {
-    font-size: 14px;
-    opacity: 0.9;
-    font-weight: 400;
-}
-
-.qr-header-right {
-    display: flex;
-    gap: 12px;
-}
-
-.qr-header-btn {
-    background: rgba(255,255,255,0.15);
-    border: none;
-    color: white;
-    padding: 10px 16px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    transition: background 0.2s;
-}
-
-.qr-header-btn:hover {
-    background: rgba(255,255,255,0.25);
-}
-
-.qr-main-content {
-    flex: 1;
-    padding: 24px 40px;
-    max-width: 1600px;
-    width: 100%;
-    margin: 0 auto;
-}
-
-.qr-page-header {
-    margin-bottom: 24px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.qr-page-title {
-    font-size: 28px;
-    font-weight: 600;
-    color: #2c3e50;
-}
-
-.qr-page-actions {
-    display: flex;
-    gap: 12px;
-}
-
-/* 統計カード */
-.qr-stats-section {
-    margin-bottom: 32px;
-}
-
-.qr-stats-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
-}
-
-.qr-stat-card {
-    background: white;
-    border: 2px solid #e0e0e0;
-    border-radius: 12px;
-    padding: 24px;
-    transition: all 0.3s;
-}
-
-.qr-stat-card.total {
-    border-color: #2196f3;
-    background: linear-gradient(135deg, #e3f2fd 0%, #ffffff 100%);
-}
-
-.qr-stat-card.in-use {
-    border-color: #4caf50;
-    background: linear-gradient(135deg, #e8f5e9 0%, #ffffff 100%);
-}
-
-.qr-stat-card.available {
-    border-color: #ff9800;
-    background: linear-gradient(135deg, #fff3e0 0%, #ffffff 100%);
-}
-
-.qr-stat-card.lost {
-    border-color: #f44336;
-    background: linear-gradient(135deg, #ffebee 0%, #ffffff 100%);
-}
-
-.qr-stat-icon {
-    width: 48px;
-    height: 48px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 24px;
-    margin-bottom: 16px;
-}
-
-.qr-stat-card.total .qr-stat-icon { background: #2196f3; color: white; }
-.qr-stat-card.in-use .qr-stat-icon { background: #4caf50; color: white; }
-.qr-stat-card.available .qr-stat-icon { background: #ff9800; color: white; }
-.qr-stat-card.lost .qr-stat-icon { background: #f44336; color: white; }
-
-.qr-stat-value {
-    font-size: 36px;
-    font-weight: 700;
-    color: #2c3e50;
-    margin-bottom: 4px;
-}
-
-.qr-stat-label {
-    font-size: 14px;
-    color: #666;
-    font-weight: 500;
-}
-
-.qr-btn-new {
-    background: linear-gradient(135deg, #2ecc71, #27ae60);
-    color: white;
-    border: none;
-    padding: 12px 24px;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
-    transition: all 0.2s;
-}
-
-.qr-btn-new:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(39, 174, 96, 0.4);
-}
-
-/* フィルターバー */
-.qr-filter-bar {
-    background: white;
-    border: 2px solid #e0e0e0;
-    border-radius: 12px;
-    padding: 20px;
-    margin-bottom: 20px;
-    display: flex;
-    gap: 16px;
-    align-items: center;
-}
-
-.qr-search-box {
-    flex: 1;
-    position: relative;
-}
-
-.qr-search-icon {
-    position: absolute;
-    left: 14px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 18px;
-    color: #999;
-}
-
-.qr-search-input {
-    width: 100%;
-    padding: 12px 16px 12px 44px;
-    border: 2px solid #e0e0e0;
-    border-radius: 8px;
-    font-size: 14px;
-    transition: all 0.2s;
-}
-
-.qr-search-input:focus {
-    outline: none;
-    border-color: #2d7f3e;
-    box-shadow: 0 0 0 3px rgba(45, 127, 62, 0.1);
-}
-
-.qr-filter-select {
-    padding: 12px 16px;
-    border: 2px solid #e0e0e0;
-    border-radius: 8px;
-    font-size: 14px;
-    background: white;
-    cursor: pointer;
-    transition: all 0.2s;
-    min-width: 160px;
-}
-
-.qr-filter-select:focus {
-    outline: none;
-    border-color: #2d7f3e;
-}
-
-.qr-filter-btn {
-    padding: 12px 20px;
-    background: #f5f5f5;
-    border: 2px solid #e0e0e0;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    transition: all 0.2s;
-}
-
-.qr-filter-btn:hover {
-    background: #e0e0e0;
-}
-
-/* アクションバー */
-.qr-action-bar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.qr-action-left {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-}
-
-.qr-action-btn {
-    padding: 10px 20px;
-    background: #2d7f3e;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    transition: all 0.2s;
-}
-
-.qr-action-btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
-
-.qr-action-btn:not(:disabled):hover {
-    background: #236530;
-    transform: translateY(-1px);
-}
-
-.qr-selected-count {
-    font-size: 14px;
-    color: #666;
-    font-weight: 500;
-}
-
-.qr-result-count {
-    font-size: 14px;
-    color: #666;
-}
-
-/* テーブル */
-.qr-table-container {
-    background: white;
-    border: 2px solid #e0e0e0;
-    border-radius: 12px;
-    overflow: hidden;
-    margin-bottom: 20px;
-}
-
-.qr-table-container table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.qr-table-container th {
-    background: #f8f9fa;
-    padding: 16px;
-    text-align: left;
-    font-weight: 600;
-    font-size: 14px;
-    color: #2c3e50;
-    border-bottom: 2px solid #e0e0e0;
-    white-space: nowrap;
-}
-
-.qr-table-container td {
-    padding: 16px;
-    border-bottom: 1px solid #f0f0f0;
-    font-size: 14px;
-    color: #333;
-}
-
-.qr-table-container tbody tr:hover {
-    background: #f8f9fa;
-}
-
-.qr-table-container tbody tr:last-child td {
-    border-bottom: none;
-}
-
-.qr-checkbox-cell {
-    width: 50px;
-    text-align: center;
-}
-
-.qr-checkbox-cell input[type="checkbox"] {
-    width: 18px;
-    height: 18px;
-    cursor: pointer;
-}
-
-.qr-sortable {
-    cursor: pointer;
-    user-select: none;
-    position: relative;
-}
-
-.qr-sortable:hover {
-    color: #2d7f3e;
-}
-
-.qr-number {
-    font-family: 'Courier New', monospace;
-    font-weight: 600;
-    color: #2c3e50;
-}
-
-.qr-status-badge {
-    display: inline-block;
-    padding: 6px 12px;
-    border-radius: 6px;
-    font-size: 12px;
-    font-weight: 600;
-    text-align: center;
-    min-width: 70px;
-}
-
-.qr-status-badge.available {
-    background: #fff3cd;
-    color: #856404;
-}
-
-.qr-status-badge.in-use {
-    background: #d4edda;
-    color: #155724;
-}
-
-.qr-status-badge.lost {
-    background: #f8d7da;
-    color: #721c24;
-}
-
-.qr-status-badge.damaged {
-    background: #f8d7da;
-    color: #721c24;
-}
-
-.qr-print-badge {
-    display: inline-block;
-    padding: 6px 12px;
-    border-radius: 6px;
-    font-size: 12px;
-    font-weight: 500;
-}
-
-.qr-print-badge.printed {
-    background: #e3f2fd;
-    color: #0d47a1;
-}
-
-.qr-print-badge.not-printed {
-    background: #f5f5f5;
-    color: #666;
-}
-
-.qr-action-link {
-    color: #2d7f3e;
-    text-decoration: none;
-    font-weight: 500;
-    margin-right: 12px;
-}
-
-.qr-action-link:hover {
-    text-decoration: underline;
-}
-
-/* ページネーション */
-.qr-pagination {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
-    padding: 20px 0;
-}
-
-.qr-page-btn {
-    padding: 8px 14px;
-    background: white;
-    border: 2px solid #e0e0e0;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 500;
-    color: #333;
-    transition: all 0.2s;
-    min-width: 40px;
-}
-
-.qr-page-btn:hover:not(:disabled) {
-    background: #f5f5f5;
-    border-color: #2d7f3e;
-}
-
-.qr-page-btn.active {
-    background: #2d7f3e;
-    color: white;
-    border-color: #2d7f3e;
-}
-
-.qr-page-btn:disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
-}
-
-/* ========================================
-   QRコード詳細画面
-======================================== */
-.qr-detail-page {
-    display: none;
-    background: #fff;
-    min-height: 100vh;
-}
-
-.qr-detail-page.active {
-    display: flex;
-    flex-direction: column;
-}
-
-.qr-detail-header {
-    background: #2d7f3e;
-    color: white;
-    padding: 16px 24px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
-
-.qr-detail-header-left {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-}
-
-.qr-detail-back-btn {
-    background: rgba(255,255,255,0.15);
-    border: none;
-    color: white;
-    padding: 10px 16px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    transition: background 0.2s;
-}
-
-.qr-detail-back-btn:hover {
-    background: rgba(255,255,255,0.25);
-}
-
-.qr-detail-header-title-group {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-}
-
-.qr-detail-header h1 {
-    font-size: 22px;
-    font-weight: 600;
-}
-
-.qr-detail-number-header {
-    font-family: 'Courier New', monospace;
-    font-size: 14px;
-    opacity: 0.9;
-    font-weight: 400;
-}
-
-.qr-detail-main-content {
-    flex: 1;
-    padding: 32px 40px;
-    max-width: 1200px;
-    width: 100%;
-    margin: 0 auto;
-}
-
-.qr-detail-content-grid {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 24px;
-}
-
-.qr-detail-section {
-    background: white;
-    border: 2px solid #e0e0e0;
-    border-radius: 12px;
-    padding: 24px;
-    margin-bottom: 24px;
-}
-
-.qr-detail-section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-    padding-bottom: 16px;
-    border-bottom: 2px solid #f0f0f0;
-}
-
-.qr-detail-section-title {
-    font-size: 18px;
-    font-weight: 600;
-    color: #2c3e50;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-/* QRコードプレビュー */
-.qr-detail-preview {
-    text-align: center;
-    padding: 20px;
-}
-
-.qr-detail-image {
-    width: 200px;
-    height: 200px;
-    background: #f0f0f0;
-    border: 3px solid #2d7f3e;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 120px;
-    margin: 0 auto 16px;
-}
-
-.qr-detail-number-large {
-    font-family: 'Courier New', monospace;
-    font-size: 20px;
-    font-weight: 700;
-    color: #2d7f3e;
-    margin-bottom: 8px;
-}
-
-.qr-detail-print-btn {
-    margin-top: 16px;
-    padding: 12px 24px;
-    background: linear-gradient(135deg, #2ecc71, #27ae60);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
-    transition: all 0.2s;
-}
-
-.qr-detail-print-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(39, 174, 96, 0.4);
-}
-
-/* フォームグループ */
-.qr-detail-form-group {
-    margin-bottom: 20px;
-}
-
-.qr-detail-form-label {
-    display: block;
-    font-size: 13px;
-    font-weight: 600;
-    color: #5a6c7d;
-    margin-bottom: 8px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.qr-detail-form-value {
-    font-size: 15px;
-    color: #2c3e50;
-    padding: 12px 0;
-}
-
-.qr-detail-form-input, .qr-detail-form-select {
-    width: 100%;
-    padding: 12px 14px;
-    font-size: 15px;
-    border: 2px solid #d0d0d0;
-    border-radius: 8px;
-    background: #fff;
-    transition: border-color 0.2s;
-}
-
-.qr-detail-form-input:focus, .qr-detail-form-select:focus {
-    outline: none;
-    border-color: #2d7f3e;
-}
-
-.qr-detail-form-textarea {
-    width: 100%;
-    padding: 12px 14px;
-    font-size: 15px;
-    border: 2px solid #d0d0d0;
-    border-radius: 8px;
-    background: #fff;
-    min-height: 100px;
-    resize: vertical;
-    font-family: inherit;
-}
-
-.qr-detail-form-textarea:focus {
-    outline: none;
-    border-color: #2d7f3e;
-}
-
-/* ステータスバッジ */
-.qr-detail-status-badge {
-    display: inline-block;
-    padding: 6px 16px;
-    border-radius: 16px;
-    font-size: 13px;
-    font-weight: 600;
-}
-
-.qr-detail-status-badge.available {
-    background: #fff3e0;
-    color: #e65100;
-}
-
-.qr-detail-status-badge.in-use {
-    background: #e8f5e9;
-    color: #2e7d32;
-}
-
-.qr-detail-status-badge.lost {
-    background: #ffebee;
-    color: #c62828;
-}
-
-.qr-detail-status-badge.damaged {
-    background: #fce4ec;
-    color: #c2185b;
-}
-
-/* 履歴テーブル */
-.qr-detail-history-table {
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    overflow: hidden;
-    margin-top: 16px;
-}
-
-.qr-detail-history-table table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.qr-detail-history-table th {
-    background: #fafbfc;
-    padding: 10px 12px;
-    text-align: left;
-    font-size: 12px;
-    font-weight: 600;
-    color: #5a6c7d;
-    border-bottom: 1px solid #e0e0e0;
-}
-
-.qr-detail-history-table td {
-    padding: 10px 12px;
-    font-size: 13px;
-    color: #2c3e50;
-    border-bottom: 1px solid #f0f0f0;
-}
-
-.qr-detail-history-table tr:last-child td {
-    border-bottom: none;
-}
-
-/* リンクカード */
-.qr-detail-link-card {
-    background: #f0fdf4;
-    border: 2px solid #bbf7d0;
-    border-radius: 12px;
-    padding: 16px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    text-decoration: none;
-    transition: all 0.2s;
-    margin-top: 12px;
-}
-
-.qr-detail-link-card:hover {
-    border-color: #86efac;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(34, 197, 94, 0.2);
-}
-
-.qr-detail-link-card-icon {
-    font-size: 32px;
-    flex-shrink: 0;
-}
-
-.qr-detail-link-card-content {
-    flex: 1;
-}
-
-.qr-detail-link-card-title {
-    font-size: 15px;
-    font-weight: 600;
-    color: #166534;
-    margin-bottom: 4px;
-}
-
-.qr-detail-link-card-subtitle {
-    font-size: 13px;
-    color: #16a34a;
-}
-
-.qr-detail-link-card-arrow {
-    font-size: 20px;
-    color: #22c55e;
-}
-
-/* アラートボックス */
-.qr-detail-alert-box {
-    background: #fff8e1;
-    border: 2px solid #ffd54f;
-    border-radius: 12px;
-    padding: 16px;
-    margin-bottom: 24px;
-    display: flex;
-    gap: 12px;
-}
-
-.qr-detail-alert-box.danger {
-    background: #ffebee;
-    border-color: #f44336;
-}
-
-.qr-detail-alert-icon {
-    font-size: 20px;
-    flex-shrink: 0;
-}
-
-.qr-detail-alert-content {
-    flex: 1;
-}
-
-.qr-detail-alert-title {
-    font-size: 14px;
-    font-weight: 600;
-    color: #e65100;
-    margin-bottom: 4px;
-}
-
-.qr-detail-alert-box.danger .qr-detail-alert-title {
-    color: #c62828;
-}
-
-.qr-detail-alert-text {
-    font-size: 13px;
-    color: #f57c00;
-    line-height: 1.5;
-}
-
-.qr-detail-alert-box.danger .qr-detail-alert-text {
-    color: #d32f2f;
-}
-
-/* ボタングループ */
-.qr-detail-button-group {
-    display: flex;
-    gap: 12px;
-    justify-content: flex-end;
-    margin-top: 24px;
-    padding-top: 24px;
-    border-top: 1px solid #e0e0e0;
-}
-
-.qr-detail-btn {
-    padding: 12px 24px;
-    font-size: 15px;
-    font-weight: 600;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    transition: all 0.2s;
-}
-
-.qr-detail-btn-secondary {
-    background: white;
-    color: #666;
-    border: 2px solid #d0d0d0;
-}
-
-.qr-detail-btn-secondary:hover {
-    border-color: #999;
-    background: #f5f5f5;
-}
-
-.qr-detail-btn-danger {
-    background: #f44336;
-    color: white;
-}
-
-.qr-detail-btn-danger:hover {
-    background: #d32f2f;
-    box-shadow: 0 4px 12px rgba(244, 67, 54, 0.3);
-}
-
-.qr-detail-btn-primary {
-    background: linear-gradient(135deg, #2ecc71, #27ae60);
-    color: white;
-    box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
-}
-
-.qr-detail-btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(39, 174, 96, 0.4);
-}
 
 /* ========================================
    QRコード新規発行画面
@@ -1058,35 +143,6 @@
     display: block;
 }
 
-/* 番号フォーマット説明 */
-.qr-issue-number-format {
-    background: #fffde7;
-    border: 2px solid #fdd835;
-    border-radius: 8px;
-    padding: 16px 20px;
-    margin-bottom: 24px;
-}
-
-.qr-issue-format-label {
-    font-size: 15px;
-    color: #333;
-    line-height: 1.6;
-}
-
-.qr-issue-format-note {
-    font-size: 13px;
-    color: #666;
-    margin-top: 8px;
-    font-style: italic;
-}
-
-.qr-issue-form-note {
-    font-size: 13px;
-    color: #666;
-    margin-top: 6px;
-    font-style: italic;
-}
-
 /* 共通設定セクション */
 .qr-issue-common-section {
     border-top: 2px solid #e0e0e0;
@@ -1101,36 +157,205 @@
     margin-bottom: 16px;
 }
 
-/* アクションボタン群 */
-.qr-issue-action-buttons {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    margin-bottom: 24px;
-}
-
-.qr-issue-action-btn {
-    background: #fffde7;
-    border: 2px solid #fdd835;
-    border-radius: 8px;
-    padding: 14px 20px;
-    font-size: 15px;
-    font-weight: 500;
-    color: #333;
-    cursor: pointer;
-    text-align: left;
-    transition: all 0.2s;
-}
-
-.qr-issue-action-btn:hover {
-    background: #fff9c4;
-    border-color: #f9a825;
-}
-
 /* 戻るボタンの矢印 */
 .qr-issue-back-btn .back-arrow::before {
     content: '←';
     margin-right: 4px;
+}
+
+/* 番号入力グループ */
+.qr-issue-number-input-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+
+.qr-issue-number-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.qr-issue-number-separator {
+    font-size: 24px;
+    font-weight: bold;
+    color: #666;
+    padding-bottom: 10px;
+}
+
+.qr-issue-alpha-select {
+    width: 80px;
+    height: 48px;
+    padding: 12px 8px;
+    text-align: center;
+    font-family: 'Courier New', monospace;
+    font-size: 16px;
+    font-weight: 600;
+    border: 2px solid #d0d0d0;
+    border-radius: 8px;
+    background: white;
+    cursor: pointer;
+}
+
+.qr-issue-alpha-select:focus {
+    outline: none;
+    border-color: #2d7f3e;
+}
+
+.qr-issue-digit2-input {
+    width: 80px;
+    height: 48px;
+    padding: 12px 8px;
+    text-align: center;
+    font-family: 'Courier New', monospace;
+    font-size: 16px;
+    font-weight: 600;
+    border: 2px solid #d0d0d0;
+    border-radius: 8px;
+    box-sizing: border-box;
+}
+
+.qr-issue-digit2-input:focus {
+    outline: none;
+    border-color: #2d7f3e;
+}
+
+.qr-issue-digit5-input {
+    width: 120px;
+    height: 48px;
+    padding: 12px 8px;
+    text-align: center;
+    font-family: 'Courier New', monospace;
+    font-size: 16px;
+    font-weight: 600;
+    border: 2px solid #d0d0d0;
+    border-radius: 8px;
+    box-sizing: border-box;
+}
+
+.qr-issue-digit5-input:focus {
+    outline: none;
+    border-color: #2d7f3e;
+}
+
+/* テンプレート選択 */
+.qr-issue-template-section {
+    margin-bottom: 32px;
+}
+
+.qr-issue-template-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.qr-issue-template-group {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 16px;
+}
+
+.qr-issue-template-group-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 12px;
+}
+
+.qr-issue-template-options {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.qr-issue-template-option {
+    cursor: pointer;
+}
+
+.qr-issue-template-option input[type="radio"] {
+    display: none;
+}
+
+.qr-issue-template-card {
+    background: white;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    padding: 16px;
+    min-width: 100px;
+    text-align: center;
+    transition: all 0.2s;
+}
+
+.qr-issue-template-option input[type="radio"]:checked + .qr-issue-template-card {
+    border-color: #2d7f3e;
+    background: #f0fdf4;
+}
+
+.qr-issue-template-card:hover {
+    border-color: #27ae60;
+}
+
+.qr-issue-template-icon {
+    font-size: 32px;
+    margin-bottom: 8px;
+    color: #2d7f3e;
+}
+
+/* QRコードアイコン（正方形） */
+.qr-issue-template-icon.qr-icon-square {
+    width: 40px;
+    height: 40px;
+    background: #2d7f3e;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 8px;
+    border-radius: 4px;
+    font-size: 24px;
+}
+
+/* バーコードアイコン（長方形） */
+.qr-issue-template-icon.barcode-icon-rect {
+    width: 60px;
+    height: 30px;
+    background: linear-gradient(90deg, #333 2px, transparent 2px) 0 0 / 6px 100%;
+    background-color: white;
+    border: 2px solid #333;
+    margin: 0 auto 8px;
+    border-radius: 2px;
+    font-size: 0;
+    color: transparent;
+}
+
+.qr-issue-template-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 4px;
+}
+
+.qr-issue-template-size {
+    font-size: 12px;
+    color: #666;
+}
+
+/* フッター入力セクション */
+.qr-issue-footer-section {
+    margin-bottom: 32px;
+}
+
+.qr-issue-footer-char-info {
+    font-size: 13px;
+    color: #666;
+    margin-top: 6px;
+    text-align: right;
+}
+
+#footerCharCount {
+    font-weight: 600;
+    color: #2d7f3e;
 }
 
 /* フォームグループ */
@@ -1182,37 +407,11 @@
     margin-top: 6px;
 }
 
-/* インフォボックス */
-.qr-issue-info-box {
-    background: #e3f2fd;
-    border: 2px solid #2196f3;
-    border-radius: 8px;
-    padding: 16px;
-    margin-bottom: 24px;
-    display: flex;
-    gap: 12px;
-}
-
-.qr-issue-info-box-icon {
-    font-size: 20px;
-    flex-shrink: 0;
-}
-
-.qr-issue-info-box-content {
-    flex: 1;
-}
-
-.qr-issue-info-box-title {
-    font-size: 14px;
-    font-weight: 600;
-    color: #1565c0;
-    margin-bottom: 4px;
-}
-
-.qr-issue-info-box-text {
+.qr-issue-form-note {
     font-size: 13px;
-    color: #1976d2;
-    line-height: 1.5;
+    color: #666;
+    margin-top: 6px;
+    font-style: italic;
 }
 
 /* 番号プレビュー */
@@ -1255,26 +454,6 @@
     font-size: 14px;
     color: #666;
     margin-left: auto;
-}
-
-/* チェックボックス */
-.qr-issue-checkbox-group {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 24px;
-}
-
-.qr-issue-checkbox-group input[type="checkbox"] {
-    width: 20px;
-    height: 20px;
-    cursor: pointer;
-}
-
-.qr-issue-checkbox-label {
-    font-size: 15px;
-    color: #333;
-    cursor: pointer;
 }
 
 /* ボタングループ */
@@ -1324,46 +503,6 @@
 
 .qr-issue-btn-primary:active {
     transform: translateY(0);
-}
-
-/* 一括発行用のテーブル */
-.qr-issue-bulk-preview-table {
-    border: 2px solid #e0e0e0;
-    border-radius: 8px;
-    overflow: hidden;
-    margin-top: 24px;
-}
-
-.qr-issue-bulk-preview-table table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.qr-issue-bulk-preview-table th {
-    background: #fafbfc;
-    padding: 12px 16px;
-    text-align: left;
-    font-size: 13px;
-    font-weight: 600;
-    color: #5a6c7d;
-    border-bottom: 2px solid #e0e0e0;
-}
-
-.qr-issue-bulk-preview-table td {
-    padding: 12px 16px;
-    font-size: 14px;
-    color: #2c3e50;
-    border-bottom: 1px solid #f0f0f0;
-}
-
-.qr-issue-bulk-preview-table tr:last-child td {
-    border-bottom: none;
-}
-
-.qr-issue-qr-number-cell {
-    font-family: 'Courier New', monospace;
-    font-weight: 600;
-    color: #2d7f3e;
 }
 
 /* ========================================
@@ -1451,11 +590,6 @@
     margin-bottom: 8px;
 }
 
-.qr-print-page-description {
-    font-size: 15px;
-    color: #666;
-}
-
 .qr-print-content-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -1521,38 +655,6 @@
     margin-top: 6px;
 }
 
-/* 統計情報 */
-.qr-print-stats {
-    background: #f0fdf4;
-    border: 2px solid #2d7f3e;
-    border-radius: 8px;
-    padding: 20px;
-    margin-bottom: 24px;
-}
-
-.qr-print-stats-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 16px;
-}
-
-.qr-print-stat-item {
-    text-align: center;
-}
-
-.qr-print-stat-value {
-    font-size: 32px;
-    font-weight: 700;
-    color: #2d7f3e;
-    margin-bottom: 4px;
-}
-
-.qr-print-stat-label {
-    font-size: 12px;
-    color: #666;
-    font-weight: 500;
-}
-
 /* プレビューエリア */
 .qr-print-preview-area {
     background: #fafbfc;
@@ -1589,14 +691,36 @@
 }
 
 .qr-print-qr-placeholder {
-    width: 160px;
-    height: 160px;
+    width: 120px;
+    height: 120px;
     background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
     border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 80px;
+    font-size: 60px;
+}
+
+/* QRコード用プレースホルダー（正方形） */
+.qr-print-qr-placeholder.qr-square {
+    width: 120px;
+    height: 120px;
+    background: white;
+    border: 3px solid #333;
+    border-radius: 4px;
+    position: relative;
+    font-size: 48px;
+    color: #333;
+}
+
+/* バーコード用プレースホルダー（長方形） */
+.qr-print-qr-placeholder.barcode-rect {
+    width: 160px;
+    height: 60px;
+    background: linear-gradient(90deg, #333 3px, transparent 3px) 0 0 / 8px 100%;
+    background-color: white;
+    border: 2px solid #333;
+    font-size: 0;
 }
 
 .qr-print-qr-number-preview {
@@ -1604,17 +728,6 @@
     font-size: 18px;
     font-weight: 700;
     color: #2d7f3e;
-}
-
-.qr-print-hospital-name-preview {
-    font-size: 14px;
-    color: #666;
-    font-weight: 500;
-}
-
-.qr-print-date-preview {
-    font-size: 11px;
-    color: #999;
 }
 
 /* 印刷リスト */
@@ -1659,86 +772,6 @@
     font-family: 'Courier New', monospace;
     font-weight: 600;
     color: #2d7f3e;
-}
-
-/* プリンタステータス */
-.qr-print-printer-status {
-    background: #e3f2fd;
-    border: 2px solid #2196f3;
-    border-radius: 8px;
-    padding: 16px;
-    margin-bottom: 20px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.qr-print-printer-status.warning {
-    background: #fff3e0;
-    border-color: #ff9800;
-}
-
-.qr-print-printer-status.error {
-    background: #ffebee;
-    border-color: #f44336;
-}
-
-.qr-print-status-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 20px;
-    flex-shrink: 0;
-}
-
-.qr-print-printer-status .qr-print-status-icon {
-    background: #2196f3;
-    color: white;
-}
-
-.qr-print-printer-status.warning .qr-print-status-icon {
-    background: #ff9800;
-    color: white;
-}
-
-.qr-print-printer-status.error .qr-print-status-icon {
-    background: #f44336;
-    color: white;
-}
-
-.qr-print-status-content {
-    flex: 1;
-}
-
-.qr-print-status-title {
-    font-size: 14px;
-    font-weight: 600;
-    color: #1565c0;
-    margin-bottom: 2px;
-}
-
-.qr-print-printer-status.warning .qr-print-status-title {
-    color: #e65100;
-}
-
-.qr-print-printer-status.error .qr-print-status-title {
-    color: #c62828;
-}
-
-.qr-print-status-text {
-    font-size: 12px;
-    color: #1976d2;
-}
-
-.qr-print-printer-status.warning .qr-print-status-text {
-    color: #f57c00;
-}
-
-.qr-print-printer-status.error .qr-print-status-text {
-    color: #d32f2f;
 }
 
 /* ボタングループ */
@@ -1790,4 +823,30 @@
     opacity: 0.5;
     cursor: not-allowed;
     transform: none;
+}
+
+/* 印刷プレビュー：テンプレート情報 */
+.qr-print-template-info {
+    font-size: 13px;
+    color: #666;
+    background: #f5f5f5;
+    padding: 8px 16px;
+    border-radius: 4px;
+    margin-bottom: 16px;
+}
+
+/* 印刷プレビュー：フッター行 */
+.qr-print-footer-line {
+    font-size: 11px;
+    color: #333;
+    text-align: center;
+    margin-top: 8px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+
+.qr-print-footer-line:empty {
+    display: none;
 }
