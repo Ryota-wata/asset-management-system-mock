@@ -10,228 +10,32 @@
                 </div>
             </div>
             <div class="header-actions">
+                <button class="header-btn consultant-only" onclick="handleQRRead()">QR読取</button>
+                <button class="header-btn consultant-only" onclick="handleRemodelManagement()">リモデル管理</button>
+                <button class="header-btn consultant-only" onclick="handleQuotationManagement()">見積管理</button>
+                <button class="header-btn secondary consultant-only master-mgmt-btn" onclick="showMasterModal()">マスタ管理</button>
                 <button class="header-btn success consultant-only" onclick="showListModal()">個体管理リスト作成</button>
-                <button class="header-btn secondary master-mgmt-btn" onclick="showMasterModal()">マスタ管理</button>
                 <button class="header-btn success hospital-only" onclick="handleQRIssueFromModal()">QRコード発行</button>
                 <button class="header-btn logout" onclick="handleLogout()">ログアウト</button>
             </div>
         </header>
-        
-        <!-- 検索条件読み込みエリア -->
-        <div class="condition-loader">
-            <label class="condition-label">保存済み検索条件：</label>
-            <select class="condition-select">
-                <option value="">-- 選択してください --</option>
-                <option value="1">月次レポート用条件</option>
-                <option value="2">現有品調査用条件</option>
-                <option value="3">CT機器検索条件</option>
-                <option value="4">特殊設備検索条件</option>
-            </select>
-            <button class="load-btn">読み込み</button>
-        </div>
-        
-        <!-- メインコンテンツ -->
-        <div class="main-content">
-            <!-- 検索パネル -->
-            <div class="search-panel">
-                <!-- 検索条件カード -->
-                <div class="search-cards">
-                    <!-- 施設情報セクション -->
-                    <div class="search-section">
-                        <h2 class="section-title">施設情報</h2>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label class="form-label">施設名</label>
-                                <select id="facilityNameSelect">
-                                    <option value="">読み込み中...</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label class="form-label">病床規模</label>
-                                <div class="range-input">
-                                    <select>
-                                        <option>選択</option>
-                                        <option>0</option>
-                                        <option>100</option>
-                                        <option>200</option>
-                                        <option>300</option>
-                                    </select>
-                                    <span class="range-separator">床 〜</span>
-                                    <select>
-                                        <option>選択</option>
-                                        <option>100</option>
-                                        <option>200</option>
-                                        <option>300</option>
-                                        <option>500</option>
-                                    </select>
-                                    <span class="range-separator">床</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label class="form-label">部門名</label>
-                                <select id="departmentSelect">
-                                    <option value="">読み込み中...</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">部署名</label>
-                                <select id="sectionSelect">
-                                    <option value="">読み込み中...</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- 資産情報セクション -->
-                    <div class="search-section">
-                        <h2 class="section-title">資産情報</h2>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label class="form-label">Category</label>
-                                <select id="categorySelect">
-                                    <option value="">読み込み中...</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label class="form-label">大分類</label>
-                                <select id="largeClassSelect">
-                                    <option value="">読み込み中...</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label class="form-label">中分類</label>
-                                <select id="mediumClassSelect">
-                                    <option value="">読み込み中...</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label class="form-label">個体管理品目</label>
-                                <select id="itemSelect">
-                                    <option value="">読み込み中...</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label class="form-label">資産台帳No.</label>
-                                <input type="text" placeholder="任意の番号">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- 検索条件保存エリア -->
-                <div class="save-section">
-                    <h2 class="section-title">この検索条件を保存</h2>
-                    <div class="save-row">
-                        <input type="text" class="save-input" placeholder="検索条件名を入力（例：月次レポート用）">
-                        <button class="save-btn">保存</button>
-                    </div>
-                </div>
-                
-                <!-- モバイル用カラムトグルボタン -->
-                <button class="mobile-column-toggle" onclick="toggleMobileColumn()">出力項目を選択</button>
-            </div>
-            
-            <!-- カラム選択パネル（PC・タブレット用） -->
-            <div class="column-panel" id="columnPanel">
-                <div class="column-header">出力項目（カラム選択）</div>
-                <div class="column-content">
-                    <ul class="column-list">
-                        <div class="column-category">基本情報</div>
-                        <li class="column-item">
-                            <input type="checkbox" class="column-checkbox" checked>
-                            <span>資産台帳No.</span>
-                        </li>
-                        <li class="column-item">
-                            <input type="checkbox" class="column-checkbox" checked>
-                            <span>機器名称</span>
-                        </li>
-                        <li class="column-item">
-                            <input type="checkbox" class="column-checkbox" checked>
-                            <span>メーカー</span>
-                        </li>
-                        <li class="column-item">
-                            <input type="checkbox" class="column-checkbox" checked>
-                            <span>型番</span>
-                        </li>
-                        
-                        <div class="column-category">設備情報</div>
-                        <li class="column-item">
-                            <input type="checkbox" class="column-checkbox">
-                            <span>特殊設備（重設備）</span>
-                        </li>
-                        <li class="column-item">
-                            <input type="checkbox" class="column-checkbox">
-                            <span>図面No.</span>
-                        </li>
-                        <li class="column-item">
-                            <input type="checkbox" class="column-checkbox">
-                            <span>幅（W）</span>
-                        </li>
-                        <li class="column-item">
-                            <input type="checkbox" class="column-checkbox">
-                            <span>奥行（D）</span>
-                        </li>
-                        <li class="column-item">
-                            <input type="checkbox" class="column-checkbox">
-                            <span>高さ（H）</span>
-                        </li>
-                        <li class="column-item">
-                            <input type="checkbox" class="column-checkbox">
-                            <span>電源種別</span>
-                        </li>
-                        <li class="column-item">
-                            <input type="checkbox" class="column-checkbox">
-                            <span>電源容量</span>
-                        </li>
-                        
-                        <div class="column-category">システム情報</div>
-                        <li class="column-item">
-                            <input type="checkbox" class="column-checkbox">
-                            <span>システム接続</span>
-                        </li>
-                        <li class="column-item">
-                            <input type="checkbox" class="column-checkbox">
-                            <span>IPアドレス</span>
-                        </li>
-                        <li class="column-item">
-                            <input type="checkbox" class="column-checkbox">
-                            <span>MACアドレス</span>
-                        </li>
-                        
-                        <div class="column-category">日付情報</div>
-                        <li class="column-item">
-                            <input type="checkbox" class="column-checkbox">
-                            <span>導入日</span>
-                        </li>
-                        <li class="column-item">
-                            <input type="checkbox" class="column-checkbox">
-                            <span>保守契約期限</span>
-                        </li>
-                        <li class="column-item">
-                            <input type="checkbox" class="column-checkbox">
-                            <span>リース期限</span>
-                        </li>
-                    </ul>
-                </div>
+
+        <!-- メニューセクション -->
+        <div class="menu-section">
+            <div class="menu-button-group">
+                <button class="menu-button" onclick="handleAssetBrowseAndApplication()">資産閲覧・申請</button>
+                <button class="menu-button" onclick="handleMaintenanceInspection()">保守・点検</button>
+                <button class="menu-button" onclick="handleLendingManagement()">貸出管理</button>
+                <button class="menu-button" onclick="handleRepairApplication()">修理申請</button>
+                <button class="menu-button" onclick="handleAllDataView()">全データ閲覧（閲覧・出力）</button>
             </div>
         </div>
-        
-        <!-- ボタングループ -->
-        <div class="button-group">
-            <button class="action-btn outline" onclick="clearForm()">条件クリア</button>
-            <button class="action-btn primary" onclick="viewList()">この条件でリスト閲覧する</button>
+
+        <!-- ダッシュボードボディ（次スコープ用） -->
+        <div class="dashboard-body">
+            <div class="dashboard-placeholder">
+                <p>※ ダッシュボード機能は次スコープで実装予定です</p>
+            </div>
         </div>
     </div>
     </div>

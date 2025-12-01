@@ -808,3 +808,115 @@ select:focus {
 .clickable-row:hover {
     background-color: #f8f9fa;
 }
+
+/* ========================================
+   メニュー画面用スタイル
+======================================== */
+.menu-section {
+    padding: 30px 20px;
+    background: #f8f9fa;
+}
+
+.menu-button-group {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 12px;
+    max-width: 1400px;
+    margin: 0 auto;
+    justify-content: center;
+}
+
+.menu-button {
+    background: white;
+    border: 2px solid #e0e0e0;
+    border-radius: 6px;
+    padding: 14px 20px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #2c3e50;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    flex: 0 0 auto;
+}
+
+.menu-button:hover {
+    background: #27ae60;
+    color: white;
+    border-color: #27ae60;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(39, 174, 96, 0.2);
+}
+
+.menu-button:active {
+    transform: translateY(0);
+}
+
+.dashboard-body {
+    padding: 40px 20px;
+    min-height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dashboard-placeholder {
+    text-align: center;
+    color: #7f8c8d;
+    font-size: 16px;
+    padding: 40px;
+    background: white;
+    border: 2px dashed #ddd;
+    border-radius: 8px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* ========================================
+   メニュー画面レスポンシブ
+======================================== */
+@media (max-width: 1024px) {
+    .menu-button-group {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .menu-button {
+        padding: 10px 14px;
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 768px) {
+    .menu-section {
+        padding: 20px 10px;
+    }
+
+    .menu-button-group {
+        gap: 8px;
+    }
+
+    .menu-button {
+        padding: 9px 12px;
+        font-size: 12px;
+    }
+
+    .dashboard-body {
+        padding: 20px 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .menu-section {
+        padding: 15px 10px;
+    }
+
+    .menu-button-group {
+        gap: 6px;
+    }
+
+    .menu-button {
+        padding: 8px 10px;
+        font-size: 11px;
+    }
+}

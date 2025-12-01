@@ -652,3 +652,104 @@ if (!navMenuClickListenerAdded) {
 }
 
 window.toggleNavMenu = toggleNavMenu;
+
+// =============================================================================
+// メニュー画面用の画面遷移関数
+// =============================================================================
+
+/**
+ * QR読取画面へ遷移
+ */
+function handleQRRead() {
+    console.log('[Navigation] QR読取画面へ遷移');
+    PageNavigationHelper.showPage('qrIssuePage');
+}
+
+/**
+ * リモデル管理画面へ遷移
+ */
+function handleRemodelManagement() {
+    console.log('[Navigation] リモデル管理画面へ遷移');
+    alert('リモデル管理機能は開発中です。\n※次スコープで実装予定');
+}
+
+/**
+ * 見積管理画面へ遷移
+ */
+function handleQuotationManagement() {
+    console.log('[Navigation] 見積書管理画面へ遷移');
+    PageNavigationHelper.showPage('quotationDataBoxPage');
+}
+
+/**
+ * 資産閲覧・申請画面へ遷移
+ */
+function handleAssetBrowseAndApplication() {
+    console.log('[Navigation] 資産閲覧・申請画面へ遷移');
+    PageNavigationHelper.showPage('searchResultPage', function() {
+        if (typeof initSearchResultPage === 'function') {
+            initSearchResultPage();
+        }
+    });
+}
+
+/**
+ * 保守・点検画面へ遷移
+ */
+function handleMaintenanceInspection() {
+    console.log('[Navigation] 保守・点検画面へ遷移');
+    alert('保守・点検機能は開発中です。\n※次スコープで実装予定');
+}
+
+/**
+ * 貸出管理画面へ遷移
+ */
+function handleLendingManagement() {
+    console.log('[Navigation] 貸出管理画面へ遷移');
+    alert('貸出管理機能は開発中です。\n※次スコープで実装予定');
+}
+
+/**
+ * 修理申請画面へ遷移
+ */
+function handleRepairApplication() {
+    console.log('[Navigation] 修理申請画面へ遷移');
+    alert('修理申請機能は開発中です。\n※次スコープで実装予定');
+}
+
+/**
+ * 全データ閲覧画面へ遷移
+ */
+function handleAllDataView() {
+    console.log('[Navigation] 全データ閲覧画面へ遷移');
+    alert('全データ閲覧機能は開発中です。\n※次スコープで実装予定');
+}
+
+/**
+ * マスタ管理モーダルから個体管理リスト作成画面へ遷移
+ */
+function handleIndividualListFromMaster() {
+    console.log('[Navigation] 個体管理リスト作成画面へ遷移');
+
+    // マスタ管理モーダルを閉じる
+    const masterModal = document.getElementById('masterModal');
+    if (masterModal) {
+        masterModal.classList.remove('active');
+    }
+
+    // 個体管理リストモーダルを開く
+    if (typeof showListModal === 'function') {
+        showListModal();
+    }
+}
+
+// グローバル関数としてエクスポート
+window.handleQRRead = handleQRRead;
+window.handleRemodelManagement = handleRemodelManagement;
+window.handleQuotationManagement = handleQuotationManagement;
+window.handleAssetBrowseAndApplication = handleAssetBrowseAndApplication;
+window.handleMaintenanceInspection = handleMaintenanceInspection;
+window.handleLendingManagement = handleLendingManagement;
+window.handleRepairApplication = handleRepairApplication;
+window.handleAllDataView = handleAllDataView;
+window.handleIndividualListFromMaster = handleIndividualListFromMaster;
