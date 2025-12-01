@@ -9,6 +9,27 @@
 let searchResultFilter_facilityMaster = null;
 let searchResultFilter_assetMaster = null;
 
+// ========================================
+// 施設情報マスタデータ（共通定数）
+// ========================================
+const FACILITY_MASTER = {
+    buildings: ['本館', '新館', '東棟', '西棟', '診療棟'],
+    divisions: ['内科', '外科', '手術部', '放射線科', '検査科', '薬剤部', '事務部'],
+    sectionsByDivision: {
+        '内科': ['循環器内科', '消化器内科', '呼吸器内科'],
+        '外科': ['一般外科', '整形外科', '脳神経外科'],
+        '手術部': ['中央手術室', 'ICU', 'HCU'],
+        '放射線科': ['X線撮影室', 'CT室', 'MRI室'],
+        '検査科': ['検体検査室', '生理検査室', '病理検査室']
+    },
+    roomRangesBySection: {
+        '循環器内科': ['外来診察室', '病棟', '処置室'],
+        '中央手術室': ['手術室1', '手術室2', '手術室3', 'リカバリー室'],
+        'X線撮影室': ['一般撮影室', 'ポータブル撮影室', 'TV撮影室'],
+        'CT室': ['CT1号機室', 'CT2号機室', '操作室']
+    }
+};
+
         // サンプルデータ
         const sampleData = [
             {
@@ -530,17 +551,21 @@ let searchResultFilter_assetMaster = null;
         function updateSelectionInfo() {
             const info = document.getElementById('selectionInfo');
             info.textContent = `${selectedItems.size}件選択中`;
-            
-            // ドロップダウンボタンと棚卸しボタンの有効/無効
+
+            // 各申請ボタンの有効/無効
             const hasSelection = selectedItems.size > 0;
-            const purchaseBtn = document.getElementById('purchaseDropdownBtn');
-            if (purchaseBtn) {
-                purchaseBtn.disabled = !hasSelection;
+
+            // 既存資産ベースの申請ボタン
+            const expansionBtn = document.getElementById('expansionBtn');
+            if (expansionBtn) {
+                expansionBtn.disabled = !hasSelection;
             }
-            const managementBtn = document.getElementById('managementDropdownBtn');
-            if (managementBtn) {
-                managementBtn.disabled = !hasSelection;
+            const renewalBtn = document.getElementById('renewalBtn');
+            if (renewalBtn) {
+                renewalBtn.disabled = !hasSelection;
             }
+
+            // 棚卸しボタン
             const inventoryBtn = document.getElementById('inventoryBtn');
             if (inventoryBtn) {
                 inventoryBtn.disabled = !hasSelection;
@@ -649,30 +674,38 @@ let searchResultFilter_assetMaster = null;
         }
 
         function handleExpansionRequest() {
-            // 増設：選択した資産で申請
+            // 増設購入申請：選択した資産で申請
             closeAllDropdowns();
-            openApplicationInputModalWithType('増設購入申請');
+
+            if (selectedItems.size === 0) {
+                alert('資産を選択してください');
+                return;
+            }
+
+            // 増設購入申請モーダルを開く
+            const modal = document.getElementById('expansionRequestModal');
+            if (!modal) {
+                alert('この機能は現在利用できません');
+                return;
+            }
+
+            // 選択された資産を表示
+            renderExpansionAssetList();
+
+            // 数量フォームを生成
+            renderExpansionQuantityForm();
+
+            // 設置情報の選択肢を初期化
+            initializeExpansionFacilityOptions();
+
+            // モーダルを表示
+            modal.classList.add('active');
         }
 
         function handleRenewalRequest() {
             // 更新：選択した資産で申請
             closeAllDropdowns();
             openApplicationInputModalWithType('更新購入申請');
-        }
-
-        function handleMoveRequest() {
-            closeAllDropdowns();
-            openApplicationInputModalWithType('移動・廃棄申請');
-        }
-
-        function handleRepairRequest() {
-            closeAllDropdowns();
-            openApplicationInputModalWithType('修理申請');
-        }
-
-        function handleMaintenanceRequest() {
-            closeAllDropdowns();
-            openApplicationInputModalWithType('保守申請');
         }
 
         function handleLendingRequest() {
@@ -838,6 +871,8 @@ let searchResultFilter_assetMaster = null;
         function handleModalOutsideClick(event) {
             if (event.target.id === 'assetMasterModal') {
                 closeAssetMasterModal();
+            } else if (event.target.id === 'expansionRequestModal') {
+                closeExpansionRequestModal();
             }
         }
 
@@ -1242,73 +1277,53 @@ let searchResultFilter_assetMaster = null;
 
         // 設置情報の選択肢を初期化
         function initializeFacilityOptions() {
-            // 施設マスタデータ（サンプル）
-            const buildingOptions = ['本館', '新館', '東棟', '西棟', '診療棟'];
-            const divisionOptions = ['内科', '外科', '手術部', '放射線科', '検査科', '薬剤部', '事務部'];
-            const sectionOptions = {
-                '内科': ['循環器内科', '消化器内科', '呼吸器内科'],
-                '外科': ['一般外科', '整形外科', '脳神経外科'],
-                '手術部': ['中央手術室', 'ICU', 'HCU'],
-                '放射線科': ['X線撮影室', 'CT室', 'MRI室'],
-                '検査科': ['検体検査室', '生理検査室', '病理検査室']
-            };
-            const roomRangeOptions = {
-                '循環器内科': ['外来診察室', '病棟', '処置室'],
-                '中央手術室': ['手術室1', '手術室2', '手術室3', 'リカバリー室']
-            };
-
             // 棟の選択肢を設定
             const buildingSelect = document.getElementById('building');
-            buildingSelect.innerHTML = '<option value="">選択してください</option>' +
-                buildingOptions.map(b => `<option value="${b}">${b}</option>`).join('');
+            if (buildingSelect) {
+                buildingSelect.innerHTML = '<option value="">選択してください</option>' +
+                    FACILITY_MASTER.buildings.map(b => `<option value="${b}">${b}</option>`).join('');
+            }
 
             // 部門の選択肢を設定
             const divisionSelect = document.getElementById('division');
-            divisionSelect.innerHTML = '<option value="">選択してください</option>' +
-                divisionOptions.map(d => `<option value="${d}">${d}</option>`).join('');
+            if (divisionSelect) {
+                divisionSelect.innerHTML = '<option value="">選択してください</option>' +
+                    FACILITY_MASTER.divisions.map(d => `<option value="${d}">${d}</option>`).join('');
+            }
         }
 
         // 部門選択時に部署の選択肢を更新
         function updateSectionOptions() {
-            const division = document.getElementById('division').value;
+            const division = document.getElementById('division')?.value;
             const sectionSelect = document.getElementById('section');
             const roomRangeSelect = document.getElementById('roomRange');
 
-            const sectionOptions = {
-                '内科': ['循環器内科', '消化器内科', '呼吸器内科'],
-                '外科': ['一般外科', '整形外科', '脳神経外科'],
-                '手術部': ['中央手術室', 'ICU', 'HCU'],
-                '放射線科': ['X線撮影室', 'CT室', 'MRI室'],
-                '検査科': ['検体検査室', '生理検査室', '病理検査室']
-            };
-
-            if (division && sectionOptions[division]) {
-                sectionSelect.innerHTML = '<option value="">選択してください</option>' +
-                    sectionOptions[division].map(s => `<option value="${s}">${s}</option>`).join('');
-            } else {
-                sectionSelect.innerHTML = '<option value="">選択してください</option>';
+            if (sectionSelect) {
+                if (division && FACILITY_MASTER.sectionsByDivision[division]) {
+                    sectionSelect.innerHTML = '<option value="">選択してください</option>' +
+                        FACILITY_MASTER.sectionsByDivision[division].map(s => `<option value="${s}">${s}</option>`).join('');
+                } else {
+                    sectionSelect.innerHTML = '<option value="">選択してください</option>';
+                }
             }
 
-            roomRangeSelect.innerHTML = '<option value="">選択してください</option>';
+            if (roomRangeSelect) {
+                roomRangeSelect.innerHTML = '<option value="">選択してください</option>';
+            }
         }
 
         // 部署選択時に諸室名範囲の選択肢を更新
         function updateRoomRangeOptions() {
-            const section = document.getElementById('section').value;
+            const section = document.getElementById('section')?.value;
             const roomRangeSelect = document.getElementById('roomRange');
 
-            const roomRangeOptions = {
-                '循環器内科': ['外来診察室', '病棟', '処置室'],
-                '中央手術室': ['手術室1', '手術室2', '手術室3', 'リカバリー室'],
-                'X線撮影室': ['一般撮影室', 'ポータブル撮影室', 'TV撮影室'],
-                'CT室': ['CT1号機室', 'CT2号機室', '操作室']
-            };
-
-            if (section && roomRangeOptions[section]) {
-                roomRangeSelect.innerHTML = '<option value="">選択してください</option>' +
-                    roomRangeOptions[section].map(r => `<option value="${r}">${r}</option>`).join('');
-            } else {
-                roomRangeSelect.innerHTML = '<option value="">選択してください</option>';
+            if (roomRangeSelect) {
+                if (section && FACILITY_MASTER.roomRangesBySection[section]) {
+                    roomRangeSelect.innerHTML = '<option value="">選択してください</option>' +
+                        FACILITY_MASTER.roomRangesBySection[section].map(r => `<option value="${r}">${r}</option>`).join('');
+                } else {
+                    roomRangeSelect.innerHTML = '<option value="">選択してください</option>';
+                }
             }
         }
 
@@ -1568,6 +1583,252 @@ let searchResultFilter_assetMaster = null;
 
                 // 選択をクリア
                 selectedMasterItems.clear();
+            }
+        }
+
+        // 増設購入申請モーダル関連関数
+
+        // 増設購入申請モーダルを閉じる
+        function closeExpansionRequestModal() {
+            const modal = document.getElementById('expansionRequestModal');
+            if (modal) {
+                modal.classList.remove('active');
+            }
+        }
+
+        // 選択された資産リストを表示
+        function renderExpansionAssetList() {
+            const container = document.getElementById('expansionAssetList');
+            if (!container) return;
+
+            // サンプルデータから選択された資産を取得
+            const selectedAssets = sampleData.filter(item => selectedItems.has(item.no));
+
+            if (selectedAssets.length === 0) {
+                container.innerHTML = '<p style="color: #999; text-align: center; padding: 20px;">資産が選択されていません</p>';
+                return;
+            }
+
+            container.innerHTML = selectedAssets.map(asset => `
+                <div style="background: white; border: 1px solid #ddd; padding: 12px; border-radius: 4px; margin-bottom: 8px;">
+                    <div style="font-weight: 600; color: #2c3e50; margin-bottom: 4px;">${asset.name}</div>
+                    <div style="font-size: 11px; color: #7f8c8d;">
+                        資産番号: No.${asset.no} / メーカー: ${asset.maker} / 型式: ${asset.model}<br>
+                        設置場所: ${asset.building} ${asset.floor} ${asset.department} ${asset.section}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // 数量フォームを生成
+        function renderExpansionQuantityForm() {
+            const container = document.getElementById('expansionQuantityForm');
+            if (!container) return;
+
+            const selectedAssets = sampleData.filter(item => selectedItems.has(item.no));
+
+            if (selectedAssets.length === 0) {
+                container.innerHTML = '<p style="color: #999; text-align: center; padding: 20px;">資産が選択されていません</p>';
+                return;
+            }
+
+            container.innerHTML = `
+                <div style="background: white; border: 1px solid #ddd; border-radius: 4px; overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse; min-width: 700px;">
+                        <thead>
+                            <tr style="background: #34495e; color: white;">
+                                <th style="padding: 12px 15px; text-align: left; font-size: 13px; min-width: 250px;">資産名</th>
+                                <th style="padding: 12px 15px; text-align: left; font-size: 13px; min-width: 200px;">メーカー/型式</th>
+                                <th style="padding: 12px 15px; text-align: center; font-size: 13px; width: 130px;">増設数量 <span class="required">*</span></th>
+                                <th style="padding: 12px 15px; text-align: center; font-size: 13px; width: 120px;">単位 <span class="required">*</span></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${selectedAssets.map(asset => `
+                                <tr style="border-bottom: 1px solid #eee;">
+                                    <td style="padding: 12px 15px;">
+                                        <div style="font-weight: 600; color: #2c3e50; margin-bottom: 4px; font-size: 14px;">${asset.name}</div>
+                                        <div style="font-size: 11px; color: #7f8c8d;">資産番号: No.${asset.no}</div>
+                                    </td>
+                                    <td style="padding: 12px 15px; font-size: 13px; color: #34495e;">
+                                        <div style="margin-bottom: 2px;">${asset.maker}</div>
+                                        <div style="font-size: 12px; color: #7f8c8d;">${asset.model}</div>
+                                    </td>
+                                    <td style="padding: 12px 15px; text-align: center;">
+                                        <input type="number" id="expansionQuantity_${asset.no}" value="1" min="1" max="999"
+                                               style="width: 90px; padding: 8px; border: 1px solid #ccc; border-radius: 4px; text-align: center; font-size: 14px;">
+                                    </td>
+                                    <td style="padding: 12px 15px; text-align: center;">
+                                        <select id="expansionUnit_${asset.no}" style="width: 90px; padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;">
+                                            <option value="台" selected>台</option>
+                                            <option value="式">式</option>
+                                            <option value="個">個</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        // 増設購入申請の設置情報選択肢を初期化
+        function initializeExpansionFacilityOptions() {
+            // 棟の選択肢を設定
+            const buildingSelect = document.getElementById('expansionBuilding');
+            if (buildingSelect) {
+                buildingSelect.innerHTML = '<option value="">選択してください</option>' +
+                    FACILITY_MASTER.buildings.map(b => `<option value="${b}">${b}</option>`).join('');
+            }
+
+            // 部門の選択肢を設定
+            const divisionSelect = document.getElementById('expansionDivision');
+            if (divisionSelect) {
+                divisionSelect.innerHTML = '<option value="">選択してください</option>' +
+                    FACILITY_MASTER.divisions.map(d => `<option value="${d}">${d}</option>`).join('');
+            }
+        }
+
+        // 増設購入申請の部門選択時に部署の選択肢を更新
+        function updateExpansionSectionOptions() {
+            const division = document.getElementById('expansionDivision')?.value || '';
+            const sectionSelect = document.getElementById('expansionSection');
+            const roomRangeSelect = document.getElementById('expansionRoomRange');
+
+            if (sectionSelect) {
+                if (division && FACILITY_MASTER.sectionsByDivision[division]) {
+                    sectionSelect.innerHTML = '<option value="">選択してください</option>' +
+                        FACILITY_MASTER.sectionsByDivision[division].map(s => `<option value="${s}">${s}</option>`).join('');
+                } else {
+                    sectionSelect.innerHTML = '<option value="">選択してください</option>';
+                }
+            }
+
+            if (roomRangeSelect) {
+                roomRangeSelect.innerHTML = '<option value="">選択してください</option>';
+            }
+        }
+
+        // 増設購入申請の部署選択時に諸室名範囲の選択肢を更新
+        function updateExpansionRoomRangeOptions() {
+            const section = document.getElementById('expansionSection')?.value || '';
+            const roomRangeSelect = document.getElementById('expansionRoomRange');
+
+            if (roomRangeSelect) {
+                if (section && FACILITY_MASTER.roomRangesBySection[section]) {
+                    roomRangeSelect.innerHTML = '<option value="">選択してください</option>' +
+                        FACILITY_MASTER.roomRangesBySection[section].map(r => `<option value="${r}">${r}</option>`).join('');
+                } else {
+                    roomRangeSelect.innerHTML = '<option value="">選択してください</option>';
+                }
+            }
+        }
+
+        // 増設購入申請の棟選択時（拡張用）
+        function updateExpansionDepartmentOptions() {
+            // 必要に応じて棟ごとに部門を絞り込む処理を追加
+        }
+
+        // 増設購入申請を提出
+        function submitExpansionApplication() {
+            if (selectedItems.size === 0) {
+                alert('資産を選択してください');
+                return;
+            }
+
+            const selectedAssets = sampleData.filter(item => selectedItems.has(item.no));
+
+            // 各資産の数量・単位をバリデーション
+            for (const asset of selectedAssets) {
+                const quantity = document.getElementById(`expansionQuantity_${asset.no}`)?.value;
+                const unit = document.getElementById(`expansionUnit_${asset.no}`)?.value;
+
+                if (!quantity || parseInt(quantity) < 1) {
+                    alert(`${asset.name}の数量は1以上で入力してください`);
+                    return;
+                }
+            }
+
+            // 設置情報の取得
+            const building = document.getElementById('expansionBuilding')?.value || '';
+            const division = document.getElementById('expansionDivision')?.value || '';
+            const section = document.getElementById('expansionSection')?.value || '';
+            const roomRange = document.getElementById('expansionRoomRange')?.value || '';
+            const roomName = document.getElementById('expansionRoomName')?.value || '';
+            const freeInput = document.getElementById('expansionFreeInput')?.value || '';
+            const executionYear = document.getElementById('expansionExecutionYear')?.value || '';
+
+            // 申請内容の確認
+            const assetList = selectedAssets.map(asset => {
+                const quantity = document.getElementById(`expansionQuantity_${asset.no}`)?.value;
+                const unit = document.getElementById(`expansionUnit_${asset.no}`)?.value;
+                return `・${asset.name} (${asset.maker}) × ${quantity}${unit}`;
+            }).join('\n');
+
+            const confirmMessage = `以下の内容で増設購入申請を提出します:\n\n` +
+                `【資産情報】(${selectedAssets.length}件)\n` +
+                `${assetList}\n\n` +
+                `【設置先】\n` +
+                `${building} ${division} ${section} ${roomRange}\n\n` +
+                `※申請一覧では資産ごとに${selectedAssets.length}件のレコードが作成されます。\n\n` +
+                `よろしいですか？`;
+
+            if (confirm(confirmMessage)) {
+                // 申請一覧にデータを追加
+                if (typeof window.applicationListData !== 'undefined') {
+                    const today = new Date();
+                    const dateStr = today.toISOString().split('T')[0];
+                    const createdApplications = [];
+
+                    // 各資産ごとに個別の申請レコードを作成
+                    selectedAssets.forEach((asset, index) => {
+                        const quantity = document.getElementById(`expansionQuantity_${asset.no}`)?.value;
+                        const unit = document.getElementById(`expansionUnit_${asset.no}`)?.value;
+                        const appNo = window.IdGenerator.generateRandomApplicationNo('REQ');
+
+                        const newApplication = {
+                            id: window.applicationListData.length + 1 + index,
+                            applicationNo: appNo,
+                            applicationDate: dateStr,
+                            applicationType: '増設購入申請',
+                            asset: {
+                                name: asset.name,
+                                model: asset.model
+                            },
+                            vendor: '未設定',
+                            quantity: `${quantity}${unit}`,
+                            rfqNo: '',
+                            status: '下書き',
+                            approvalProgress: {
+                                current: 0,
+                                total: 3
+                            },
+                            facility: {
+                                building: building,
+                                floor: '',
+                                department: division,
+                                section: section
+                            },
+                            freeInput: freeInput,
+                            executionYear: executionYear
+                        };
+
+                        window.applicationListData.push(newApplication);
+                        createdApplications.push(newApplication);
+                        console.log('申請一覧に追加しました:', newApplication);
+                    });
+
+                    const appNos = createdApplications.map(app => app.applicationNo).join(', ');
+                    alert(`申請が提出されました\n\n作成された申請: ${selectedAssets.length}件\n申請番号: ${appNos}`);
+                }
+
+                closeExpansionRequestModal();
+
+                // 選択をクリア
+                selectedItems.clear();
+                updateSelectionInfo();
+                renderTable();
             }
         }
 

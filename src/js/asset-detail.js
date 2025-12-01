@@ -544,3 +544,97 @@ window.deleteCurrentPhoto = deleteCurrentPhoto;
 window.printDocument = printDocument;
 window.handleDocumentUpload = handleDocumentUpload;
 window.deleteDocument = deleteDocument;
+
+// ========================================
+// 申請アクション関数
+// ========================================
+
+/**
+ * 移動申請（資産カルテから）
+ */
+function handleAssetDetailMoveRequest() {
+    if (!currentAssetDetail) {
+        alert('資産情報が読み込まれていません');
+        return;
+    }
+
+    const confirmMsg = `以下の資産の移動申請を開始します:\n\n` +
+        `品名: ${currentAssetDetail.name}\n` +
+        `メーカー: ${currentAssetDetail.maker}\n` +
+        `型式: ${currentAssetDetail.model}\n\n` +
+        `移動申請画面に遷移しますか？`;
+
+    if (confirm(confirmMsg)) {
+        alert('移動申請画面に遷移します\n※実装予定');
+        // TODO: 移動申請モーダルまたは画面への遷移
+    }
+}
+
+/**
+ * 廃棄申請（資産カルテから）
+ */
+function handleAssetDetailDisposalRequest() {
+    if (!currentAssetDetail) {
+        alert('資産情報が読み込まれていません');
+        return;
+    }
+
+    const confirmMsg = `以下の資産の廃棄申請を開始します:\n\n` +
+        `品名: ${currentAssetDetail.name}\n` +
+        `メーカー: ${currentAssetDetail.maker}\n` +
+        `型式: ${currentAssetDetail.model}\n\n` +
+        `廃棄申請画面に遷移しますか？`;
+
+    if (confirm(confirmMsg)) {
+        alert('廃棄申請画面に遷移します\n※実装予定');
+        // TODO: 廃棄申請モーダルまたは画面への遷移
+    }
+}
+
+/**
+ * 修理申請（資産カルテから）
+ */
+function handleAssetDetailRepairRequest() {
+    if (!currentAssetDetail) {
+        alert('資産情報が読み込まれていません');
+        return;
+    }
+
+    const confirmMsg = `以下の資産の修理申請を開始します:\n\n` +
+        `品名: ${currentAssetDetail.name}\n` +
+        `メーカー: ${currentAssetDetail.maker}\n` +
+        `型式: ${currentAssetDetail.model}\n\n` +
+        `修理申請画面に遷移しますか？`;
+
+    if (confirm(confirmMsg)) {
+        alert('修理申請画面に遷移します\n※実装予定');
+        // TODO: 修理申請モーダルまたは画面への遷移
+    }
+}
+
+/**
+ * 保守申請（資産カルテから）
+ */
+function handleAssetDetailMaintenanceRequest() {
+    if (!currentAssetDetail) {
+        alert('資産情報が読み込まれていません');
+        return;
+    }
+
+    const confirmMsg = `以下の資産の保守申請を開始します:\n\n` +
+        `品名: ${currentAssetDetail.name}\n` +
+        `メーカー: ${currentAssetDetail.maker}\n` +
+        `型式: ${currentAssetDetail.model}\n\n` +
+        `保守申請画面に遷移しますか？`;
+
+    if (confirm(confirmMsg)) {
+        alert('保守申請画面に遷移します\n※実装予定');
+        // TODO: 保守申請モーダルまたは画面への遷移
+    }
+}
+
+// グローバルに公開
+window.handleAssetDetailMoveRequest = handleAssetDetailMoveRequest;
+window.handleAssetDetailDisposalRequest = handleAssetDetailDisposalRequest;
+window.handleAssetDetailRepairRequest = handleAssetDetailRepairRequest;
+window.handleAssetDetailMaintenanceRequest = handleAssetDetailMaintenanceRequest;

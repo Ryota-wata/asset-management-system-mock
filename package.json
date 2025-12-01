@@ -1,0 +1,21 @@
+{
+  "name": "asset-management-system-mock",
+  "version": "1.0.0",
+  "description": "医療機器管理システム画面モック",
+  "main": "index.html",
+  "scripts": {
+    "start": "python3 -m http.server 8080",
+    "capture-screenshots": "node scripts/capture-screenshots-responsive.js",
+    "generate-excel": "source .venv/bin/activate && python3 scripts/generate-excel-design-doc.py"
+  },
+  "keywords": [
+    "medical-device",
+    "asset-management",
+    "mockup"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "puppeteer": "^19.11.1"
+  }
+}

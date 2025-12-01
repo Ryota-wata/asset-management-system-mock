@@ -483,3 +483,60 @@
         font-size: 13px;
     }
 }
+
+/* ========================================
+   ヘッダーの申請ボタン
+======================================== */
+.header-btn.application-btn {
+    font-size: 13px;
+    padding: 8px 14px;
+    font-weight: 600;
+    border: 1px solid #e0e0e0;
+    transition: all 0.3s ease;
+}
+
+.header-btn.application-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* 申請タイプ別のカラー */
+.header-btn.application-btn.move-action {
+    background: #3498db;
+    color: white;
+    border-color: #2980b9;
+}
+
+.header-btn.application-btn.move-action:hover {
+    background: #2980b9;
+}
+
+.header-btn.application-btn.disposal-action {
+    background: #e74c3c;
+    color: white;
+    border-color: #c0392b;
+}
+
+.header-btn.application-btn.disposal-action:hover {
+    background: #c0392b;
+}
+
+.header-btn.application-btn.repair-action {
+    background: #f39c12;
+    color: white;
+    border-color: #e67e22;
+}
+
+.header-btn.application-btn.repair-action:hover {
+    background: #e67e22;
+}
+
+.header-btn.application-btn.maintenance-action {
+    background: #9b59b6;
+    color: white;
+    border-color: #8e44ad;
+}
+
+.header-btn.application-btn.maintenance-action:hover {
+    background: #8e44ad;
+}

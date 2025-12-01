@@ -128,18 +128,6 @@
                 更新購入申請
             </button>
 
-            <button class="action-btn move-action" id="moveBtn" onclick="handleMoveRequest()" disabled>
-                移動申請
-            </button>
-
-            <button class="action-btn disposal-action" id="disposalBtn" onclick="handleDisposalRequest()" disabled>
-                廃棄申請
-            </button>
-
-            <button class="action-btn hold-action" id="holdBtn" onclick="handleHoldRequest()" disabled>
-                保留申請
-            </button>
-
             <!-- その他の機能 -->
             <button class="action-btn inventory-action" id="inventoryBtn" onclick="handleInventory()" disabled>
                 資産棚卸し
@@ -366,6 +354,132 @@
             <div style="display: flex; gap: 10px;">
                 <button class="modal-button secondary" onclick="closeAssetMasterModal()" style="flex: 1;">キャンセル</button>
                 <button class="modal-button" onclick="submitApplication()" style="flex: 2; background: #27ae60; color: white;">申請を確定</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 増設購入申請モーダル -->
+    <div class="modal" id="expansionRequestModal" onclick="handleModalOutsideClick(event)">
+        <div class="modal-content" style="max-width: 1000px;">
+            <h2 class="modal-title">増設購入申請</h2>
+
+            <!-- 選択済み資産 -->
+            <div class="application-section" style="margin-bottom: 20px;">
+                <div class="application-section-title">📦 対象資産 <span class="required">*</span></div>
+                <div id="expansionAssetList" style="background: #f8f9fa; padding: 15px; border-radius: 4px; max-height: 200px; overflow-y: auto;">
+                    <!-- JavaScriptで生成 -->
+                </div>
+            </div>
+
+            <!-- 数量設定 -->
+            <div class="application-section" style="margin-bottom: 20px;">
+                <div class="application-section-title">📋 数量設定 <span class="required">*</span></div>
+                <div id="expansionQuantityForm" style="max-height: 300px; overflow-y: auto;">
+                    <!-- JavaScriptで生成 -->
+                </div>
+            </div>
+
+            <!-- 設置情報 -->
+            <div class="application-section" style="margin-bottom: 20px;">
+                <div class="application-section-title">🏥 設置情報（任意）</div>
+                <div style="background: #f8f9fa; padding: 15px; border-radius: 4px;">
+                    <div class="form-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px;">
+                        <div class="application-form-group">
+                            <label>棟</label>
+                            <select id="expansionBuilding" onchange="updateExpansionDepartmentOptions()">
+                                <option value="">選択してください</option>
+                            </select>
+                        </div>
+                        <div class="application-form-group">
+                            <label>部門</label>
+                            <select id="expansionDivision" onchange="updateExpansionSectionOptions()">
+                                <option value="">選択してください</option>
+                            </select>
+                        </div>
+                        <div class="application-form-group">
+                            <label>部署</label>
+                            <select id="expansionSection" onchange="updateExpansionRoomRangeOptions()">
+                                <option value="">選択してください</option>
+                            </select>
+                        </div>
+                        <div class="application-form-group">
+                            <label>諸室名範囲</label>
+                            <select id="expansionRoomRange">
+                                <option value="">選択してください</option>
+                            </select>
+                        </div>
+                        <div class="application-form-group" style="grid-column: 1 / -1;">
+                            <label>諸室名（自由入力可）</label>
+                            <input type="text" id="expansionRoomName" placeholder="諸室名を入力">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- その他情報（任意） -->
+            <div class="application-section" style="margin-bottom: 20px;">
+                <div class="application-section-title">📝 その他情報（任意）</div>
+                <div style="background: #f8f9fa; padding: 15px; border-radius: 4px;">
+                    <div class="application-form-group" style="margin-bottom: 15px;">
+                        <label>フリー入力（申請理由・コメント等）</label>
+                        <textarea id="expansionFreeInput" placeholder="増設理由や設置場所の詳細などを入力してください" rows="3" style="width: 100%;"></textarea>
+                    </div>
+                    <div class="application-form-group">
+                        <label>執行年度</label>
+                        <select id="expansionExecutionYear" style="width: 250px;">
+                            <option value="">選択してください</option>
+                            <option value="2024">2024年度</option>
+                            <option value="2025">2025年度</option>
+                            <option value="2026">2026年度</option>
+                            <option value="2024-2025">2024～2025年度</option>
+                            <option value="2025-2026">2025～2026年度</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- システム関連情報（任意） -->
+            <div class="application-section" style="margin-bottom: 20px;">
+                <div class="application-section-title">💻 システム関連情報（任意）</div>
+                <div style="background: #f8f9fa; padding: 15px; border-radius: 4px;">
+                    <div class="system-info-grid">
+                        <div class="system-info-label">現状の接続状況</div>
+                        <div class="system-info-fields">
+                            <label class="radio-label">
+                                <input type="radio" name="expansionCurrentConnection" value="yes"> 接続あり
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="expansionCurrentConnection" value="no" checked> 接続なし
+                            </label>
+                        </div>
+
+                        <div class="system-info-label">現状の接続先</div>
+                        <div class="system-info-fields">
+                            <input type="text" id="expansionCurrentConnectionTarget" placeholder="部門システム名を入力">
+                        </div>
+
+                        <div class="system-info-label">要望機器の接続要望</div>
+                        <div class="system-info-fields">
+                            <label class="radio-label">
+                                <input type="radio" name="expansionRequestConnection" value="yes"> 接続希望
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="expansionRequestConnection" value="no" checked> 接続不要
+                            </label>
+                        </div>
+
+                        <div class="system-info-label">要望機器の接続先</div>
+                        <div class="system-info-fields">
+                            <input type="text" id="expansionRequestConnectionTarget" placeholder="部門システム名を入力">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ボタンエリア -->
+            <div style="display: flex; gap: 10px;">
+                <button class="modal-button secondary" onclick="closeExpansionRequestModal()" style="flex: 1;">キャンセル</button>
+                <button class="modal-button" onclick="submitExpansionApplication()" style="flex: 2; background: #27ae60; color: white;">申請を確定</button>
             </div>
         </div>
     </div>

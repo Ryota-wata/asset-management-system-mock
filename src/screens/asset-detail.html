@@ -10,6 +10,10 @@
                 <span class="result-count" id="assetDetailCount">1件</span>
             </div>
             <div class="result-header-actions">
+                <button class="header-btn application-btn move-action" onclick="handleAssetDetailMoveRequest()">移動申請</button>
+                <button class="header-btn application-btn disposal-action" onclick="handleAssetDetailDisposalRequest()">廃棄申請</button>
+                <button class="header-btn application-btn repair-action" onclick="handleAssetDetailRepairRequest()">修理申請</button>
+                <button class="header-btn application-btn maintenance-action" onclick="handleAssetDetailMaintenanceRequest()">保守申請</button>
                 <button class="header-btn primary" id="editBtn" onclick="toggleEditMode()">編集</button>
                 <button class="header-btn success" id="saveBtn" onclick="saveAssetDetail()" style="display: none;">保存</button>
                 <button class="header-btn secondary" id="cancelBtn" onclick="cancelEdit()" style="display: none;">キャンセル</button>

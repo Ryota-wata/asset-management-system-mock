@@ -28,3 +28,12 @@ Temporary Items
 # Original mockup files (reference only)
 画面モック.html
 画面分析レポート.md
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Node.js
+node_modules/
+package-lock.json
